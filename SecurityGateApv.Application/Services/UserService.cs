@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Application.DTOs.Req;
+﻿using AutoMapper;
+using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Repositories;
@@ -14,8 +15,10 @@ namespace SecurityGateApv.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepo _userRepo;
-        public UserService(IUserRepo userRepo) {
+        private readonly IMapper _mapper;
+        public UserService(IUserRepo userRepo, IMapper mapper) {
             _userRepo = userRepo;
+            _mapper = mapper;
         }
         public async Task<Result<LoginModel>> Login(LoginModel loginModel)
         {

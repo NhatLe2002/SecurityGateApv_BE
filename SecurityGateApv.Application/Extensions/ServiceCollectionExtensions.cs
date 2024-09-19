@@ -20,6 +20,7 @@ namespace SecurityGateApv.Application.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddFluentValidation();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;
         }
