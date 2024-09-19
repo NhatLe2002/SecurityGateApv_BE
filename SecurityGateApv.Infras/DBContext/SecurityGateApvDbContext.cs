@@ -70,30 +70,16 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasOne(v => v.CreateBy)
                 .WithMany(u => u.CreatedVisits)
                 .HasForeignKey(v => v.CreateById)
-                .OnDelete(DeleteBehavior.Restrict); // Hoặc tùy chọn theo yêu cầu
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.UpdateBy)
                 .WithMany(u => u.UpdatedVisits)
                 .HasForeignKey(v => v.UpdateById)
-                .OnDelete(DeleteBehavior.Restrict); // Hoặc tùy chọn theo yêu cầu
+                .OnDelete(DeleteBehavior.Restrict);
 
 
-            // Seed data for Roles
-            modelBuilder.Entity<Role>().HasData(SeedData.GetRoles().ToArray());
-
-            // Seed data for Users
-            //modelBuilder.Entity<User>().HasData(SeedData.GetUsers().ToArray());
-
-            // Seed data for Department
-            //modelBuilder.Entity<Departments>().HasData(SeedData.GetDepartments().ToArray());
-
-            // Seed data for Visits
-            // modelBuilder.Entity<Visit>().HasData(SeedData.GetVisits().ToArray());
-
-
-            // Seed data for VisitDetails
-            // modelBuilder.Entity<VisitDetails>().HasData(SeedData.GetVisitDetails().ToArray());
+            modelBuilder.Seed();
         }
     }
 }
