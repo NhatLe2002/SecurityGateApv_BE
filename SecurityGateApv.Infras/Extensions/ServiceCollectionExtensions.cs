@@ -26,7 +26,7 @@ namespace SecurityGateApv.Infras.Extentions
 
             //DI Repo
             services.AddScoped<IUserRepo, UserRepo>();
-
+            services.AddScoped<IVisitRepo, VisitRepo>();
             return services;
         }
     }

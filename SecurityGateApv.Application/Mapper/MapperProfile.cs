@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using SecurityGateApv.Application.DTOs.Res;
+using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,8 @@ namespace SecurityGateApv.Application.Mapper
     {
         public MapperProfile()
         {
-            
+            CreateMap<Visit, GetVisitRes>().ReverseMap();
+
         }
     }
 }

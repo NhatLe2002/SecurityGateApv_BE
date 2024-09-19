@@ -22,9 +22,14 @@ namespace SecurityGateApv.Domain.Errors
 
         public static implicit operator string(Error error) { return error.Code; }
         //Domain Errors
+        public static readonly Error NotFound = new("Error.Notfound", "Not found item");
 
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
+
+
+        //Visit error
+        public static readonly Error NotFoundVisit = new("Error.NotfoundVisit", "Not found this visit");
     }
 }

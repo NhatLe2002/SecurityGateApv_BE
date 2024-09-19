@@ -18,6 +18,7 @@ namespace SecurityGateApv.Application.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IVisitService, VisitService>();
             services.AddFluentValidation();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

@@ -23,5 +23,11 @@ namespace SecurityGateApv.Domain.Interfaces.Repositories
         public Task<bool> RemoveEntityAsync(T entity);
         public Task<bool> RemoveRange(IEnumerable<T> entities);
         public Task<bool> UpdateAsync(T entity);
+        public Task<IEnumerable<T>> GetAllByFilterOrderbyIncludePaging(
+          Expression<Func<T, bool>> filter,
+          Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
+          string includeProperties,
+          int? pageIndex, // Optional parameter for pagination (page number)
+          int? pageSize);
     }
 }

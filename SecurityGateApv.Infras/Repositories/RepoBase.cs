@@ -47,6 +47,35 @@ namespace SecurityGateApv.Infras.Repositories
             return await _dbSet.ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> GetAllByFilterOrderbyIncludePaging(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, string includeProperties, int? pageIndex, int? pageSize)
+        {
+            IQueryable<T> query = _dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            foreach (var includeProperty in includeProperties.Split
+               (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            // Implementing pagination
+            if (pageIndex.HasValue && pageSize.HasValue)
+            {
+                int validPageIndex = pageIndex.Value > 0 ? pageIndex.Value - 1 : 0;
+                int validPageSize = pageSize.Value > 0 ? pageSize.Value : 10; // Default pageSize to 10 if an invalid value is passed
+
+                query = query.Skip(validPageIndex * validPageSize).Take(validPageSize);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public virtual async Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);

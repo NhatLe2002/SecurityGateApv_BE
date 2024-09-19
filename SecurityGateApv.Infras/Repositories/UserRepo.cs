@@ -11,8 +11,10 @@ namespace SecurityGateApv.Infras.Repositories
 {
     public class UserRepo : RepoBase<User>, IUserRepo
     {
+
         public UserRepo(SecurityGateApvDbContext context) : base(context)
         {
+
         }
     }
 }
