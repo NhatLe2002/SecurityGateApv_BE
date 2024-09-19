@@ -10,24 +10,49 @@ namespace SecurityGateApv.Domain.Models
 {
     public class VisitDetail
     {
+        protected VisitDetail()
+        {
+
+        }
+        internal VisitDetail(string visitDetailName, string description, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visit visit, Visitor visitor)
+        {
+            VisitDetailName = visitDetailName;
+            Description = description;
+            ExpectedTimeIn = expectedTimeIn;
+            ExpectedTimeOut = expectedTimeOut;
+            Status = status;
+            Visit = visit;
+            Visitor = visitor;
+        }
+        internal VisitDetail(string visitDetailName, string description, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visit visit, int visitorId)
+        {
+            VisitDetailName = visitDetailName;
+            Description = description;
+            ExpectedTimeIn = expectedTimeIn;
+            ExpectedTimeOut = expectedTimeOut;
+            Status = status;
+            Visit = visit;
+            VisitorId = visitorId;
+        }
+
         [Key]
-        public int VisitDetailId { get; set; }
-        public string VisitDetailName { get; set; }
-        public string Description { get; set; }
-        public DateTime ExpectedTimeIn { get; set; }
-        public DateTime ExpectedTimeOut { get; set; }
-        public bool Status { get; set; }
+        public int VisitDetailId { get; private set; }
+        public string VisitDetailName { get; private set; }
+        public string Description { get; private set; }
+        public DateTime ExpectedTimeIn { get; private set; }
+        public DateTime ExpectedTimeOut { get; private set; }
+        public bool Status { get; private set; }
 
         [ForeignKey("Visit")]
-        public int VisitId { get; set; }
-        public Visit Visit { get; set; }
+        public int VisitId { get; private set; }
+        public Visit Visit { get; private set; }
 
 
         [ForeignKey("Visitor")]
-        public int VisitorId { get; set; }
-        public Visitor Visitor { get; set; }
+        public int VisitorId { get; private set; }
+        public Visitor Visitor { get; private set; }
 
-        public ICollection<VehicleSession> VehicleSession { get; set; }
-        public ICollection<VisitorSession> VisitorSession { get; set; }
+        public ICollection<VehicleSession> VehicleSession { get; private set; }
+        public ICollection<VisitorSession> VisitorSession { get; private set; }
     }
 }

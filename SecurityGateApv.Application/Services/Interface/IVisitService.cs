@@ -17,6 +17,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<List<GetVisitRes>>> GetAllByFilterOrderbyIncludePaging(QueryParameters<Visit> queryParameters);
         public Task<Result<List<GetVisitRes>>> GetAllByPaging(int pageNumber, int pageSize);
         public Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId);
+        public Task<Result<bool>> CreateVisit(VisitCreateCommand command);
 
 
     }

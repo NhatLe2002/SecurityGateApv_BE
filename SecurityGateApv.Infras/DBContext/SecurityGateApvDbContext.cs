@@ -79,7 +79,7 @@ namespace SecurityGateApv.Infras.DBContext
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            modelBuilder.Seed();
+           // modelBuilder.Seed();
         }
     }
 }
