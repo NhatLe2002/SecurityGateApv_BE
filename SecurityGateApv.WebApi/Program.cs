@@ -16,7 +16,7 @@ namespace SecurityGateApv.WebApi
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetSection("ConnectionStrings").Value;
             // Add services to the container.
-            builder.Services.AddInfrastructure(connectionString);
+            builder.Services.AddInfrastructure(connectionString, builder.Configuration);
             builder.Services.AddServices();
   
 
@@ -37,7 +37,7 @@ namespace SecurityGateApv.WebApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
 
             app.MapControllers();
 

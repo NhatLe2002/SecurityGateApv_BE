@@ -56,20 +56,35 @@ namespace SecurityGateApv.Application.Services
             var res = _mapper.Map<List<GetVisitRes>>(visit);
             return res;
         }
+
+        public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
+        {
+            var visit = await _visitRepo.FindAsync(
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor"
+                );
+
+            if (visit == null)
+            {
+                return Result.Failure<GetVisitRes>(Error.NotFound); 
+            }
+            var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
+
+            return Result.Success(visitRes);
+        }
         /* public async Task<Result<GetVisitRes>> GetAllVisit()
 {
-    var visit = await _visitRepo.GetAllVisitIncludeVisitor();
-    var result = new List<GetVisitRes>();
-    foreach (var item in visit)
-    {
-        result.Add(new GetVisitRes
-        {
-            DateRegis = item.DateRegister,
-            VisitQuantity = item.VisitQuantity,
-            AcceptLevel = item.AcceptLevel,
-            VisitDetails = item.VisitDetail,
-        });
-    }
+var visit = await _visitRepo.GetAllVisitIncludeVisitor();
+var result = new List<GetVisitRes>();
+foreach (var item in visit)
+{
+result.Add(new GetVisitRes
+{
+   DateRegis = item.DateRegister,
+   VisitQuantity = item.VisitQuantity,
+   AcceptLevel = item.AcceptLevel,
+   VisitDetails = item.VisitDetail,
+});
+}
 
 
 }*/

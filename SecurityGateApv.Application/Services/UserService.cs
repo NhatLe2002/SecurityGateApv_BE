@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Shared;
 using System;
@@ -16,22 +18,30 @@ namespace SecurityGateApv.Application.Services
     {
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
-        public UserService(IUserRepo userRepo, IMapper mapper) {
+        private readonly IJwt _jwt;
+        public UserService(IUserRepo userRepo, IMapper mapper, IJwt jwt) {
             _userRepo = userRepo;
             _mapper = mapper;
+            _jwt = jwt;
         }
-        public async Task<Result<LoginModel>> Login(LoginModel loginModel)
+        public async Task<Result<LoginRes>> Login(LoginModel loginModel)
         {
-            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Email)).FirstOrDefault();
+            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Email, includeProperties: "Role")).FirstOrDefault();
             if (login == null)
             {
-                return Result.Failure<LoginModel>(Error.NotFoundUser);
+                return Result.Failure<LoginRes>(Error.NotFoundUser);
             }
             if(login.Password != loginModel.Password)
             {
-                return Result.Failure<LoginModel>(Error.IncorrectPassword);
+                return Result.Failure<LoginRes>(Error.IncorrectPassword);
             }
-            return loginModel;
+            var result = new LoginRes
+            {
+                UserId = login.UserId,
+                UserName = login.UserName,
+                JwtToken = _jwt.GenerateJwtToken(login.Role.RoleName)
+            };
+            return result;
         }
     }
 }

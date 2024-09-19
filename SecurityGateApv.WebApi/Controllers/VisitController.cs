@@ -25,8 +25,8 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("paging")]
-        public async Task<ActionResult<GetVisitRes>> GetAllPaging([FromQuery] int pageNumber , [FromQuery] int pageSize)
+        [HttpGet("GetAllPaging")]
+        public async Task<ActionResult> GetAllPaging([FromQuery] int pageNumber , [FromQuery] int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0)
             {
@@ -36,7 +36,17 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _visitService.GetAllByPaging(pageNumber, pageSize);
             return Ok(result.Value);
         }
+        [HttpGet("GetVisitDetailByVisitId/{visitId}")]
+        public async Task<ActionResult> GetVisitDetailByVisitId(int visitId)
+        {
+            var result = await _visitService.GetVisitDetailByVisitId(visitId);
 
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error); 
+            }
 
+            return Ok(result.Value);
+        }
     }
 }

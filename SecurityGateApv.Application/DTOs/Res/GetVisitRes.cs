@@ -13,21 +13,21 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime DateRegister { get; set; }
         public int VisitQuantity { get; set; }
         public int AcceptLevel { get; set; }
-        public List<VisitDetail> VisitDetails { get; set; }
+        public ICollection<VisitDetailRes> VisitDetail { get; set; }
     }
 
-    public class VisitDetail
+    public class VisitDetailRes
     {
         public string VisitDetailName { get; set; }
         public string Description { get; set; }
         public DateTime ExpectedTimeIn { get; set; }
         public DateTime ExpectedTimeOut { get; set; }
         public bool Status { get; set; }
+        public VisitorRes Visitor { get; set; }
     }
 
-    public class Visitor
+    public class VisitorRes
     {
-        public int VisitorId { get; set; }
         public string VisitorName { get; set; }
         public string CompanyName { get; set; }
         public string PhoneNumber { get; set; }

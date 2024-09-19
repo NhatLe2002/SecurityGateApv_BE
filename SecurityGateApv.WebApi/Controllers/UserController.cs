@@ -17,6 +17,7 @@ namespace SecurityGateApv.WebApi.Controllers
         public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
         {
             var result = await _userService.Login(loginModel);
+
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

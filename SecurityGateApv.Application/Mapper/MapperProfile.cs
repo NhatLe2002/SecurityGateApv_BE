@@ -14,6 +14,8 @@ namespace SecurityGateApv.Application.Mapper
         public MapperProfile()
         {
             CreateMap<Visit, GetVisitRes>().ReverseMap();
+            CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
+            CreateMap<Visitor, VisitorRes>().ReverseMap();
 
         }
     }
