@@ -44,7 +44,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
         public DbSet<VisitProject> VisitProjects { get; set; }
 
-/*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder();
             IConfigurationRoot configurationRoot = builder.Build();
@@ -78,8 +78,31 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasForeignKey(v => v.UpdateById)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<VisitorSession>()
+                .HasOne(vs => vs.SecurityIn)
+                .WithMany(g => g.SecurityInSessions) 
+                .HasForeignKey(vs => vs.SecurityInId)
+                .OnDelete(DeleteBehavior.Cascade); 
 
-           // modelBuilder.Seed();
+            modelBuilder.Entity<VisitorSession>()
+                .HasOne(vs => vs.SecurityOut)
+                .WithMany(g => g.SecurityOutSessions) 
+                .HasForeignKey(vs => vs.SecurityOutId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<VisitorSession>()
+                .HasOne(vs => vs.GateIn)
+                .WithMany(g => g.VisitorSessionsIn) 
+                .HasForeignKey(vs => vs.GateInId)
+                .OnDelete(DeleteBehavior.Cascade); 
+
+            modelBuilder.Entity<VisitorSession>()
+                .HasOne(vs => vs.GateOut)
+                .WithMany(g => g.VisitorSessionsOut) 
+                .HasForeignKey(vs => vs.GateOutId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //modelBuilder.Seed();
         }
     }
 }

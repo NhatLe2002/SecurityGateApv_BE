@@ -10,7 +10,7 @@ namespace SecurityGateApv.Domain.Models
 {
     public class VisitDetail
     {
-        protected VisitDetail()
+        public VisitDetail()
         {
 
         }

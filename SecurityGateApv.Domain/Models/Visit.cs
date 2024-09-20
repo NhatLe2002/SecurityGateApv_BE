@@ -22,7 +22,7 @@ namespace SecurityGateApv.Domain.Models
 
         }
 
-        protected Visit()
+        public Visit()
         {
             
         }

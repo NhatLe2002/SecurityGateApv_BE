@@ -14,7 +14,8 @@ namespace SecurityGateApv.Domain.Models
         public string GateName { get; set; }
         public string GateCoordinate { get; set;}
 
-        public ICollection<VisitorSession> VisitorSession { get; set; }
+        public ICollection<VisitorSession> VisitorSessionsIn { get; set; } 
+        public ICollection<VisitorSession> VisitorSessionsOut { get; set; }
         public ICollection<VehicleSession> VehicleSession{ get; set; }
 
 

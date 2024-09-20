@@ -11,7 +11,7 @@ namespace SecurityGateApv.Domain.Models
     {
         [Key]
         public int QRCardStatusId { get; set; }
-        public int StatusName { get; set; }
+        public string StatusName { get; set; }
         public int StatusNumber { get; set; }
 
         public ICollection<QRCard> QRCards { get; set; }

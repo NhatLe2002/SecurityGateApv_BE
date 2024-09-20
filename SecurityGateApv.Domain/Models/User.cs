@@ -40,7 +40,11 @@ namespace SecurityGateApv.Domain.Models
 
         [InverseProperty("UpdateBy")]
         public ICollection<Visit> UpdatedVisits { get; set; }
-        public ICollection<VisitorSession> VisitorSession { get; set; }
+
+
+        public ICollection<VisitorSession> SecurityInSessions { get; set; } 
+        public ICollection<VisitorSession> SecurityOutSessions { get; set; }
+
         public ICollection<VehicleSession> VehicleSession { get; set; }
     }
 }

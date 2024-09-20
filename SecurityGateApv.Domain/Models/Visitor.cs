@@ -11,7 +11,7 @@ namespace SecurityGateApv.Domain.Models
 {
     public class Visitor
     {
-        protected Visitor()
+        public Visitor()
         {
             
         }

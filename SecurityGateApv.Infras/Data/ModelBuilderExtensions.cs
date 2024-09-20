@@ -25,6 +25,10 @@ namespace SecurityGateApv.Infras.Data
             SeedProjects(modelBuilder);
             SeedVisits(modelBuilder);
             SeedVisitDetails(modelBuilder);
+            SeedQRCards(modelBuilder);
+            SeedGate(modelBuilder);
+            SeedVisitorSession(modelBuilder);
+
         }
 
         private static void SeedRoles(ModelBuilder modelBuilder)
@@ -253,8 +257,8 @@ namespace SecurityGateApv.Infras.Data
                 .RuleFor(vd => vd.VisitDetailId, f => f.IndexFaker + 1)
                 .RuleFor(vd => vd.VisitDetailName, f => f.Commerce.ProductName())
                 .RuleFor(vd => vd.Description, f => f.Lorem.Paragraph())
-                .RuleFor(vd => vd.ExpectedTimeIn, f => f.Date.Future(1))
-                .RuleFor(vd => vd.ExpectedTimeOut, f => f.Date.Future(1))
+                .RuleFor(vd => vd.ExpectedTimeIn, f => DateTime.Now) 
+                .RuleFor(vd => vd.ExpectedTimeOut, f => DateTime.Now.AddDays(1)) 
                 .RuleFor(vd => vd.Status, f => f.Random.Bool())
                 .RuleFor(vd => vd.VisitId, f => f.Random.Int(1, 5))
                 .RuleFor(vd => vd.VisitorId, f => f.Random.Int(1, 10));
@@ -263,6 +267,84 @@ namespace SecurityGateApv.Infras.Data
 
             modelBuilder.Entity<VisitDetail>().HasData(visitDetails);
         }
+
+        private static void SeedQRCards(ModelBuilder modelBuilder)
+        {
+            // Seed QRCardStatus
+            modelBuilder.Entity<QRCardStatus>().HasData(
+                new QRCardStatus { QRCardStatusId = 1, StatusName = "Active", StatusNumber = 1 },
+                new QRCardStatus { QRCardStatusId = 2, StatusName = "Inactive", StatusNumber = 0 }
+            );
+
+            // Seed QRCardType
+            modelBuilder.Entity<QRCardType>().HasData(
+                new QRCardType { QRCardTypeId = 1, CardTypeName = "Employee", TypeDescription = "Employee QR Card" },
+                new QRCardType { QRCardTypeId = 2, CardTypeName = "Visitor", TypeDescription = "Visitor QR Card" }
+            );
+
+            var cardFaker = new Faker<QRCard>()
+                .RuleFor(q => q.QRCardId, f => f.IndexFaker + 1)
+                .RuleFor(q => q.CardGuidId, f => Guid.NewGuid())
+                .RuleFor(q => q.CreateDate, f => DateTime.Now)  // CreateDate là hôm nay
+                .RuleFor(q => q.LastCancelDate, (f, q) => q.CreateDate.AddMonths(1))  // LastCancelDate là 1 tháng sau CreateDate
+                .RuleFor(q => q.QRCardTypeId, f => f.PickRandom(1, 2))  // Random QRCardType
+                .RuleFor(q => q.QRCardStatusId, f => f.PickRandom(1, 2));  // Random QRCardStatus
+
+
+            var randomQRCards = cardFaker.Generate(10);
+
+            // Seed QRCards
+            modelBuilder.Entity<QRCard>().HasData(randomQRCards);
+        }
+        private static void SeedGate(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Gate>().HasData(
+                new Gate { GateId = 1, GateName = "Cổng 1", GateCoordinate = "Ra vào trong ngày" },
+                new Gate { GateId = 2, GateName = "Cổng 2", GateCoordinate = "Ra vào trong ngày" }
+                );
+        }
+        private static void SeedVisitorSession(ModelBuilder modelBuilder)
+            {
+            var visitorSessionFaker = new Faker<VisitorSession>()
+                .RuleFor(vs => vs.VisitorSessionId, f => f.IndexFaker + 1)
+                .RuleFor(vs => vs.CheckinTime, f => DateTime.UtcNow.AddDays(1))
+                .RuleFor(vs => vs.CheckoutTime, f => null)
+                .RuleFor(vs => vs.QRCardId, f => f.Random.Int(1, 10))
+                .RuleFor(vs => vs.VisitDetailId, f => f.Random.Int(1, 10))
+                .RuleFor(vs => vs.SecurityInId, 5)
+                .RuleFor(vs => vs.SecurityOutId, f => null)
+                .RuleFor(vs => vs.GateInId, f => f.Random.Int(1, 2))
+                .RuleFor(vs => vs.GateOutId, f => null)
+                .RuleFor(vs => vs.Status, f => "CheckIn");
+
+                var visitorSessions = visitorSessionFaker.Generate(5); 
+                modelBuilder.Entity<VisitorSession>().HasData(visitorSessions);
+                SeedVisitorSessionImages(modelBuilder, visitorSessions);
+            }
+
+        private static void SeedVisitorSessionImages(ModelBuilder modelBuilder, List<VisitorSession> visitorSessions)
+        {
+            var visitorSessionImages = new List<VisitorSessionsImage>();
+
+            foreach (var session in visitorSessions)
+            {
+                for (int j = 0; j < 3; j++) // Tạo 3 hình ảnh cho mỗi VisitorSession
+                {
+                    visitorSessionImages.Add(new VisitorSessionsImage
+                    {
+                        VisitorSessionsImageId = (session.VisitorSessionId - 1) * 3 + j + 1, // Đảm bảo ID là duy nhất
+                        Name = $"Image_{session.VisitorSessionId}_{j + 1}",
+                        ImageType = "jpg", // Hoặc bất kỳ loại nào bạn muốn
+                        ImageURL = $"https://example.com/images/{session.VisitorSessionId}_{j + 1}.jpg", // Địa chỉ URL hình ảnh
+                        VisitorSessionId = session.VisitorSessionId
+                    });
+                }
+            }
+
+            modelBuilder.Entity<VisitorSessionsImage>().HasData(visitorSessionImages);
+        }
+
+
 
     }
 
