@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Domain.Models;
 using System;
@@ -16,6 +17,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Visit, GetVisitRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
             CreateMap<Visitor, VisitorRes>().ReverseMap();
+            CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
 
         }
     }

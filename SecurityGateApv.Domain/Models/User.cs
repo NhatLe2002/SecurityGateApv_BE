@@ -25,7 +25,7 @@ namespace SecurityGateApv.Domain.Models
         public int RoleId { get; set; }
         public Role Role { get; set; }
 
-        public ICollection<Project> Project { get; set; }
+        public ICollection<Process> Project { get; set; }
         public ICollection<UserDepartment> UserDepartment { get; set; }
         [InverseProperty("Sender")]
         public ICollection<NotificationUsers> SentNotifications { get; set; }
@@ -46,5 +46,6 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<VisitorSession> SecurityOutSessions { get; set; }
 
         public ICollection<VehicleSession> VehicleSession { get; set; }
+        public Visitor Visitor { get; set; }
     }
 }

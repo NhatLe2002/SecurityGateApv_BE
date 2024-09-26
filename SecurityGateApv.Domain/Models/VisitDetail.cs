@@ -16,20 +16,20 @@ namespace SecurityGateApv.Domain.Models
         }
         internal VisitDetail(string visitDetailName, string description, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visit visit, Visitor visitor)
         {
-            VisitDetailName = visitDetailName;
+            //VisitDetailName = visitDetailName;
             Description = description;
-            ExpectedTimeIn = expectedTimeIn;
-            ExpectedTimeOut = expectedTimeOut;
+            ExpectedStartDate = expectedTimeIn;
+            ExpectedEndDate = expectedTimeOut;
             Status = status;
             Visit = visit;
             Visitor = visitor;
         }
         internal VisitDetail(string visitDetailName, string description, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visit visit, int visitorId)
         {
-            VisitDetailName = visitDetailName;
+            //VisitDetailName = visitDetailName;
             Description = description;
-            ExpectedTimeIn = expectedTimeIn;
-            ExpectedTimeOut = expectedTimeOut;
+            ExpectedStartDate = expectedTimeIn;
+            ExpectedEndDate = expectedTimeOut;
             Status = status;
             Visit = visit;
             VisitorId = visitorId;
@@ -37,10 +37,11 @@ namespace SecurityGateApv.Domain.Models
 
         [Key]
         public int VisitDetailId { get; private set; }
-        public string VisitDetailName { get; private set; }
-        public string Description { get; private set; }
-        public DateTime ExpectedTimeIn { get; private set; }
-        public DateTime ExpectedTimeOut { get; private set; }
+        public DateTime ExpectedStartDate { get; private set; }
+        public DateTime ExpectedEndDate { get; private set; }
+        public TimeSpan ExpectedStartTime { get; private set; }
+        public TimeSpan ExpectedEndTime { get; private set; }
+        public string? Description { get; private set; }
         public bool Status { get; private set; }
 
         [ForeignKey("Visit")]
@@ -52,7 +53,7 @@ namespace SecurityGateApv.Domain.Models
         public int VisitorId { get; private set; }
         public Visitor Visitor { get; private set; }
 
-        public ICollection<VehicleSession> VehicleSession { get; private set; }
         public ICollection<VisitorSession> VisitorSession { get; private set; }
+        public ICollection<VehicleSession> VehicleSession { get; private set; }
     }
 }

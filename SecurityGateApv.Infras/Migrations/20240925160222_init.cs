@@ -3,19 +3,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace SecurityGateApv.Infras.Migrations
 {
     /// <inheritdoc />
-    public partial class init_2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Role");
-
             migrationBuilder.CreateTable(
                 name: "CredentialCardTypes",
                 columns: table => new
@@ -83,7 +78,7 @@ namespace SecurityGateApv.Infras.Migrations
                 {
                     QRCardStatusId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StatusName = table.Column<int>(type: "int", nullable: false),
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StatusNumber = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -106,20 +101,6 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reasons",
-                columns: table => new
-                {
-                    ReasonId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ReasonName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reasons", x => x.ReasonId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -134,29 +115,17 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Visitors",
+                name: "VisitTypes",
                 columns: table => new
                 {
-                    VisitorId = table.Column<int>(type: "int", nullable: false)
+                    VisitTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VisitorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CredentialsCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    CredentialCardTypeId = table.Column<int>(type: "int", nullable: false)
+                    VisitTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Visitors", x => x.VisitorId);
-                    table.ForeignKey(
-                        name: "FK_Visitors_CredentialCardTypes_CredentialCardTypeId",
-                        column: x => x.CredentialCardTypeId,
-                        principalTable: "CredentialCardTypes",
-                        principalColumn: "CredentialCardTypeId",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_VisitTypes", x => x.VisitTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,41 +158,13 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DepartmentReasons",
-                columns: table => new
-                {
-                    DepartmentReasonId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false),
-                    ReasonId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DepartmentReasons", x => x.DepartmentReasonId);
-                    table.ForeignKey(
-                        name: "FK_DepartmentReasons_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DepartmentReasons_Reasons_ReasonId",
-                        column: x => x.ReasonId,
-                        principalTable: "Reasons",
-                        principalColumn: "ReasonId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Passwork = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -281,21 +222,29 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                    ProcessId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProcessName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    Visittype = table.Column<int>(type: "int", nullable: false),
                     CreateBy = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
+                    table.PrimaryKey("PK_Projects", x => x.ProcessId);
                     table.ForeignKey(
                         name: "FK_Projects_Users_CreateBy",
                         column: x => x.CreateBy,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Projects_VisitTypes_Visittype",
+                        column: x => x.Visittype,
+                        principalTable: "VisitTypes",
+                        principalColumn: "VisitTypeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -332,21 +281,17 @@ namespace SecurityGateApv.Infras.Migrations
                     VisitId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateRegister = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VisitName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VisitQuantity = table.Column<int>(type: "int", nullable: false),
                     AcceptLevel = table.Column<int>(type: "int", nullable: false),
-                    DepartmentReasonId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VisitType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateById = table.Column<int>(type: "int", nullable: false),
                     UpdateById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Visits", x => x.VisitId);
-                    table.ForeignKey(
-                        name: "FK_Visits_DepartmentReasons_DepartmentReasonId",
-                        column: x => x.DepartmentReasonId,
-                        principalTable: "DepartmentReasons",
-                        principalColumn: "DepartmentReasonId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Visits_Users_CreateById",
                         column: x => x.CreateById,
@@ -362,15 +307,82 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Visitors",
+                columns: table => new
+                {
+                    VisitorId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VisitorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CredentialsCard = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    CredentialCardTypeId = table.Column<int>(type: "int", nullable: false),
+                    CreateById = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visitors", x => x.VisitorId);
+                    table.ForeignKey(
+                        name: "FK_Visitors_CredentialCardTypes_CredentialCardTypeId",
+                        column: x => x.CredentialCardTypeId,
+                        principalTable: "CredentialCardTypes",
+                        principalColumn: "CredentialCardTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Visitors_UserDepartments_CreateById",
+                        column: x => x.CreateById,
+                        principalTable: "UserDepartments",
+                        principalColumn: "UserDepartmentId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VisitProjects",
+                columns: table => new
+                {
+                    VisitProcessId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ExpectedStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpectedEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpectedStartTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    ExpectedEndTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    DaysOfProcess = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VisitQuantity = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProcessId = table.Column<int>(type: "int", nullable: false),
+                    VisitId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VisitProjects", x => x.VisitProcessId);
+                    table.ForeignKey(
+                        name: "FK_VisitProjects_Projects_ProcessId",
+                        column: x => x.ProcessId,
+                        principalTable: "Projects",
+                        principalColumn: "ProcessId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VisitProjects_Visits_VisitId",
+                        column: x => x.VisitId,
+                        principalTable: "Visits",
+                        principalColumn: "VisitId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VisitDetails",
                 columns: table => new
                 {
                     VisitDetailId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VisitDetailName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpectedStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpectedEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpectedStartTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    ExpectedEndTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpectedTimeIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpectedTimeOut = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     VisitId = table.Column<int>(type: "int", nullable: false),
                     VisitorId = table.Column<int>(type: "int", nullable: false)
@@ -386,37 +398,6 @@ namespace SecurityGateApv.Infras.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VisitDetails_Visits_VisitId",
-                        column: x => x.VisitId,
-                        principalTable: "Visits",
-                        principalColumn: "VisitId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VisitProjects",
-                columns: table => new
-                {
-                    VisitProjectId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    VisitName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QuantityOfVisit = table.Column<int>(type: "int", nullable: false),
-                    ExpectedTimeIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpectedTimeOut = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
-                    VisitId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VisitProjects", x => x.VisitProjectId);
-                    table.ForeignKey(
-                        name: "FK_VisitProjects_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_VisitProjects_Visits_VisitId",
                         column: x => x.VisitId,
                         principalTable: "Visits",
                         principalColumn: "VisitId",
@@ -455,7 +436,7 @@ namespace SecurityGateApv.Infras.Migrations
                         column: x => x.VisitDetailId,
                         principalTable: "VisitDetails",
                         principalColumn: "VisitDetailId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -465,21 +446,30 @@ namespace SecurityGateApv.Infras.Migrations
                     VisitorSessionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CheckinTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckoutTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckoutTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     QRCardId = table.Column<int>(type: "int", nullable: false),
                     VisitDetailId = table.Column<int>(type: "int", nullable: false),
-                    SecurityID = table.Column<int>(type: "int", nullable: false),
-                    GateId = table.Column<int>(type: "int", nullable: false)
+                    SecurityInId = table.Column<int>(type: "int", nullable: false),
+                    SecurityOutId = table.Column<int>(type: "int", nullable: true),
+                    GateInId = table.Column<int>(type: "int", nullable: false),
+                    GateOutId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VisitorSessions", x => x.VisitorSessionId);
                     table.ForeignKey(
-                        name: "FK_VisitorSessions_Gates_GateId",
-                        column: x => x.GateId,
+                        name: "FK_VisitorSessions_Gates_GateInId",
+                        column: x => x.GateInId,
                         principalTable: "Gates",
                         principalColumn: "GateId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VisitorSessions_Gates_GateOutId",
+                        column: x => x.GateOutId,
+                        principalTable: "Gates",
+                        principalColumn: "GateId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VisitorSessions_QRCards_QRCardId",
                         column: x => x.QRCardId,
@@ -487,17 +477,23 @@ namespace SecurityGateApv.Infras.Migrations
                         principalColumn: "QRCardId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_VisitorSessions_Users_SecurityID",
-                        column: x => x.SecurityID,
+                        name: "FK_VisitorSessions_Users_SecurityInId",
+                        column: x => x.SecurityInId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VisitorSessions_Users_SecurityOutId",
+                        column: x => x.SecurityOutId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VisitorSessions_VisitDetails_VisitDetailId",
                         column: x => x.VisitDetailId,
                         principalTable: "VisitDetails",
                         principalColumn: "VisitDetailId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -544,28 +540,6 @@ namespace SecurityGateApv.Infras.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "RoleId", "Description", "RoleName" },
-                values: new object[,]
-                {
-                    { 1, "Quản lý toàn bộ hệ thống", "Admin" },
-                    { 2, "Quản lý toàn bộ công ty", "Manager" },
-                    { 3, "Quản lý toàn bộ phòng ban", "DepartmentManaager" },
-                    { 4, "Tạo và quản lý khách ra vào của phòng ban", "Staff" },
-                    { 5, "Quản lý khách ra vào tại cổng", "Security" }
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DepartmentReasons_DepartmentId",
-                table: "DepartmentReasons",
-                column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DepartmentReasons_ReasonId",
-                table: "DepartmentReasons",
-                column: "ReasonId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationUsers_NotificationID",
                 table: "NotificationUsers",
@@ -585,6 +559,11 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "IX_Projects_CreateBy",
                 table: "Projects",
                 column: "CreateBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_Visittype",
+                table: "Projects",
+                column: "Visittype");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QRCards_QRCardStatusId",
@@ -642,14 +621,24 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "VisitorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Visitors_CreateById",
+                table: "Visitors",
+                column: "CreateById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Visitors_CredentialCardTypeId",
                 table: "Visitors",
                 column: "CredentialCardTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VisitorSessions_GateId",
+                name: "IX_VisitorSessions_GateInId",
                 table: "VisitorSessions",
-                column: "GateId");
+                column: "GateInId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitorSessions_GateOutId",
+                table: "VisitorSessions",
+                column: "GateOutId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VisitorSessions_QRCardId",
@@ -657,9 +646,14 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "QRCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VisitorSessions_SecurityID",
+                name: "IX_VisitorSessions_SecurityInId",
                 table: "VisitorSessions",
-                column: "SecurityID");
+                column: "SecurityInId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitorSessions_SecurityOutId",
+                table: "VisitorSessions",
+                column: "SecurityOutId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VisitorSessions_VisitDetailId",
@@ -672,9 +666,9 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "VisitorSessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VisitProjects_ProjectId",
+                name: "IX_VisitProjects_ProcessId",
                 table: "VisitProjects",
-                column: "ProjectId");
+                column: "ProcessId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VisitProjects_VisitId",
@@ -687,11 +681,6 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "CreateById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Visits_DepartmentReasonId",
-                table: "Visits",
-                column: "DepartmentReasonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Visits_UpdateById",
                 table: "Visits",
                 column: "UpdateById");
@@ -702,9 +691,6 @@ namespace SecurityGateApv.Infras.Migrations
         {
             migrationBuilder.DropTable(
                 name: "NotificationUsers");
-
-            migrationBuilder.DropTable(
-                name: "UserDepartments");
 
             migrationBuilder.DropTable(
                 name: "VehicleSessionImages");
@@ -737,6 +723,9 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "VisitDetails");
 
             migrationBuilder.DropTable(
+                name: "VisitTypes");
+
+            migrationBuilder.DropTable(
                 name: "QRCardStatus");
 
             migrationBuilder.DropTable(
@@ -752,45 +741,16 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "CredentialCardTypes");
 
             migrationBuilder.DropTable(
-                name: "DepartmentReasons");
-
-            migrationBuilder.DropTable(
-                name: "Users");
+                name: "UserDepartments");
 
             migrationBuilder.DropTable(
                 name: "Departments");
 
             migrationBuilder.DropTable(
-                name: "Reasons");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Roles");
-
-            migrationBuilder.CreateTable(
-                name: "Role",
-                columns: table => new
-                {
-                    RoleId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Role", x => x.RoleId);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Role",
-                columns: new[] { "RoleId", "Description", "RoleName" },
-                values: new object[,]
-                {
-                    { 1, "Quản lý toàn bộ hệ thống", "Admin" },
-                    { 2, "Quản lý toàn bộ công ty", "Manager" },
-                    { 3, "Quản lý toàn bộ phòng ban", "DepartmentManaager" },
-                    { 4, "Tạo và quản lý khách ra vào của phòng ban", "Staff" },
-                    { 5, "Quản lý khách ra vào tại cổng", "Security" }
-                });
         }
     }
 }

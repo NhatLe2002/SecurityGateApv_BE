@@ -12,8 +12,8 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    [Migration("20240919054149_SeedData_4")]
-    partial class SeedData_4
+    [Migration("20240925161226_SeedData")]
+    partial class SeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,18 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("CredentialCardTypeId");
 
                     b.ToTable("CredentialCardTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            CredentialCardTypeId = 1,
+                            CredentialCardTypeName = "Căn cước công dân"
+                        },
+                        new
+                        {
+                            CredentialCardTypeId = 2,
+                            CredentialCardTypeName = "Căn cước công dân"
+                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Department", b =>
@@ -70,37 +82,98 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("DepartmentId");
 
                     b.ToTable("Departments");
-                });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.DepartmentReason", b =>
-                {
-                    b.Property<int>("DepartmentReasonId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentReasonId"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReasonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DepartmentReasonId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("ReasonId");
-
-                    b.ToTable("DepartmentReasons");
+                    b.HasData(
+                        new
+                        {
+                            DepartmentId = 1,
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 5, 22, 4, 55, 667, DateTimeKind.Utc).AddTicks(3278),
+                            DepartmentName = "Phòng Hành chính",
+                            Description = "Amet consequuntur magnam iusto voluptates et repudiandae odio.",
+                            UpdatedDate = new DateTime(2024, 9, 5, 22, 4, 55, 667, DateTimeKind.Utc).AddTicks(3278)
+                        },
+                        new
+                        {
+                            DepartmentId = 2,
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 4, 18, 26, 28, 975, DateTimeKind.Utc).AddTicks(8559),
+                            DepartmentName = "Phòng Hành chính",
+                            Description = "Tempora ipsum mollitia sunt laborum itaque ipsam.",
+                            UpdatedDate = new DateTime(2024, 9, 4, 18, 26, 28, 975, DateTimeKind.Utc).AddTicks(8559)
+                        },
+                        new
+                        {
+                            DepartmentId = 3,
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 5, 1, 18, 51, 451, DateTimeKind.Utc).AddTicks(6536),
+                            DepartmentName = "Phòng Kế toán",
+                            Description = "Occaecati consequatur explicabo dolor est aut quas.",
+                            UpdatedDate = new DateTime(2024, 9, 5, 1, 18, 51, 451, DateTimeKind.Utc).AddTicks(6536)
+                        },
+                        new
+                        {
+                            DepartmentId = 4,
+                            AcceptLevel = 1,
+                            CreateDate = new DateTime(2024, 9, 12, 5, 48, 12, 464, DateTimeKind.Utc).AddTicks(4551),
+                            DepartmentName = "Phòng Chăm sóc khách hàng",
+                            Description = "Et laudantium quia.",
+                            UpdatedDate = new DateTime(2024, 9, 12, 5, 48, 12, 464, DateTimeKind.Utc).AddTicks(4551)
+                        },
+                        new
+                        {
+                            DepartmentId = 5,
+                            AcceptLevel = 1,
+                            CreateDate = new DateTime(2024, 9, 15, 5, 13, 11, 383, DateTimeKind.Utc).AddTicks(7617),
+                            DepartmentName = "Phòng Sản xuất",
+                            Description = "Illum est illum.",
+                            UpdatedDate = new DateTime(2024, 9, 15, 5, 13, 11, 383, DateTimeKind.Utc).AddTicks(7617)
+                        },
+                        new
+                        {
+                            DepartmentId = 6,
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 13, 21, 41, 38, 66, DateTimeKind.Utc).AddTicks(5081),
+                            DepartmentName = "Phòng R&D",
+                            Description = "Temporibus aspernatur earum eveniet tempore ea in iusto.",
+                            UpdatedDate = new DateTime(2024, 9, 13, 21, 41, 38, 66, DateTimeKind.Utc).AddTicks(5081)
+                        },
+                        new
+                        {
+                            DepartmentId = 7,
+                            AcceptLevel = 3,
+                            CreateDate = new DateTime(2024, 9, 19, 3, 20, 11, 979, DateTimeKind.Utc).AddTicks(2228),
+                            DepartmentName = "Phòng IT",
+                            Description = "Voluptatem et debitis rem.",
+                            UpdatedDate = new DateTime(2024, 9, 19, 3, 20, 11, 979, DateTimeKind.Utc).AddTicks(2228)
+                        },
+                        new
+                        {
+                            DepartmentId = 8,
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 6, 15, 49, 58, 819, DateTimeKind.Utc).AddTicks(7458),
+                            DepartmentName = "Phòng Pháp chế",
+                            Description = "Quam voluptates maxime.",
+                            UpdatedDate = new DateTime(2024, 9, 6, 15, 49, 58, 819, DateTimeKind.Utc).AddTicks(7458)
+                        },
+                        new
+                        {
+                            DepartmentId = 9,
+                            AcceptLevel = 4,
+                            CreateDate = new DateTime(2024, 9, 14, 15, 40, 11, 536, DateTimeKind.Utc).AddTicks(8504),
+                            DepartmentName = "Phòng Kinh doanh",
+                            Description = "Rerum laudantium explicabo.",
+                            UpdatedDate = new DateTime(2024, 9, 14, 15, 40, 11, 536, DateTimeKind.Utc).AddTicks(8504)
+                        },
+                        new
+                        {
+                            DepartmentId = 10,
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 15, 1, 9, 53, 187, DateTimeKind.Utc).AddTicks(8690),
+                            DepartmentName = "Phòng Kinh doanh",
+                            Description = "Veniam eius et qui est perferendis asperiores eius dolore dolor.",
+                            UpdatedDate = new DateTime(2024, 9, 15, 1, 9, 53, 187, DateTimeKind.Utc).AddTicks(8690)
+                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Gate", b =>
@@ -185,13 +258,13 @@ namespace SecurityGateApv.Infras.Migrations
                     b.ToTable("NotificationUsers");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.Project", b =>
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Process", b =>
                 {
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("ProcessId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProcessId"));
 
                     b.Property<int>("CreateBy")
                         .HasColumnType("int");
@@ -199,16 +272,25 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ProjectName")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProcessName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.HasKey("ProjectId");
+                    b.Property<int>("Visittype")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProcessId");
 
                     b.HasIndex("CreateBy");
+
+                    b.HasIndex("Visittype");
 
                     b.ToTable("Projects");
                 });
@@ -253,8 +335,9 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QRCardStatusId"));
 
-                    b.Property<int>("StatusName")
-                        .HasColumnType("int");
+                    b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StatusNumber")
                         .HasColumnType("int");
@@ -283,27 +366,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("QRCardTypeId");
 
                     b.ToTable("QRCardType");
-                });
-
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.Reason", b =>
-                {
-                    b.Property<int>("ReasonId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReasonId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReasonName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ReasonId");
-
-                    b.ToTable("Reasons");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Role", b =>
@@ -410,327 +472,327 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedDate = new DateTime(2024, 3, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2903),
+                            CreatedDate = new DateTime(2024, 3, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6785),
                             Email = "admin1@example.com",
                             FullName = "Admin One",
                             Password = "123",
-                            PhoneNumber = "1234567890",
+                            PhoneNumber = "0123456789",
                             RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2910),
+                            UpdatedDate = new DateTime(2024, 9, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6792),
                             UserName = "admin1"
                         },
                         new
                         {
                             UserId = 2,
-                            CreatedDate = new DateTime(2024, 6, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2914),
+                            CreatedDate = new DateTime(2024, 6, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6794),
                             Email = "manager1@example.com",
                             FullName = "Manager One",
                             Password = "123",
                             PhoneNumber = "0987654321",
                             RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2914),
+                            UpdatedDate = new DateTime(2024, 9, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6795),
                             UserName = "manager1"
                         },
                         new
                         {
                             UserId = 3,
-                            CreatedDate = new DateTime(2024, 7, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2916),
+                            CreatedDate = new DateTime(2024, 7, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6797),
                             Email = "employee1@example.com",
                             FullName = "Department Manager One",
                             Password = "123",
-                            PhoneNumber = "1112223334",
+                            PhoneNumber = "0112223334",
                             RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2917),
+                            UpdatedDate = new DateTime(2024, 9, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6797),
                             UserName = "DM1"
                         },
                         new
                         {
                             UserId = 4,
-                            CreatedDate = new DateTime(2024, 8, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2918),
+                            CreatedDate = new DateTime(2024, 8, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6799),
                             Email = "hr1@example.com",
                             FullName = "Staff One",
                             Password = "123",
-                            PhoneNumber = "2223334445",
+                            PhoneNumber = "0223334445",
                             RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2919),
+                            UpdatedDate = new DateTime(2024, 9, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6800),
                             UserName = "Staff1"
                         },
                         new
                         {
                             UserId = 5,
-                            CreatedDate = new DateTime(2024, 5, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2920),
+                            CreatedDate = new DateTime(2024, 5, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6801),
                             Email = "it1@example.com",
                             FullName = "Security One",
                             Password = "123",
-                            PhoneNumber = "3334445556",
+                            PhoneNumber = "0334445556",
                             RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 19, 5, 41, 49, 358, DateTimeKind.Utc).AddTicks(2920),
+                            UpdatedDate = new DateTime(2024, 9, 25, 16, 12, 25, 850, DateTimeKind.Utc).AddTicks(6802),
                             UserName = "Security1"
                         },
                         new
                         {
                             UserId = 6,
-                            CreatedDate = new DateTime(2024, 9, 11, 8, 33, 28, 761, DateTimeKind.Unspecified).AddTicks(2366),
-                            Email = "gmail.com.Jacobson@yahoo.com",
-                            FullName = "Nathan Schneider",
-                            Password = "820o3y",
-                            PhoneNumber = "0641048822",
-                            RoleId = 2,
+                            CreatedDate = new DateTime(2024, 9, 17, 2, 29, 39, 760, DateTimeKind.Unspecified).AddTicks(1408),
+                            Email = "gmail.com.Mertz@gmail.com",
+                            FullName = "Wilburn Nikolaus",
+                            Password = "2gxkhw",
+                            PhoneNumber = "0358184031",
+                            RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 8, 33, 28, 761, DateTimeKind.Unspecified).AddTicks(2366),
-                            UserName = "Graham58"
+                            UpdatedDate = new DateTime(2024, 9, 17, 2, 29, 39, 760, DateTimeKind.Unspecified).AddTicks(1408),
+                            UserName = "Sage_Schmeler"
                         },
                         new
                         {
                             UserId = 7,
-                            CreatedDate = new DateTime(2024, 9, 1, 11, 54, 47, 447, DateTimeKind.Unspecified).AddTicks(4543),
-                            Email = "gmail.com.Armstrong90@gmail.com",
-                            FullName = "Devin Goldner",
-                            Password = "4thop7",
-                            PhoneNumber = "0105768905",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 6, 9, 50, 51, 668, DateTimeKind.Unspecified).AddTicks(3048),
+                            Email = "gmail.com_Bailey38@gmail.com",
+                            FullName = "Eric Spinka",
+                            Password = "0p4yq9",
+                            PhoneNumber = "0656597384",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 11, 54, 47, 447, DateTimeKind.Unspecified).AddTicks(4543),
-                            UserName = "Jabari.McCullough"
+                            UpdatedDate = new DateTime(2024, 9, 6, 9, 50, 51, 668, DateTimeKind.Unspecified).AddTicks(3048),
+                            UserName = "Clarissa_Zemlak"
                         },
                         new
                         {
                             UserId = 8,
-                            CreatedDate = new DateTime(2024, 9, 1, 15, 8, 47, 370, DateTimeKind.Unspecified).AddTicks(908),
-                            Email = "gmail.com.Waelchi60@yahoo.com",
-                            FullName = "Hazel Champlin",
-                            Password = "4ge0fp",
-                            PhoneNumber = "0321059430",
-                            RoleId = 2,
+                            CreatedDate = new DateTime(2024, 9, 20, 0, 0, 25, 15, DateTimeKind.Unspecified).AddTicks(9588),
+                            Email = "gmail.com.Rogahn32@yahoo.com",
+                            FullName = "Alayna Renner",
+                            Password = "yrlhco",
+                            PhoneNumber = "0276634956",
+                            RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 15, 8, 47, 370, DateTimeKind.Unspecified).AddTicks(908),
-                            UserName = "Alexandrea8"
+                            UpdatedDate = new DateTime(2024, 9, 20, 0, 0, 25, 15, DateTimeKind.Unspecified).AddTicks(9588),
+                            UserName = "Matt36"
                         },
                         new
                         {
                             UserId = 9,
-                            CreatedDate = new DateTime(2024, 9, 5, 1, 8, 54, 890, DateTimeKind.Unspecified).AddTicks(3917),
-                            Email = "gmail.com27@hotmail.com",
-                            FullName = "Fredy Jacobi",
-                            Password = "rr6gfk",
-                            PhoneNumber = "0285630611",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 6, 1, 38, 18, 663, DateTimeKind.Unspecified).AddTicks(7033),
+                            Email = "gmail.com_Nikolaus62@gmail.com",
+                            FullName = "Jefferey Heaney",
+                            Password = "084pd1",
+                            PhoneNumber = "0411848682",
+                            RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 5, 1, 8, 54, 890, DateTimeKind.Unspecified).AddTicks(3917),
-                            UserName = "Lambert97"
+                            UpdatedDate = new DateTime(2024, 9, 6, 1, 38, 18, 663, DateTimeKind.Unspecified).AddTicks(7033),
+                            UserName = "Leon_Schneider14"
                         },
                         new
                         {
                             UserId = 10,
-                            CreatedDate = new DateTime(2024, 9, 13, 22, 11, 33, 922, DateTimeKind.Unspecified).AddTicks(7152),
-                            Email = "gmail.com_Quitzon@hotmail.com",
-                            FullName = "Clement Cremin",
-                            Password = "ig6xlw",
-                            PhoneNumber = "0796612345",
-                            RoleId = 3,
+                            CreatedDate = new DateTime(2024, 9, 10, 11, 52, 38, 572, DateTimeKind.Unspecified).AddTicks(4356),
+                            Email = "gmail.com.Bogisich@hotmail.com",
+                            FullName = "Elena Terry",
+                            Password = "27c43e",
+                            PhoneNumber = "0762949919",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 13, 22, 11, 33, 922, DateTimeKind.Unspecified).AddTicks(7152),
-                            UserName = "Moises_Rempel98"
+                            UpdatedDate = new DateTime(2024, 9, 10, 11, 52, 38, 572, DateTimeKind.Unspecified).AddTicks(4356),
+                            UserName = "Adolf64"
                         },
                         new
                         {
                             UserId = 11,
-                            CreatedDate = new DateTime(2024, 9, 1, 22, 34, 26, 626, DateTimeKind.Unspecified).AddTicks(6526),
-                            Email = "gmail.com81@hotmail.com",
-                            FullName = "Willow O'Conner",
-                            Password = "vvlwss",
-                            PhoneNumber = "0114077762",
+                            CreatedDate = new DateTime(2024, 9, 24, 14, 29, 47, 159, DateTimeKind.Unspecified).AddTicks(4548),
+                            Email = "gmail.com_Oberbrunner@gmail.com",
+                            FullName = "Gay Toy",
+                            Password = "pjtc4q",
+                            PhoneNumber = "0372122902",
                             RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 22, 34, 26, 626, DateTimeKind.Unspecified).AddTicks(6526),
-                            UserName = "Jacques_Herzog5"
+                            UpdatedDate = new DateTime(2024, 9, 24, 14, 29, 47, 159, DateTimeKind.Unspecified).AddTicks(4548),
+                            UserName = "Anastacio.Blick"
                         },
                         new
                         {
                             UserId = 12,
-                            CreatedDate = new DateTime(2024, 9, 16, 11, 59, 59, 392, DateTimeKind.Unspecified).AddTicks(9509),
-                            Email = "gmail.com38@hotmail.com",
-                            FullName = "Corbin Runte",
-                            Password = "mkxn80",
-                            PhoneNumber = "0613814326",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 21, 2, 4, 49, 516, DateTimeKind.Unspecified).AddTicks(8541),
+                            Email = "gmail.com9@hotmail.com",
+                            FullName = "Pietro Morissette",
+                            Password = "nz5deb",
+                            PhoneNumber = "0191711831",
+                            RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 16, 11, 59, 59, 392, DateTimeKind.Unspecified).AddTicks(9509),
-                            UserName = "Kaela.Kub94"
+                            UpdatedDate = new DateTime(2024, 9, 21, 2, 4, 49, 516, DateTimeKind.Unspecified).AddTicks(8541),
+                            UserName = "Fabiola28"
                         },
                         new
                         {
                             UserId = 13,
-                            CreatedDate = new DateTime(2024, 9, 9, 2, 9, 39, 308, DateTimeKind.Unspecified).AddTicks(9509),
-                            Email = "gmail.com.Koepp@hotmail.com",
-                            FullName = "Brody Feeney",
-                            Password = "kmyb89",
-                            PhoneNumber = "0935250012",
+                            CreatedDate = new DateTime(2024, 9, 11, 10, 40, 5, 338, DateTimeKind.Unspecified).AddTicks(3282),
+                            Email = "gmail.com_Kihn@yahoo.com",
+                            FullName = "Janessa Ernser",
+                            Password = "34v1rs",
+                            PhoneNumber = "0379914908",
                             RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 9, 2, 9, 39, 308, DateTimeKind.Unspecified).AddTicks(9509),
-                            UserName = "Reba.Koch"
+                            UpdatedDate = new DateTime(2024, 9, 11, 10, 40, 5, 338, DateTimeKind.Unspecified).AddTicks(3282),
+                            UserName = "Sarah91"
                         },
                         new
                         {
                             UserId = 14,
-                            CreatedDate = new DateTime(2024, 9, 1, 7, 52, 17, 307, DateTimeKind.Unspecified).AddTicks(1394),
-                            Email = "gmail.com_Towne79@hotmail.com",
-                            FullName = "Durward Gerhold",
-                            Password = "ac2hwo",
-                            PhoneNumber = "0363836515",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 9, 21, 37, 4, 722, DateTimeKind.Unspecified).AddTicks(6194),
+                            Email = "gmail.com.Cronin79@hotmail.com",
+                            FullName = "Freda Hand",
+                            Password = "7hbmc7",
+                            PhoneNumber = "0546219994",
+                            RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 7, 52, 17, 307, DateTimeKind.Unspecified).AddTicks(1394),
-                            UserName = "Lexi.Lakin5"
+                            UpdatedDate = new DateTime(2024, 9, 9, 21, 37, 4, 722, DateTimeKind.Unspecified).AddTicks(6194),
+                            UserName = "Jayden.Boyer"
                         },
                         new
                         {
                             UserId = 15,
-                            CreatedDate = new DateTime(2024, 9, 15, 18, 54, 52, 906, DateTimeKind.Unspecified).AddTicks(9036),
-                            Email = "gmail.com_White82@yahoo.com",
-                            FullName = "Icie Thompson",
-                            Password = "zg8l6y",
-                            PhoneNumber = "0673020572",
+                            CreatedDate = new DateTime(2024, 9, 13, 9, 37, 48, 670, DateTimeKind.Unspecified).AddTicks(14),
+                            Email = "gmail.com.Wisozk@hotmail.com",
+                            FullName = "Myrl Abshire",
+                            Password = "a2e1fb",
+                            PhoneNumber = "0195639728",
                             RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 15, 18, 54, 52, 906, DateTimeKind.Unspecified).AddTicks(9036),
-                            UserName = "Jonas_Kerluke18"
+                            UpdatedDate = new DateTime(2024, 9, 13, 9, 37, 48, 670, DateTimeKind.Unspecified).AddTicks(14),
+                            UserName = "Betsy41"
                         },
                         new
                         {
                             UserId = 16,
-                            CreatedDate = new DateTime(2024, 9, 4, 10, 43, 28, 961, DateTimeKind.Unspecified).AddTicks(3060),
-                            Email = "gmail.com91@hotmail.com",
-                            FullName = "Gunner Gerlach",
-                            Password = "ikv8kr",
-                            PhoneNumber = "0755882735",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 10, 22, 32, 6, 133, DateTimeKind.Unspecified).AddTicks(1891),
+                            Email = "gmail.com70@yahoo.com",
+                            FullName = "Nicolette Stehr",
+                            Password = "kpradd",
+                            PhoneNumber = "0710529703",
+                            RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 4, 10, 43, 28, 961, DateTimeKind.Unspecified).AddTicks(3060),
-                            UserName = "Mariam.Bernhard38"
+                            UpdatedDate = new DateTime(2024, 9, 10, 22, 32, 6, 133, DateTimeKind.Unspecified).AddTicks(1891),
+                            UserName = "Ryley.Dare36"
                         },
                         new
                         {
                             UserId = 17,
-                            CreatedDate = new DateTime(2024, 9, 11, 3, 16, 24, 413, DateTimeKind.Unspecified).AddTicks(8864),
-                            Email = "gmail.com65@gmail.com",
-                            FullName = "Avis Pagac",
-                            Password = "lvfwm8",
-                            PhoneNumber = "0154048461",
+                            CreatedDate = new DateTime(2024, 9, 1, 3, 0, 17, 358, DateTimeKind.Unspecified).AddTicks(3392),
+                            Email = "gmail.com_Jacobi32@yahoo.com",
+                            FullName = "Raquel Fahey",
+                            Password = "v5iniw",
+                            PhoneNumber = "0241223773",
                             RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 3, 16, 24, 413, DateTimeKind.Unspecified).AddTicks(8864),
-                            UserName = "Lesley.Hand89"
+                            UpdatedDate = new DateTime(2024, 9, 1, 3, 0, 17, 358, DateTimeKind.Unspecified).AddTicks(3392),
+                            UserName = "Joany.Baumbach63"
                         },
                         new
                         {
                             UserId = 18,
-                            CreatedDate = new DateTime(2024, 9, 1, 0, 53, 31, 316, DateTimeKind.Unspecified).AddTicks(6245),
-                            Email = "gmail.com_Streich@yahoo.com",
-                            FullName = "Jodie Heller",
-                            Password = "rj20ca",
-                            PhoneNumber = "0337680250",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 22, 21, 7, 10, 473, DateTimeKind.Unspecified).AddTicks(7790),
+                            Email = "gmail.com_Kozey37@yahoo.com",
+                            FullName = "Joey Bednar",
+                            Password = "a9hsxa",
+                            PhoneNumber = "0345509790",
+                            RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 0, 53, 31, 316, DateTimeKind.Unspecified).AddTicks(6245),
-                            UserName = "Petra.Hane"
+                            UpdatedDate = new DateTime(2024, 9, 22, 21, 7, 10, 473, DateTimeKind.Unspecified).AddTicks(7790),
+                            UserName = "Leopold.Turcotte72"
                         },
                         new
                         {
                             UserId = 19,
-                            CreatedDate = new DateTime(2024, 9, 3, 10, 31, 4, 751, DateTimeKind.Unspecified).AddTicks(6650),
-                            Email = "gmail.com98@gmail.com",
-                            FullName = "Pansy Leuschke",
-                            Password = "e1roor",
-                            PhoneNumber = "0454210865",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 23, 4, 56, 53, 604, DateTimeKind.Unspecified).AddTicks(640),
+                            Email = "gmail.com_Harris69@yahoo.com",
+                            FullName = "Misael Kemmer",
+                            Password = "j9mp58",
+                            PhoneNumber = "0142800786",
+                            RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 3, 10, 31, 4, 751, DateTimeKind.Unspecified).AddTicks(6650),
-                            UserName = "Dan.Beatty"
+                            UpdatedDate = new DateTime(2024, 9, 23, 4, 56, 53, 604, DateTimeKind.Unspecified).AddTicks(640),
+                            UserName = "Dan_Batz22"
                         },
                         new
                         {
                             UserId = 20,
-                            CreatedDate = new DateTime(2024, 9, 18, 12, 31, 31, 609, DateTimeKind.Unspecified).AddTicks(9969),
-                            Email = "gmail.com_Reichert@hotmail.com",
-                            FullName = "Kole Walter",
-                            Password = "blcmbk",
-                            PhoneNumber = "0929899524",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 16, 10, 0, 14, 792, DateTimeKind.Unspecified).AddTicks(9553),
+                            Email = "gmail.com61@gmail.com",
+                            FullName = "Emile Okuneva",
+                            Password = "f897se",
+                            PhoneNumber = "0701111702",
+                            RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 18, 12, 31, 31, 609, DateTimeKind.Unspecified).AddTicks(9969),
-                            UserName = "Priscilla_Grady"
+                            UpdatedDate = new DateTime(2024, 9, 16, 10, 0, 14, 792, DateTimeKind.Unspecified).AddTicks(9553),
+                            UserName = "Tanya_Bartoletti37"
                         },
                         new
                         {
                             UserId = 21,
-                            CreatedDate = new DateTime(2024, 9, 8, 22, 58, 44, 666, DateTimeKind.Unspecified).AddTicks(9526),
-                            Email = "gmail.com.Hane14@yahoo.com",
-                            FullName = "Pierce O'Connell",
-                            Password = "q5wyps",
-                            PhoneNumber = "0333017731",
+                            CreatedDate = new DateTime(2024, 9, 10, 3, 10, 3, 498, DateTimeKind.Unspecified).AddTicks(6734),
+                            Email = "gmail.com.Stoltenberg@hotmail.com",
+                            FullName = "Charity Kertzmann",
+                            Password = "bpzbxq",
+                            PhoneNumber = "0135663761",
                             RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 8, 22, 58, 44, 666, DateTimeKind.Unspecified).AddTicks(9526),
-                            UserName = "Selina_Mueller73"
+                            UpdatedDate = new DateTime(2024, 9, 10, 3, 10, 3, 498, DateTimeKind.Unspecified).AddTicks(6734),
+                            UserName = "Javonte33"
                         },
                         new
                         {
                             UserId = 22,
-                            CreatedDate = new DateTime(2024, 9, 2, 16, 41, 3, 571, DateTimeKind.Unspecified).AddTicks(7646),
-                            Email = "gmail.com_Kassulke@gmail.com",
-                            FullName = "Damian Koelpin",
-                            Password = "155ei1",
-                            PhoneNumber = "0418537702",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 22, 20, 23, 5, 911, DateTimeKind.Unspecified).AddTicks(1619),
+                            Email = "gmail.com.Jacobson@yahoo.com",
+                            FullName = "Toney Bailey",
+                            Password = "1elc7y",
+                            PhoneNumber = "0956080700",
+                            RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 2, 16, 41, 3, 571, DateTimeKind.Unspecified).AddTicks(7646),
-                            UserName = "Novella_Kohler79"
+                            UpdatedDate = new DateTime(2024, 9, 22, 20, 23, 5, 911, DateTimeKind.Unspecified).AddTicks(1619),
+                            UserName = "Bradford4"
                         },
                         new
                         {
                             UserId = 23,
-                            CreatedDate = new DateTime(2024, 9, 13, 8, 50, 15, 386, DateTimeKind.Unspecified).AddTicks(3545),
-                            Email = "gmail.com_Bernhard@gmail.com",
-                            FullName = "Bernie Lakin",
-                            Password = "nku78b",
-                            PhoneNumber = "0732483340",
+                            CreatedDate = new DateTime(2024, 9, 4, 2, 42, 26, 710, DateTimeKind.Unspecified).AddTicks(1098),
+                            Email = "gmail.com85@yahoo.com",
+                            FullName = "Larissa Goyette",
+                            Password = "9pomlw",
+                            PhoneNumber = "0629654378",
                             RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 13, 8, 50, 15, 386, DateTimeKind.Unspecified).AddTicks(3545),
-                            UserName = "Jackeline_Sporer57"
+                            UpdatedDate = new DateTime(2024, 9, 4, 2, 42, 26, 710, DateTimeKind.Unspecified).AddTicks(1098),
+                            UserName = "Orville.Prohaska"
                         },
                         new
                         {
                             UserId = 24,
-                            CreatedDate = new DateTime(2024, 9, 5, 9, 47, 2, 984, DateTimeKind.Unspecified).AddTicks(3654),
-                            Email = "gmail.com86@yahoo.com",
-                            FullName = "Tad Abshire",
-                            Password = "4qdd0s",
-                            PhoneNumber = "0114944255",
-                            RoleId = 2,
+                            CreatedDate = new DateTime(2024, 9, 16, 21, 9, 14, 128, DateTimeKind.Unspecified).AddTicks(1766),
+                            Email = "gmail.com.Cole18@yahoo.com",
+                            FullName = "Torrey Rogahn",
+                            Password = "ronx1o",
+                            PhoneNumber = "0434673269",
+                            RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 5, 9, 47, 2, 984, DateTimeKind.Unspecified).AddTicks(3654),
-                            UserName = "Zelma_Wintheiser20"
+                            UpdatedDate = new DateTime(2024, 9, 16, 21, 9, 14, 128, DateTimeKind.Unspecified).AddTicks(1766),
+                            UserName = "Kaitlin56"
                         },
                         new
                         {
                             UserId = 25,
-                            CreatedDate = new DateTime(2024, 9, 9, 21, 31, 34, 906, DateTimeKind.Unspecified).AddTicks(8682),
-                            Email = "gmail.com22@hotmail.com",
-                            FullName = "Maddison Ebert",
-                            Password = "qkf9xh",
-                            PhoneNumber = "0472617027",
-                            RoleId = 1,
+                            CreatedDate = new DateTime(2024, 9, 10, 3, 35, 7, 814, DateTimeKind.Unspecified).AddTicks(9169),
+                            Email = "gmail.com.Zboncak98@gmail.com",
+                            FullName = "Floyd Morissette",
+                            Password = "1acx6x",
+                            PhoneNumber = "0260729199",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 9, 21, 31, 34, 906, DateTimeKind.Unspecified).AddTicks(8682),
-                            UserName = "Ernie_Murray"
+                            UpdatedDate = new DateTime(2024, 9, 10, 3, 35, 7, 814, DateTimeKind.Unspecified).AddTicks(9169),
+                            UserName = "Irma.Ankunding13"
                         });
                 });
 
@@ -755,6 +817,188 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserDepartments");
+
+                    b.HasData(
+                        new
+                        {
+                            UserDepartmentId = 1,
+                            DepartmentId = 3,
+                            UserId = 12
+                        },
+                        new
+                        {
+                            UserDepartmentId = 2,
+                            DepartmentId = 10,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            UserDepartmentId = 3,
+                            DepartmentId = 10,
+                            UserId = 9
+                        },
+                        new
+                        {
+                            UserDepartmentId = 4,
+                            DepartmentId = 6,
+                            UserId = 8
+                        },
+                        new
+                        {
+                            UserDepartmentId = 5,
+                            DepartmentId = 9,
+                            UserId = 10
+                        },
+                        new
+                        {
+                            UserDepartmentId = 6,
+                            DepartmentId = 4,
+                            UserId = 23
+                        },
+                        new
+                        {
+                            UserDepartmentId = 7,
+                            DepartmentId = 10,
+                            UserId = 8
+                        },
+                        new
+                        {
+                            UserDepartmentId = 8,
+                            DepartmentId = 1,
+                            UserId = 15
+                        },
+                        new
+                        {
+                            UserDepartmentId = 9,
+                            DepartmentId = 3,
+                            UserId = 9
+                        },
+                        new
+                        {
+                            UserDepartmentId = 10,
+                            DepartmentId = 8,
+                            UserId = 10
+                        },
+                        new
+                        {
+                            UserDepartmentId = 11,
+                            DepartmentId = 7,
+                            UserId = 21
+                        },
+                        new
+                        {
+                            UserDepartmentId = 12,
+                            DepartmentId = 8,
+                            UserId = 13
+                        },
+                        new
+                        {
+                            UserDepartmentId = 13,
+                            DepartmentId = 3,
+                            UserId = 6
+                        },
+                        new
+                        {
+                            UserDepartmentId = 14,
+                            DepartmentId = 3,
+                            UserId = 22
+                        },
+                        new
+                        {
+                            UserDepartmentId = 15,
+                            DepartmentId = 2,
+                            UserId = 9
+                        },
+                        new
+                        {
+                            UserDepartmentId = 16,
+                            DepartmentId = 8,
+                            UserId = 18
+                        },
+                        new
+                        {
+                            UserDepartmentId = 17,
+                            DepartmentId = 4,
+                            UserId = 23
+                        },
+                        new
+                        {
+                            UserDepartmentId = 18,
+                            DepartmentId = 3,
+                            UserId = 22
+                        },
+                        new
+                        {
+                            UserDepartmentId = 19,
+                            DepartmentId = 5,
+                            UserId = 13
+                        },
+                        new
+                        {
+                            UserDepartmentId = 20,
+                            DepartmentId = 6,
+                            UserId = 18
+                        },
+                        new
+                        {
+                            UserDepartmentId = 21,
+                            DepartmentId = 7,
+                            UserId = 25
+                        },
+                        new
+                        {
+                            UserDepartmentId = 22,
+                            DepartmentId = 8,
+                            UserId = 19
+                        },
+                        new
+                        {
+                            UserDepartmentId = 23,
+                            DepartmentId = 8,
+                            UserId = 16
+                        },
+                        new
+                        {
+                            UserDepartmentId = 24,
+                            DepartmentId = 5,
+                            UserId = 6
+                        },
+                        new
+                        {
+                            UserDepartmentId = 25,
+                            DepartmentId = 2,
+                            UserId = 6
+                        },
+                        new
+                        {
+                            UserDepartmentId = 26,
+                            DepartmentId = 8,
+                            UserId = 17
+                        },
+                        new
+                        {
+                            UserDepartmentId = 27,
+                            DepartmentId = 2,
+                            UserId = 24
+                        },
+                        new
+                        {
+                            UserDepartmentId = 28,
+                            DepartmentId = 10,
+                            UserId = 10
+                        },
+                        new
+                        {
+                            UserDepartmentId = 29,
+                            DepartmentId = 10,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            UserDepartmentId = 30,
+                            DepartmentId = 6,
+                            UserId = 14
+                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>
@@ -838,20 +1082,27 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("DateRegister")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentReasonId")
-                        .HasColumnType("int");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UpdateById")
                         .HasColumnType("int");
 
+                    b.Property<string>("VisitName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("VisitQuantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("VisitType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VisitId");
 
                     b.HasIndex("CreateById");
-
-                    b.HasIndex("DepartmentReasonId");
 
                     b.HasIndex("UpdateById");
 
@@ -870,18 +1121,20 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpectedTimeIn")
+                    b.Property<DateTime>("ExpectedEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ExpectedTimeOut")
+                    b.Property<TimeSpan>("ExpectedEndTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("ExpectedStartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("ExpectedStartTime")
+                        .HasColumnType("time");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
-
-                    b.Property<string>("VisitDetailName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VisitId")
                         .HasColumnType("int");
@@ -898,43 +1151,71 @@ namespace SecurityGateApv.Infras.Migrations
                     b.ToTable("VisitDetails");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitProject", b =>
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitProcess", b =>
                 {
-                    b.Property<int>("VisitProjectId")
+                    b.Property<int>("VisitProcessId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitProjectId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitProcessId"));
 
-                    b.Property<DateTime>("ExpectedTimeIn")
+                    b.Property<string>("DaysOfProcess")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpectedEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ExpectedTimeOut")
+                    b.Property<TimeSpan>("ExpectedEndTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("ExpectedStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<TimeSpan>("ExpectedStartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("ProcessId")
                         .HasColumnType("int");
 
-                    b.Property<int>("QuantityOfVisit")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VisitId")
                         .HasColumnType("int");
 
-                    b.Property<string>("VisitName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("VisitQuantity")
+                        .HasColumnType("int");
 
-                    b.HasKey("VisitProjectId");
+                    b.HasKey("VisitProcessId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProcessId");
 
                     b.HasIndex("VisitId");
 
                     b.ToTable("VisitProjects");
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitType", b =>
+                {
+                    b.Property<int>("VisitTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitTypeId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VisitTypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VisitTypeId");
+
+                    b.ToTable("VisitTypes");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
@@ -948,6 +1229,9 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreateById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -969,13 +1253,22 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("VisitorName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VisitorId");
 
+                    b.HasIndex("CreateById");
+
                     b.HasIndex("CredentialCardTypeId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Visitors");
                 });
@@ -991,28 +1284,42 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("CheckinTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CheckoutTime")
+                    b.Property<DateTime?>("CheckoutTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GateId")
+                    b.Property<int>("GateInId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GateOutId")
                         .HasColumnType("int");
 
                     b.Property<int>("QRCardId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SecurityID")
+                    b.Property<int>("SecurityInId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("SecurityOutId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VisitDetailId")
                         .HasColumnType("int");
 
                     b.HasKey("VisitorSessionId");
 
-                    b.HasIndex("GateId");
+                    b.HasIndex("GateInId");
+
+                    b.HasIndex("GateOutId");
 
                     b.HasIndex("QRCardId");
 
-                    b.HasIndex("SecurityID");
+                    b.HasIndex("SecurityInId");
+
+                    b.HasIndex("SecurityOutId");
 
                     b.HasIndex("VisitDetailId");
 
@@ -1049,25 +1356,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.ToTable("VisitorSessionsImages");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.DepartmentReason", b =>
-                {
-                    b.HasOne("SecurityGateApv.Domain.Models.Department", "Department")
-                        .WithMany("DepartmentReason")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SecurityGateApv.Domain.Models.Reason", "Reason")
-                        .WithMany("DepartmentReason")
-                        .HasForeignKey("ReasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Reason");
-                });
-
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationUsers", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.Notification", "Notification")
@@ -1095,7 +1383,7 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.Project", b =>
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Process", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.User", "User")
                         .WithMany("Project")
@@ -1103,7 +1391,15 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SecurityGateApv.Domain.Models.VisitType", "VisitType")
+                        .WithMany("VisitTypes")
+                        .HasForeignKey("Visittype")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("User");
+
+                    b.Navigation("VisitType");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.QRCard", b =>
@@ -1172,7 +1468,7 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasOne("SecurityGateApv.Domain.Models.VisitDetail", "VisitDetail")
                         .WithMany("VehicleSession")
                         .HasForeignKey("VisitDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Gate");
@@ -1201,12 +1497,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SecurityGateApv.Domain.Models.DepartmentReason", "DepartmentReason")
-                        .WithMany("Visits")
-                        .HasForeignKey("DepartmentReasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SecurityGateApv.Domain.Models.User", "UpdateBy")
                         .WithMany("UpdatedVisits")
                         .HasForeignKey("UpdateById")
@@ -1214,8 +1504,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired();
 
                     b.Navigation("CreateBy");
-
-                    b.Navigation("DepartmentReason");
 
                     b.Navigation("UpdateBy");
                 });
@@ -1239,11 +1527,11 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("Visitor");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitProject", b =>
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitProcess", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.Project", "Project")
+                    b.HasOne("SecurityGateApv.Domain.Models.Process", "Process")
                         .WithMany("VisitProject")
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("ProcessId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1253,29 +1541,48 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Project");
+                    b.Navigation("Process");
 
                     b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
                 {
+                    b.HasOne("SecurityGateApv.Domain.Models.UserDepartment", "UserDepartment")
+                        .WithMany("Visitors")
+                        .HasForeignKey("CreateById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SecurityGateApv.Domain.Models.CredentialCardType", "CredentialCardType")
                         .WithMany("Visitor")
                         .HasForeignKey("CredentialCardTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "User")
+                        .WithOne("Visitor")
+                        .HasForeignKey("SecurityGateApv.Domain.Models.Visitor", "UserId");
+
                     b.Navigation("CredentialCardType");
+
+                    b.Navigation("User");
+
+                    b.Navigation("UserDepartment");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "Gate")
-                        .WithMany("VisitorSession")
-                        .HasForeignKey("GateId")
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateIn")
+                        .WithMany("VisitorSessionsIn")
+                        .HasForeignKey("GateInId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateOut")
+                        .WithMany("VisitorSessionsOut")
+                        .HasForeignKey("GateOutId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SecurityGateApv.Domain.Models.QRCard", "QRCard")
                         .WithMany("VisitorSession")
@@ -1283,23 +1590,32 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SecurityGateApv.Domain.Models.User", "Security")
-                        .WithMany("VisitorSession")
-                        .HasForeignKey("SecurityID")
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "SecurityIn")
+                        .WithMany("SecurityInSessions")
+                        .HasForeignKey("SecurityInId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "SecurityOut")
+                        .WithMany("SecurityOutSessions")
+                        .HasForeignKey("SecurityOutId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SecurityGateApv.Domain.Models.VisitDetail", "VisitDetail")
                         .WithMany("VisitorSession")
                         .HasForeignKey("VisitDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Gate");
+                    b.Navigation("GateIn");
+
+                    b.Navigation("GateOut");
 
                     b.Navigation("QRCard");
 
-                    b.Navigation("Security");
+                    b.Navigation("SecurityIn");
+
+                    b.Navigation("SecurityOut");
 
                     b.Navigation("VisitDetail");
                 });
@@ -1322,21 +1638,16 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Department", b =>
                 {
-                    b.Navigation("DepartmentReason");
-
                     b.Navigation("UserDepartment");
-                });
-
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.DepartmentReason", b =>
-                {
-                    b.Navigation("Visits");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Gate", b =>
                 {
                     b.Navigation("VehicleSession");
 
-                    b.Navigation("VisitorSession");
+                    b.Navigation("VisitorSessionsIn");
+
+                    b.Navigation("VisitorSessionsOut");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Notification", b =>
@@ -1344,7 +1655,7 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("NotificationUsers");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.Project", b =>
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Process", b =>
                 {
                     b.Navigation("VisitProject");
                 });
@@ -1364,11 +1675,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("QRCards");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.Reason", b =>
-                {
-                    b.Navigation("DepartmentReason");
-                });
-
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Role", b =>
                 {
                     b.Navigation("User");
@@ -1382,6 +1688,10 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.Navigation("ReceivedNotifications");
 
+                    b.Navigation("SecurityInSessions");
+
+                    b.Navigation("SecurityOutSessions");
+
                     b.Navigation("SentNotifications");
 
                     b.Navigation("UpdatedVisits");
@@ -1390,7 +1700,13 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.Navigation("VehicleSession");
 
-                    b.Navigation("VisitorSession");
+                    b.Navigation("Visitor")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.UserDepartment", b =>
+                {
+                    b.Navigation("Visitors");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>
@@ -1410,6 +1726,11 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("VehicleSession");
 
                     b.Navigation("VisitorSession");
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitType", b =>
+                {
+                    b.Navigation("VisitTypes");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>

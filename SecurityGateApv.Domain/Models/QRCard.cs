@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityGateApv.Domain.Shared;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,5 +28,15 @@ namespace SecurityGateApv.Domain.Models
         public QRCardStatus QRCardStatus { get; set; }
 
         public ICollection<VisitorSession> VisitorSession { get; set; }
+        public Result<QRCard> Update(Guid cardGuidId)
+        {
+            this.CardGuidId = cardGuidId;
+            return this;
+        }
+        public Result<QRCard> UpdateQRCardStatus(int status)
+        {
+            this.QRCardStatusId = status;
+            return this;
+        }
     }
 }

@@ -22,34 +22,33 @@ namespace SecurityGateApv.Infras.DBContext
 
         }
         public DbSet<CredentialCardType> CredentialCardTypes { get; set; }
-        public DbSet<DepartmentReason> DepartmentReasons { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Gate> Gates { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationUsers> NotificationUsers { get; set; }
-        public DbSet<Project> Projects { get; set; }
+        public DbSet<Process> Projects { get; set; }
         public DbSet<QRCard> QRCards { get; set; }
         public DbSet<QRCardStatus> QRCardStatus { get; set; }
         public DbSet<QRCardType> QRCardType { get; set; }
-        public DbSet<Reason> Reasons { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserDepartment> UserDepartments { get; set; }
         public DbSet<VehicleSessionImage> VehicleSessionImages { get; set; }
-        public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<Visit> Visits { get; set; }
         public DbSet<VisitDetail> VisitDetails { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
-        public DbSet<VisitProject> VisitProjects { get; set; }
+        public DbSet<VisitProcess> VisitProjects { get; set; }
+        public DbSet<VisitType> VisitTypes { get; set; }
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder();
             IConfigurationRoot configurationRoot = builder.Build();
             optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv;TrustServerCertificate=True");
-        }*/
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -102,7 +101,19 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasForeignKey(vs => vs.GateOutId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //modelBuilder.Seed();
+            modelBuilder.Entity<VisitorSession>()
+               .HasOne(v => v.VisitDetail)
+               .WithMany(v => v.VisitorSession)
+               .HasForeignKey(v => v.VisitDetailId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<VehicleSession>()
+               .HasOne(v => v.VisitDetail)
+               .WithMany(v => v.VehicleSession)
+               .HasForeignKey(v => v.VisitDetailId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Seed();
         }
     }
 }

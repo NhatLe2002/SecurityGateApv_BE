@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SecurityGateApv.Domain.Shared;
 
 namespace SecurityGateApv.Domain.Models
 {
@@ -46,5 +47,12 @@ namespace SecurityGateApv.Domain.Models
 
         public string Status { get; set; }
         public ICollection<VisitorSessionsImage> Images { get; set; }
+
+        /*public Result<VisitorSession> UpdateVisitorSesson()
+        {
+            var visitorSesson = new VisitorSession
+            
+            return this;
+        }*/
     }
 }

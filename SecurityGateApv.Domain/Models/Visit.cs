@@ -16,7 +16,7 @@ namespace SecurityGateApv.Domain.Models
             DateRegister = dateRegister;
             VisitQuantity = visitQuantity;
             AcceptLevel = acceptLevel;
-            DepartmentReasonId = departmentReasonId;
+            //DepartmentReasonId = departmentReasonId;
             CreateById = createById;
             UpdateById = updateById;
 
@@ -28,17 +28,13 @@ namespace SecurityGateApv.Domain.Models
         }
 
         [Key]
-        public int VisitId { get; set; }
+        public int VisitId { get;  set; }
         public DateTime DateRegister { get; private set; }
+        public string VisitName { get; private set; }
         public int VisitQuantity { get; private set; }
         public int AcceptLevel { get; private set; }
-
-
-        [ForeignKey("DepartmentReason")]
-        public int DepartmentReasonId { get; private set; }
-        public DepartmentReason DepartmentReason { get; private set; }
-
-
+        public string? Description { get; private set; }
+        public string VisitType { get; private set; }
 
         [ForeignKey("CreateBy")]
         public int CreateById { get; private set; }
@@ -48,7 +44,7 @@ namespace SecurityGateApv.Domain.Models
         public int UpdateById { get; private set; }
         public User? UpdateBy { get; private set; }
 
-        public ICollection<VisitProject> VisitProject { get; private set; } = new List<VisitProject>();
+        public ICollection<VisitProcess> VisitProject { get; private set; } = new List<VisitProcess>();
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
 
         public static Result<Visit> Create(int visitQuantity, int acceptLevel, int departmentReasonId, int createById, int updateById)
