@@ -35,6 +35,8 @@ namespace SecurityGateApv.WebApi
                                .AllowCredentials();
                     });
             });
+
+           
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -44,11 +46,16 @@ namespace SecurityGateApv.WebApi
                 app.UseSwaggerUI();
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
             app.UseAuthentication();
-
+            app.UseCors(builder => builder
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .SetIsOriginAllowed(_ => true)
+               .AllowCredentials());
             app.MapControllers();
 
             app.Run();
