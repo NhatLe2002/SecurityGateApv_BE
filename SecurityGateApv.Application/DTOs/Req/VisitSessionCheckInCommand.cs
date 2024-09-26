@@ -1,0 +1,27 @@
+﻿using SecurityGateApv.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace SecurityGateApv.Application.DTOs.Req
+{
+    public class VisitSessionCheckInCommand
+    {
+        public int QRCardId { get; set; }
+        public int VisitDetailId { get; set; }
+        public int SecurityInId { get; set; }
+        public int GateInId { get; set; }
+        public List<VisitorSessionsImageCheckinCommand> Images { get; set; }
+        [JsonIgnore]
+        public string Status { get; set; } = string.Empty;
+    }
+    public class VisitorSessionsImageCheckinCommand
+    {
+        public string ImageType { get; set; }
+        public string ImageURL { get; set; }
+    }
+
+}

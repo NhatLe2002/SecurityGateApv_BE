@@ -22,14 +22,16 @@ namespace SecurityGateApv.Application.Services
         private readonly IQRCardRepo _qRCardRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, IQRCardRepo qRCardRepo)
+        private readonly IVisitDetailRepo _visitDetailRepo;
+        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, IQRCardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo)
         {
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _qRCardRepo = qRCardRepo;
+            _visitDetailRepo = visitDetailRepo;
         }
-        public async Task<Result<bool>> CheckIn(VisitorSessionCheckOutCommand command, int qrCardId)
+        public async Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, int qrCardId)
         {
             var qRCard = await _qRCardRepo.GetByIdAsync(qrCardId);
             if (qRCard == null)
@@ -52,6 +54,36 @@ namespace SecurityGateApv.Application.Services
             command.Status = "CheckOut";
             var updateVisitorSesson = _mapper.Map(command, visitSesson.FirstOrDefault());
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
+            await _unitOfWork.CommitAsync();
+            return true;
+        }
+
+        public async Task<Result<bool>> CheckIn(VisitSessionCheckInCommand command)
+        {
+            var visitDetailCheck = await _visitDetailRepo.GetByIdAsync(command.VisitDetailId);
+            if (visitDetailCheck == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundVisit);
+            }
+
+            var qrCard = await _qRCardRepo.GetByIdAsync(command.QRCardId);
+
+            if (qrCard == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundQRCard);
+            }
+            if (qrCard.QRCardStatusId == 1)
+            {
+                return Result.Failure<bool>(Error.CardAcctive);
+            }
+            qrCard.UpdateQRCardStatus(1);
+            await _qRCardRepo.UpdateAsync(qrCard);
+
+
+
+            var checkinSession =  VisitorSession.Checkin(command.QRCardId, command.VisitDetailId, command.SecurityInId, command.GateInId);
+
+            await _visitorSessionRepo.AddAsync(checkinSession.Value);
             await _unitOfWork.CommitAsync();
             return true;
         }

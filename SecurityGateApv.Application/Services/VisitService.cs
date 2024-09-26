@@ -17,13 +17,17 @@ namespace SecurityGateApv.Application.Services
     public class VisitService : IVisitService
     {
         private readonly IVisitRepo _visitRepo;
+        private readonly IVisitorRepo _visitorRepo;
+        private readonly IVisitDetailRepo _visitDetailRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork)
+        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _visitDetailRepo = visitDetailRepo;
+            _visitorRepo = visitorRepo;
         }
 
         public async Task<Result<bool>> CreateVisit(VisitCreateCommand command)
@@ -52,7 +56,7 @@ namespace SecurityGateApv.Application.Services
 
             List<Visitor> newVisitor = new();
             var inforNewVisitor = command.VisitDetailOfNewVisitor.Select(s => s.Visitor).ToList();
-            foreach(var item in inforNewVisitor)
+            foreach (var item in inforNewVisitor)
             {
                 var createVisitor = Visitor.Create(item.VisitorName,
                     item.CompanyName,
@@ -103,10 +107,10 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetVisitRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
             var visits = await _visitRepo.FindAsync(
-                s => true, pageSize, pageNumber, s => s.OrderBy(s=>s.DateRegister), ""
+                s => true, pageSize, pageNumber, s => s.OrderBy(s => s.DateRegister), "VisitDetail,VisitDetail.Visitor"
                 );
             var result = _mapper.Map<List<GetVisitRes>>(visits);
-            if(result.Count == 0)
+            if (result.Count == 0)
             {
                 return Result.Failure<List<GetVisitRes>>(Error.NotFoundVisit);
             }
@@ -120,6 +124,48 @@ namespace SecurityGateApv.Application.Services
             return res;
         }
 
+        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCurrentDate(int pageSize, int pageNumber)
+        {
+            var visitDetails = await _visitDetailRepo.FindAsync(
+                s => s.ExpectedStartDate.Date == DateTime.Now.Date,
+                pageSize, pageNumber, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
+                );
+            var result = new List<GetVisitByCurrentDateRes>();
+            foreach (var item in visitDetails)
+            {
+                result.Add(new GetVisitByCurrentDateRes
+                {
+                    VisitDetailId = item.VisitDetailId,
+                    VisitName = item.Visit.VisitName,
+                    ExpectedStartDate = item.ExpectedStartDate,
+                    ExpectedEndDate = item.ExpectedEndDate,
+                    ExpectedStartTime = item.ExpectedStartTime,
+                    ExpectedEndTime = item.ExpectedEndTime,
+                    VisitorName = item.Visitor.VisitorName,
+                    CompanyName = item.Visitor.CompanyName,
+                    PhoneNumber = item.Visitor.PhoneNumber,
+                    CredentialsCard = item.Visitor.CredentialsCard,
+                });
+            }
+            /*var visits = visitDetails.GroupBy(vd => vd.Visit)
+                             .Select(g => new GetVisitRes
+                             {
+                                 // Lấy thông tin từ Visit
+                                 DateRegister = g.Key.DateRegister,
+                                 VisitQuantity = g.Key.VisitQuantity,
+                                 AcceptLevel = g.Key.AcceptLevel,
+                                 // Map các VisitDetail của từng Visit
+                                 VisitDetail = _mapper.Map<List<VisitDetailRes>>(g.ToList())
+                             })
+                             .ToList();*/
+
+            if (result.Count == 0)
+            {
+                return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
+            }
+            return result;
+        }
+
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
@@ -128,28 +174,82 @@ namespace SecurityGateApv.Application.Services
 
             if (visit == null)
             {
-                return Result.Failure<GetVisitRes>(Error.NotFound); 
+                return Result.Failure<GetVisitRes>(Error.NotFound);
             }
             var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
 
             return Result.Success(visitRes);
         }
+
+        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        {
+            /*var visitor = await _visitorRepo.FindAsync(
+                s => s.CredentialsCard.Equals(credentialCard),
+                1, 1, includeProperties: ""
+                );
+            if (visitor == null || !visitor.Any())
+            {
+                return Result.Failure<GetVisitRes>(Error.NotFoundVisitor);
+            }
+            var visitorId = visitor.FirstOrDefault().VisitorId;
+            var visits = await _visitRepo.FindAsync(
+                s => s.VisitDetail.Any(vd => vd.VisitorId == visitorId), 
+                10, 10,
+                s => s.OrderBy(v => v.VisitDetail.Min(vd => vd.ExpectedStartDate)),
+                "VisitDetail,VisitDetail.Visitor"
+                );
+*/
+
+            var visitDetails = await _visitDetailRepo.FindAsync(
+                s => s.Visitor.CredentialsCard.Equals(credentialCard) && s.ExpectedStartDate <= DateTime.Now && s.ExpectedEndDate >= DateTime.Now,
+                10, 1, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
+                );
+
+
+            if (visitDetails == null || !visitDetails.Any())
+            {
+                return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
+            }
+            var result = new List<GetVisitByCurrentDateRes>();
+            foreach (var item in visitDetails)
+            {
+                result.Add(new GetVisitByCurrentDateRes
+                {
+                    VisitDetailId = item.VisitDetailId,
+                    VisitId = item.VisitId,
+                    VisitName = item.Visit.VisitName,
+                    ExpectedStartDate = item.ExpectedStartDate,
+                    ExpectedEndDate = item.ExpectedEndDate,
+                    ExpectedStartTime = item.ExpectedStartTime,
+                    ExpectedEndTime = item.ExpectedEndTime,
+                    VisitorName = item.Visitor.VisitorName,
+                    CompanyName = item.Visitor.CompanyName,
+                    PhoneNumber = item.Visitor.PhoneNumber,
+                    CredentialsCard = item.Visitor.CredentialsCard,
+                });
+            }
+
+            return Result.Success(result);
+        }
+
+
+
         /* public async Task<Result<GetVisitRes>> GetAllVisit()
-{
-var visit = await _visitRepo.GetAllVisitIncludeVisitor();
-var result = new List<GetVisitRes>();
-foreach (var item in visit)
-{
-result.Add(new GetVisitRes
-{
-   DateRegis = item.DateRegister,
-   VisitQuantity = item.VisitQuantity,
-   AcceptLevel = item.AcceptLevel,
-   VisitDetails = item.VisitDetail,
-});
-}
+            {
+            var visit = await _visitRepo.GetAllVisitIncludeVisitor();
+            var result = new List<GetVisitRes>();
+            foreach (var item in visit)
+            {
+            result.Add(new GetVisitRes
+            {
+               DateRegis = item.DateRegister,
+               VisitQuantity = item.VisitQuantity,
+               AcceptLevel = item.AcceptLevel,
+               VisitDetails = item.VisitDetail,
+            });
+            }
 
 
-}*/
+            }*/
     }
 }

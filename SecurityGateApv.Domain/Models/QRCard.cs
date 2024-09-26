@@ -13,21 +13,21 @@ namespace SecurityGateApv.Domain.Models
     {
         [Key]
         public int QRCardId { get; set; }
-        public Guid CardGuidId { get; set; }
-        public DateTime CreateDate { get; set; }
-        public DateTime LastCancelDate { get; set; }
+        public Guid CardGuidId { get; private set; }
+        public DateTime CreateDate { get; private set; }
+        public DateTime LastCancelDate { get; private set; }
 
 
         [ForeignKey("QRCardType")]
-        public int QRCardTypeId { get; set; }
-        public QRCardType QRCardType { get; set; }
+        public int QRCardTypeId { get; private set; }
+        public QRCardType QRCardType { get; private set; }
 
 
         [ForeignKey("QRCardStatus")]
-        public int QRCardStatusId { get; set; }
-        public QRCardStatus QRCardStatus { get; set; }
+        public int QRCardStatusId { get; private set; }
+        public QRCardStatus QRCardStatus { get; private set; }
 
-        public ICollection<VisitorSession> VisitorSession { get; set; }
+        public ICollection<VisitorSession> VisitorSession { get; private set; }
         public Result<QRCard> Update(Guid cardGuidId)
         {
             this.CardGuidId = cardGuidId;
