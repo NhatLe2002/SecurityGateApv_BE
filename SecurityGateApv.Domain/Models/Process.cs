@@ -8,19 +8,26 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Models
 {
-    public class Project
+    public class Process
     {
         [Key]
-        public int ProjectId { get; set; }
-        public string ProjectName { get; set; }
+        public int ProcessId { get; set; }
+        public string ProcessName { get; set; }
         public DateTime CreateTime { get; set; }
+        public string Description { get; set; }
         public bool Status { get; set; }
         
-        [ForeignKey("User")]
+        [ForeignKey("VisitType")]
+        public int VisitTypeId { get; set; }
+
+        public VisitType VisitType { get; set; }
+
+
+         [ForeignKey("User")]
         public int CreateBy { get; set; }
 
         public User User { get; set; }
 
-        public ICollection<VisitProject> VisitProject { get; set; }
+        public ICollection<VisitProcess> VisitProject { get; set; }
     }
 }

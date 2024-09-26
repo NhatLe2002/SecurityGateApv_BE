@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Infras.DBContext;
@@ -33,10 +34,13 @@ namespace SecurityGateApv.Infras.Extentions
             //DI Repo
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IVisitRepo, VisitRepo>();
+            services.AddScoped<IVisitorSessionRepo, VisitorSessionRepo>();
+            services.AddScoped<IQRCardRepo, QRCardRepo>();
             services.AddScoped<IProjectRepo, ProjectRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<IDepartmentReasonRepo, DepartmentReasonRepo>();
             services.AddScoped<IJwt, JwtHelper>();
+            services.AddScoped<IExtractQRCode, ExtractQRCode>();
 
             //JWT
             var key = configuration["Jwt:Key"];

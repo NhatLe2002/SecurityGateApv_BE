@@ -11,7 +11,7 @@ namespace SecurityGateApv.Domain.Models
 {
     public class Visitor
     {
-        protected Visitor()
+        public Visitor()
         {
             
         }
@@ -38,9 +38,18 @@ namespace SecurityGateApv.Domain.Models
         public string CredentialsCard { get; private set; }
         public bool Status { get; private set; }
 
+        [ForeignKey("User")]
+        public int? UserId { get; private set; }
+        public User? User { get; private set; } 
+        
+
         [ForeignKey("CredentialCardType")]
         public int CredentialCardTypeId { get; private set; }
-        public CredentialCardType CredentialCardType { get; private set; }
+        public CredentialCardType CredentialCardType { get; private set; }  
+        
+        [ForeignKey("UserDepartment")]
+        public int CreateById { get; private set; }
+        public UserDepartment UserDepartment { get; private set; }
 
         public ICollection<VisitDetail> VisitDetail { get; private set; }
         public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,

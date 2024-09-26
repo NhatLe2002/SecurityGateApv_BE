@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926033615_SeedData_4")]
+    partial class SeedData_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             CredentialCardTypeId = 2,
-                            CredentialCardTypeName = "Giấy phép lái xe"
+                            CredentialCardTypeName = "Căn cước công dân"
                         });
                 });
 
@@ -84,92 +87,92 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             DepartmentId = 1,
-                            AcceptLevel = 1,
-                            CreateDate = new DateTime(2024, 9, 21, 6, 34, 11, 248, DateTimeKind.Utc).AddTicks(6602),
-                            DepartmentName = "Phòng Chăm sóc khách hàng",
-                            Description = "Quam iure non.",
-                            UpdatedDate = new DateTime(2024, 9, 21, 6, 34, 11, 248, DateTimeKind.Utc).AddTicks(6602)
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 19, 15, 33, 48, 365, DateTimeKind.Utc).AddTicks(6083),
+                            DepartmentName = "Phòng Pháp chế",
+                            Description = "Et voluptates voluptas excepturi aut quos id id.",
+                            UpdatedDate = new DateTime(2024, 9, 19, 15, 33, 48, 365, DateTimeKind.Utc).AddTicks(6083)
                         },
                         new
                         {
                             DepartmentId = 2,
-                            AcceptLevel = 5,
-                            CreateDate = new DateTime(2024, 9, 22, 18, 42, 20, 926, DateTimeKind.Utc).AddTicks(350),
-                            DepartmentName = "Phòng Nhân sự",
-                            Description = "Accusamus id corporis enim.",
-                            UpdatedDate = new DateTime(2024, 9, 22, 18, 42, 20, 926, DateTimeKind.Utc).AddTicks(350)
+                            AcceptLevel = 1,
+                            CreateDate = new DateTime(2024, 9, 11, 22, 10, 40, 619, DateTimeKind.Utc).AddTicks(1274),
+                            DepartmentName = "Phòng Marketing",
+                            Description = "Adipisci numquam et dolor autem odio sed autem aut.",
+                            UpdatedDate = new DateTime(2024, 9, 11, 22, 10, 40, 619, DateTimeKind.Utc).AddTicks(1274)
                         },
                         new
                         {
                             DepartmentId = 3,
                             AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 15, 12, 25, 59, 440, DateTimeKind.Utc).AddTicks(3325),
-                            DepartmentName = "Phòng R&D",
-                            Description = "Vero est ex.",
-                            UpdatedDate = new DateTime(2024, 9, 15, 12, 25, 59, 440, DateTimeKind.Utc).AddTicks(3325)
+                            CreateDate = new DateTime(2024, 9, 3, 23, 7, 8, 288, DateTimeKind.Utc).AddTicks(3762),
+                            DepartmentName = "Phòng Kinh doanh",
+                            Description = "Sed voluptas architecto eum aut.",
+                            UpdatedDate = new DateTime(2024, 9, 3, 23, 7, 8, 288, DateTimeKind.Utc).AddTicks(3762)
                         },
                         new
                         {
                             DepartmentId = 4,
-                            AcceptLevel = 1,
-                            CreateDate = new DateTime(2024, 9, 3, 20, 21, 27, 45, DateTimeKind.Utc).AddTicks(9847),
-                            DepartmentName = "Phòng Nhân sự",
-                            Description = "Consequuntur eum reprehenderit sunt tenetur ad eligendi qui.",
-                            UpdatedDate = new DateTime(2024, 9, 3, 20, 21, 27, 45, DateTimeKind.Utc).AddTicks(9847)
+                            AcceptLevel = 4,
+                            CreateDate = new DateTime(2024, 9, 19, 3, 31, 1, 334, DateTimeKind.Utc).AddTicks(8492),
+                            DepartmentName = "Phòng Kế toán",
+                            Description = "Optio dolorum quisquam sed.",
+                            UpdatedDate = new DateTime(2024, 9, 19, 3, 31, 1, 334, DateTimeKind.Utc).AddTicks(8492)
                         },
                         new
                         {
                             DepartmentId = 5,
                             AcceptLevel = 4,
-                            CreateDate = new DateTime(2024, 9, 4, 9, 20, 48, 357, DateTimeKind.Utc).AddTicks(7729),
-                            DepartmentName = "Phòng Pháp chế",
-                            Description = "Sit qui quod enim a quam est aut.",
-                            UpdatedDate = new DateTime(2024, 9, 4, 9, 20, 48, 357, DateTimeKind.Utc).AddTicks(7729)
+                            CreateDate = new DateTime(2024, 9, 6, 13, 45, 34, 567, DateTimeKind.Utc).AddTicks(1628),
+                            DepartmentName = "Phòng IT",
+                            Description = "Nobis temporibus consequatur.",
+                            UpdatedDate = new DateTime(2024, 9, 6, 13, 45, 34, 567, DateTimeKind.Utc).AddTicks(1628)
                         },
                         new
                         {
                             DepartmentId = 6,
-                            AcceptLevel = 5,
-                            CreateDate = new DateTime(2024, 9, 7, 11, 55, 13, 592, DateTimeKind.Utc).AddTicks(5825),
-                            DepartmentName = "Phòng R&D",
-                            Description = "Esse voluptatem minus dolores commodi voluptas.",
-                            UpdatedDate = new DateTime(2024, 9, 7, 11, 55, 13, 592, DateTimeKind.Utc).AddTicks(5825)
+                            AcceptLevel = 4,
+                            CreateDate = new DateTime(2024, 9, 22, 9, 45, 2, 446, DateTimeKind.Utc).AddTicks(6213),
+                            DepartmentName = "Phòng Nhân sự",
+                            Description = "Consectetur sed aliquam ut.",
+                            UpdatedDate = new DateTime(2024, 9, 22, 9, 45, 2, 446, DateTimeKind.Utc).AddTicks(6213)
                         },
                         new
                         {
                             DepartmentId = 7,
-                            AcceptLevel = 1,
-                            CreateDate = new DateTime(2024, 9, 25, 11, 53, 53, 220, DateTimeKind.Utc).AddTicks(9329),
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 21, 1, 48, 6, 245, DateTimeKind.Utc).AddTicks(1912),
                             DepartmentName = "Phòng Kinh doanh",
-                            Description = "Et accusantium nesciunt et.",
-                            UpdatedDate = new DateTime(2024, 9, 25, 11, 53, 53, 220, DateTimeKind.Utc).AddTicks(9329)
+                            Description = "Non recusandae fuga qui non.",
+                            UpdatedDate = new DateTime(2024, 9, 21, 1, 48, 6, 245, DateTimeKind.Utc).AddTicks(1912)
                         },
                         new
                         {
                             DepartmentId = 8,
-                            AcceptLevel = 1,
-                            CreateDate = new DateTime(2024, 9, 25, 13, 15, 48, 720, DateTimeKind.Utc).AddTicks(7835),
-                            DepartmentName = "Phòng Hành chính",
-                            Description = "Non voluptates consequuntur saepe odit minima quam nemo dolorem suscipit.",
-                            UpdatedDate = new DateTime(2024, 9, 25, 13, 15, 48, 720, DateTimeKind.Utc).AddTicks(7835)
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 2, 15, 49, 13, 978, DateTimeKind.Utc).AddTicks(6457),
+                            DepartmentName = "Phòng Kinh doanh",
+                            Description = "Aut sunt tempore qui.",
+                            UpdatedDate = new DateTime(2024, 9, 2, 15, 49, 13, 978, DateTimeKind.Utc).AddTicks(6457)
                         },
                         new
                         {
                             DepartmentId = 9,
-                            AcceptLevel = 5,
-                            CreateDate = new DateTime(2024, 9, 11, 6, 51, 1, 178, DateTimeKind.Utc).AddTicks(1393),
-                            DepartmentName = "Phòng Pháp chế",
-                            Description = "Et odio debitis cumque perferendis sunt.",
-                            UpdatedDate = new DateTime(2024, 9, 11, 6, 51, 1, 178, DateTimeKind.Utc).AddTicks(1393)
+                            AcceptLevel = 3,
+                            CreateDate = new DateTime(2024, 9, 19, 4, 8, 29, 36, DateTimeKind.Utc).AddTicks(2180),
+                            DepartmentName = "Phòng R&D",
+                            Description = "Rerum dolores quia voluptas officiis.",
+                            UpdatedDate = new DateTime(2024, 9, 19, 4, 8, 29, 36, DateTimeKind.Utc).AddTicks(2180)
                         },
                         new
                         {
                             DepartmentId = 10,
-                            AcceptLevel = 4,
-                            CreateDate = new DateTime(2024, 9, 13, 8, 10, 17, 906, DateTimeKind.Utc).AddTicks(6360),
-                            DepartmentName = "Phòng IT",
-                            Description = "Et quidem aut.",
-                            UpdatedDate = new DateTime(2024, 9, 13, 8, 10, 17, 906, DateTimeKind.Utc).AddTicks(6360)
+                            AcceptLevel = 5,
+                            CreateDate = new DateTime(2024, 9, 4, 8, 24, 45, 678, DateTimeKind.Utc).AddTicks(3330),
+                            DepartmentName = "Phòng Marketing",
+                            Description = "Et ducimus porro.",
+                            UpdatedDate = new DateTime(2024, 9, 4, 8, 24, 45, 678, DateTimeKind.Utc).AddTicks(3330)
                         });
                 });
 
@@ -310,19 +313,19 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             ProcessId = 1,
                             CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 3, 37, 46, 498, DateTimeKind.Utc).AddTicks(2497),
+                            CreateTime = new DateTime(2024, 9, 24, 3, 36, 14, 614, DateTimeKind.Utc).AddTicks(5635),
                             Description = "",
-                            ProcessName = "Gorgeous Plastic Fish",
-                            Status = false,
+                            ProcessName = "Generic Plastic Car",
+                            Status = true,
                             VisitTypeId = 1
                         },
                         new
                         {
                             ProcessId = 2,
                             CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 3, 37, 46, 498, DateTimeKind.Utc).AddTicks(4245),
+                            CreateTime = new DateTime(2024, 9, 24, 3, 36, 14, 614, DateTimeKind.Utc).AddTicks(7186),
                             Description = "",
-                            ProcessName = "Tasty Soft Gloves",
+                            ProcessName = "Licensed Frozen Chair",
                             Status = false,
                             VisitTypeId = 1
                         },
@@ -330,30 +333,30 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             ProcessId = 3,
                             CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 3, 37, 46, 498, DateTimeKind.Utc).AddTicks(4273),
+                            CreateTime = new DateTime(2024, 9, 24, 3, 36, 14, 614, DateTimeKind.Utc).AddTicks(7215),
                             Description = "",
-                            ProcessName = "Rustic Steel Bacon",
-                            Status = true,
+                            ProcessName = "Gorgeous Rubber Chair",
+                            Status = false,
                             VisitTypeId = 1
                         },
                         new
                         {
                             ProcessId = 4,
                             CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 3, 37, 46, 498, DateTimeKind.Utc).AddTicks(4293),
+                            CreateTime = new DateTime(2024, 9, 24, 3, 36, 14, 614, DateTimeKind.Utc).AddTicks(7234),
                             Description = "",
-                            ProcessName = "Awesome Wooden Chicken",
-                            Status = false,
+                            ProcessName = "Handcrafted Granite Pants",
+                            Status = true,
                             VisitTypeId = 1
                         },
                         new
                         {
                             ProcessId = 5,
                             CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 3, 37, 46, 498, DateTimeKind.Utc).AddTicks(4311),
+                            CreateTime = new DateTime(2024, 9, 24, 3, 36, 14, 614, DateTimeKind.Utc).AddTicks(7252),
                             Description = "",
-                            ProcessName = "Handmade Cotton Hat",
-                            Status = false,
+                            ProcessName = "Tasty Wooden Bacon",
+                            Status = true,
                             VisitTypeId = 1
                         });
                 });
@@ -393,90 +396,90 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             QRCardId = 1,
-                            CardGuidId = new Guid("76ab3780-b8cc-4a0a-866e-9bd546f46a97"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(749),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(749),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 2
-                        },
-                        new
-                        {
-                            QRCardId = 2,
-                            CardGuidId = new Guid("1f3a948e-5e97-43cf-afef-8a7871003b4f"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(917),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(917),
+                            CardGuidId = new Guid("feaacadb-65a1-4a35-b17b-f146d438fab0"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3431),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3431),
                             QRCardStatusId = 2,
                             QRCardTypeId = 2
                         },
                         new
                         {
+                            QRCardId = 2,
+                            CardGuidId = new Guid("fd777383-becc-48f9-9437-99febbecf6fb"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3617),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3617),
+                            QRCardStatusId = 2,
+                            QRCardTypeId = 1
+                        },
+                        new
+                        {
                             QRCardId = 3,
-                            CardGuidId = new Guid("0f1debf3-dbb9-4063-9dc8-7566c08c5b63"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(939),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(939),
+                            CardGuidId = new Guid("e5d71f51-f97b-4bfa-beeb-8c867b1495e0"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3630),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3630),
                             QRCardStatusId = 1,
                             QRCardTypeId = 1
                         },
                         new
                         {
                             QRCardId = 4,
-                            CardGuidId = new Guid("b8985168-d4ce-40f9-b138-e1fcd0415099"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(948),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(948),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 2
+                            CardGuidId = new Guid("d96b058e-e1c5-48db-b8b8-07d8a298c2bd"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3638),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3638),
+                            QRCardStatusId = 2,
+                            QRCardTypeId = 1
                         },
                         new
                         {
                             QRCardId = 5,
-                            CardGuidId = new Guid("71c864bf-9b41-4e9e-a140-d1f34c02bec0"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(956),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(956),
+                            CardGuidId = new Guid("308c525e-1b37-4457-ae0a-a1e2afc44486"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3654),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3654),
                             QRCardStatusId = 2,
                             QRCardTypeId = 2
                         },
                         new
                         {
                             QRCardId = 6,
-                            CardGuidId = new Guid("eac4d56a-17fd-428f-8ec8-5874184a3c42"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(963),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(963),
-                            QRCardStatusId = 2,
+                            CardGuidId = new Guid("95da113a-fa97-445f-986e-0b6c8b68db14"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3661),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3661),
+                            QRCardStatusId = 1,
                             QRCardTypeId = 1
                         },
                         new
                         {
                             QRCardId = 7,
-                            CardGuidId = new Guid("87e28ded-8302-4f08-8407-535cd548c029"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(970),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(970),
+                            CardGuidId = new Guid("98c2abbf-3cf5-4bb9-8ef5-1bc440c9f629"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3668),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3668),
                             QRCardStatusId = 2,
                             QRCardTypeId = 1
                         },
                         new
                         {
                             QRCardId = 8,
-                            CardGuidId = new Guid("fa5d6e8d-1fe8-4001-809a-29e578998bb2"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(977),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(977),
+                            CardGuidId = new Guid("acdc2de7-a9ff-4425-9660-e6bf297d6685"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3674),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3674),
                             QRCardStatusId = 1,
-                            QRCardTypeId = 2
+                            QRCardTypeId = 1
                         },
                         new
                         {
                             QRCardId = 9,
-                            CardGuidId = new Guid("b482ac66-b645-4531-8778-233c1cc82c2c"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(989),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(989),
+                            CardGuidId = new Guid("e9f8d3c0-0297-4c38-b1e8-bf216ce65dbd"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3681),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3681),
                             QRCardStatusId = 2,
                             QRCardTypeId = 1
                         },
                         new
                         {
                             QRCardId = 10,
-                            CardGuidId = new Guid("62e19307-2f5c-4ce6-ba81-3ffa603e9106"),
-                            CreateDate = new DateTime(2024, 9, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(996),
-                            LastCancelDate = new DateTime(2024, 10, 26, 10, 37, 46, 532, DateTimeKind.Local).AddTicks(996),
+                            CardGuidId = new Guid("12a11578-e955-4586-9e91-d9da6b37c6db"),
+                            CreateDate = new DateTime(2024, 9, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3690),
+                            LastCancelDate = new DateTime(2024, 10, 26, 10, 36, 14, 641, DateTimeKind.Local).AddTicks(3690),
                             QRCardStatusId = 1,
                             QRCardTypeId = 1
                         });
@@ -655,327 +658,327 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedDate = new DateTime(2024, 3, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(457),
+                            CreatedDate = new DateTime(2024, 3, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1839),
                             Email = "admin1@example.com",
                             FullName = "Admin One",
                             Password = "123",
                             PhoneNumber = "0123456789",
                             RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(464),
+                            UpdatedDate = new DateTime(2024, 9, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1846),
                             UserName = "admin1"
                         },
                         new
                         {
                             UserId = 2,
-                            CreatedDate = new DateTime(2024, 6, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(467),
+                            CreatedDate = new DateTime(2024, 6, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1848),
                             Email = "manager1@example.com",
                             FullName = "Manager One",
                             Password = "123",
                             PhoneNumber = "0987654321",
                             RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(467),
+                            UpdatedDate = new DateTime(2024, 9, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1849),
                             UserName = "manager1"
                         },
                         new
                         {
                             UserId = 3,
-                            CreatedDate = new DateTime(2024, 7, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(469),
+                            CreatedDate = new DateTime(2024, 7, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1851),
                             Email = "employee1@example.com",
                             FullName = "Department Manager One",
                             Password = "123",
                             PhoneNumber = "0112223334",
                             RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(470),
+                            UpdatedDate = new DateTime(2024, 9, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1851),
                             UserName = "DM1"
                         },
                         new
                         {
                             UserId = 4,
-                            CreatedDate = new DateTime(2024, 8, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(472),
+                            CreatedDate = new DateTime(2024, 8, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1853),
                             Email = "hr1@example.com",
                             FullName = "Staff One",
                             Password = "123",
                             PhoneNumber = "0223334445",
                             RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(472),
+                            UpdatedDate = new DateTime(2024, 9, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1853),
                             UserName = "Staff1"
                         },
                         new
                         {
                             UserId = 5,
-                            CreatedDate = new DateTime(2024, 5, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(474),
+                            CreatedDate = new DateTime(2024, 5, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1855),
                             Email = "it1@example.com",
                             FullName = "Security One",
                             Password = "123",
                             PhoneNumber = "0334445556",
                             RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 3, 37, 46, 489, DateTimeKind.Utc).AddTicks(474),
+                            UpdatedDate = new DateTime(2024, 9, 26, 3, 36, 14, 599, DateTimeKind.Utc).AddTicks(1855),
                             UserName = "Security1"
                         },
                         new
                         {
                             UserId = 6,
-                            CreatedDate = new DateTime(2024, 9, 24, 6, 46, 55, 959, DateTimeKind.Unspecified).AddTicks(2103),
-                            Email = "gmail.com43@yahoo.com",
-                            FullName = "King Torp",
-                            Password = "0imnq9",
-                            PhoneNumber = "0802649440",
+                            CreatedDate = new DateTime(2024, 9, 20, 1, 26, 7, 842, DateTimeKind.Unspecified).AddTicks(9485),
+                            Email = "gmail.com.Leannon@gmail.com",
+                            FullName = "Damon Ebert",
+                            Password = "0d6n16",
+                            PhoneNumber = "0220111683",
                             RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 24, 6, 46, 55, 959, DateTimeKind.Unspecified).AddTicks(2103),
-                            UserName = "Jordan37"
+                            UpdatedDate = new DateTime(2024, 9, 20, 1, 26, 7, 842, DateTimeKind.Unspecified).AddTicks(9485),
+                            UserName = "Mary.Koss"
                         },
                         new
                         {
                             UserId = 7,
-                            CreatedDate = new DateTime(2024, 9, 12, 19, 18, 24, 930, DateTimeKind.Unspecified).AddTicks(2141),
-                            Email = "gmail.com.Johns@yahoo.com",
-                            FullName = "Gavin Marvin",
-                            Password = "7jzda5",
-                            PhoneNumber = "0601503519",
-                            RoleId = 1,
+                            CreatedDate = new DateTime(2024, 9, 7, 1, 10, 39, 306, DateTimeKind.Unspecified).AddTicks(5549),
+                            Email = "gmail.com.Legros87@gmail.com",
+                            FullName = "Ida Mante",
+                            Password = "tkouc3",
+                            PhoneNumber = "0431242079",
+                            RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 12, 19, 18, 24, 930, DateTimeKind.Unspecified).AddTicks(2141),
-                            UserName = "Jaeden_Rippin"
+                            UpdatedDate = new DateTime(2024, 9, 7, 1, 10, 39, 306, DateTimeKind.Unspecified).AddTicks(5549),
+                            UserName = "Nona_Volkman"
                         },
                         new
                         {
                             UserId = 8,
-                            CreatedDate = new DateTime(2024, 9, 11, 6, 52, 5, 994, DateTimeKind.Unspecified).AddTicks(5987),
-                            Email = "gmail.com16@yahoo.com",
-                            FullName = "Vince Anderson",
-                            Password = "5icz3x",
-                            PhoneNumber = "0356080466",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 7, 2, 55, 57, 227, DateTimeKind.Unspecified).AddTicks(5271),
+                            Email = "gmail.com26@yahoo.com",
+                            FullName = "Christopher Roob",
+                            Password = "8ekqlx",
+                            PhoneNumber = "0727010136",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 6, 52, 5, 994, DateTimeKind.Unspecified).AddTicks(5987),
-                            UserName = "Willis_Rogahn99"
+                            UpdatedDate = new DateTime(2024, 9, 7, 2, 55, 57, 227, DateTimeKind.Unspecified).AddTicks(5271),
+                            UserName = "Carlotta.Conroy"
                         },
                         new
                         {
                             UserId = 9,
-                            CreatedDate = new DateTime(2024, 9, 15, 3, 41, 26, 998, DateTimeKind.Unspecified).AddTicks(7127),
-                            Email = "gmail.com_Johns77@hotmail.com",
-                            FullName = "Josefina Lind",
-                            Password = "wapuio",
-                            PhoneNumber = "0217542496",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 19, 15, 9, 25, 635, DateTimeKind.Unspecified).AddTicks(861),
+                            Email = "gmail.com64@gmail.com",
+                            FullName = "Armand Padberg",
+                            Password = "t4795k",
+                            PhoneNumber = "0591259712",
+                            RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 15, 3, 41, 26, 998, DateTimeKind.Unspecified).AddTicks(7127),
-                            UserName = "Mellie95"
+                            UpdatedDate = new DateTime(2024, 9, 19, 15, 9, 25, 635, DateTimeKind.Unspecified).AddTicks(861),
+                            UserName = "Hassie.Harvey"
                         },
                         new
                         {
                             UserId = 10,
-                            CreatedDate = new DateTime(2024, 9, 15, 8, 28, 32, 458, DateTimeKind.Unspecified).AddTicks(6272),
-                            Email = "gmail.com_Hahn38@gmail.com",
-                            FullName = "Myron Dooley",
-                            Password = "7berxh",
-                            PhoneNumber = "0382593385",
-                            RoleId = 1,
+                            CreatedDate = new DateTime(2024, 9, 10, 5, 14, 47, 366, DateTimeKind.Unspecified).AddTicks(470),
+                            Email = "gmail.com.Cummings@yahoo.com",
+                            FullName = "Isai Heidenreich",
+                            Password = "g6x76h",
+                            PhoneNumber = "0876020354",
+                            RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 15, 8, 28, 32, 458, DateTimeKind.Unspecified).AddTicks(6272),
-                            UserName = "Bernita37"
+                            UpdatedDate = new DateTime(2024, 9, 10, 5, 14, 47, 366, DateTimeKind.Unspecified).AddTicks(470),
+                            UserName = "Danyka.Keeling21"
                         },
                         new
                         {
                             UserId = 11,
-                            CreatedDate = new DateTime(2024, 9, 14, 15, 22, 9, 946, DateTimeKind.Unspecified).AddTicks(7338),
-                            Email = "gmail.com_Schoen58@yahoo.com",
-                            FullName = "Trystan Ortiz",
-                            Password = "rem8qq",
-                            PhoneNumber = "0790122859",
+                            CreatedDate = new DateTime(2024, 9, 13, 9, 24, 14, 452, DateTimeKind.Unspecified).AddTicks(8814),
+                            Email = "gmail.com_Lemke@gmail.com",
+                            FullName = "Michaela Bins",
+                            Password = "am8uy0",
+                            PhoneNumber = "0100773471",
                             RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 14, 15, 22, 9, 946, DateTimeKind.Unspecified).AddTicks(7338),
-                            UserName = "Melyssa_MacGyver55"
+                            UpdatedDate = new DateTime(2024, 9, 13, 9, 24, 14, 452, DateTimeKind.Unspecified).AddTicks(8814),
+                            UserName = "Milford_Wintheiser"
                         },
                         new
                         {
                             UserId = 12,
-                            CreatedDate = new DateTime(2024, 9, 12, 9, 7, 3, 242, DateTimeKind.Unspecified).AddTicks(5109),
-                            Email = "gmail.com18@hotmail.com",
-                            FullName = "Porter D'Amore",
-                            Password = "3a8f6i",
-                            PhoneNumber = "0234341175",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 7, 9, 25, 19, 417, DateTimeKind.Unspecified).AddTicks(9623),
+                            Email = "gmail.com.Orn73@hotmail.com",
+                            FullName = "Alison Emard",
+                            Password = "n2u4t3",
+                            PhoneNumber = "0882584535",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 12, 9, 7, 3, 242, DateTimeKind.Unspecified).AddTicks(5109),
-                            UserName = "Madelynn83"
+                            UpdatedDate = new DateTime(2024, 9, 7, 9, 25, 19, 417, DateTimeKind.Unspecified).AddTicks(9623),
+                            UserName = "Hiram72"
                         },
                         new
                         {
                             UserId = 13,
-                            CreatedDate = new DateTime(2024, 9, 17, 17, 37, 37, 226, DateTimeKind.Unspecified).AddTicks(8961),
-                            Email = "gmail.com23@gmail.com",
-                            FullName = "Timothy Littel",
-                            Password = "exdp90",
-                            PhoneNumber = "0424770673",
-                            RoleId = 2,
+                            CreatedDate = new DateTime(2024, 9, 11, 18, 21, 40, 968, DateTimeKind.Unspecified).AddTicks(2518),
+                            Email = "gmail.com_Harber@yahoo.com",
+                            FullName = "Deon Heaney",
+                            Password = "6g4o3q",
+                            PhoneNumber = "0368600164",
+                            RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 17, 17, 37, 37, 226, DateTimeKind.Unspecified).AddTicks(8961),
-                            UserName = "Keshaun_Steuber"
+                            UpdatedDate = new DateTime(2024, 9, 11, 18, 21, 40, 968, DateTimeKind.Unspecified).AddTicks(2518),
+                            UserName = "Albin_Lubowitz74"
                         },
                         new
                         {
                             UserId = 14,
-                            CreatedDate = new DateTime(2024, 9, 19, 9, 51, 13, 329, DateTimeKind.Unspecified).AddTicks(5580),
-                            Email = "gmail.com.Balistreri@hotmail.com",
-                            FullName = "Stewart Purdy",
-                            Password = "nf16z6",
-                            PhoneNumber = "0703612668",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 2, 19, 6, 10, 137, DateTimeKind.Unspecified).AddTicks(6359),
+                            Email = "gmail.com55@gmail.com",
+                            FullName = "Lola Corkery",
+                            Password = "lmbuis",
+                            PhoneNumber = "0277592075",
+                            RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 19, 9, 51, 13, 329, DateTimeKind.Unspecified).AddTicks(5580),
-                            UserName = "Verner59"
+                            UpdatedDate = new DateTime(2024, 9, 2, 19, 6, 10, 137, DateTimeKind.Unspecified).AddTicks(6359),
+                            UserName = "Gregoria26"
                         },
                         new
                         {
                             UserId = 15,
-                            CreatedDate = new DateTime(2024, 9, 13, 23, 46, 42, 483, DateTimeKind.Unspecified).AddTicks(8899),
-                            Email = "gmail.com_Mraz@gmail.com",
-                            FullName = "Alice Roob",
-                            Password = "k2p1ex",
-                            PhoneNumber = "0618048868",
-                            RoleId = 3,
+                            CreatedDate = new DateTime(2024, 9, 13, 8, 46, 48, 53, DateTimeKind.Unspecified).AddTicks(2016),
+                            Email = "gmail.com_Rosenbaum@gmail.com",
+                            FullName = "Misty Herzog",
+                            Password = "c2wb9t",
+                            PhoneNumber = "0371321014",
+                            RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 13, 23, 46, 42, 483, DateTimeKind.Unspecified).AddTicks(8899),
-                            UserName = "Damon.Buckridge65"
+                            UpdatedDate = new DateTime(2024, 9, 13, 8, 46, 48, 53, DateTimeKind.Unspecified).AddTicks(2016),
+                            UserName = "Elliott.Moore36"
                         },
                         new
                         {
                             UserId = 16,
-                            CreatedDate = new DateTime(2024, 9, 14, 1, 13, 4, 651, DateTimeKind.Unspecified).AddTicks(4847),
-                            Email = "gmail.com_Heathcote@yahoo.com",
-                            FullName = "Johann Pfeffer",
-                            Password = "ayvs6t",
-                            PhoneNumber = "0846020965",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 20, 23, 53, 48, 708, DateTimeKind.Unspecified).AddTicks(4937),
+                            Email = "gmail.com.Marquardt64@hotmail.com",
+                            FullName = "Rogelio Shields",
+                            Password = "l6mngk",
+                            PhoneNumber = "0382234816",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 14, 1, 13, 4, 651, DateTimeKind.Unspecified).AddTicks(4847),
-                            UserName = "Macy.Smitham"
+                            UpdatedDate = new DateTime(2024, 9, 20, 23, 53, 48, 708, DateTimeKind.Unspecified).AddTicks(4937),
+                            UserName = "Adelle.Emmerich40"
                         },
                         new
                         {
                             UserId = 17,
-                            CreatedDate = new DateTime(2024, 9, 7, 21, 47, 24, 526, DateTimeKind.Unspecified).AddTicks(7138),
-                            Email = "gmail.com2@yahoo.com",
-                            FullName = "Ludie Conroy",
-                            Password = "mp54ev",
-                            PhoneNumber = "0846285375",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 25, 9, 40, 49, 613, DateTimeKind.Unspecified).AddTicks(4428),
+                            Email = "gmail.com.Dietrich83@gmail.com",
+                            FullName = "Megane Sauer",
+                            Password = "nfnxcg",
+                            PhoneNumber = "0664300065",
+                            RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 7, 21, 47, 24, 526, DateTimeKind.Unspecified).AddTicks(7138),
-                            UserName = "Alfonso_Goyette27"
+                            UpdatedDate = new DateTime(2024, 9, 25, 9, 40, 49, 613, DateTimeKind.Unspecified).AddTicks(4428),
+                            UserName = "Daisy19"
                         },
                         new
                         {
                             UserId = 18,
-                            CreatedDate = new DateTime(2024, 9, 6, 14, 59, 47, 522, DateTimeKind.Unspecified).AddTicks(8540),
-                            Email = "gmail.com_Runolfsson@hotmail.com",
-                            FullName = "Jerad Lowe",
-                            Password = "1tmdem",
-                            PhoneNumber = "0274544479",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 15, 9, 55, 42, 294, DateTimeKind.Unspecified).AddTicks(6341),
+                            Email = "gmail.com.Wolff@yahoo.com",
+                            FullName = "Jaycee Simonis",
+                            Password = "aiaoka",
+                            PhoneNumber = "0944507242",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 6, 14, 59, 47, 522, DateTimeKind.Unspecified).AddTicks(8540),
-                            UserName = "Estevan.Mitchell"
+                            UpdatedDate = new DateTime(2024, 9, 15, 9, 55, 42, 294, DateTimeKind.Unspecified).AddTicks(6341),
+                            UserName = "Jace.Hudson94"
                         },
                         new
                         {
                             UserId = 19,
-                            CreatedDate = new DateTime(2024, 9, 12, 11, 45, 18, 666, DateTimeKind.Unspecified).AddTicks(378),
-                            Email = "gmail.com_Mayert26@gmail.com",
-                            FullName = "Janis Gutkowski",
-                            Password = "wptsg8",
-                            PhoneNumber = "0981421746",
+                            CreatedDate = new DateTime(2024, 9, 13, 15, 55, 7, 97, DateTimeKind.Unspecified).AddTicks(6294),
+                            Email = "gmail.com_Bosco96@gmail.com",
+                            FullName = "Nina Balistreri",
+                            Password = "6yvgfg",
+                            PhoneNumber = "0134106991",
                             RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 12, 11, 45, 18, 666, DateTimeKind.Unspecified).AddTicks(378),
-                            UserName = "Cheyanne41"
+                            UpdatedDate = new DateTime(2024, 9, 13, 15, 55, 7, 97, DateTimeKind.Unspecified).AddTicks(6294),
+                            UserName = "Reina_Buckridge"
                         },
                         new
                         {
                             UserId = 20,
-                            CreatedDate = new DateTime(2024, 9, 10, 16, 14, 45, 586, DateTimeKind.Unspecified).AddTicks(4452),
-                            Email = "gmail.com.Kuphal95@hotmail.com",
-                            FullName = "Dillon Grant",
-                            Password = "f6gngb",
-                            PhoneNumber = "0498073103",
+                            CreatedDate = new DateTime(2024, 9, 25, 11, 17, 17, 717, DateTimeKind.Unspecified).AddTicks(345),
+                            Email = "gmail.com_OConner4@hotmail.com",
+                            FullName = "Sonya Rosenbaum",
+                            Password = "coeu4x",
+                            PhoneNumber = "0616532121",
                             RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 10, 16, 14, 45, 586, DateTimeKind.Unspecified).AddTicks(4452),
-                            UserName = "Margie_Cummerata72"
+                            UpdatedDate = new DateTime(2024, 9, 25, 11, 17, 17, 717, DateTimeKind.Unspecified).AddTicks(345),
+                            UserName = "Martin_Rogahn"
                         },
                         new
                         {
                             UserId = 21,
-                            CreatedDate = new DateTime(2024, 9, 11, 3, 23, 36, 596, DateTimeKind.Unspecified).AddTicks(4054),
-                            Email = "gmail.com97@hotmail.com",
-                            FullName = "Junius Kautzer",
-                            Password = "285io9",
-                            PhoneNumber = "0223839799",
-                            RoleId = 4,
+                            CreatedDate = new DateTime(2024, 9, 15, 13, 7, 51, 447, DateTimeKind.Unspecified).AddTicks(425),
+                            Email = "gmail.com11@hotmail.com",
+                            FullName = "Haven Moore",
+                            Password = "wp0v67",
+                            PhoneNumber = "0602017912",
+                            RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 3, 23, 36, 596, DateTimeKind.Unspecified).AddTicks(4054),
-                            UserName = "Eva27"
+                            UpdatedDate = new DateTime(2024, 9, 15, 13, 7, 51, 447, DateTimeKind.Unspecified).AddTicks(425),
+                            UserName = "Kasey67"
                         },
                         new
                         {
                             UserId = 22,
-                            CreatedDate = new DateTime(2024, 9, 11, 1, 12, 12, 34, DateTimeKind.Unspecified).AddTicks(2285),
-                            Email = "gmail.com.Mohr30@gmail.com",
-                            FullName = "Britney Dach",
-                            Password = "er87iz",
-                            PhoneNumber = "0238522230",
+                            CreatedDate = new DateTime(2024, 9, 11, 18, 32, 31, 752, DateTimeKind.Unspecified).AddTicks(5096),
+                            Email = "gmail.com.Pouros46@gmail.com",
+                            FullName = "Anna Rice",
+                            Password = "a8wi21",
+                            PhoneNumber = "0200878000",
                             RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 1, 12, 12, 34, DateTimeKind.Unspecified).AddTicks(2285),
-                            UserName = "Fredrick81"
+                            UpdatedDate = new DateTime(2024, 9, 11, 18, 32, 31, 752, DateTimeKind.Unspecified).AddTicks(5096),
+                            UserName = "Lyla.Baumbach18"
                         },
                         new
                         {
                             UserId = 23,
-                            CreatedDate = new DateTime(2024, 9, 9, 4, 55, 15, 219, DateTimeKind.Unspecified).AddTicks(8965),
-                            Email = "gmail.com.Feeney@gmail.com",
-                            FullName = "Dale King",
-                            Password = "uomu6y",
-                            PhoneNumber = "0866935268",
-                            RoleId = 2,
+                            CreatedDate = new DateTime(2024, 9, 21, 9, 13, 33, 274, DateTimeKind.Unspecified).AddTicks(3680),
+                            Email = "gmail.com.Stehr@hotmail.com",
+                            FullName = "Nelson Schimmel",
+                            Password = "33mbgf",
+                            PhoneNumber = "0847117786",
+                            RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 9, 4, 55, 15, 219, DateTimeKind.Unspecified).AddTicks(8965),
-                            UserName = "Pete_Kohler71"
+                            UpdatedDate = new DateTime(2024, 9, 21, 9, 13, 33, 274, DateTimeKind.Unspecified).AddTicks(3680),
+                            UserName = "Davin_Greenfelder"
                         },
                         new
                         {
                             UserId = 24,
-                            CreatedDate = new DateTime(2024, 9, 14, 7, 10, 36, 659, DateTimeKind.Unspecified).AddTicks(9504),
-                            Email = "gmail.com60@gmail.com",
-                            FullName = "Talon Harber",
-                            Password = "g6baxt",
-                            PhoneNumber = "0900914495",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 5, 19, 50, 2, 213, DateTimeKind.Unspecified).AddTicks(3472),
+                            Email = "gmail.com_Schmitt74@yahoo.com",
+                            FullName = "Ulises Effertz",
+                            Password = "5s2etn",
+                            PhoneNumber = "0263798362",
+                            RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 14, 7, 10, 36, 659, DateTimeKind.Unspecified).AddTicks(9504),
-                            UserName = "Elda.Collins58"
+                            UpdatedDate = new DateTime(2024, 9, 5, 19, 50, 2, 213, DateTimeKind.Unspecified).AddTicks(3472),
+                            UserName = "Enid.Wunsch59"
                         },
                         new
                         {
                             UserId = 25,
-                            CreatedDate = new DateTime(2024, 9, 1, 11, 10, 19, 518, DateTimeKind.Unspecified).AddTicks(745),
-                            Email = "gmail.com_Swaniawski@gmail.com",
-                            FullName = "London Douglas",
-                            Password = "o5olbu",
-                            PhoneNumber = "0357180130",
-                            RoleId = 5,
+                            CreatedDate = new DateTime(2024, 9, 8, 9, 24, 50, 193, DateTimeKind.Unspecified).AddTicks(9319),
+                            Email = "gmail.com_Rutherford71@hotmail.com",
+                            FullName = "Madalyn Nolan",
+                            Password = "qs5o3f",
+                            PhoneNumber = "0906601799",
+                            RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 11, 10, 19, 518, DateTimeKind.Unspecified).AddTicks(745),
-                            UserName = "Anastacio_DuBuque24"
+                            UpdatedDate = new DateTime(2024, 9, 8, 9, 24, 50, 193, DateTimeKind.Unspecified).AddTicks(9319),
+                            UserName = "Dean_Johnson"
                         });
                 });
 
@@ -1023,122 +1026,122 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             UserDepartmentId = 4,
-                            DepartmentId = 10,
-                            UserId = 9
+                            DepartmentId = 6,
+                            UserId = 24
                         },
                         new
                         {
                             UserDepartmentId = 5,
-                            DepartmentId = 2,
-                            UserId = 21
+                            DepartmentId = 7,
+                            UserId = 19
                         },
                         new
                         {
                             UserDepartmentId = 6,
-                            DepartmentId = 2,
-                            UserId = 21
+                            DepartmentId = 8,
+                            UserId = 6
                         },
                         new
                         {
                             UserDepartmentId = 7,
                             DepartmentId = 4,
-                            UserId = 18
+                            UserId = 12
                         },
                         new
                         {
                             UserDepartmentId = 8,
                             DepartmentId = 5,
-                            UserId = 15
-                        },
-                        new
-                        {
-                            UserDepartmentId = 9,
-                            DepartmentId = 2,
                             UserId = 11
                         },
                         new
                         {
-                            UserDepartmentId = 10,
+                            UserDepartmentId = 9,
                             DepartmentId = 7,
-                            UserId = 20
+                            UserId = 7
+                        },
+                        new
+                        {
+                            UserDepartmentId = 10,
+                            DepartmentId = 8,
+                            UserId = 21
                         },
                         new
                         {
                             UserDepartmentId = 11,
-                            DepartmentId = 7,
-                            UserId = 14
+                            DepartmentId = 5,
+                            UserId = 11
                         },
                         new
                         {
                             UserDepartmentId = 12,
-                            DepartmentId = 5,
-                            UserId = 13
+                            DepartmentId = 9,
+                            UserId = 14
                         },
                         new
                         {
                             UserDepartmentId = 13,
-                            DepartmentId = 3,
-                            UserId = 23
+                            DepartmentId = 1,
+                            UserId = 17
                         },
                         new
                         {
                             UserDepartmentId = 14,
-                            DepartmentId = 2,
-                            UserId = 12
+                            DepartmentId = 6,
+                            UserId = 16
                         },
                         new
                         {
                             UserDepartmentId = 15,
                             DepartmentId = 5,
-                            UserId = 7
+                            UserId = 20
                         },
                         new
                         {
                             UserDepartmentId = 16,
-                            DepartmentId = 3,
-                            UserId = 11
+                            DepartmentId = 4,
+                            UserId = 24
                         },
                         new
                         {
                             UserDepartmentId = 17,
-                            DepartmentId = 4,
-                            UserId = 21
+                            DepartmentId = 7,
+                            UserId = 17
                         },
                         new
                         {
                             UserDepartmentId = 18,
-                            DepartmentId = 3,
-                            UserId = 22
+                            DepartmentId = 8,
+                            UserId = 21
                         },
                         new
                         {
                             UserDepartmentId = 19,
                             DepartmentId = 7,
-                            UserId = 21
+                            UserId = 16
                         },
                         new
                         {
                             UserDepartmentId = 20,
-                            DepartmentId = 10,
-                            UserId = 24
+                            DepartmentId = 7,
+                            UserId = 22
                         },
                         new
                         {
                             UserDepartmentId = 21,
-                            DepartmentId = 2,
-                            UserId = 18
+                            DepartmentId = 1,
+                            UserId = 16
                         },
                         new
                         {
                             UserDepartmentId = 22,
-                            DepartmentId = 1,
-                            UserId = 21
+                            DepartmentId = 4,
+                            UserId = 7
                         },
                         new
                         {
                             UserDepartmentId = 23,
-                            DepartmentId = 3,
-                            UserId = 20
+                            DepartmentId = 10,
+                            UserId = 10
                         });
                 });
 
@@ -1254,7 +1257,7 @@ namespace SecurityGateApv.Infras.Migrations
                             VisitId = 1,
                             AcceptLevel = 1,
                             CreateById = 3,
-                            DateRegister = new DateTime(2024, 9, 24, 10, 37, 46, 499, DateTimeKind.Local).AddTicks(5245),
+                            DateRegister = new DateTime(2024, 9, 24, 10, 36, 14, 615, DateTimeKind.Local).AddTicks(8110),
                             UpdateById = 4,
                             VisitName = "Dọn vệ sinh",
                             VisitQuantity = 2,
@@ -1265,7 +1268,7 @@ namespace SecurityGateApv.Infras.Migrations
                             VisitId = 2,
                             AcceptLevel = 2,
                             CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 3, 37, 46, 511, DateTimeKind.Utc).AddTicks(2361),
+                            DateRegister = new DateTime(2024, 9, 26, 3, 36, 14, 620, DateTimeKind.Utc).AddTicks(9689),
                             UpdateById = 4,
                             VisitName = "Dọn vệ sinh",
                             VisitQuantity = 2,
@@ -1276,7 +1279,7 @@ namespace SecurityGateApv.Infras.Migrations
                             VisitId = 3,
                             AcceptLevel = 2,
                             CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 3, 37, 46, 511, DateTimeKind.Utc).AddTicks(2520),
+                            DateRegister = new DateTime(2024, 9, 26, 3, 36, 14, 620, DateTimeKind.Utc).AddTicks(9845),
                             UpdateById = 4,
                             VisitName = "Dọn vệ sinh",
                             VisitQuantity = 2,
@@ -1287,7 +1290,7 @@ namespace SecurityGateApv.Infras.Migrations
                             VisitId = 4,
                             AcceptLevel = 2,
                             CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 3, 37, 46, 511, DateTimeKind.Utc).AddTicks(2533),
+                            DateRegister = new DateTime(2024, 9, 26, 3, 36, 14, 620, DateTimeKind.Utc).AddTicks(9857),
                             UpdateById = 4,
                             VisitName = "Dọn vệ sinh",
                             VisitQuantity = 2,
@@ -1298,7 +1301,7 @@ namespace SecurityGateApv.Infras.Migrations
                             VisitId = 5,
                             AcceptLevel = 2,
                             CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 3, 37, 46, 511, DateTimeKind.Utc).AddTicks(2542),
+                            DateRegister = new DateTime(2024, 9, 26, 3, 36, 14, 620, DateTimeKind.Utc).AddTicks(9866),
                             UpdateById = 4,
                             VisitName = "Dọn vệ sinh",
                             VisitQuantity = 2,
@@ -1309,7 +1312,7 @@ namespace SecurityGateApv.Infras.Migrations
                             VisitId = 6,
                             AcceptLevel = 2,
                             CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 3, 37, 46, 511, DateTimeKind.Utc).AddTicks(2551),
+                            DateRegister = new DateTime(2024, 9, 26, 3, 36, 14, 620, DateTimeKind.Utc).AddTicks(9874),
                             UpdateById = 4,
                             VisitName = "Dọn vệ sinh",
                             VisitQuantity = 2,
@@ -1361,10 +1364,10 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitDetailId = 1,
-                            Description = "Perferendis rem eum quibusdam accusantium tenetur. Ea distinctio nesciunt fugiat beatae dicta ab nisi quaerat minima. Possimus consectetur sit consectetur aliquid voluptatem quisquam repellendus. Iure eum sit.",
-                            ExpectedEndDate = new DateTime(2024, 10, 25, 10, 37, 46, 510, DateTimeKind.Local).AddTicks(797),
+                            Description = "Voluptas nesciunt recusandae aspernatur ullam adipisci quia commodi. Amet facere reiciendis. Quia ipsum recusandae incidunt voluptatibus sapiente et. Animi ipsam aut non veniam voluptatibus.",
+                            ExpectedEndDate = new DateTime(2024, 10, 25, 10, 36, 14, 619, DateTimeKind.Local).AddTicks(8329),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 25, 10, 37, 46, 510, DateTimeKind.Local).AddTicks(742),
+                            ExpectedStartDate = new DateTime(2024, 9, 25, 10, 36, 14, 619, DateTimeKind.Local).AddTicks(8289),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 1,
@@ -1373,10 +1376,10 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitDetailId = 2,
-                            Description = "Dolorum assumenda accusantium ea eligendi saepe et dolores. Ea provident officiis fugiat temporibus voluptatum. Velit nesciunt temporibus perspiciatis qui. Vitae nulla qui officiis quia. Saepe est rerum non aliquid nisi aut optio. Reprehenderit animi est minima eaque voluptatem.",
-                            ExpectedEndDate = new DateTime(2024, 10, 25, 10, 37, 46, 510, DateTimeKind.Local).AddTicks(1243),
+                            Description = "Ex est aut et sed. Nulla dicta aperiam commodi aperiam enim rerum eligendi molestiae molestiae. Itaque officia suscipit impedit assumenda.",
+                            ExpectedEndDate = new DateTime(2024, 10, 25, 10, 36, 14, 619, DateTimeKind.Local).AddTicks(8745),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 25, 10, 37, 46, 510, DateTimeKind.Local).AddTicks(1241),
+                            ExpectedStartDate = new DateTime(2024, 9, 25, 10, 36, 14, 619, DateTimeKind.Local).AddTicks(8742),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 1,
@@ -1385,58 +1388,22 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitDetailId = 3,
-                            Description = "Doloribus delectus consequatur et et veritatis harum et atque qui. Eos ratione nostrum. Magnam temporibus quam sed dolor repellendus.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 512, DateTimeKind.Local).AddTicks(3742),
+                            Description = "Dicta dolor aut dolores. Aspernatur enim consequatur. Optio doloremque officiis iure tempore nihil et dolores blanditiis perferendis. Ea nihil sint et. Totam dolores quia minus enim deleniti repellat minima dignissimos quia. Nulla vitae necessitatibus ut dignissimos vitae autem sed aperiam.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 622, DateTimeKind.Local).AddTicks(1403),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 512, DateTimeKind.Local).AddTicks(3707),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 622, DateTimeKind.Local).AddTicks(1434),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 2,
-                            VisitorId = 5
+                            VisitorId = 9
                         },
                         new
                         {
                             VisitDetailId = 4,
-                            Description = "Quia at facere ut ipsa explicabo rerum officiis. Exercitationem est totam nisi sint cupiditate suscipit voluptas labore unde. Blanditiis repellat nam sit sed. Corrupti deserunt tempore sit deserunt repellendus a aut provident rerum. Ut et et sapiente.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 512, DateTimeKind.Local).AddTicks(4021),
+                            Description = "Est distinctio repudiandae blanditiis placeat et sit animi totam possimus. Incidunt sint ut aut harum officiis. Non sit corporis sapiente. Esse autem illo. Vel sit quis in voluptatibus incidunt provident.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 622, DateTimeKind.Local).AddTicks(1710),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 512, DateTimeKind.Local).AddTicks(4018),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 2
-                        },
-                        new
-                        {
-                            VisitDetailId = 5,
-                            Description = "Facere beatae quia. Ipsa fuga autem quo praesentium sit. Magni dolor eum dolorem et. Soluta voluptatem qui deleniti. Libero recusandae qui voluptatibus rerum quam dignissimos perferendis. Alias cupiditate quis qui veritatis qui deleniti.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 513, DateTimeKind.Local).AddTicks(4735),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 513, DateTimeKind.Local).AddTicks(4710),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 8
-                        },
-                        new
-                        {
-                            VisitDetailId = 6,
-                            Description = "Voluptatum quasi dolorem cumque. Harum quam eaque nisi ut placeat autem et nisi. Reprehenderit id vel architecto consectetur veritatis laborum voluptatibus ducimus.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 513, DateTimeKind.Local).AddTicks(4945),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 513, DateTimeKind.Local).AddTicks(4943),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 7,
-                            Description = "Commodi omnis deserunt dolor nesciunt. Mollitia quidem sit nostrum facere nobis blanditiis nulla omnis nobis. Facilis modi modi totam eligendi vero atque tempore qui sed.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 514, DateTimeKind.Local).AddTicks(5875),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 514, DateTimeKind.Local).AddTicks(5849),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 622, DateTimeKind.Local).AddTicks(1713),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 2,
@@ -1444,35 +1411,83 @@ namespace SecurityGateApv.Infras.Migrations
                         },
                         new
                         {
-                            VisitDetailId = 8,
-                            Description = "Et ipsum laboriosam. Ut aut officia nesciunt vel qui quia odit eum exercitationem. Alias odio quae accusamus aut autem perferendis sed. Eum et nobis necessitatibus non blanditiis numquam nisi cumque tempore. Non dolor quae. Doloremque et minus quia adipisci dolor totam.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 514, DateTimeKind.Local).AddTicks(6147),
+                            VisitDetailId = 5,
+                            Description = "Voluptatibus est consequatur odio aut. Ipsa aspernatur aut. Id perferendis consequuntur dolorum ipsam delectus magni.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 623, DateTimeKind.Local).AddTicks(2742),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 514, DateTimeKind.Local).AddTicks(6145),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 623, DateTimeKind.Local).AddTicks(2775),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 2,
-                            VisitorId = 1
+                            VisitorId = 10
+                        },
+                        new
+                        {
+                            VisitDetailId = 6,
+                            Description = "Perferendis et culpa sunt aperiam sequi molestiae illo. Iste deleniti suscipit. Quibusdam qui qui qui. Non atque accusantium.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 623, DateTimeKind.Local).AddTicks(2982),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 623, DateTimeKind.Local).AddTicks(2984),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 2,
+                            VisitorId = 7
+                        },
+                        new
+                        {
+                            VisitDetailId = 7,
+                            Description = "Aliquid ut vel quia ut. Eum eum aut quisquam libero consequatur quis dolorem vel debitis. Sapiente quo a. Rerum non provident debitis in enim.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 624, DateTimeKind.Local).AddTicks(3874),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 624, DateTimeKind.Local).AddTicks(3899),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 2,
+                            VisitorId = 3
+                        },
+                        new
+                        {
+                            VisitDetailId = 8,
+                            Description = "Deserunt quasi atque consequatur voluptatibus et tenetur. Accusamus eum eveniet. Quam quae sint eveniet perferendis odio reiciendis. Explicabo soluta quis eveniet repudiandae explicabo tenetur vel laborum similique.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 624, DateTimeKind.Local).AddTicks(4190),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 624, DateTimeKind.Local).AddTicks(4192),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 2,
+                            VisitorId = 4
                         },
                         new
                         {
                             VisitDetailId = 9,
-                            Description = "Vel est quo dolor. Quidem aspernatur occaecati sed aut sed necessitatibus saepe. Quo commodi et consequatur aut qui accusantium necessitatibus ducimus cumque. Et omnis delectus blanditiis tempora iusto.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 515, DateTimeKind.Local).AddTicks(6859),
+                            Description = "A voluptas voluptatum deserunt sequi cupiditate explicabo. Nobis quisquam ut hic similique fuga nulla vitae inventore error. Vel quibusdam adipisci voluptas facilis quia nesciunt non et qui. Illo molestiae enim voluptatem molestias quisquam et non dolor dolores. Quasi commodi dolor non aperiam similique laudantium nulla temporibus reiciendis.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 625, DateTimeKind.Local).AddTicks(4758),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 515, DateTimeKind.Local).AddTicks(6834),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 625, DateTimeKind.Local).AddTicks(4782),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 3,
-                            VisitorId = 8
+                            VisitorId = 10
                         },
                         new
                         {
                             VisitDetailId = 10,
-                            Description = "Quos maiores at consequuntur quidem doloremque velit ullam facere sed. Quaerat officia officia et totam atque. Est ut sunt iusto earum natus laborum. Dolores eius autem architecto et eaque. Autem alias vitae consequuntur aut.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 515, DateTimeKind.Local).AddTicks(7099),
+                            Description = "Aliquam ut sit excepturi. Harum numquam eum rerum dolorem cum nihil delectus accusamus. Ex omnis non. Qui dolorem molestiae culpa et at. Rerum repellat consequatur repellat et distinctio sed. Dolorem repudiandae nam voluptatem nihil.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 625, DateTimeKind.Local).AddTicks(5031),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 515, DateTimeKind.Local).AddTicks(7097),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 625, DateTimeKind.Local).AddTicks(5033),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 3,
+                            VisitorId = 1
+                        },
+                        new
+                        {
+                            VisitDetailId = 11,
+                            Description = "Vel quisquam ut modi ut officia unde sapiente eius architecto. Distinctio ut expedita cupiditate nostrum alias perspiciatis. Architecto esse ullam impedit. Voluptatem quam sapiente quae.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 626, DateTimeKind.Local).AddTicks(6010),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 626, DateTimeKind.Local).AddTicks(6037),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 3,
@@ -1480,95 +1495,83 @@ namespace SecurityGateApv.Infras.Migrations
                         },
                         new
                         {
-                            VisitDetailId = 11,
-                            Description = "Itaque velit exercitationem a iste assumenda minus est a commodi. Et voluptas similique omnis. Temporibus neque voluptatum veniam excepturi voluptatem voluptate commodi porro. Quia eum voluptas soluta accusamus ea cum culpa. Consequatur beatae velit odio. Laboriosam officiis quo sed recusandae.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 516, DateTimeKind.Local).AddTicks(7719),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 516, DateTimeKind.Local).AddTicks(7693),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 2
-                        },
-                        new
-                        {
                             VisitDetailId = 12,
-                            Description = "Laborum et voluptatum. Aut eos id laboriosam et atque soluta deleniti beatae odio. Voluptatum unde in dolor ipsa provident mollitia officiis enim. Molestiae vel et veritatis rerum minima perferendis dolorem.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 516, DateTimeKind.Local).AddTicks(7951),
+                            Description = "Perferendis debitis ea animi est ut. Eos dolores doloribus eveniet esse consequatur suscipit. Ipsum incidunt ea aut. Rem voluptas ad aut.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 626, DateTimeKind.Local).AddTicks(6261),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 516, DateTimeKind.Local).AddTicks(7949),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 626, DateTimeKind.Local).AddTicks(6264),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 3,
-                            VisitorId = 2
-                        },
-                        new
-                        {
-                            VisitDetailId = 13,
-                            Description = "Autem ullam cum perferendis dolorem cupiditate laborum. Impedit et quos fugit quis autem ea. Accusamus et ducimus quia animi debitis sapiente minus quia. Et necessitatibus incidunt adipisci laboriosam ut quod libero et. Quos ducimus beatae eum. Quibusdam excepturi atque in.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 519, DateTimeKind.Local).AddTicks(5570),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 519, DateTimeKind.Local).AddTicks(5542),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 14,
-                            Description = "Assumenda autem fuga dolorum optio deserunt ab quasi sunt. Qui perspiciatis repellendus inventore inventore ea. Harum sed nihil quia consequatur qui eligendi eligendi. Perferendis ea optio vero qui fuga sed alias maxime. Aperiam ullam qui adipisci eligendi.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 519, DateTimeKind.Local).AddTicks(5831),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 519, DateTimeKind.Local).AddTicks(5829),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 6
-                        },
-                        new
-                        {
-                            VisitDetailId = 15,
-                            Description = "Sit itaque necessitatibus ab unde mollitia necessitatibus corporis aperiam. Quia velit accusamus et est et ipsa aut recusandae quisquam. Qui molestias iure. Sit magnam et consequuntur.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 520, DateTimeKind.Local).AddTicks(7109),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 520, DateTimeKind.Local).AddTicks(7083),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 5
-                        },
-                        new
-                        {
-                            VisitDetailId = 16,
-                            Description = "Qui aut vel eius beatae magnam dolores consequatur. Id sint eum minima voluptatem eum molestiae vitae omnis. Temporibus modi culpa voluptas in voluptatibus. Voluptatem hic odit. Voluptatem earum in est enim et laborum rerum beatae. Eos dolorem magnam.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 520, DateTimeKind.Local).AddTicks(7360),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 520, DateTimeKind.Local).AddTicks(7358),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
                             VisitorId = 7
                         },
                         new
                         {
-                            VisitDetailId = 17,
-                            Description = "Quod sed quis quaerat unde nulla. Ad dolores enim ducimus quisquam occaecati vel et. Non ullam exercitationem nisi veniam illo cupiditate dolores voluptas doloremque. Vel non beatae sed nobis aut perspiciatis corrupti qui. Inventore aliquid harum molestiae tenetur earum accusantium earum. Vel perspiciatis quis dolor et quos aut voluptate.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 521, DateTimeKind.Local).AddTicks(8268),
+                            VisitDetailId = 13,
+                            Description = "Eos voluptas quia totam ut. Doloribus vitae velit ut facilis consequatur itaque. Dolores unde tenetur doloribus labore.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 629, DateTimeKind.Local).AddTicks(2197),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 521, DateTimeKind.Local).AddTicks(8242),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 629, DateTimeKind.Local).AddTicks(2225),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 3,
+                            VisitorId = 10
+                        },
+                        new
+                        {
+                            VisitDetailId = 14,
+                            Description = "Exercitationem non ex maiores sint maiores ipsum omnis earum. Magni quas natus et quos. Maxime unde inventore dolor atque est impedit sit ut. Est facere ab facilis possimus.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 629, DateTimeKind.Local).AddTicks(2473),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 629, DateTimeKind.Local).AddTicks(2475),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 3,
+                            VisitorId = 4
+                        },
+                        new
+                        {
+                            VisitDetailId = 15,
+                            Description = "Illo molestiae maiores facilis earum voluptatem a enim. Nemo ratione mollitia ipsum aliquid ullam nihil iusto. Aut mollitia deleniti enim sit expedita accusamus. Consequatur ad et pariatur esse illo sint itaque.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 630, DateTimeKind.Local).AddTicks(3640),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 630, DateTimeKind.Local).AddTicks(3667),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 4,
-                            VisitorId = 5
+                            VisitorId = 9
+                        },
+                        new
+                        {
+                            VisitDetailId = 16,
+                            Description = "Assumenda necessitatibus fugiat laboriosam quaerat ad rerum nesciunt. Magnam velit sint. Sed placeat voluptatem tempora quidem dolorem aut beatae quo architecto. Non cum sed magnam eos.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 630, DateTimeKind.Local).AddTicks(3890),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 630, DateTimeKind.Local).AddTicks(3892),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 4,
+                            VisitorId = 3
+                        },
+                        new
+                        {
+                            VisitDetailId = 17,
+                            Description = "Voluptatibus id voluptatem perspiciatis laudantium ut qui accusantium vel. Aperiam tempora harum earum. Ducimus occaecati et est accusamus ad aut eligendi eaque iure. Nisi est suscipit alias reiciendis assumenda quis. Illum repudiandae quam nihil molestias explicabo. A vel cumque sit aut quia quia eos.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 631, DateTimeKind.Local).AddTicks(4578),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 631, DateTimeKind.Local).AddTicks(4668),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 4,
+                            VisitorId = 9
                         },
                         new
                         {
                             VisitDetailId = 18,
-                            Description = "Et et et quo voluptates ullam quis. Nulla veniam ea est facilis quia iure consequuntur a ut. Sed debitis explicabo dicta expedita beatae est omnis praesentium. Ipsa aut similique.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 521, DateTimeKind.Local).AddTicks(8497),
+                            Description = "Voluptatem dolore iste. Repudiandae mollitia aut nihil ut quidem nam autem. Soluta eos non eligendi sed corporis ut id id. Est harum qui harum sint consequatur harum numquam qui ratione.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 631, DateTimeKind.Local).AddTicks(4903),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 521, DateTimeKind.Local).AddTicks(8495),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 631, DateTimeKind.Local).AddTicks(4906),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 4,
@@ -1577,46 +1580,34 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitDetailId = 19,
-                            Description = "Nobis sunt voluptas aut deserunt iure rerum dolores similique suscipit. Vel odio inventore ut eum corporis reiciendis. Fugit repellendus magnam tempore occaecati sunt. Quas et cumque est ut repudiandae atque libero. Ad maxime amet ab nesciunt illum animi dolore.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 523, DateTimeKind.Local).AddTicks(2110),
+                            Description = "Facere ut saepe modi dicta ea fugit sit. Error et dolores sunt pariatur. Totam alias recusandae labore minima excepturi molestiae atque optio.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 632, DateTimeKind.Local).AddTicks(5746),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 523, DateTimeKind.Local).AddTicks(2075),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 632, DateTimeKind.Local).AddTicks(5772),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 4,
-                            VisitorId = 8
+                            VisitorId = 5
                         },
                         new
                         {
                             VisitDetailId = 20,
-                            Description = "Facere quia accusantium delectus eveniet omnis in ratione nihil officia. Repellendus magnam sunt et nesciunt deserunt sunt reprehenderit velit. Aspernatur quia et quae et qui tempora repellat et. Qui ut qui impedit aspernatur dolor deleniti rerum provident. Distinctio dicta pariatur sit eos.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 523, DateTimeKind.Local).AddTicks(2414),
+                            Description = "Et ut vel repellendus quia sunt voluptatem. At doloribus a. Est id molestiae ducimus aut. Voluptas nihil veniam aliquam. Iure qui sit veniam at sunt sit fuga.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 632, DateTimeKind.Local).AddTicks(6003),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 523, DateTimeKind.Local).AddTicks(2412),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 632, DateTimeKind.Local).AddTicks(6005),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 4,
-                            VisitorId = 10
+                            VisitorId = 4
                         },
                         new
                         {
                             VisitDetailId = 21,
-                            Description = "Velit nihil enim repellendus. Facere perspiciatis commodi numquam dignissimos facere. Quia voluptatem ipsum inventore sunt non dolore ea nihil. Error sint incidunt rerum modi aut. Vel sapiente debitis eos. Voluptatibus distinctio rem quidem laudantium quia incidunt dolores itaque repellendus.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 524, DateTimeKind.Local).AddTicks(4487),
+                            Description = "Sint ullam placeat. Et sed nulla nisi placeat totam quidem. Quod aut facilis ipsa rerum culpa distinctio voluptate repellendus perspiciatis. Harum doloribus vel dicta soluta est iure molestiae reiciendis cupiditate. Quaerat nemo id excepturi dignissimos autem quasi ut odit deleniti.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 633, DateTimeKind.Local).AddTicks(6667),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 524, DateTimeKind.Local).AddTicks(4454),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 6
-                        },
-                        new
-                        {
-                            VisitDetailId = 22,
-                            Description = "Ullam ullam ex deleniti similique quis quia totam qui aspernatur. Labore voluptatem aliquid aspernatur possimus. Veritatis autem ut maxime ipsum.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 524, DateTimeKind.Local).AddTicks(4791),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 524, DateTimeKind.Local).AddTicks(4788),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 633, DateTimeKind.Local).AddTicks(6692),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 5,
@@ -1624,59 +1615,71 @@ namespace SecurityGateApv.Infras.Migrations
                         },
                         new
                         {
-                            VisitDetailId = 23,
-                            Description = "Placeat culpa tempora id dolorem qui sunt aspernatur distinctio. Laborum dolores corporis totam. Dolores sit explicabo aut vel velit earum natus.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 525, DateTimeKind.Local).AddTicks(5537),
+                            VisitDetailId = 22,
+                            Description = "Quasi non rerum ut in vel ipsa eos. Unde provident error amet. Nesciunt ut explicabo. Voluptas rerum sequi in harum aperiam.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 633, DateTimeKind.Local).AddTicks(6906),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 525, DateTimeKind.Local).AddTicks(5510),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 633, DateTimeKind.Local).AddTicks(6909),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 5,
-                            VisitorId = 5
+                            VisitorId = 6
+                        },
+                        new
+                        {
+                            VisitDetailId = 23,
+                            Description = "Aut porro officia quo eos. Fugiat quidem quam repudiandae saepe consequuntur quia vero recusandae. Sunt laudantium repudiandae reiciendis architecto.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 634, DateTimeKind.Local).AddTicks(8917),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 634, DateTimeKind.Local).AddTicks(8942),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 5,
+                            VisitorId = 4
                         },
                         new
                         {
                             VisitDetailId = 24,
-                            Description = "Eligendi magnam nulla nisi. Labore laudantium quasi perspiciatis eveniet voluptatem vel adipisci magni ut. Enim asperiores omnis sapiente odit molestiae eveniet velit eos. Est aut pariatur voluptatem sed reprehenderit quam. Fugiat dignissimos corrupti dolor et at vitae qui culpa et. Eum qui dicta est eius.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 525, DateTimeKind.Local).AddTicks(5814),
+                            Description = "Deleniti beatae praesentium sed rerum quisquam quia fugit velit maiores. Ad mollitia consequatur perferendis assumenda et laborum dolore aut. Atque architecto fugit qui laboriosam vero. Enim aperiam blanditiis accusamus voluptates dolores vero culpa. Id est numquam aut nisi minima eaque sit atque.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 634, DateTimeKind.Local).AddTicks(9209),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 525, DateTimeKind.Local).AddTicks(5812),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 634, DateTimeKind.Local).AddTicks(9211),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 5,
-                            VisitorId = 8
+                            VisitorId = 7
                         },
                         new
                         {
                             VisitDetailId = 25,
-                            Description = "Iure similique consectetur. Eum omnis iusto vero ea quibusdam ab sint. Labore sapiente nesciunt voluptatem velit et velit magni rerum explicabo. Sit sed quia id ut amet cupiditate. Voluptas iusto aut enim.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 526, DateTimeKind.Local).AddTicks(6620),
+                            Description = "Totam impedit placeat cupiditate delectus nihil nesciunt. Ut non aut inventore nulla odio accusamus in. Inventore voluptas dicta earum quisquam asperiores et sit ducimus sit. Consectetur inventore distinctio perspiciatis nisi rerum. Enim eum odio ipsam fuga consectetur et dolores et.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 636, DateTimeKind.Local).AddTicks(152),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 526, DateTimeKind.Local).AddTicks(6594),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 636, DateTimeKind.Local).AddTicks(177),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 5,
-                            VisitorId = 1
+                            VisitorId = 7
                         },
                         new
                         {
                             VisitDetailId = 26,
-                            Description = "Dignissimos ut eos provident dicta. Omnis ab aut et provident dolores aspernatur laboriosam. Ipsa deleniti iste aut ea natus quibusdam. Eaque aliquam consequatur ut.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 526, DateTimeKind.Local).AddTicks(6835),
+                            Description = "Aut ipsum repellat iste. Nesciunt hic nobis et non recusandae ut. Voluptate hic omnis aut et qui. Tempore veritatis aut et dolorem repellendus velit aliquid molestias impedit. Culpa nostrum enim et.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 636, DateTimeKind.Local).AddTicks(416),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 526, DateTimeKind.Local).AddTicks(6833),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 636, DateTimeKind.Local).AddTicks(418),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 5,
-                            VisitorId = 10
+                            VisitorId = 9
                         },
                         new
                         {
                             VisitDetailId = 27,
-                            Description = "Unde perferendis quasi doloribus architecto rerum. Dolorum est vel perspiciatis reprehenderit quaerat optio. Ipsam ullam rerum qui nesciunt.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 527, DateTimeKind.Local).AddTicks(7475),
+                            Description = "Eos sunt architecto ut quas ea omnis. Et unde dolorem perferendis ut. Magni ea saepe minima assumenda officiis.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 637, DateTimeKind.Local).AddTicks(908),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 527, DateTimeKind.Local).AddTicks(7449),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 637, DateTimeKind.Local).AddTicks(932),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 6,
@@ -1685,22 +1688,22 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitDetailId = 28,
-                            Description = "Ab dicta qui maiores sint aut. Soluta quas deleniti. Assumenda ea ut. Omnis neque sint corporis accusamus quia quam modi adipisci fuga. At eligendi sint soluta. Necessitatibus enim deserunt consequatur reiciendis nesciunt sit.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 527, DateTimeKind.Local).AddTicks(7714),
+                            Description = "Modi quam unde autem hic. Maxime aut iure sit incidunt totam. Magni velit reiciendis ea perferendis eos qui eos.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 637, DateTimeKind.Local).AddTicks(1133),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 527, DateTimeKind.Local).AddTicks(7712),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 637, DateTimeKind.Local).AddTicks(1135),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 6,
-                            VisitorId = 3
+                            VisitorId = 6
                         },
                         new
                         {
                             VisitDetailId = 29,
-                            Description = "Eos saepe in modi est neque possimus consequatur eum. Voluptate quis explicabo nobis doloremque eum maiores sunt id. Quaerat ut dolorem vel necessitatibus non ullam expedita error. Sunt at distinctio repudiandae ea autem. Qui pariatur quo minima fugit.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 529, DateTimeKind.Local).AddTicks(6758),
+                            Description = "Consequatur in rerum deleniti ab. Dolores suscipit dicta mollitia eum neque minima autem. Fugiat temporibus non. Est neque culpa dolorem repellat. Aliquam et voluptate est. Est distinctio natus aliquam voluptatem quos esse a ullam.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 638, DateTimeKind.Local).AddTicks(9886),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 529, DateTimeKind.Local).AddTicks(6724),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 638, DateTimeKind.Local).AddTicks(9918),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 6,
@@ -1709,10 +1712,22 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitDetailId = 30,
-                            Description = "Qui velit consequatur labore eius. Expedita aliquam quos praesentium enim qui debitis quaerat. Exercitationem maxime et sequi dolores. Ut occaecati et consequuntur est esse.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 529, DateTimeKind.Local).AddTicks(6978),
+                            Description = "Dolorem illum recusandae eius delectus hic quisquam architecto. Rerum veritatis dicta odit minus dolor est unde iste voluptatem. Aspernatur occaecati dolorem animi voluptates qui dignissimos labore ullam rerum. Libero ipsa aut natus adipisci expedita occaecati. Modi officiis id sint aut molestiae. Sit mollitia eaque quas officia.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 639, DateTimeKind.Local).AddTicks(199),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 529, DateTimeKind.Local).AddTicks(6976),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 639, DateTimeKind.Local).AddTicks(202),
+                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
+                            Status = true,
+                            VisitId = 6,
+                            VisitorId = 4
+                        },
+                        new
+                        {
+                            VisitDetailId = 31,
+                            Description = "Tempora porro debitis libero odio. Rerum sint aliquam et et explicabo occaecati exercitationem debitis sint. Itaque perspiciatis autem necessitatibus et. Qui minus nisi qui ad quia. Aliquid numquam aut voluptas et. Minima aliquid magnam aut quaerat laborum numquam error id est.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 640, DateTimeKind.Local).AddTicks(1381),
+                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 640, DateTimeKind.Local).AddTicks(1412),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 6,
@@ -1720,23 +1735,11 @@ namespace SecurityGateApv.Infras.Migrations
                         },
                         new
                         {
-                            VisitDetailId = 31,
-                            Description = "Iusto blanditiis id ut placeat quia molestiae eos illum. Animi sint nobis adipisci. Consectetur voluptates similique officia accusantium.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 530, DateTimeKind.Local).AddTicks(8160),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 530, DateTimeKind.Local).AddTicks(8124),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 1
-                        },
-                        new
-                        {
                             VisitDetailId = 32,
-                            Description = "Omnis ab officia sit atque ratione eum aperiam. Necessitatibus totam alias labore. Eos dignissimos ab ut quia.",
-                            ExpectedEndDate = new DateTime(2024, 9, 27, 10, 37, 46, 530, DateTimeKind.Local).AddTicks(8368),
+                            Description = "Officia et nulla dolores. Tenetur eum necessitatibus quasi a aut. Hic sint quisquam corporis tempore ipsum eos fuga incidunt voluptatum. Sint quam tempora minima voluptas saepe qui facilis recusandae ipsa. Facere vitae dolores aut aut est a nobis.",
+                            ExpectedEndDate = new DateTime(2024, 9, 26, 10, 36, 14, 640, DateTimeKind.Local).AddTicks(1656),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 10, 37, 46, 530, DateTimeKind.Local).AddTicks(8366),
+                            ExpectedStartDate = new DateTime(2024, 9, 27, 10, 36, 14, 640, DateTimeKind.Local).AddTicks(1658),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             Status = true,
                             VisitId = 6,
@@ -1794,9 +1797,9 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             VisitProcessId = 1,
                             DaysOfProcess = "Monday",
-                            ExpectedEndDate = new DateTime(2024, 10, 25, 10, 37, 46, 500, DateTimeKind.Local).AddTicks(6558),
+                            ExpectedEndDate = new DateTime(2024, 10, 25, 10, 36, 14, 616, DateTimeKind.Local).AddTicks(9174),
                             ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 25, 10, 37, 46, 500, DateTimeKind.Local).AddTicks(6521),
+                            ExpectedStartDate = new DateTime(2024, 9, 25, 10, 36, 14, 616, DateTimeKind.Local).AddTicks(9141),
                             ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
                             ProcessId = 1,
                             Status = "Processing",
@@ -1916,132 +1919,132 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             VisitorId = 1,
-                            CompanyName = "Marquardt - Yundt",
+                            CompanyName = "Gulgowski Inc",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 18, 5, 17, 24, 30, DateTimeKind.Unspecified).AddTicks(9787),
+                            CreatedDate = new DateTime(2024, 9, 3, 20, 9, 23, 379, DateTimeKind.Unspecified).AddTicks(4679),
                             CredentialCardTypeId = 2,
-                            CredentialsCard = "pvc7uan331",
-                            PhoneNumber = "0490385705",
-                            Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 18, 5, 17, 24, 30, DateTimeKind.Unspecified).AddTicks(9787),
-                            VisitorName = "Sandrine Leuschke"
+                            CredentialsCard = "mwpj1y4k4u",
+                            PhoneNumber = "0234171487",
+                            Status = true,
+                            UpdatedDate = new DateTime(2024, 9, 3, 20, 9, 23, 379, DateTimeKind.Unspecified).AddTicks(4679),
+                            VisitorName = "Gregorio Lemke"
                         },
                         new
                         {
                             VisitorId = 2,
-                            CompanyName = "Green - O'Reilly",
+                            CompanyName = "Stehr, Kassulke and Johnston",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 13, 14, 55, 0, 674, DateTimeKind.Unspecified).AddTicks(3630),
-                            CredentialCardTypeId = 1,
-                            CredentialsCard = "s6er3nssjs",
-                            PhoneNumber = "0383993078",
+                            CreatedDate = new DateTime(2024, 9, 21, 9, 29, 51, 717, DateTimeKind.Unspecified).AddTicks(8134),
+                            CredentialCardTypeId = 2,
+                            CredentialsCard = "u21rsr7xm2",
+                            PhoneNumber = "0247807559",
                             Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 13, 14, 55, 0, 674, DateTimeKind.Unspecified).AddTicks(3630),
-                            VisitorName = "Drew Stanton"
+                            UpdatedDate = new DateTime(2024, 9, 21, 9, 29, 51, 717, DateTimeKind.Unspecified).AddTicks(8134),
+                            VisitorName = "Orin Mayer"
                         },
                         new
                         {
                             VisitorId = 3,
-                            CompanyName = "Ebert LLC",
+                            CompanyName = "Reinger - Nolan",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 9, 4, 0, 41, 603, DateTimeKind.Unspecified).AddTicks(5646),
+                            CreatedDate = new DateTime(2024, 9, 17, 7, 42, 31, 145, DateTimeKind.Unspecified).AddTicks(9170),
                             CredentialCardTypeId = 1,
-                            CredentialsCard = "4ns90cdp5u",
-                            PhoneNumber = "0891297487",
+                            CredentialsCard = "oej2t31v91",
+                            PhoneNumber = "0739218090",
                             Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 9, 4, 0, 41, 603, DateTimeKind.Unspecified).AddTicks(5646),
-                            VisitorName = "Sherwood Farrell"
+                            UpdatedDate = new DateTime(2024, 9, 17, 7, 42, 31, 145, DateTimeKind.Unspecified).AddTicks(9170),
+                            VisitorName = "Raphael Boyle"
                         },
                         new
                         {
                             VisitorId = 4,
-                            CompanyName = "Carter, Carroll and Wehner",
+                            CompanyName = "Douglas - Terry",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 23, 21, 41, 9, 449, DateTimeKind.Unspecified).AddTicks(7119),
+                            CreatedDate = new DateTime(2024, 9, 8, 11, 54, 43, 8, DateTimeKind.Unspecified).AddTicks(3209),
                             CredentialCardTypeId = 1,
-                            CredentialsCard = "zav15xkr1t",
-                            PhoneNumber = "0376460894",
+                            CredentialsCard = "tm81p79jvk",
+                            PhoneNumber = "0589188705",
                             Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 23, 21, 41, 9, 449, DateTimeKind.Unspecified).AddTicks(7119),
-                            VisitorName = "Alessandro Effertz"
+                            UpdatedDate = new DateTime(2024, 9, 8, 11, 54, 43, 8, DateTimeKind.Unspecified).AddTicks(3209),
+                            VisitorName = "Cali Schiller"
                         },
                         new
                         {
                             VisitorId = 5,
-                            CompanyName = "Hoppe, Zboncak and Wyman",
+                            CompanyName = "Mosciski LLC",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 16, 3, 57, 47, 302, DateTimeKind.Unspecified).AddTicks(4037),
+                            CreatedDate = new DateTime(2024, 9, 21, 23, 33, 3, 593, DateTimeKind.Unspecified).AddTicks(8317),
                             CredentialCardTypeId = 1,
-                            CredentialsCard = "p82hnkwaqp",
-                            PhoneNumber = "0989444664",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 16, 3, 57, 47, 302, DateTimeKind.Unspecified).AddTicks(4037),
-                            VisitorName = "Liza Ernser"
+                            CredentialsCard = "ii30iazfve",
+                            PhoneNumber = "0323981932",
+                            Status = false,
+                            UpdatedDate = new DateTime(2024, 9, 21, 23, 33, 3, 593, DateTimeKind.Unspecified).AddTicks(8317),
+                            VisitorName = "Estrella McDermott"
                         },
                         new
                         {
                             VisitorId = 6,
-                            CompanyName = "Blanda, Halvorson and Hand",
+                            CompanyName = "Sanford Group",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 5, 8, 33, 52, 310, DateTimeKind.Unspecified).AddTicks(1414),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "0q2vzusmvv",
-                            PhoneNumber = "0637470226",
-                            Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 5, 8, 33, 52, 310, DateTimeKind.Unspecified).AddTicks(1414),
-                            VisitorName = "Destin Gottlieb"
+                            CreatedDate = new DateTime(2024, 9, 20, 17, 7, 6, 624, DateTimeKind.Unspecified).AddTicks(4674),
+                            CredentialCardTypeId = 1,
+                            CredentialsCard = "r62r5x4jpf",
+                            PhoneNumber = "0633675726",
+                            Status = true,
+                            UpdatedDate = new DateTime(2024, 9, 20, 17, 7, 6, 624, DateTimeKind.Unspecified).AddTicks(4674),
+                            VisitorName = "Anabelle Beahan"
                         },
                         new
                         {
                             VisitorId = 7,
-                            CompanyName = "Erdman - Lowe",
+                            CompanyName = "Dooley - Stark",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 6, 23, 5, 50, 586, DateTimeKind.Unspecified).AddTicks(6761),
+                            CreatedDate = new DateTime(2024, 9, 21, 18, 26, 32, 714, DateTimeKind.Unspecified).AddTicks(3336),
                             CredentialCardTypeId = 2,
-                            CredentialsCard = "8m1qqp38zp",
-                            PhoneNumber = "0570849680",
-                            Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 6, 23, 5, 50, 586, DateTimeKind.Unspecified).AddTicks(6761),
-                            VisitorName = "Braulio Cormier"
+                            CredentialsCard = "877vmja2k0",
+                            PhoneNumber = "0358068131",
+                            Status = true,
+                            UpdatedDate = new DateTime(2024, 9, 21, 18, 26, 32, 714, DateTimeKind.Unspecified).AddTicks(3336),
+                            VisitorName = "Rachael Kovacek"
                         },
                         new
                         {
                             VisitorId = 8,
-                            CompanyName = "Wisozk and Sons",
+                            CompanyName = "Medhurst Inc",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 22, 21, 33, 42, 723, DateTimeKind.Unspecified).AddTicks(7889),
+                            CreatedDate = new DateTime(2024, 9, 6, 3, 48, 43, 839, DateTimeKind.Unspecified).AddTicks(2299),
                             CredentialCardTypeId = 2,
-                            CredentialsCard = "nr6x3jq57f",
-                            PhoneNumber = "0883931216",
+                            CredentialsCard = "am5xpvhymz",
+                            PhoneNumber = "0283136949",
                             Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 22, 21, 33, 42, 723, DateTimeKind.Unspecified).AddTicks(7889),
-                            VisitorName = "Roderick Dooley"
+                            UpdatedDate = new DateTime(2024, 9, 6, 3, 48, 43, 839, DateTimeKind.Unspecified).AddTicks(2299),
+                            VisitorName = "Dagmar Doyle"
                         },
                         new
                         {
                             VisitorId = 9,
-                            CompanyName = "McDermott, Larson and Jast",
+                            CompanyName = "Altenwerth, Deckow and Will",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 3, 16, 49, 31, 156, DateTimeKind.Unspecified).AddTicks(2632),
+                            CreatedDate = new DateTime(2024, 9, 13, 0, 53, 20, 848, DateTimeKind.Unspecified).AddTicks(5313),
                             CredentialCardTypeId = 1,
-                            CredentialsCard = "alg07j5uo3",
-                            PhoneNumber = "0975273201",
+                            CredentialsCard = "jwpsm07yo7",
+                            PhoneNumber = "0696546225",
                             Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 3, 16, 49, 31, 156, DateTimeKind.Unspecified).AddTicks(2632),
-                            VisitorName = "Lorenza Haag"
+                            UpdatedDate = new DateTime(2024, 9, 13, 0, 53, 20, 848, DateTimeKind.Unspecified).AddTicks(5313),
+                            VisitorName = "Sylvia Schuppe"
                         },
                         new
                         {
                             VisitorId = 10,
-                            CompanyName = "Batz, Walter and Lehner",
+                            CompanyName = "Greenholt - Weimann",
                             CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 14, 7, 6, 38, 637, DateTimeKind.Unspecified).AddTicks(7634),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "xqr9rp76gp",
-                            PhoneNumber = "0149874652",
-                            Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 14, 7, 6, 38, 637, DateTimeKind.Unspecified).AddTicks(7634),
-                            VisitorName = "Ilene Fisher"
+                            CreatedDate = new DateTime(2024, 9, 15, 1, 16, 30, 551, DateTimeKind.Unspecified).AddTicks(4884),
+                            CredentialCardTypeId = 1,
+                            CredentialsCard = "d5xvd2qs4w",
+                            PhoneNumber = "0690427093",
+                            Status = true,
+                            UpdatedDate = new DateTime(2024, 9, 15, 1, 16, 30, 551, DateTimeKind.Unspecified).AddTicks(4884),
+                            VisitorName = "Ladarius Boyle"
                         });
                 });
 

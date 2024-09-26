@@ -31,5 +31,13 @@ namespace SecurityGateApv.Domain.Errors
 
         //Visit error
         public static readonly Error NotFoundVisit = new("Error.NotfoundVisit", "Not found this visit");
+
+        //QRCard error
+        public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");
+
+
+        //VisitSesson error 
+        public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
+
     }
 }
