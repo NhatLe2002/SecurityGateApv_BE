@@ -33,6 +33,9 @@ namespace SecurityGateApv.Infras.Extentions
             //DI Repo
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IVisitRepo, VisitRepo>();
+            services.AddScoped<IProjectRepo, ProjectRepo>();
+            services.AddScoped<IVisitorRepo, VisitorRepo>();
+            services.AddScoped<IDepartmentReasonRepo, DepartmentReasonRepo>();
             services.AddScoped<IJwt, JwtHelper>();
 
             //JWT
