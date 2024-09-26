@@ -31,6 +31,7 @@ namespace SecurityGateApv.Domain.Errors
 
         //Visit error
         public static readonly Error NotFoundVisit = new("Error.NotfoundVisit", "Not found this visit");
+        public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
 
         //QRCard error
         public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");
@@ -39,5 +40,11 @@ namespace SecurityGateApv.Domain.Errors
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
 
+        //Process Error
+        public static readonly Error ProcessCreateError = new("Error.Create", "Can not create process");
+        public static readonly Error ProcessNotFoundError = new("Error.ProcessNotFoundError", "Can not found process");
+
+        //ProcessVisit Error
+        public static readonly Error ProcessVisitCreateDateError = new("Error.ProcessVisitCreateDateError", @"Date format is ""Mon,Tue,Sun""");
     }
 }

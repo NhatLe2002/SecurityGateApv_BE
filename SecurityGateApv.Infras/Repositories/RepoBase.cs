@@ -26,6 +26,12 @@ namespace SecurityGateApv.Infras.Repositories
             return true;
         }
 
+        public async Task<bool> AddRangeAsync(ICollection<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            return true;
+        }
+
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, int entry = 1, int page = 1, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
                         string includeProperties = "")
         {
@@ -79,6 +85,11 @@ namespace SecurityGateApv.Infras.Repositories
         public virtual async Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<bool> IsAny(Expression<Func<T, bool>> filter)
+        {
+            return await _dbSet.AnyAsync(filter);
         }
 
         public async Task<bool> RemoveAsync(int id)

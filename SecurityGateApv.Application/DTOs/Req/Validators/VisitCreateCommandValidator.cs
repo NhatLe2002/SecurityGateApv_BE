@@ -11,7 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class VisitCreateCommandValidator : AbstractValidator<VisitCreateCommand>
     {
-        public VisitCreateCommandValidator(IUserRepo userRepo, IProjectRepo projectRepo, IDepartmentReasonRepo departmentReasonRepo)
+        public VisitCreateCommandValidator(IUserRepo userRepo)
         {
             RuleFor(s => s.AcceptLevel).Must(s => s > 0).NotNull();
             RuleFor(s => s.VisitQuantity).Must(s => s > 0).NotNull();
@@ -33,7 +33,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 }
                 return false;
             }).WithMessage("User Id not exist");
-            RuleForEach(s => s.VisitProject).Must(s =>
+/*            RuleForEach(s => s.VisitProject).Must(s =>
             {
                 if(s == null)
                 {
@@ -45,8 +45,8 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;
-            }).WithMessage("Project Id not exist");
-            RuleFor(s => s.DepartmentReasonId).Must(s =>
+            }).WithMessage("Project Id not exist");*/
+/*            RuleFor(s => s.DepartmentReasonId).Must(s =>
             {
                 var deReason = departmentReasonRepo.FindAsync(t => t.DepartmentReasonId == s).GetAwaiter().GetResult();
                 if (deReason != null)
@@ -54,7 +54,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;
-            }).WithMessage("DeparmentReason Id not exist");
+            }).WithMessage("DeparmentReason Id not exist");*/
         }
         class VisitDetailCommandValidator : AbstractValidator<VisitDetailCommand>
         {

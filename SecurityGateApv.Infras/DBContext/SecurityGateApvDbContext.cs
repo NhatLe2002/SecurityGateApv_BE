@@ -26,7 +26,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<Gate> Gates { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationUsers> NotificationUsers { get; set; }
-        public DbSet<Process> Projects { get; set; }
+        public DbSet<Process> Processes { get; set; }
         public DbSet<QRCard> QRCards { get; set; }
         public DbSet<QRCardStatus> QRCardStatus { get; set; }
         public DbSet<QRCardType> QRCardType { get; set; }
@@ -40,7 +40,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
-        public DbSet<VisitProcess> VisitProjects { get; set; }
+        public DbSet<VisitProcess> VisitProcesses { get; set; }
         public DbSet<VisitType> VisitTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

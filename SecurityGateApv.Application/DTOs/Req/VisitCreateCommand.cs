@@ -13,10 +13,9 @@ namespace SecurityGateApv.Application.DTOs.Req
     {
         public int VisitQuantity { get; set; }
         public int AcceptLevel { get; set; }
-        public int DepartmentReasonId { get; set; }
+        public string VisitName { get; set; }
         public int CreateById { get; set; }
         public int UpdateById { get; set; }
-        public ICollection<VisitProjectCommand>? VisitProject { get; set; }
         public ICollection<VisitDetailCommand> VisitDetailOfNewVisitor { get; set; }
         public ICollection<VisitDetailOldCommand> VisitDetailOfOldVisitor { get; set; }
     }
@@ -32,6 +31,8 @@ namespace SecurityGateApv.Application.DTOs.Req
     {
         public string VisitDetailName { get; set; }
         public string Description { get; set; }
+        public DateTime ExpectedStartDate { get; private set; }
+        public DateTime ExpectedEndDate { get; private set; }
         public DateTime ExpectedTimeIn { get; set; }
         public DateTime ExpectedTimeOut { get; set; }
         public bool Status { get; set; }
@@ -41,6 +42,8 @@ namespace SecurityGateApv.Application.DTOs.Req
     {
         public string VisitDetailName { get; set; }
         public string Description { get; set; }
+        public DateTime ExpectedStartDate { get; private set; }
+        public DateTime ExpectedEndDate { get; private set; }
         public DateTime ExpectedTimeIn { get; set; }
         public DateTime ExpectedTimeOut { get; set; }
         public bool Status { get; set; }
@@ -54,6 +57,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public string CredentialsCard { get; set; }
+        public int CreateById { get; set; }
         public bool Status { get; set; }
         public int CredentialCardTypeId { get; set; }
     }

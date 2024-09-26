@@ -15,7 +15,7 @@ namespace SecurityGateApv.Domain.Models
         {
             
         }
-        internal Visitor(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
+        internal Visitor(string visitorName, string companyName, string phoneNumber, int createById, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
             int credentialCardTypeId)
         {
             VisitorName = visitorName;
@@ -23,6 +23,7 @@ namespace SecurityGateApv.Domain.Models
             PhoneNumber = phoneNumber;
             CreatedDate = createdDate;
             UpdatedDate = updatedDate;
+            CreateById = createById;
             CredentialsCard = credentialsCard;
             Status = status;
             CredentialCardTypeId = credentialCardTypeId;
@@ -52,10 +53,10 @@ namespace SecurityGateApv.Domain.Models
         public UserDepartment UserDepartment { get; private set; }
 
         public ICollection<VisitDetail> VisitDetail { get; private set; }
-        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
+        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, int createById, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
             int credentialCardTypeId)
         {
-            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId);
+            var result = new Visitor(visitorName, companyName, phoneNumber, createById, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId);
             return result;
         }
     }

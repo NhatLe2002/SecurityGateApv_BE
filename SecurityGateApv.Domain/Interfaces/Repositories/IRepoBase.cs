@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,7 +11,7 @@ namespace SecurityGateApv.Domain.Interfaces.Repositories
     public interface IRepoBase<T> where T : class
     {
         public Task<bool> AddAsync(T entity);
-
+        public Task<bool> AddRangeAsync(ICollection<T> entities);
 
         public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, int entry = 1, int page = 1, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
                         string includeProperties = "");
@@ -29,5 +30,6 @@ namespace SecurityGateApv.Domain.Interfaces.Repositories
           string includeProperties,
           int? pageIndex, // Optional parameter for pagination (page number)
           int? pageSize);
+        public Task<bool> IsAny(Expression<Func<T, bool>> filter);
     }
 }

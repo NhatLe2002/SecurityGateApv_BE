@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Interfaces.Repositories
 {
-    public interface IProjectRepo : IRepoBase<Project>
+    public interface IVistProcessRepo : IRepoBase<VisitProcess>
     {
     }
 }
