@@ -271,7 +271,7 @@ namespace SecurityGateApv.Infras.Data
                .RuleFor(vd => vd.Description, f => f.Lorem.Paragraph())
                .RuleFor(vd => vd.Status, f => true)
                .RuleFor(vd => vd.VisitId, f => 1)
-               .RuleFor(vd => vd.VisitorId, f => 1);
+               .RuleFor(vd => vd.VisitorId, f => f.Random.Int(1, 2));
 
             var visitDetails = visitDetailFaker.Generate(2);
 
@@ -390,7 +390,6 @@ namespace SecurityGateApv.Infras.Data
                     visitorSessionImages.Add(new VisitorSessionsImage
                     {
                         VisitorSessionsImageId = (session.VisitorSessionId - 1) * 3 + j + 1, // Đảm bảo ID là duy nhất
-                        Name = $"Image_{session.VisitorSessionId}_{j + 1}",
                         ImageType = "jpg", // Hoặc bất kỳ loại nào bạn muốn
                         ImageURL = $"https://example.com/images/{session.VisitorSessionId}_{j + 1}.jpg", // Địa chỉ URL hình ảnh
                         VisitorSessionId = session.VisitorSessionId

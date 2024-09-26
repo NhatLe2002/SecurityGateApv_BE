@@ -17,7 +17,20 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPut("CheckOut")]
         public async Task<ActionResult> CheckOut(VisitorSessionCheckOutCommand command, int qrCardId)
         {
-            var result = await _visitorSessionService.CheckIn(command, qrCardId);
+            var result = await _visitorSessionService.CheckOut(command, qrCardId);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        
+        
+        [HttpPut("CheckIn")]
+        public async Task<ActionResult> CheckIn(VisitSessionCheckInCommand visitSessionCheckInCommand)
+        {
+            var result = await _visitorSessionService.CheckIn(visitSessionCheckInCommand);
 
             if (result.IsFailure)
             {

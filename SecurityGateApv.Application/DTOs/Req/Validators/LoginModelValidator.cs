@@ -11,7 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
     {
         public LoginModelValidator()
         {
-            RuleFor(s=> s.Email).NotEmpty().NotNull();
+            RuleFor(s=> s.Username).NotEmpty().NotNull();
             RuleFor(s => s.Password).NotEmpty().NotNull();
         }
     }

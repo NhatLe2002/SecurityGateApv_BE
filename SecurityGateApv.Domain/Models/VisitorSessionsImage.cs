@@ -12,7 +12,6 @@ namespace SecurityGateApv.Domain.Models
     {
         [Key]
         public int VisitorSessionsImageId { get; set; }
-        public string Name { get; set; }
         public string ImageType { get; set; }
         public string ImageURL { get; set; }
 

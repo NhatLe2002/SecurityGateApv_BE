@@ -17,6 +17,8 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Visit, GetVisitRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
             CreateMap<Visitor, VisitorRes>().ReverseMap();
+            CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
+            CreateMap<Gate, GetGateRes>().ReverseMap();
             CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
             CreateMap<ProcessByDepartmentManagerIdRes, Process>().ReverseMap();
             CreateMap<ProcessDetailRes, VisitProcess>().ReverseMap();

@@ -10,16 +10,15 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Infras.Repositories
 {
-    public class VisitorRepo : RepoBase<Visitor>, IVisitorRepo
+    public class VisitDetailRepo : RepoBase<VisitDetail>, IVisitDetailRepo
     {
         private readonly SecurityGateApvDbContext _context;
         private readonly DbSet<Visit> _dbSet;
 
-        public VisitorRepo(SecurityGateApvDbContext context) : base(context)
+        public VisitDetailRepo(SecurityGateApvDbContext context) : base(context)
         {
             _context = context;
             _dbSet = _context.Set<Visit>();
         }
-
     }
 }

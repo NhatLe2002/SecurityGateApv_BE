@@ -35,10 +35,21 @@ namespace SecurityGateApv.Domain.Errors
 
         //QRCard error
         public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");
+        public static readonly Error NotFoundQRCard = new("Error.NotfoundQRCard", "Not found this QRCard");
+        public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
 
 
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
+        public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
+
+
+
+        //Visitor eror
+        public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Not found this visitor");
+
+
+
 
         //Process Error
         public static readonly Error ProcessCreateError = new("Error.Create", "Can not create process");

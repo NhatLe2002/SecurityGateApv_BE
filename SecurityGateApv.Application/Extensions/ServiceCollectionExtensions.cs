@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SecurityGateApv.Application.Common;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,12 @@ namespace SecurityGateApv.Application.Extensions
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVisitService, VisitService>();
+            //services.AddScoped<IVisitDetai, VisitService>();
             services.AddScoped<IVisitorSessionService, VisitorSessionService>();
             services.AddScoped<IVisitService, VisitService>();
             services.AddScoped<IQRCodeService, QRCodeService>();
             services.AddScoped<IProcessService, ProcessSerivce>();
+            services.AddScoped<IGateService, GateService>();
             services.AddFluentValidation();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

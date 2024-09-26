@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SecurityGateApv.Application.DTOs.Res
@@ -15,14 +16,28 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int AcceptLevel { get; set; }
         public ICollection<VisitDetailRes> VisitDetail { get; set; }
     }
-
+    public class GetVisitByCurrentDateRes
+    {
+        [JsonIgnore]
+        public int VisitDetailId { get;  set; }
+        public int VisitId { get;  set; }
+        public string VisitName { get; set; }
+        public DateTime ExpectedStartDate { get; set; }
+        public DateTime ExpectedEndDate { get; set; }
+        public TimeSpan ExpectedStartTime { get; set; }
+        public TimeSpan ExpectedEndTime { get; set; }
+        public string VisitorName { get; set; }
+        public string CompanyName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string CredentialsCard { get; set; }
+    }
     public class VisitDetailRes
     {
         public string VisitDetailName { get; set; }
-        public string Description { get; set; }
-        public DateTime ExpectedTimeIn { get; set; }
-        public DateTime ExpectedTimeOut { get; set; }
-        public bool Status { get; set; }
+        public DateTime ExpectedStartDate { get; set; }
+        public DateTime ExpectedEndDate { get; set; }
+        public TimeSpan ExpectedStartTime { get;  set; }
+        public TimeSpan ExpectedEndTime { get;  set; }
         public VisitorRes Visitor { get; set; }
     }
 
@@ -34,7 +49,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public string CredentialsCard { get; set; }
-        public bool Status { get; set; }
+        //public bool Status { get; set; }
 
         public CredentialCardType CredentialCardType { get; set; }
     }

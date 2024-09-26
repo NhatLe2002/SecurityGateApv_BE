@@ -10,7 +10,8 @@ namespace SecurityGateApv.Application.Services.Interface
 {
     public interface IVisitorSessionService
     {
-        public Task<Result<bool>> CheckIn(VisitorSessionCheckOutCommand command, int qrCardId);
+        public Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, int qrCardId);
+        public Task<Result<bool>> CheckIn(VisitSessionCheckInCommand command);
 
     }
 }
