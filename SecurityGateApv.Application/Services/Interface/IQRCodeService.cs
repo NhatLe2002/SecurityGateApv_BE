@@ -10,6 +10,7 @@ namespace SecurityGateApv.Application.Services.Interface
     public interface IQRCodeService
     {
         public string DecodeQRCodeFromImage(IFormFile imageStream);
+        public string GenerateQrCar(string data);
 
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using System.Drawing;
-using ZXing;
 namespace SecurityGateApv.Infras.Helpers
 {
     public class ExtractQRCode : IExtractQRCode
@@ -16,19 +15,19 @@ namespace SecurityGateApv.Infras.Helpers
                 var bitmap = new Bitmap(stream);
 
 
-                var barcodeReader = new ZXing.Windows.Compatibility.BarcodeReader();
-                var result = barcodeReader.Decode(bitmap);
+                //var barcodeReader = new ZXing.Windows.Compatibility.BarcodeReader();
+                //var result = barcodeReader.Decode(bitmap);
 
-                if (result == null)
+                /*if (result == null)
                 {
                     Console.WriteLine("No QR code found in the image.");
                 }
                 else
                 {
                     Console.WriteLine($"QR code found: {result.Text}");
-                }
+                }*/
 
-                return result?.Text ?? "No QR code found";
+                return null; /*result?.Text ?? "No QR code found";*/
             }
         }
     }

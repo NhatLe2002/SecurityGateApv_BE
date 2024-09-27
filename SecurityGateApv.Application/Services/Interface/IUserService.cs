@@ -12,5 +12,6 @@ namespace SecurityGateApv.Application.Services.Interface
     public interface IUserService
     {
         public Task<Result<LoginRes>> Login(LoginModel loginModel);
+        public Task<Result<List<GetUserRes>>> GetUserByRolePaging(int pageNumber, int pageSize, string role);
     }
 }

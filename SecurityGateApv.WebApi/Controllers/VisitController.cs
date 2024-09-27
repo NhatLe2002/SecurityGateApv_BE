@@ -26,6 +26,7 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+       
         
         [HttpGet("GetAllVisitsByCurrentDate")]
         public async Task<ActionResult> GetAllVisitsByCurrentDate(int pageSize, int pageNumber)
