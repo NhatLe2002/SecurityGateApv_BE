@@ -38,7 +38,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command)
         {
 
-            var visitCreate = await NewVisit(VisitTypeEnum.NONE, command);
+            var visitCreate = await NewVisit(VisitTypeEnum.NONE, command, null);
             if (visitCreate.IsFailure)
             {
                 return Result.Failure<VisitCreateCommand>(visitCreate.Error);
@@ -48,7 +48,7 @@ namespace SecurityGateApv.Application.Services
             await _unitOfWork.CommitAsync();
             return command;
         }
-        private async Task<Result<Visit>> NewVisit(VisitTypeEnum visitType, VisitCreateCommand command)
+        private async Task<Result<Visit>> NewVisit(VisitTypeEnum visitType, VisitCreateCommand command, VisitProcess visitProcess)
         {
             var createPerson = (await _userRepo.FindAsync(s => s.UserId == command.CreateById, includeProperties: "Role")).FirstOrDefault();
             var visit = new Visit();
@@ -86,10 +86,10 @@ namespace SecurityGateApv.Application.Services
 
             foreach (var item in command.VisitDetailOfOldVisitor)
             {
-                visit.AddVisitDetailOfOldVisitor(item.VisitDetailName,
+                visit.AddVisitDetailOfOldVisitor(
                     item.Description,
-                    item.ExpectedStartDate,
-                    item.ExpectedEndDate,
+                    visitProcess.ExpectedStartDate,
+                    visitProcess.ExpectedEndDate,
                     item.ExpectedTimeIn,
                     item.ExpectedTimeOut,
                     item.Status,
@@ -120,10 +120,10 @@ namespace SecurityGateApv.Application.Services
             var t = 0;
             foreach (var item in command.VisitDetailOfNewVisitor)
             {
-                visit.AddVisitDetailOfNewVisitor(item.VisitDetailName,
+                visit.AddVisitDetailOfNewVisitor(
                     item.Description,
-                    item.ExpectedStartDate,
-                    item.ExpectedEndDate,
+                    visitProcess.ExpectedStartDate,
+                    visitProcess.ExpectedEndDate,
                     item.ExpectedTimeIn,
                     item.ExpectedTimeOut,
                     item.Status,
@@ -135,12 +135,12 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<VisitCreateCommand>> CreateVisitOfProcess(int processVisitId, VisitCreateCommand command, bool visitType) //true is for process, false for project
         {
             var processVisit = (await _vistProcessRepo.FindAsync(s => s.VisitProcessId == processVisitId)).FirstOrDefault();
-
             var visit = new Visit();
 
             if (visitType)
             {
-                var createvisit = await NewVisit(VisitTypeEnum.ProcessWeek, command);
+                
+                var createvisit = await NewVisit(VisitTypeEnum.ProcessWeek, command, processVisit);
                 if (createvisit.IsFailure)
                 {
                     return Result.Failure<VisitCreateCommand>(createvisit.Error);
@@ -149,7 +149,7 @@ namespace SecurityGateApv.Application.Services
             }
             else
             {
-                var createvisit = await NewVisit(VisitTypeEnum.Project, command);
+                var createvisit = await NewVisit(VisitTypeEnum.Project, command, processVisit);
 
                 if (createvisit.IsFailure)
                 {

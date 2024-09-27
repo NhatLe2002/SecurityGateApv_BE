@@ -14,26 +14,24 @@ namespace SecurityGateApv.Domain.Models
         {
 
         }
-        internal VisitDetail(string visitDetailName, string description, DateTime expectedStartDate, DateTime expectedEndDate, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visit visit, Visitor visitor)
+        internal VisitDetail( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, Visit visit, Visitor visitor)
         {
-            //VisitDetailName = visitDetailName;
             Description = description;
             ExpectedStartDate = expectedStartDate;
             ExpectedEndDate = expectedEndDate;
-            ExpectedStartDate = expectedTimeIn;
-            ExpectedEndDate = expectedTimeOut;
+            ExpectedStartTime = expectedTimeIn;
+            ExpectedEndTime = expectedTimeOut;
             Status = status;
             Visit = visit;
             Visitor = visitor;
         }
-        internal VisitDetail(string visitDetailName, string description, DateTime expectedStartDate, DateTime expectedEndDate, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visit visit, int visitorId)
+        internal VisitDetail( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, Visit visit, int visitorId)
         {
-            //VisitDetailName = visitDetailName;
             Description = description;
             ExpectedStartDate = expectedStartDate;
             ExpectedEndDate = expectedEndDate;
-            ExpectedStartDate = expectedTimeIn;
-            ExpectedEndDate = expectedTimeOut;
+            ExpectedStartTime = expectedTimeIn;
+            ExpectedEndTime = expectedTimeOut;
             Status = status;
             Visit = visit;
             VisitorId = visitorId;

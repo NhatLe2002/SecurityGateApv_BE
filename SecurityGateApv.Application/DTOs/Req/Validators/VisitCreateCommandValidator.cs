@@ -60,8 +60,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
         {
             public VisitDetailCommandValidator(IVisitorRepo visitorRepo)
             {
-                RuleFor(s => s.VisitDetailName).NotNull().NotEmpty();
-                RuleFor(s => s.ExpectedTimeOut).NotEmpty().Must(s =>
+                /*RuleFor(s => s.ExpectedTimeOut).NotEmpty().Must(s =>
                 {
                     if(s > DateTime.Now)
                     {
@@ -76,7 +75,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                         return true;
                     }
                     return false;
-                });
+                });*/
                 RuleFor(s => new { s.ExpectedTimeIn, s.ExpectedTimeOut }).Must(s =>
                 {
                     if (s.ExpectedTimeIn < s.ExpectedTimeOut)

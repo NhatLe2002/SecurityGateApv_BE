@@ -84,15 +84,15 @@ namespace SecurityGateApv.Domain.Models
             var result = new Visit(DateTime.UtcNow, visitQuantity, visitName, acceptLevel, createById, updateById, visitTypeEnum.ToString());
             return result;
         }
-        public Result<Visit> AddVisitDetailOfOldVisitor(string visitDetailName, string description, DateTime expectedStartDate, DateTime expectedEndDate, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, int visitorId)
+        public Result<Visit> AddVisitDetailOfOldVisitor( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, int visitorId)
         {
-            var visitDetail = new VisitDetail(visitDetailName, description, expectedStartDate, expectedEndDate, expectedTimeIn, expectedTimeOut, status, this, visitorId);
+            var visitDetail = new VisitDetail( description, expectedStartDate, expectedEndDate, expectedTimeIn, expectedTimeOut, status, this, visitorId);
             VisitDetail.Add(visitDetail);
             return this;
         }
-        public Result<Visit> AddVisitDetailOfNewVisitor(string visitDetailName, string description, DateTime expectedStartDate, DateTime expectedEndDate, DateTime expectedTimeIn, DateTime expectedTimeOut, bool status, Visitor visitor)
+        public Result<Visit> AddVisitDetailOfNewVisitor( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, Visitor visitor)
         {
-            var visitDetail = new VisitDetail(visitDetailName, description, expectedStartDate, expectedEndDate, expectedTimeIn, expectedTimeOut, status, this, visitor);
+            var visitDetail = new VisitDetail( description, expectedStartDate, expectedEndDate, expectedTimeIn, expectedTimeOut, status, this, visitor);
             VisitDetail.Add(visitDetail);
             return this;
         }
