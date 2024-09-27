@@ -54,5 +54,13 @@ namespace SecurityGateApv.WebApi.Controllers
             }
         }
 
+
+        [HttpPost("CreateQRCard")]
+        public async Task<IActionResult> CreateQRCard(string image)
+        {
+            var result = _qrCodeService.GenerateQrCar(image);
+            return Ok(result);
+        }
+
     }
 }

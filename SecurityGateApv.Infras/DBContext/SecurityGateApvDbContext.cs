@@ -77,6 +77,7 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasForeignKey(v => v.UpdateById)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.SecurityIn)
                 .WithMany(g => g.SecurityInSessions) 

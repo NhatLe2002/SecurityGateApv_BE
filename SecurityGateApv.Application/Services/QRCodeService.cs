@@ -7,6 +7,7 @@ using SecurityGateApv.Domain.Interfaces.DomainDTOs;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Shared;
+using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -19,6 +20,7 @@ namespace SecurityGateApv.Application.Services
     public class QRCodeService : IQRCodeService
     {
         private readonly IExtractQRCode _extractQRCode;
+        private readonly IQRCardRepo _qrRCardRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAWSService _awsService;
@@ -27,6 +29,7 @@ namespace SecurityGateApv.Application.Services
             _extractQRCode = extractQRCode;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _qrRCardRepo = qrRCardRepo;
             _awsService = awsService;
         }
 
@@ -34,6 +37,13 @@ namespace SecurityGateApv.Application.Services
         {
             var result = _extractQRCode.ExtractQrCodeFromImage(imageStream);
             return result;
+        }
+
+        public string GenerateQrCar(string data)
+        {
+            var qrCard = QRCard.Create(1, 2);
+            var qrCoder = _qrRCardRepo.GenerateQRCard(data);
+            return qrCoder.Result;
         }
 
         public bool DetectImage(IFormFile image)

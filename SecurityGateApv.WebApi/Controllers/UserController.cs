@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -22,6 +23,18 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest(result.Error);
             }
+            return Ok(result.Value);
+        }
+
+        [HttpGet("GetAllUserPaging")]
+        public async Task<ActionResult> GetAllUserPaging(int pageNumber, int pageSize, string role)
+        {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+
+            var result = await _userService.GetUserByRolePaging(pageNumber, pageSize, role);
             return Ok(result.Value);
         }
     }
