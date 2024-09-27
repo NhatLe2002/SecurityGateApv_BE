@@ -13,10 +13,10 @@ namespace SecurityGateApv.Domain.Models
     {
         [Key]
         public int QRCardId { get; set; }
-        public Guid CardGuidId { get; private set; }
+        public string CardVerification { get; private set; }
         public DateTime CreateDate { get; private set; }
         public DateTime LastCancelDate { get; private set; }
-
+        public string CardImage { get; private set; }
 
         [ForeignKey("QRCardType")]
         public int QRCardTypeId { get; private set; }
@@ -28,22 +28,24 @@ namespace SecurityGateApv.Domain.Models
         public QRCardStatus QRCardStatus { get; private set; }
 
         public ICollection<VisitorSession> VisitorSession { get; private set; }
-        public Result<QRCard> Update(Guid cardGuidId)
+       /* public Result<QRCard> Update(Guid cardGuidId)
         {
             this.CardGuidId = cardGuidId;
             return this;
-        }
+        }*/
         public Result<QRCard> UpdateQRCardStatus(int status)
         {
             this.QRCardStatusId = status;
             return this;
         }
-        public static QRCard Create(int qrCardTypeId, int qrCardStatusId)
+        public static QRCard Create(int qrCardTypeId, int qrCardStatusId, string guid, string cardImage)
         {
             var qrCard = new QRCard
             {
-                CardGuidId = Guid.NewGuid(),
+                CardVerification = guid,
                 CreateDate = DateTime.Now,
+                LastCancelDate = DateTime.Now,
+                CardImage = cardImage,
                 QRCardTypeId = qrCardTypeId,
                 QRCardStatusId = qrCardStatusId
             };

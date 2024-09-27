@@ -326,29 +326,30 @@ namespace SecurityGateApv.Infras.Data
         {
             // Seed QRCardStatus
             modelBuilder.Entity<QRCardStatus>().HasData(
-                new QRCardStatus { QRCardStatusId = 1, StatusName = "Active", StatusNumber = 1 },
-                new QRCardStatus { QRCardStatusId = 2, StatusName = "Inactive", StatusNumber = 0 }
+                new QRCardStatus { QRCardStatusId = 1, StatusName = "Active", Description = "Thẻ đang được dùng checkin" },
+                new QRCardStatus { QRCardStatusId = 2, StatusName = "Inactive", Description = "Thẻ chưa dùng cho bảo vệ" },
+                new QRCardStatus { QRCardStatusId = 3, StatusName = "Disable", Description = "Thẻ đã hết hạn" }
             );
 
             // Seed QRCardType
             modelBuilder.Entity<QRCardType>().HasData(
-                new QRCardType { QRCardTypeId = 1, CardTypeName = "Employee", TypeDescription = "Employee QR Card" },
+                new QRCardType { QRCardTypeId = 1, CardTypeName = "Vehicle", TypeDescription = "Vehicle QR Card" },
                 new QRCardType { QRCardTypeId = 2, CardTypeName = "Visitor", TypeDescription = "Visitor QR Card" }
             );
 
-            var cardFaker = new Faker<QRCard>()
+            /*var cardFaker = new Faker<QRCard>()
                 .RuleFor(q => q.QRCardId, f => f.IndexFaker + 1)
-                .RuleFor(q => q.CardGuidId, f => Guid.NewGuid())
+                .RuleFor(q => q.CardVerification, f => f.Random.AlphaNumeric(10))
                 .RuleFor(q => q.CreateDate, f => DateTime.Now)  // CreateDate là hôm nay
-                .RuleFor(q => q.LastCancelDate, (f, q) => q.CreateDate.AddMonths(1))  // LastCancelDate là 1 tháng sau CreateDate
+                .RuleFor(q => q.LastCancelDate, f => DateTime.Now)  // LastCancelDate là 1 tháng sau CreateDate
                 .RuleFor(q => q.QRCardTypeId, f => f.PickRandom(1, 2))  // Random QRCardType
-                .RuleFor(q => q.QRCardStatusId, f => f.PickRandom(1, 2));  // Random QRCardStatus
+                .RuleFor(q => q.QRCardStatusId, f => f.PickRandom(1, 2)); */ // Random QRCardStatus
 
 
-            var randomQRCards = cardFaker.Generate(10);
+            //var randomQRCards = cardFaker.Generate(10);
 
             // Seed QRCards
-            modelBuilder.Entity<QRCard>().HasData(randomQRCards);
+            //modelBuilder.Entity<QRCard>().HasData(randomQRCards);
         }
         private static void SeedGate(ModelBuilder modelBuilder)
         {

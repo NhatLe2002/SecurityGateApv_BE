@@ -10,10 +10,11 @@ namespace SecurityGateApv.Application.DTOs.Req
 {
     public class VisitSessionCheckInCommand
     {
-        public int QRCardId { get; set; }
+        //public int QRCardId { get; set; }
         public int VisitDetailId { get; set; }
         public int SecurityInId { get; set; }
         public int GateInId { get; set; }
+        public string QRCardVerification {  get; set; }
         public List<VisitorSessionsImageCheckinCommand> Images { get; set; }
         [JsonIgnore]
         public string Status { get; set; } = string.Empty;

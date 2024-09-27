@@ -66,7 +66,9 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<bool>(Error.NotFoundVisit);
             }
 
-            var qrCard = await _qRCardRepo.GetByIdAsync(command.QRCardId);
+            var qrCard = (await _qRCardRepo.FindAsync(
+               s => s.CardVerification.Equals(command.QRCardVerification)))
+               .FirstOrDefault();
 
             if (qrCard == null)
             {
@@ -81,7 +83,7 @@ namespace SecurityGateApv.Application.Services
 
 
 
-            var checkinSession =  VisitorSession.Checkin(command.QRCardId, command.VisitDetailId, command.SecurityInId, command.GateInId);
+            var checkinSession =  VisitorSession.Checkin(qrCard.QRCardId, command.VisitDetailId, command.SecurityInId, command.GateInId);
 
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             await _unitOfWork.CommitAsync();

@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
+using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,17 +30,44 @@ namespace SecurityGateApv.Application.Services
             _qrRCardRepo = qrRCardRepo;
         }
 
+
+        public async Task<Result<bool>> CreateQRCard(string guid)
+        {
+            var qrCoder = _qrRCardRepo.GenerateQRCard(guid);
+
+            var qrCard = QRCard.Create(2, 2, guid, qrCoder.Result);
+            await _qrRCardRepo.AddAsync(qrCard);
+            await _unitOfWork.CommitAsync();
+            return true;
+        }
+
         public string DecodeQRCodeFromImage(IFormFile imageStream)
         {
             var result = _extractQRCode.ExtractQrCodeFromImage(imageStream);
             return result;
         }
 
-        public string GenerateQrCar(string data)
+        public async Task<Result<string>> GenerateQrCar( string cardGuid)
         {
-            var qrCard = QRCard.Create(1, 2);
-            var qrCoder = _qrRCardRepo.GenerateQRCard(data);
-            return qrCoder.Result;
+            //var qrCard = QRCard.Create(1, 2, cardGuid, );
+            var qrCoder = await _qrRCardRepo.GenerateQRCard(cardGuid);
+            return qrCoder;
+        }
+
+        public async Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize)
+        {
+            var card = await _qrRCardRepo.FindAsync(
+                s => true, pageSize, pageNumber,includeProperties: "QRCardStatus,QRCardType"
+                );
+            if(card == null)
+            {
+                return Result.Failure<List<GetCardRes>>(Error.NotFoundQRCard);
+            }
+
+            var result = _mapper.Map<List<GetCardRes>>(card);
+            return result;
+
+
         }
     }
 }

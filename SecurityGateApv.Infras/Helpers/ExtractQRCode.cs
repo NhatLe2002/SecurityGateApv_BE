@@ -15,18 +15,18 @@ namespace SecurityGateApv.Infras.Helpers
                 var bitmap = new Bitmap(stream);
 
 
-                //var barcodeReader = new ZXing.Windows.Compatibility.BarcodeReader();
-                //var result = barcodeReader.Decode(bitmap);
+                /*var barcodereader = new zxing.windows.compatibility.barcodereader();
+                var result = barcodereader.decode(bitmap);
 
-                /*if (result == null)
+                if (result == null)
                 {
                     Console.WriteLine("No QR code found in the image.");
                 }
                 else
                 {
                     Console.WriteLine($"QR code found: {result.Text}");
-                }*/
-
+                }
+*/
                 return null; /*result?.Text ?? "No QR code found";*/
             }
         }
