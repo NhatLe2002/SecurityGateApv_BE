@@ -29,23 +29,23 @@ namespace SecurityGateApv.Application.DTOs.Req
     }
     public class VisitDetailCommand
     {
-        public string VisitDetailName { get; set; }
+        //public string VisitDetailName { get; set; }
         public string Description { get; set; }
         public DateTime ExpectedStartDate { get; private set; }
         public DateTime ExpectedEndDate { get; private set; }
-        public DateTime ExpectedTimeIn { get; set; }
-        public DateTime ExpectedTimeOut { get; set; }
+        public TimeSpan ExpectedTimeIn { get; set; }
+        public TimeSpan ExpectedTimeOut { get; set; }
         public bool Status { get; set; }
         public VisitorCommand Visitor { get; set; }
     }
     public class VisitDetailOldCommand
     {
-        public string VisitDetailName { get; set; }
+        //public string VisitDetailName { get; set; }
         public string Description { get; set; }
         public DateTime ExpectedStartDate { get; private set; }
         public DateTime ExpectedEndDate { get; private set; }
-        public DateTime ExpectedTimeIn { get; set; }
-        public DateTime ExpectedTimeOut { get; set; }
+        public TimeSpan ExpectedTimeIn { get; set; }
+        public TimeSpan ExpectedTimeOut { get; set; }
         public bool Status { get; set; }
         public int VisitorId { get; set; }
     }
