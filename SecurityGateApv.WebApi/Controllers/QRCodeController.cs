@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -55,12 +56,29 @@ namespace SecurityGateApv.WebApi.Controllers
         }
 
 
-        [HttpPost("CreateQRCard")]
-        public async Task<IActionResult> CreateQRCard(string image)
+        [HttpPost("GenerateQrCar")]
+        public async Task<IActionResult> GenerateQrCar(string cardGuid)
         {
-            var result = _qrCodeService.GenerateQrCar(image);
-            return Ok(result);
+            var result = _qrCodeService.GenerateQrCar(cardGuid);
+            return Ok(result.Result);
         }
 
+        [HttpPost("CreateQRCard")]
+        public async Task<IActionResult> CreateQRCard( string cardGuid)
+        {
+            var result = _qrCodeService.CreateQRCard( cardGuid);
+            return Ok(result.Result.Value);
+        }
+        [HttpGet("GetAllQrCardPaging")]
+        public async Task<ActionResult> GetAllQrCardPaging(int pageNumber,  int pageSize)
+        {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+
+            var result = await _qrCodeService.GetAllByPaging(pageNumber, pageSize);
+            return Ok(result.Value);
+        }
     }
 }
