@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.Services.Interface;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -33,5 +34,25 @@ namespace SecurityGateApv.WebApi.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+        [HttpPost("ShoeDetect")]
+        public async Task<IActionResult> ShoeDetect(DetectImageCommand request)
+        {
+            // Kiểm tra xem file có tồn tại không
+            if (request.Image == null || request.Image.Length == 0)
+            {
+                return BadRequest("Vui lòng chọn một file ảnh.");
+            }
+
+            try
+            {
+                var result = await _qrCodeService.DetectShoe(request.Image);
+                return Ok(result.Value);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi: {ex.Message}");
+            }
+        }
+
     }
 }

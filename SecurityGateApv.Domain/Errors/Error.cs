@@ -46,5 +46,8 @@ namespace SecurityGateApv.Domain.Errors
 
         //ProcessVisit Error
         public static readonly Error ProcessVisitCreateDateError = new("Error.ProcessVisitCreateDateError", @"Date format is ""Mon,Tue,Sun""");
+
+        //Detection Error
+        public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
     }
 }
