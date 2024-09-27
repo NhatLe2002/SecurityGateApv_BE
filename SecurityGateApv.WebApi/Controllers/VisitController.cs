@@ -2,6 +2,7 @@
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Models;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -80,6 +81,30 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest(result.Error);
             }
+            return Ok(result.Value);
+        }
+        [HttpPost("CreateVisitOfProcess/{visitProcessId}")]
+        public async Task<ActionResult> CreateVisitOfProcess(int visitProcessId, VisitCreateCommand command)
+        {
+            var result = await _visitService.CreateVisitOfProcess(visitProcessId, command, true);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+        [HttpPost("CreateVisitOfProject/{visitProcessId}")]
+        public async Task<ActionResult> CreateVisitOfProject(int visitProcessId, VisitCreateCommand command)
+        {
+            var result = await _visitService.CreateVisitOfProcess(visitProcessId, command, false);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
             return Ok(result.Value);
         }
     }

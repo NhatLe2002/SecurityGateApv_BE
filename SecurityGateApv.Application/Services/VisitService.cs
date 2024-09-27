@@ -2,6 +2,7 @@
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SecurityGateApv.Application.Services
 {
@@ -21,33 +23,77 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitDetailRepo _visitDetailRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo)
+        private readonly IVisitTypeRepo _visitTypeRepo;
+        private readonly IUserRepo _userRepo;
+        private readonly IVistProcessRepo _vistProcessRepo;
+
+        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitTypeRepo visitTypeRepo, IUserRepo userRepo, IVistProcessRepo visitProcessRepo, IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _visitDetailRepo = visitDetailRepo;
             _visitorRepo = visitorRepo;
+            _visitTypeRepo = visitTypeRepo;
+            _userRepo = userRepo;
+            _vistProcessRepo = visitProcessRepo;
         }
 
-        public async Task<Result<bool>> CreateVisit(VisitCreateCommand command)
+        public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command)
         {
-            var createvisit = Visit.Create(command.VisitQuantity,
-                command.AcceptLevel,
-                command.DepartmentReasonId,
-                command.CreateById,
-                command.UpdateById
-                );
-            if (createvisit.IsFailure)
+
+            var visitCreate = await NewVisit(VisitTypeEnum.NONE, command, null);
+            if (visitCreate.IsFailure)
             {
-                return Result.Failure<bool>(createvisit.Error);
+                return Result.Failure<VisitCreateCommand>(visitCreate.Error);
             }
-            var visit = createvisit.Value;
+            await _visitRepo.AddAsync(visitCreate.Value);
+
+            await _unitOfWork.CommitAsync();
+            return command;
+        }
+        private async Task<Result<Visit>> NewVisit(VisitTypeEnum visitType, VisitCreateCommand command, VisitProcess visitProcess)
+        {
+            var createPerson = (await _userRepo.FindAsync(s => s.UserId == command.CreateById, includeProperties: "Role")).FirstOrDefault();
+            var visit = new Visit();
+            if(visitType != VisitTypeEnum.NONE)
+            {
+                var createvisit = Visit.CreateVisitOfProcess(command.VisitQuantity,
+                    command.AcceptLevel,
+                    command.VisitName,
+                    command.CreateById,
+                    command.UpdateById,
+                    visitType
+                );
+                if (createvisit.IsFailure)
+                {
+                    return Result.Failure<Visit>(createvisit.Error);
+                }
+                visit = createvisit.Value;
+            }
+            else
+            {
+                var createvisit = Visit.Create(command.VisitQuantity,
+                    command.AcceptLevel,
+                    command.VisitName,
+                    command.CreateById,
+                    command.UpdateById,
+                    createPerson
+                );
+                if (createvisit.IsFailure)
+                {
+                    return Result.Failure<Visit>(createvisit.Error);
+                }
+                visit = createvisit.Value;
+            }
+
 
             foreach (var item in command.VisitDetailOfOldVisitor)
             {
-                visit.AddVisitDetailOfOldVisitor(item.VisitDetailName,
+                visit.AddVisitDetailOfOldVisitor(
                     item.Description,
+                    visitProcess.ExpectedStartDate,
+                    visitProcess.ExpectedEndDate,
                     item.ExpectedTimeIn,
                     item.ExpectedTimeOut,
                     item.Status,
@@ -61,6 +107,7 @@ namespace SecurityGateApv.Application.Services
                 var createVisitor = Visitor.Create(item.VisitorName,
                     item.CompanyName,
                     item.PhoneNumber,
+                    item.CreateById,
                     DateTime.Now,
                     DateTime.Now,
                     item.CredentialsCard,
@@ -69,7 +116,7 @@ namespace SecurityGateApv.Application.Services
                     );
                 if (createVisitor.IsFailure)
                 {
-                    return Result.Failure<bool>(createVisitor.Error);
+                    return Result.Failure<Visit>(createVisitor.Error);
                 }
                 newVisitor.Add(createVisitor.Value);
             }
@@ -77,18 +124,50 @@ namespace SecurityGateApv.Application.Services
             var t = 0;
             foreach (var item in command.VisitDetailOfNewVisitor)
             {
-                visit.AddVisitDetailOfNewVisitor(item.VisitDetailName,
+                visit.AddVisitDetailOfNewVisitor(
                     item.Description,
+                    visitProcess.ExpectedStartDate,
+                    visitProcess.ExpectedEndDate,
                     item.ExpectedTimeIn,
                     item.ExpectedTimeOut,
                     item.Status,
                     newVisitor[t]);
                 t++;
             }
-            await _visitRepo.AddAsync(visit);
+            return visit;
+        }
+        public async Task<Result<VisitCreateCommand>> CreateVisitOfProcess(int processVisitId, VisitCreateCommand command, bool visitType) //true is for process, false for project
+        {
+            var processVisit = (await _vistProcessRepo.FindAsync(s => s.VisitProcessId == processVisitId)).FirstOrDefault();
+            var visit = new Visit();
 
+            if (visitType)
+            {
+                
+                var createvisit = await NewVisit(VisitTypeEnum.ProcessWeek, command, processVisit);
+                if (createvisit.IsFailure)
+                {
+                    return Result.Failure<VisitCreateCommand>(createvisit.Error);
+                }
+                visit = createvisit.Value;
+            }
+            else
+            {
+                var createvisit = await NewVisit(VisitTypeEnum.Project, command, processVisit);
+
+                if (createvisit.IsFailure)
+                {
+                    return Result.Failure<VisitCreateCommand>(createvisit.Error);
+                }
+                visit = createvisit.Value;
+            }
+
+            processVisit.AddVisitToProcess(visit);
+
+            await _vistProcessRepo.UpdateAsync(processVisit);
             await _unitOfWork.CommitAsync();
-            return true;
+
+            return command;
         }
 
         public async Task<Result<List<GetVisitRes>>> GetAllByFilterOrderbyIncludePaging(QueryParameters<Visit> queryParameters)

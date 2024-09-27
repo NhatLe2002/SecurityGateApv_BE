@@ -11,6 +11,7 @@ using SecurityGateApv.Infras.Helpers;
 using SecurityGateApv.Infras.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -36,9 +37,12 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitRepo, VisitRepo>();
             services.AddScoped<IVisitDetailRepo, VisitDetailRepo>();
             services.AddScoped<IVisitorSessionRepo, VisitorSessionRepo>();
-            services.AddScoped<IQRCardRepo, QRCardRepo>();
             services.AddScoped<IGateRepo, GateRepo>();
+            services.AddScoped<IQRCardRepo, QRCardRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
+            services.AddScoped<IVisitTypeRepo, VisitTypeRepo>();
+            services.AddScoped<IProcessRepo, ProcessRepo>();
+            services.AddScoped<IVistProcessRepo, VisitProcessRepo>();
             services.AddScoped<IJwt, JwtHelper>();
             services.AddScoped<IExtractQRCode, ExtractQRCode>();
 
