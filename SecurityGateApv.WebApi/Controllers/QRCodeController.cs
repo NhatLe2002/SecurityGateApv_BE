@@ -33,5 +33,13 @@ namespace SecurityGateApv.WebApi.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+
+        [HttpPost("CreateQRCard")]
+        public async Task<IActionResult> CreateQRCard(string image)
+        {
+            var result = _qrCodeService.GenerateQrCar(image);
+            return Ok(result);
+        }
+
     }
 }

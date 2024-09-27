@@ -38,5 +38,17 @@ namespace SecurityGateApv.Domain.Models
             this.QRCardStatusId = status;
             return this;
         }
+        public static QRCard Create(int qrCardTypeId, int qrCardStatusId)
+        {
+            var qrCard = new QRCard
+            {
+                CardGuidId = Guid.NewGuid(),
+                CreateDate = DateTime.Now,
+                QRCardTypeId = qrCardTypeId,
+                QRCardStatusId = qrCardStatusId
+            };
+
+            return qrCard;
+        }
     }
 }

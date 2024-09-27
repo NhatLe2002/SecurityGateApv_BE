@@ -24,6 +24,23 @@ namespace SecurityGateApv.Application.Services
             _mapper = mapper;
             _jwt = jwt;
         }
+
+      
+
+        public async Task<Result<List<GetUserRes>>> GetUserByRolePaging(int pageNumber, int pageSize, string role)
+        {
+            var user = await _userRepo.FindAsync(
+                    s => s.Role.RoleName.Equals(role),
+                    pageSize, pageNumber,includeProperties: "Role"
+                );
+            if(user.Count() == 0)
+            {
+                return  Result.Failure<List<GetUserRes>>(Error.NotFoundUser);
+            }
+            var result = _mapper.Map<List<GetUserRes>>( user );
+            return result;
+        }
+
         public async Task<Result<LoginRes>> Login(LoginModel loginModel)
         {
             var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Username, includeProperties: "Role")).FirstOrDefault();

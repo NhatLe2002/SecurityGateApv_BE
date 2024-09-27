@@ -40,7 +40,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
-        public DbSet<VisitProcess> VisitProjects { get; set; }
+        public DbSet<VisitProcess> VisitProcesses { get; set; }
         public DbSet<VisitType> VisitTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -76,6 +76,7 @@ namespace SecurityGateApv.Infras.DBContext
                 .WithMany(u => u.UpdatedVisits)
                 .HasForeignKey(v => v.UpdateById)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.SecurityIn)

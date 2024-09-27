@@ -44,7 +44,7 @@ namespace SecurityGateApv.Domain.Models
         public int UpdateById { get; private set; }
         public User? UpdateBy { get; private set; }
 
-        public ICollection<VisitProcess> VisitProject { get; private set; } = new List<VisitProcess>();
+        public ICollection<VisitProcess> VisitProcess { get; private set; } = new List<VisitProcess>();
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
 
         public static Result<Visit> Create(int visitQuantity, int acceptLevel, int departmentReasonId, int createById, int updateById)

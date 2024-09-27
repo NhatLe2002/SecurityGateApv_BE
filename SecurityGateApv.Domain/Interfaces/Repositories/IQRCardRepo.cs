@@ -9,5 +9,6 @@ namespace SecurityGateApv.Domain.Interfaces.Repositories
 {
     public interface IQRCardRepo : IRepoBase<QRCard>
     {
+        public Task<string> GenerateQRCard(string cardIdGuid);
     }
 }

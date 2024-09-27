@@ -5,47 +5,75 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SecurityGateApv.Domain.Shared;
 
 namespace SecurityGateApv.Domain.Models
 {
     public class User
     {
+        public User()
+        {
+            
+        }
+        internal User(int userId, string userName, string password, string fullName, string email, string phoneNumber, string image, DateTime createdDate, DateTime updatedDate, string status, int roleId)
+        {
+            UserId = userId;
+            UserName = userName;
+            Password = password;
+            FullName = fullName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            Image = image;
+            CreatedDate = createdDate;
+            UpdatedDate = updatedDate;
+            Status = status;
+            RoleId = roleId;
+        }
+
         [Key]
         public int UserId { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public string Status { get; set; }
+        public string UserName { get; private set; }
+        public string Password { get; private set; }
+        public string FullName { get; private set; }
+        public string Email { get; private set; }
+        public string PhoneNumber { get; private set; }
+        public string? Image { get; private set; }
+        public DateTime CreatedDate { get; private set; }
+        public DateTime UpdatedDate { get; private set; }
+        public string Status { get; private set; }
 
         [ForeignKey("Role")]
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
+        public int RoleId { get; private set; }
+        public Role Role { get; private set; }
 
-        public ICollection<Process> Project { get; set; }
-        public ICollection<UserDepartment> UserDepartment { get; set; }
+        public ICollection<Process> Project { get; private set; }
+        public ICollection<UserDepartment> UserDepartment { get; private set; }
         [InverseProperty("Sender")]
-        public ICollection<NotificationUsers> SentNotifications { get; set; }
+        public ICollection<NotificationUsers> SentNotifications { get; private set; }
 
         [InverseProperty("Receiver")]
-        public ICollection<NotificationUsers> ReceivedNotifications { get; set; }
+        public ICollection<NotificationUsers> ReceivedNotifications { get; private set; }
 
 
 
         [InverseProperty("CreateBy")]
-        public ICollection<Visit> CreatedVisits { get; set; }
+        public ICollection<Visit> CreatedVisits { get; private set; }
 
         [InverseProperty("UpdateBy")]
-        public ICollection<Visit> UpdatedVisits { get; set; }
+        public ICollection<Visit> UpdatedVisits { get; private set; }
 
 
-        public ICollection<VisitorSession> SecurityInSessions { get; set; } 
-        public ICollection<VisitorSession> SecurityOutSessions { get; set; }
+        public ICollection<VisitorSession> SecurityInSessions { get; private set; } 
+        public ICollection<VisitorSession> SecurityOutSessions { get; private set; }
 
-        public ICollection<VehicleSession> VehicleSession { get; set; }
-        public Visitor Visitor { get; set; }
+        public ICollection<VehicleSession> VehicleSession { get; private set; }
+        public Visitor Visitor { get; private set; }
+
+
+        public static Result<User> Create(int userId, string userName, string password, string fullName, string email, string phoneNumber, string image, DateTime createdDate, DateTime updatedDate, string status, int roleId)
+        {
+            var result = new User(userId, userName,password,fullName,email,phoneNumber,image,createdDate,updatedDate,status,roleId);
+            return result;
+        }
     }
 }

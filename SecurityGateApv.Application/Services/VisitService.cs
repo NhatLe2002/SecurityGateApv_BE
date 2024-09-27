@@ -104,23 +104,24 @@ namespace SecurityGateApv.Application.Services
             return Result.Success(visitRes);
         }
 
-        public async Task<Result<List<GetVisitRes>>> GetAllByPaging(int pageNumber, int pageSize)
+        public async Task<Result<List<GetVisitNoDetailRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
             var visits = await _visitRepo.FindAsync(
-                s => true, pageSize, pageNumber, s => s.OrderBy(s => s.DateRegister), "VisitDetail,VisitDetail.Visitor"
+                s => true, pageSize, pageNumber, s => s.OrderBy(s => s.DateRegister), "CreateBy"
                 );
-            var result = _mapper.Map<List<GetVisitRes>>(visits);
+            var result = _mapper.Map<List<GetVisitNoDetailRes>>(visits);
+            
             if (result.Count == 0)
             {
-                return Result.Failure<List<GetVisitRes>>(Error.NotFoundVisit);
+                return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
             }
             return result;
         }
 
-        public async Task<Result<List<GetVisitRes>>> GetAllVisit()
+        public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit()
         {
             var visit = await _visitRepo.GetAllAsync();
-            var res = _mapper.Map<List<GetVisitRes>>(visit);
+            var res = _mapper.Map<List<GetVisitNoDetailRes>>(visit);
             return res;
         }
 
@@ -135,6 +136,7 @@ namespace SecurityGateApv.Application.Services
             {
                 result.Add(new GetVisitByCurrentDateRes
                 {
+                    VisitId = item.VisitId,
                     VisitDetailId = item.VisitDetailId,
                     VisitName = item.Visit.VisitName,
                     ExpectedStartDate = item.ExpectedStartDate,
@@ -147,17 +149,6 @@ namespace SecurityGateApv.Application.Services
                     CredentialsCard = item.Visitor.CredentialsCard,
                 });
             }
-            /*var visits = visitDetails.GroupBy(vd => vd.Visit)
-                             .Select(g => new GetVisitRes
-                             {
-                                 // Lấy thông tin từ Visit
-                                 DateRegister = g.Key.DateRegister,
-                                 VisitQuantity = g.Key.VisitQuantity,
-                                 AcceptLevel = g.Key.AcceptLevel,
-                                 // Map các VisitDetail của từng Visit
-                                 VisitDetail = _mapper.Map<List<VisitDetailRes>>(g.ToList())
-                             })
-                             .ToList();*/
 
             if (result.Count == 0)
             {
@@ -169,7 +160,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor"
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,VisitProcess"
                 );
 
             if (visit == null)
@@ -177,29 +168,12 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<GetVisitRes>(Error.NotFound);
             }
             var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
-
+            visitRes.DaysOfProcess = visit.FirstOrDefault().VisitProcess.FirstOrDefault().DaysOfProcess;
             return Result.Success(visitRes);
         }
 
         public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
         {
-            /*var visitor = await _visitorRepo.FindAsync(
-                s => s.CredentialsCard.Equals(credentialCard),
-                1, 1, includeProperties: ""
-                );
-            if (visitor == null || !visitor.Any())
-            {
-                return Result.Failure<GetVisitRes>(Error.NotFoundVisitor);
-            }
-            var visitorId = visitor.FirstOrDefault().VisitorId;
-            var visits = await _visitRepo.FindAsync(
-                s => s.VisitDetail.Any(vd => vd.VisitorId == visitorId), 
-                10, 10,
-                s => s.OrderBy(v => v.VisitDetail.Min(vd => vd.ExpectedStartDate)),
-                "VisitDetail,VisitDetail.Visitor"
-                );
-*/
-
             var visitDetails = await _visitDetailRepo.FindAsync(
                 s => s.Visitor.CredentialsCard.Equals(credentialCard) && s.ExpectedStartDate <= DateTime.Now && s.ExpectedEndDate >= DateTime.Now,
                 10, 1, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
@@ -232,24 +206,5 @@ namespace SecurityGateApv.Application.Services
             return Result.Success(result);
         }
 
-
-
-        /* public async Task<Result<GetVisitRes>> GetAllVisit()
-            {
-            var visit = await _visitRepo.GetAllVisitIncludeVisitor();
-            var result = new List<GetVisitRes>();
-            foreach (var item in visit)
-            {
-            result.Add(new GetVisitRes
-            {
-               DateRegis = item.DateRegister,
-               VisitQuantity = item.VisitQuantity,
-               AcceptLevel = item.AcceptLevel,
-               VisitDetails = item.VisitDetail,
-            });
-            }
-
-
-            }*/
     }
 }
