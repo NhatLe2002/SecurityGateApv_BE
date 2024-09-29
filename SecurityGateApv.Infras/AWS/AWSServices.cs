@@ -19,7 +19,7 @@ namespace SecurityGateApv.Infras.AWS
             MemoryStream stream = new MemoryStream();
             await image.CopyToAsync(stream);
             List<AWSDomainDTO> list = new List<AWSDomainDTO>();
-            AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient();
+            AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient(key.KeyName, key.Key, Amazon.RegionEndpoint.APSoutheast1);
 
             DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
             {

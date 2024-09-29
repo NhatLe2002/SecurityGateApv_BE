@@ -27,7 +27,8 @@ namespace SecurityGateApv.Application.Services
         private readonly IUserRepo _userRepo;
         private readonly IVistProcessRepo _vistProcessRepo;
 
-        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitTypeRepo visitTypeRepo, IUserRepo userRepo, IVistProcessRepo visitProcessRepo)
+        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitTypeRepo visitTypeRepo,
+            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IVistProcessRepo visitProcessRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
