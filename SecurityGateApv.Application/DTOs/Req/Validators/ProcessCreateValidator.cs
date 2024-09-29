@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
-    public class ProcessCreateValidator : AbstractValidator<ProcessCreateCommand>
+    public class ProcessCreateValidator : AbstractValidator<ProcessCreateAndDetailCommand>
     {
         private readonly IVisitTypeRepo _visitTypeRepo;
         private readonly IUserRepo _userRepo1;
@@ -126,5 +126,33 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
         }
        
 
+    }
+
+    public class ProcesCreateValidator : AbstractValidator<ProcessCreateCommand>
+    {
+        private readonly IVisitTypeRepo _visitTypeRepo;
+        private readonly IUserRepo _userRepo1;
+
+        public ProcesCreateValidator(IVisitTypeRepo visitTypeRepo, IUserRepo userRepo)
+        {
+            _visitTypeRepo = visitTypeRepo;
+            _userRepo1 = userRepo;
+            RuleFor(s => s.ProcessName)
+                 .NotEmpty()
+                 .WithMessage("Process name is required.");
+            //RuleFor(s => s.Status).NotEmpty().NotNull();
+            RuleFor(s => s.Description)
+                 .NotEmpty()
+                 .WithMessage("Description is required.");
+            RuleFor(s => s.VisitTypeId).NotEmpty().NotNull().Must(s =>
+            {
+                return visitTypeRepo.IsAny(x => x.VisitTypeId == s).GetAwaiter().GetResult();
+            }).WithMessage("Visit type Id not exist");
+            RuleFor(s => s.CreateBy).NotEmpty().NotNull().Must(s =>
+            {
+                return userRepo.IsAny(x => x.UserId == s).GetAwaiter().GetResult();
+            });
+           
+        }
     }
 }

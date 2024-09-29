@@ -45,10 +45,20 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpPost("CreateProcessAndDetail")]
+        public async Task<IActionResult> CreateProcessAndDetail(ProcessCreateAndDetailCommand request)
+        {
+            var result = await _processService.CreateProcess(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpPost("CreateProcess")]
         public async Task<IActionResult> CreateProcess(ProcessCreateCommand request)
         {
-            var result = await _processService.CreateProcess(request);
+            var result = await _processService.CreateProces(request);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

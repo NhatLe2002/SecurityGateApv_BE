@@ -6,9 +6,6 @@ namespace SecurityGateApv.WebApi.Controllers
     [ApiController]
     public class VisitTypeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
     }
 }
