@@ -13,7 +13,6 @@ namespace SecurityGateApv.Application.Services.Interface
     public interface IQRCodeService
     {
         public string DecodeQRCodeFromImage(IFormFile imageStream);
-        public bool DetectImage(IFormFile image);
         public Task<Result<AWSDomainDTO>> DetectShoe(IFormFile image);
         public Task<Result<string>> GenerateQrCar(string data);
         public Task<Result<bool>> CreateQRCard( string guid);

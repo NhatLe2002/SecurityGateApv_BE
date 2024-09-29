@@ -33,6 +33,8 @@ namespace SecurityGateApv.Application.Services
             _visitRepo = visitRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _visitDetailRepo = visitDetailRepo;
+            _visitorRepo = visitorRepo;
             _visitTypeRepo = visitTypeRepo;
             _userRepo = userRepo;
             _vistProcessRepo = visitProcessRepo;

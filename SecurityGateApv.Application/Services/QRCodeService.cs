@@ -9,7 +9,6 @@ using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Shared;
 using SecurityGateApv.Domain.Models;
-using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,6 +37,18 @@ namespace SecurityGateApv.Application.Services
             _qrRCardRepo = qrRCardRepo;
             _awsService = awsService;
             _privateKeyRepo = privateKeyRepo;
+            _qrRCardRepo = qrRCardRepo;
+        }
+
+
+        public async Task<Result<bool>> CreateQRCard(string guid)
+        {
+            var qrCoder = _qrRCardRepo.GenerateQRCard(guid);
+
+            var qrCard = QRCard.Create(2, 2, guid, qrCoder.Result);
+            await _qrRCardRepo.AddAsync(qrCard);
+            await _unitOfWork.CommitAsync();
+            return true;
         }
 
 
@@ -78,11 +89,6 @@ namespace SecurityGateApv.Application.Services
             return result;
 
 
-        }
-
-        public bool DetectImage(IFormFile image)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<Result<AWSDomainDTO>> DetectShoe(IFormFile image)
