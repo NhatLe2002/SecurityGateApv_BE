@@ -16,6 +16,15 @@ namespace SecurityGateApv.Application.DTOs.Req
         //public bool Status { get; set; }
         public int VisitTypeId { get; set; }
         public int CreateBy { get; set; }
+        //public ICollection<VisitProcessCommand> VisitProject { get; set; }
+    }
+    public class ProcessCreateAndDetailCommand
+    {
+        public string ProcessName { get; set; }
+        public string Description { get; set; }
+        //public bool Status { get; set; }
+        public int VisitTypeId { get; set; }
+        public int CreateBy { get; set; }
         public ICollection<VisitProcessCommand> VisitProject { get; set; }
     }
     public class VisitProcessCommand

@@ -63,7 +63,26 @@ namespace SecurityGateApv.Application.Services
 
         }
 
-        public async Task<Result<ProcessCreateCommand>> CreateProcess(ProcessCreateCommand request)
+        public async Task<Result<ProcessCreateCommand>> CreateProces(ProcessCreateCommand request)
+        {
+            var processCreate = Process.Create(request.ProcessName,
+               request.Description,
+               true,
+               request.VisitTypeId,
+               request.CreateBy
+               );
+            if (processCreate.IsFailure)
+            {
+                return Result.Failure<ProcessCreateCommand>(Error.ProcessCreateError);
+            }
+            var process = processCreate.Value;
+            await _processRepo.AddAsync(process);
+            await _unitOfWork.CommitAsync();
+
+            return request ;
+        }
+
+        public async Task<Result<ProcessCreateAndDetailCommand>> CreateProcess(ProcessCreateAndDetailCommand request)
         {
             var processCreate = Process.Create(request.ProcessName,
                 request.Description,
@@ -73,7 +92,7 @@ namespace SecurityGateApv.Application.Services
                 );
             if (processCreate.IsFailure)
             {
-                return Result.Failure<ProcessCreateCommand>(Error.ProcessCreateError);
+                return Result.Failure<ProcessCreateAndDetailCommand>(Error.ProcessCreateError);
             }
             var process = processCreate.Value;
 
@@ -94,7 +113,7 @@ namespace SecurityGateApv.Application.Services
                     );
                 if (result.IsFailure)
                 {
-                    return Result.Failure<ProcessCreateCommand>(result.Error);
+                    return Result.Failure<ProcessCreateAndDetailCommand>(result.Error);
                 }
                
             }

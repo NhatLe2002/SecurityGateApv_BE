@@ -30,6 +30,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public VisitType VisitType { get; private set; }
         public int CreateBy { get; private set; }
 
-        public ICollection<ProcessDetailRes> ProcessDetailRes { get; private set; }
+        public ICollection<ProcessDetailRes> VisitProcesses { get; private set; }
     }
 }
