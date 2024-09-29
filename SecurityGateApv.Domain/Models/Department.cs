@@ -17,5 +17,6 @@ namespace SecurityGateApv.Domain.Models
         public DateTime UpdatedDate { get; set; }
         public int AcceptLevel { get; set; }
         public ICollection<UserDepartment> UserDepartment { get; set; }
+        public ICollection<Visit> Visit { get; set; }
     }
 }

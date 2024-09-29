@@ -21,11 +21,11 @@ namespace SecurityGateApv.Domain.Models
             VisitorName = visitorName;
             CompanyName = companyName;
             PhoneNumber = phoneNumber;
-            CreatedDate = createdDate;
-            UpdatedDate = updatedDate;
-            CreateById = createById;
+            //CreatedDate = createdDate;
+            //UpdatedDate = updatedDate;
+            //CreateById = createById;
             CredentialsCard = credentialsCard;
-            Status = status;
+            //Status = status;
             CredentialCardTypeId = credentialCardTypeId;
         }
 
@@ -34,10 +34,8 @@ namespace SecurityGateApv.Domain.Models
         public string VisitorName { get; private set; }
         public string CompanyName { get; private set; }
         public string PhoneNumber { get; private set; }
-        public DateTime CreatedDate { get; private set; }
-        public DateTime UpdatedDate { get; private set; }
         public string CredentialsCard { get; private set; }
-        public bool Status { get; private set; }
+        public string? VisitorImage { get; private set; }
 
         [ForeignKey("User")]
         public int? UserId { get; private set; }
@@ -48,11 +46,11 @@ namespace SecurityGateApv.Domain.Models
         public int CredentialCardTypeId { get; private set; }
         public CredentialCardType CredentialCardType { get; private set; }  
         
-        [ForeignKey("UserDepartment")]
-        public int CreateById { get; private set; }
-        public UserDepartment UserDepartment { get; private set; }
 
-        public ICollection<VisitDetail> VisitDetail { get; private set; }
+        
+
+        public ICollection<VisitDetail> VisitDetails { get; private set; }
+        public ICollection<VisitorDepartment> VisitorDepartments { get; private set; }
         public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, int createById, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
             int credentialCardTypeId)
         {

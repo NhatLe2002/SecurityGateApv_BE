@@ -2,6 +2,7 @@
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
@@ -19,14 +20,16 @@ namespace SecurityGateApv.Application.Services
         private readonly IProcessRepo _processRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVistProcessRepo _vistProcessRepo;
+        private readonly IVisitTypeRepo _visitTypeRepo;
         private readonly IMapper _mapper;
 
-        public ProcessSerivce(IProcessRepo processRepo, IUnitOfWork unitOfWork, IVistProcessRepo vistProcessRepo, IMapper mapper)
+        public ProcessSerivce(IProcessRepo processRepo, IUnitOfWork unitOfWork, IVistProcessRepo vistProcessRepo, IMapper mapper, IVisitTypeRepo visitTypeRepo)
         {
             _processRepo = processRepo;
             _unitOfWork = unitOfWork;
             _vistProcessRepo = vistProcessRepo;
             _mapper = mapper;
+            _visitTypeRepo = visitTypeRepo;
         }
 
         public async Task<Result<ICollection<VisitProcessCommand>>> AddProcessVisit(int processId, ICollection<VisitProcessCommand> request)
@@ -45,7 +48,7 @@ namespace SecurityGateApv.Application.Services
                       item.ExpectedEndTime,
                       item.DaysOfProcess,
                       item.VisitQuantity,
-                      item.Status,
+                      VisitProcessEnum.Pending.ToString(),
                       processId
                     );
                 if (createVisitProcess.IsFailure)
@@ -64,7 +67,7 @@ namespace SecurityGateApv.Application.Services
         {
             var processCreate = Process.Create(request.ProcessName,
                 request.Description,
-                request.Status,
+                true,
                 request.VisitTypeId,
                 request.CreateBy
                 );
@@ -74,21 +77,26 @@ namespace SecurityGateApv.Application.Services
             }
             var process = processCreate.Value;
 
+            //var visitType = await _visitTypeRepo.GetByIdAsync(request.VisitTypeId);
+            
+            
             //add process visit
             foreach(var item in request.VisitProject)
             {
-                var result = process.AddProcessVisitToProcess(item.ExpectedStartDate,
+                var result = process.AddProcessVisitToProcess(
+                    item.ExpectedStartDate,
                     item.ExpectedEndDate,
                     item.ExpectedStartTime,
                     item.ExpectedEndTime,
                     item.DaysOfProcess,
                     item.VisitQuantity,
-                    item.Status
+                    VisitProcessEnum.Pending.ToString()
                     );
                 if (result.IsFailure)
                 {
                     return Result.Failure<ProcessCreateCommand>(result.Error);
                 }
+               
             }
             await _processRepo.AddAsync(process);
             await _unitOfWork.CommitAsync();
@@ -105,6 +113,18 @@ namespace SecurityGateApv.Application.Services
             }
 
             var res = _mapper.Map<ICollection<ProcessByDepartmentManagerIdRes>>(process);
+            return res.ToList();
+        }
+
+        public async Task<Result<ICollection<ProcessDetailByDepartmentManagerIdRes>>> GetAllProcessDetailByDepartmentManagerId(int managerId)
+        {
+            var process = (await _processRepo.FindAsync(s => s.User.UserId == managerId, int.MaxValue, 1, includeProperties : "VisitProcesses")).ToList();
+            if (process.Count == 0)
+            {
+                return  Result.Failure<ICollection<ProcessDetailByDepartmentManagerIdRes>>(Error.NotFound);
+            }
+
+            var res = _mapper.Map<ICollection<ProcessDetailByDepartmentManagerIdRes>>(process);
             return res.ToList();
         }
 

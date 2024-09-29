@@ -70,7 +70,7 @@ namespace SecurityGateApv.Domain.Models
         public Visitor Visitor { get; private set; }
 
 
-        public static Result<User> Create(int userId, string userName, string password, string fullName, string email, string phoneNumber, string image, DateTime createdDate, DateTime updatedDate, string status, int roleId)
+        public static Result<User> Create(int userId, string userName, string password, string fullName, string email, string phoneNumber, string? image, DateTime createdDate, DateTime updatedDate, string status, int roleId)
         {
             var result = new User(userId, userName,password,fullName,email,phoneNumber,image,createdDate,updatedDate,status,roleId);
             return result;

@@ -42,7 +42,7 @@ namespace SecurityGateApv.Domain.Models
 
         public User User { get; private set; }
 
-        public ICollection<VisitProcess> VisitProject { get; private set; } = new List<VisitProcess>();
+        public ICollection<VisitProcess> VisitProcesses { get; private set; } = new List<VisitProcess>();
 
         public static Result<Process> Create(string processName, string description, bool status, int visitTypeId, int createBy)
         {
@@ -58,7 +58,7 @@ namespace SecurityGateApv.Domain.Models
             if (visitProcess.IsFailure) {
                 return Result.Failure<Process>(visitProcess.Error);
             }
-            this.VisitProject.Add(visitProcess.Value);
+            this.VisitProcesses.Add(visitProcess.Value);
             return this;
         }
     }

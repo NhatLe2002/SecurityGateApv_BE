@@ -207,7 +207,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCurrentDate(int pageSize, int pageNumber)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
-                s => s.ExpectedStartDate.Date == DateTime.Now.Date,
+                s => s.ExpectedStartDate.Date <= DateTime.Now.Date ,
                 pageSize, pageNumber, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
                 );
             var result = new List<GetVisitByCurrentDateRes>();

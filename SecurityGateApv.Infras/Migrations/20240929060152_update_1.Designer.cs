@@ -12,8 +12,8 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    [Migration("20240926174435_UpdateDb_4")]
-    partial class UpdateDb_4
+    [Migration("20240929060152_update_1")]
+    partial class update_1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,7 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             CredentialCardTypeId = 2,
-                            CredentialCardTypeName = "Giấy phép lái xe"
+                            CredentialCardTypeName = "Căn cước công dân"
                         });
                 });
 
@@ -87,92 +87,92 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             DepartmentId = 1,
-                            AcceptLevel = 1,
-                            CreateDate = new DateTime(2024, 9, 18, 8, 30, 25, 623, DateTimeKind.Utc).AddTicks(4506),
-                            DepartmentName = "Phòng IT",
-                            Description = "Molestias omnis ut.",
-                            UpdatedDate = new DateTime(2024, 9, 18, 8, 30, 25, 623, DateTimeKind.Utc).AddTicks(4506)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng Nhân sự",
+                            Description = "Autem vel sapiente voluptatibus veniam et et nisi.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 2,
-                            AcceptLevel = 5,
-                            CreateDate = new DateTime(2024, 9, 24, 18, 35, 24, 448, DateTimeKind.Utc).AddTicks(2476),
-                            DepartmentName = "Phòng Nhân sự",
-                            Description = "Quos aut molestiae unde dolores debitis ad aut rerum harum.",
-                            UpdatedDate = new DateTime(2024, 9, 24, 18, 35, 24, 448, DateTimeKind.Utc).AddTicks(2476)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng Chăm sóc khách hàng",
+                            Description = "Pariatur officiis nisi necessitatibus.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 3,
                             AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 24, 18, 55, 54, 920, DateTimeKind.Utc).AddTicks(5639),
-                            DepartmentName = "Phòng Marketing",
-                            Description = "Qui eum vel cum voluptatem aut qui voluptatibus quisquam ab.",
-                            UpdatedDate = new DateTime(2024, 9, 24, 18, 55, 54, 920, DateTimeKind.Utc).AddTicks(5639)
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng Nhân sự",
+                            Description = "Eum aut aut nostrum eligendi.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 4,
-                            AcceptLevel = 4,
-                            CreateDate = new DateTime(2024, 9, 8, 10, 54, 40, 303, DateTimeKind.Utc).AddTicks(5422),
-                            DepartmentName = "Phòng Pháp chế",
-                            Description = "Tempora corporis corrupti voluptatem.",
-                            UpdatedDate = new DateTime(2024, 9, 8, 10, 54, 40, 303, DateTimeKind.Utc).AddTicks(5422)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng R&D",
+                            Description = "Commodi ullam atque est culpa est blanditiis qui.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 5,
-                            AcceptLevel = 5,
-                            CreateDate = new DateTime(2024, 9, 20, 14, 16, 27, 856, DateTimeKind.Utc).AddTicks(2007),
-                            DepartmentName = "Phòng Sản xuất",
-                            Description = "Saepe laborum vel.",
-                            UpdatedDate = new DateTime(2024, 9, 20, 14, 16, 27, 856, DateTimeKind.Utc).AddTicks(2007)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng R&D",
+                            Description = "Reiciendis commodi nihil et debitis harum debitis aspernatur illo.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 6,
-                            AcceptLevel = 4,
-                            CreateDate = new DateTime(2024, 9, 24, 3, 47, 57, 753, DateTimeKind.Utc).AddTicks(9582),
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentName = "Phòng Nhân sự",
-                            Description = "Molestiae ab accusamus aut id ad placeat voluptas.",
-                            UpdatedDate = new DateTime(2024, 9, 24, 3, 47, 57, 753, DateTimeKind.Utc).AddTicks(9582)
+                            Description = "Qui est ab nulla illo totam vel ullam consequatur.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 7,
-                            AcceptLevel = 3,
-                            CreateDate = new DateTime(2024, 9, 10, 13, 14, 11, 678, DateTimeKind.Utc).AddTicks(1517),
-                            DepartmentName = "Phòng Hành chính",
-                            Description = "Et vel voluptas ut eum.",
-                            UpdatedDate = new DateTime(2024, 9, 10, 13, 14, 11, 678, DateTimeKind.Utc).AddTicks(1517)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng Chăm sóc khách hàng",
+                            Description = "Rem qui omnis totam et quibusdam necessitatibus quia iure.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 8,
-                            AcceptLevel = 3,
-                            CreateDate = new DateTime(2024, 9, 12, 6, 27, 15, 454, DateTimeKind.Utc).AddTicks(1813),
-                            DepartmentName = "Phòng IT",
-                            Description = "Enim cum voluptate similique aperiam alias voluptates vel.",
-                            UpdatedDate = new DateTime(2024, 9, 12, 6, 27, 15, 454, DateTimeKind.Utc).AddTicks(1813)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng R&D",
+                            Description = "Et repudiandae architecto et voluptatem aut suscipit.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 9,
-                            AcceptLevel = 1,
-                            CreateDate = new DateTime(2024, 9, 10, 15, 35, 37, 478, DateTimeKind.Utc).AddTicks(2053),
-                            DepartmentName = "Phòng Hành chính",
-                            Description = "Fuga deleniti enim temporibus quam.",
-                            UpdatedDate = new DateTime(2024, 9, 10, 15, 35, 37, 478, DateTimeKind.Utc).AddTicks(2053)
+                            AcceptLevel = 2,
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng IT",
+                            Description = "Qui quidem id voluptate blanditiis officiis.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 10,
                             AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 19, 23, 39, 33, 131, DateTimeKind.Utc).AddTicks(4733),
-                            DepartmentName = "Phòng Sản xuất",
-                            Description = "Quas laudantium est rerum quo numquam occaecati.",
-                            UpdatedDate = new DateTime(2024, 9, 19, 23, 39, 33, 131, DateTimeKind.Utc).AddTicks(4733)
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Phòng Marketing",
+                            Description = "Praesentium hic nisi consectetur similique et quidem vel omnis iure.",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -307,58 +307,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("VisitTypeId");
 
                     b.ToTable("Processes");
-
-                    b.HasData(
-                        new
-                        {
-                            ProcessId = 1,
-                            CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 17, 44, 35, 260, DateTimeKind.Utc).AddTicks(8338),
-                            Description = "",
-                            ProcessName = "Rustic Steel Shoes",
-                            Status = true,
-                            VisitTypeId = 1
-                        },
-                        new
-                        {
-                            ProcessId = 2,
-                            CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 17, 44, 35, 261, DateTimeKind.Utc).AddTicks(91),
-                            Description = "",
-                            ProcessName = "Fantastic Granite Salad",
-                            Status = true,
-                            VisitTypeId = 1
-                        },
-                        new
-                        {
-                            ProcessId = 3,
-                            CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 17, 44, 35, 261, DateTimeKind.Utc).AddTicks(127),
-                            Description = "",
-                            ProcessName = "Intelligent Wooden Shoes",
-                            Status = false,
-                            VisitTypeId = 1
-                        },
-                        new
-                        {
-                            ProcessId = 4,
-                            CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 17, 44, 35, 261, DateTimeKind.Utc).AddTicks(153),
-                            Description = "",
-                            ProcessName = "Refined Wooden Salad",
-                            Status = true,
-                            VisitTypeId = 1
-                        },
-                        new
-                        {
-                            ProcessId = 5,
-                            CreateBy = 3,
-                            CreateTime = new DateTime(2024, 9, 24, 17, 44, 35, 261, DateTimeKind.Utc).AddTicks(183),
-                            Description = "",
-                            ProcessName = "Practical Concrete Chicken",
-                            Status = true,
-                            VisitTypeId = 1
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.QRCard", b =>
@@ -369,8 +317,13 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QRCardId"));
 
-                    b.Property<Guid>("CardGuidId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CardImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardVerification")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -391,98 +344,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("QRCardTypeId");
 
                     b.ToTable("QRCards");
-
-                    b.HasData(
-                        new
-                        {
-                            QRCardId = 1,
-                            CardGuidId = new Guid("e888c3d4-138d-46bd-bea6-66e3d2d7bd34"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(8837),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(8837),
-                            QRCardStatusId = 2,
-                            QRCardTypeId = 2
-                        },
-                        new
-                        {
-                            QRCardId = 2,
-                            CardGuidId = new Guid("305ab38e-1256-4614-a2e7-4454831ca218"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9041),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9041),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 1
-                        },
-                        new
-                        {
-                            QRCardId = 3,
-                            CardGuidId = new Guid("5cae4542-64a4-402b-ae5f-18d7e92b4cd5"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9060),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9060),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 1
-                        },
-                        new
-                        {
-                            QRCardId = 4,
-                            CardGuidId = new Guid("675b6228-e611-43b4-aeb0-166599800840"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9082),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9082),
-                            QRCardStatusId = 2,
-                            QRCardTypeId = 2
-                        },
-                        new
-                        {
-                            QRCardId = 5,
-                            CardGuidId = new Guid("d229e783-bbba-4397-9b3e-dae97c1aea64"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9091),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9091),
-                            QRCardStatusId = 2,
-                            QRCardTypeId = 2
-                        },
-                        new
-                        {
-                            QRCardId = 6,
-                            CardGuidId = new Guid("6937454c-35d3-4262-b2f9-b9174fa17c1e"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9109),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9109),
-                            QRCardStatusId = 2,
-                            QRCardTypeId = 2
-                        },
-                        new
-                        {
-                            QRCardId = 7,
-                            CardGuidId = new Guid("c61fdcc6-c2b7-436a-9e3b-a39df1e1947d"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9117),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9117),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 1
-                        },
-                        new
-                        {
-                            QRCardId = 8,
-                            CardGuidId = new Guid("f7237fb9-425a-4fea-9ea2-33ec774df898"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9124),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9124),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 1
-                        },
-                        new
-                        {
-                            QRCardId = 9,
-                            CardGuidId = new Guid("3a486339-b74e-4b25-b9c6-b99265ae584f"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9131),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9131),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 2
-                        },
-                        new
-                        {
-                            QRCardId = 10,
-                            CardGuidId = new Guid("080fbedb-c95e-4b76-8f77-fbdee145f6a6"),
-                            CreateDate = new DateTime(2024, 9, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9138),
-                            LastCancelDate = new DateTime(2024, 10, 27, 0, 44, 35, 290, DateTimeKind.Local).AddTicks(9138),
-                            QRCardStatusId = 1,
-                            QRCardTypeId = 1
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.QRCardStatus", b =>
@@ -493,12 +354,13 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QRCardStatusId"));
 
-                    b.Property<string>("StatusName")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StatusNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("QRCardStatusId");
 
@@ -508,14 +370,20 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             QRCardStatusId = 1,
-                            StatusName = "Active",
-                            StatusNumber = 1
+                            Description = "Thẻ đang được dùng checkin",
+                            StatusName = "Active"
                         },
                         new
                         {
                             QRCardStatusId = 2,
-                            StatusName = "Inactive",
-                            StatusNumber = 0
+                            Description = "Thẻ chưa dùng cho bảo vệ",
+                            StatusName = "Inactive"
+                        },
+                        new
+                        {
+                            QRCardStatusId = 3,
+                            Description = "Thẻ đã hết hạn",
+                            StatusName = "Disable"
                         });
                 });
 
@@ -543,8 +411,8 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             QRCardTypeId = 1,
-                            CardTypeName = "Employee",
-                            TypeDescription = "Employee QR Card"
+                            CardTypeName = "Vehicle",
+                            TypeDescription = "Vehicle QR Card"
                         },
                         new
                         {
@@ -661,7 +529,7 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedDate = new DateTime(2024, 3, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2672),
+                            CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin1@example.com",
                             FullName = "Admin One",
                             Image = "data:image/jpeg;base64,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",
@@ -669,13 +537,13 @@ namespace SecurityGateApv.Infras.Migrations
                             PhoneNumber = "0123456789",
                             RoleId = 1,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2680),
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "admin1"
                         },
                         new
                         {
                             UserId = 2,
-                            CreatedDate = new DateTime(2024, 6, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2696),
+                            CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager1@example.com",
                             FullName = "Manager One",
                             Image = "data:image/jpeg;base64,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",
@@ -683,13 +551,13 @@ namespace SecurityGateApv.Infras.Migrations
                             PhoneNumber = "0987654321",
                             RoleId = 2,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2697),
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "manager1"
                         },
                         new
                         {
                             UserId = 3,
-                            CreatedDate = new DateTime(2024, 7, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2699),
+                            CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "employee1@example.com",
                             FullName = "Department Manager One",
                             Image = "data:image/jpeg;base64,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",
@@ -697,27 +565,41 @@ namespace SecurityGateApv.Infras.Migrations
                             PhoneNumber = "0112223334",
                             RoleId = 3,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2699),
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "DM1"
                         },
                         new
                         {
                             UserId = 4,
-                            CreatedDate = new DateTime(2024, 8, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2702),
-                            Email = "hr1@example.com",
+                            CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Staff1@egmail.com",
                             FullName = "Staff One",
                             Image = "data:image/jpeg;base64,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",
                             Password = "123",
                             PhoneNumber = "0223334445",
                             RoleId = 4,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2703),
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "Staff1"
                         },
                         new
                         {
                             UserId = 5,
-                            CreatedDate = new DateTime(2024, 5, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2707),
+                            CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Staff2@gmail.com",
+                            FullName = "Staff Tow",
+                            Image = "data:image/jpeg;base64,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",
+                            Password = "123",
+                            PhoneNumber = "0223334446",
+                            RoleId = 4,
+                            Status = "Active",
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserName = "Staff2"
+                        },
+                        new
+                        {
+                            UserId = 6,
+                            CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "it1@example.com",
                             FullName = "Security One",
                             Image = "data:image/jpeg;base64,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",
@@ -725,268 +607,8 @@ namespace SecurityGateApv.Infras.Migrations
                             PhoneNumber = "0334445556",
                             RoleId = 5,
                             Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 17, 44, 35, 230, DateTimeKind.Utc).AddTicks(2707),
+                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "Security1"
-                        },
-                        new
-                        {
-                            UserId = 6,
-                            CreatedDate = new DateTime(2024, 9, 24, 8, 39, 54, 885, DateTimeKind.Unspecified).AddTicks(7745),
-                            Email = "gmail.com.Blanda39@yahoo.com",
-                            FullName = "Lonie Mosciski",
-                            Password = "ulwkv5",
-                            PhoneNumber = "0991567878",
-                            RoleId = 2,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 24, 8, 39, 54, 885, DateTimeKind.Unspecified).AddTicks(7745),
-                            UserName = "Lorine.Mann"
-                        },
-                        new
-                        {
-                            UserId = 7,
-                            CreatedDate = new DateTime(2024, 9, 23, 12, 25, 57, 788, DateTimeKind.Unspecified).AddTicks(4181),
-                            Email = "gmail.com.Donnelly@hotmail.com",
-                            FullName = "Lester Labadie",
-                            Password = "jgb01q",
-                            PhoneNumber = "0553365070",
-                            RoleId = 4,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 23, 12, 25, 57, 788, DateTimeKind.Unspecified).AddTicks(4181),
-                            UserName = "Alene4"
-                        },
-                        new
-                        {
-                            UserId = 8,
-                            CreatedDate = new DateTime(2024, 9, 16, 16, 17, 51, 94, DateTimeKind.Unspecified).AddTicks(6245),
-                            Email = "gmail.com.Mohr95@hotmail.com",
-                            FullName = "Lane Predovic",
-                            Password = "knc5r6",
-                            PhoneNumber = "0221970523",
-                            RoleId = 2,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 16, 16, 17, 51, 94, DateTimeKind.Unspecified).AddTicks(6245),
-                            UserName = "Bonita.Bogisich"
-                        },
-                        new
-                        {
-                            UserId = 9,
-                            CreatedDate = new DateTime(2024, 9, 23, 16, 52, 32, 787, DateTimeKind.Unspecified).AddTicks(396),
-                            Email = "gmail.com77@hotmail.com",
-                            FullName = "Tyra Williamson",
-                            Password = "jv9inh",
-                            PhoneNumber = "0116328159",
-                            RoleId = 1,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 23, 16, 52, 32, 787, DateTimeKind.Unspecified).AddTicks(396),
-                            UserName = "Jalon47"
-                        },
-                        new
-                        {
-                            UserId = 10,
-                            CreatedDate = new DateTime(2024, 9, 11, 10, 52, 29, 864, DateTimeKind.Unspecified).AddTicks(5030),
-                            Email = "gmail.com_Towne49@gmail.com",
-                            FullName = "Cornelius Jaskolski",
-                            Password = "grgy2y",
-                            PhoneNumber = "0151938174",
-                            RoleId = 5,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 10, 52, 29, 864, DateTimeKind.Unspecified).AddTicks(5030),
-                            UserName = "Miguel11"
-                        },
-                        new
-                        {
-                            UserId = 11,
-                            CreatedDate = new DateTime(2024, 9, 20, 15, 37, 54, 216, DateTimeKind.Unspecified).AddTicks(7994),
-                            Email = "gmail.com_Legros@yahoo.com",
-                            FullName = "Laron Armstrong",
-                            Password = "ge2no4",
-                            PhoneNumber = "0214893544",
-                            RoleId = 1,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 20, 15, 37, 54, 216, DateTimeKind.Unspecified).AddTicks(7994),
-                            UserName = "Bruce53"
-                        },
-                        new
-                        {
-                            UserId = 12,
-                            CreatedDate = new DateTime(2024, 9, 8, 14, 37, 30, 367, DateTimeKind.Unspecified).AddTicks(9963),
-                            Email = "gmail.com_Kovacek86@gmail.com",
-                            FullName = "Milford Beer",
-                            Password = "nnfyjk",
-                            PhoneNumber = "0646218918",
-                            RoleId = 5,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 8, 14, 37, 30, 367, DateTimeKind.Unspecified).AddTicks(9963),
-                            UserName = "Henry_Wisozk84"
-                        },
-                        new
-                        {
-                            UserId = 13,
-                            CreatedDate = new DateTime(2024, 9, 8, 12, 16, 17, 26, DateTimeKind.Unspecified).AddTicks(8095),
-                            Email = "gmail.com.Pagac@gmail.com",
-                            FullName = "Vidal Dickinson",
-                            Password = "0cml1p",
-                            PhoneNumber = "0588937542",
-                            RoleId = 5,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 8, 12, 16, 17, 26, DateTimeKind.Unspecified).AddTicks(8095),
-                            UserName = "Geraldine.Witting24"
-                        },
-                        new
-                        {
-                            UserId = 14,
-                            CreatedDate = new DateTime(2024, 9, 13, 16, 43, 25, 241, DateTimeKind.Unspecified).AddTicks(8567),
-                            Email = "gmail.com.Walter6@hotmail.com",
-                            FullName = "Antonina Mann",
-                            Password = "mj0ol5",
-                            PhoneNumber = "0595465226",
-                            RoleId = 5,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 13, 16, 43, 25, 241, DateTimeKind.Unspecified).AddTicks(8567),
-                            UserName = "Elliott78"
-                        },
-                        new
-                        {
-                            UserId = 15,
-                            CreatedDate = new DateTime(2024, 9, 16, 8, 32, 20, 893, DateTimeKind.Unspecified).AddTicks(8664),
-                            Email = "gmail.com_Romaguera64@yahoo.com",
-                            FullName = "Vivianne Cronin",
-                            Password = "khvh3f",
-                            PhoneNumber = "0360935333",
-                            RoleId = 1,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 16, 8, 32, 20, 893, DateTimeKind.Unspecified).AddTicks(8664),
-                            UserName = "Reanna60"
-                        },
-                        new
-                        {
-                            UserId = 16,
-                            CreatedDate = new DateTime(2024, 9, 21, 14, 41, 46, 773, DateTimeKind.Unspecified).AddTicks(1851),
-                            Email = "gmail.com71@hotmail.com",
-                            FullName = "Irma Rempel",
-                            Password = "4g67g8",
-                            PhoneNumber = "0447578667",
-                            RoleId = 3,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 21, 14, 41, 46, 773, DateTimeKind.Unspecified).AddTicks(1851),
-                            UserName = "Darrick_Corwin"
-                        },
-                        new
-                        {
-                            UserId = 17,
-                            CreatedDate = new DateTime(2024, 9, 26, 2, 51, 7, 635, DateTimeKind.Unspecified).AddTicks(8708),
-                            Email = "gmail.com_Russel@hotmail.com",
-                            FullName = "Morton Goyette",
-                            Password = "wstw0a",
-                            PhoneNumber = "0149790096",
-                            RoleId = 1,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 26, 2, 51, 7, 635, DateTimeKind.Unspecified).AddTicks(8708),
-                            UserName = "Kyra.Bins"
-                        },
-                        new
-                        {
-                            UserId = 18,
-                            CreatedDate = new DateTime(2024, 9, 22, 17, 10, 59, 312, DateTimeKind.Unspecified).AddTicks(4969),
-                            Email = "gmail.com_Hodkiewicz@hotmail.com",
-                            FullName = "Dominic Jacobi",
-                            Password = "i681ks",
-                            PhoneNumber = "0509532710",
-                            RoleId = 5,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 22, 17, 10, 59, 312, DateTimeKind.Unspecified).AddTicks(4969),
-                            UserName = "Toney_Keebler"
-                        },
-                        new
-                        {
-                            UserId = 19,
-                            CreatedDate = new DateTime(2024, 9, 25, 12, 7, 55, 728, DateTimeKind.Unspecified).AddTicks(3257),
-                            Email = "gmail.com24@yahoo.com",
-                            FullName = "Tyrique Wunsch",
-                            Password = "u9mney",
-                            PhoneNumber = "0465510087",
-                            RoleId = 5,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 25, 12, 7, 55, 728, DateTimeKind.Unspecified).AddTicks(3257),
-                            UserName = "Mortimer.OKeefe64"
-                        },
-                        new
-                        {
-                            UserId = 20,
-                            CreatedDate = new DateTime(2024, 9, 22, 9, 43, 22, 443, DateTimeKind.Unspecified).AddTicks(3949),
-                            Email = "gmail.com.OHara@hotmail.com",
-                            FullName = "Kaylie Maggio",
-                            Password = "9msl8j",
-                            PhoneNumber = "0304581793",
-                            RoleId = 3,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 22, 9, 43, 22, 443, DateTimeKind.Unspecified).AddTicks(3949),
-                            UserName = "Aurelio_Bayer67"
-                        },
-                        new
-                        {
-                            UserId = 21,
-                            CreatedDate = new DateTime(2024, 9, 15, 20, 55, 59, 764, DateTimeKind.Unspecified).AddTicks(1779),
-                            Email = "gmail.com.Frami@yahoo.com",
-                            FullName = "Warren Wolf",
-                            Password = "60stzm",
-                            PhoneNumber = "0500706938",
-                            RoleId = 2,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 15, 20, 55, 59, 764, DateTimeKind.Unspecified).AddTicks(1779),
-                            UserName = "Lucious52"
-                        },
-                        new
-                        {
-                            UserId = 22,
-                            CreatedDate = new DateTime(2024, 9, 1, 4, 46, 45, 906, DateTimeKind.Unspecified).AddTicks(9554),
-                            Email = "gmail.com45@hotmail.com",
-                            FullName = "Ronny Grant",
-                            Password = "qqpkpx",
-                            PhoneNumber = "0226422437",
-                            RoleId = 3,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 1, 4, 46, 45, 906, DateTimeKind.Unspecified).AddTicks(9554),
-                            UserName = "Rosina63"
-                        },
-                        new
-                        {
-                            UserId = 23,
-                            CreatedDate = new DateTime(2024, 9, 7, 20, 46, 44, 831, DateTimeKind.Unspecified).AddTicks(6705),
-                            Email = "gmail.com.Mraz@hotmail.com",
-                            FullName = "Caitlyn Boyle",
-                            Password = "sbl7wz",
-                            PhoneNumber = "0844750600",
-                            RoleId = 4,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 7, 20, 46, 44, 831, DateTimeKind.Unspecified).AddTicks(6705),
-                            UserName = "Gino.Kuphal"
-                        },
-                        new
-                        {
-                            UserId = 24,
-                            CreatedDate = new DateTime(2024, 9, 12, 18, 10, 2, 32, DateTimeKind.Unspecified).AddTicks(5193),
-                            Email = "gmail.com25@hotmail.com",
-                            FullName = "Hassan Weber",
-                            Password = "m1ceb4",
-                            PhoneNumber = "0209969692",
-                            RoleId = 2,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 12, 18, 10, 2, 32, DateTimeKind.Unspecified).AddTicks(5193),
-                            UserName = "Alaina0"
-                        },
-                        new
-                        {
-                            UserId = 25,
-                            CreatedDate = new DateTime(2024, 9, 11, 5, 2, 6, 196, DateTimeKind.Unspecified).AddTicks(8113),
-                            Email = "gmail.com.Dicki@hotmail.com",
-                            FullName = "Delores Pfeffer",
-                            Password = "xkb0v7",
-                            PhoneNumber = "0522252336",
-                            RoleId = 1,
-                            Status = "Active",
-                            UpdatedDate = new DateTime(2024, 9, 11, 5, 2, 6, 196, DateTimeKind.Unspecified).AddTicks(8113),
-                            UserName = "Johan.Bahringer95"
                         });
                 });
 
@@ -1017,13 +639,13 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserDepartmentId = 1,
                             DepartmentId = 1,
-                            UserId = 3
+                            UserId = 4
                         },
                         new
                         {
                             UserDepartmentId = 2,
                             DepartmentId = 1,
-                            UserId = 4
+                            UserId = 3
                         },
                         new
                         {
@@ -1034,122 +656,8 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             UserDepartmentId = 4,
-                            DepartmentId = 7,
-                            UserId = 8
-                        },
-                        new
-                        {
-                            UserDepartmentId = 5,
-                            DepartmentId = 1,
-                            UserId = 9
-                        },
-                        new
-                        {
-                            UserDepartmentId = 6,
-                            DepartmentId = 1,
-                            UserId = 10
-                        },
-                        new
-                        {
-                            UserDepartmentId = 7,
-                            DepartmentId = 6,
-                            UserId = 16
-                        },
-                        new
-                        {
-                            UserDepartmentId = 8,
-                            DepartmentId = 4,
-                            UserId = 15
-                        },
-                        new
-                        {
-                            UserDepartmentId = 9,
                             DepartmentId = 2,
-                            UserId = 8
-                        },
-                        new
-                        {
-                            UserDepartmentId = 10,
-                            DepartmentId = 8,
-                            UserId = 24
-                        },
-                        new
-                        {
-                            UserDepartmentId = 11,
-                            DepartmentId = 3,
-                            UserId = 15
-                        },
-                        new
-                        {
-                            UserDepartmentId = 12,
-                            DepartmentId = 8,
-                            UserId = 17
-                        },
-                        new
-                        {
-                            UserDepartmentId = 13,
-                            DepartmentId = 4,
-                            UserId = 6
-                        },
-                        new
-                        {
-                            UserDepartmentId = 14,
-                            DepartmentId = 6,
-                            UserId = 9
-                        },
-                        new
-                        {
-                            UserDepartmentId = 15,
-                            DepartmentId = 10,
-                            UserId = 19
-                        },
-                        new
-                        {
-                            UserDepartmentId = 16,
-                            DepartmentId = 2,
-                            UserId = 22
-                        },
-                        new
-                        {
-                            UserDepartmentId = 17,
-                            DepartmentId = 1,
-                            UserId = 13
-                        },
-                        new
-                        {
-                            UserDepartmentId = 18,
-                            DepartmentId = 7,
-                            UserId = 10
-                        },
-                        new
-                        {
-                            UserDepartmentId = 19,
-                            DepartmentId = 8,
-                            UserId = 16
-                        },
-                        new
-                        {
-                            UserDepartmentId = 20,
-                            DepartmentId = 2,
-                            UserId = 17
-                        },
-                        new
-                        {
-                            UserDepartmentId = 21,
-                            DepartmentId = 2,
-                            UserId = 18
-                        },
-                        new
-                        {
-                            UserDepartmentId = 22,
-                            DepartmentId = 7,
-                            UserId = 17
-                        },
-                        new
-                        {
-                            UserDepartmentId = 23,
-                            DepartmentId = 6,
-                            UserId = 13
+                            UserId = 5
                         });
                 });
 
@@ -1234,10 +742,13 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("DateRegister")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UpdateById")
+                    b.Property<int?>("UpdateById")
                         .HasColumnType("int");
 
                     b.Property<string>("VisitName")
@@ -1255,77 +766,11 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("CreateById");
 
+                    b.HasIndex("DepartmentId");
+
                     b.HasIndex("UpdateById");
 
                     b.ToTable("Visits");
-
-                    b.HasData(
-                        new
-                        {
-                            VisitId = 1,
-                            AcceptLevel = 1,
-                            CreateById = 3,
-                            DateRegister = new DateTime(2024, 9, 25, 0, 44, 35, 262, DateTimeKind.Local).AddTicks(1780),
-                            UpdateById = 4,
-                            VisitName = "Dọn vệ sinh",
-                            VisitQuantity = 2,
-                            VisitType = "ProcessWeek"
-                        },
-                        new
-                        {
-                            VisitId = 2,
-                            AcceptLevel = 2,
-                            CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 17, 44, 35, 268, DateTimeKind.Utc).AddTicks(413),
-                            UpdateById = 4,
-                            VisitName = "Dọn vệ sinh",
-                            VisitQuantity = 2,
-                            VisitType = "ProcessWeek"
-                        },
-                        new
-                        {
-                            VisitId = 3,
-                            AcceptLevel = 2,
-                            CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 17, 44, 35, 268, DateTimeKind.Utc).AddTicks(632),
-                            UpdateById = 4,
-                            VisitName = "Dọn vệ sinh",
-                            VisitQuantity = 2,
-                            VisitType = "ProcessWeek"
-                        },
-                        new
-                        {
-                            VisitId = 4,
-                            AcceptLevel = 2,
-                            CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 17, 44, 35, 268, DateTimeKind.Utc).AddTicks(654),
-                            UpdateById = 4,
-                            VisitName = "Dọn vệ sinh",
-                            VisitQuantity = 2,
-                            VisitType = "ProcessWeek"
-                        },
-                        new
-                        {
-                            VisitId = 5,
-                            AcceptLevel = 2,
-                            CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 17, 44, 35, 268, DateTimeKind.Utc).AddTicks(667),
-                            UpdateById = 4,
-                            VisitName = "Dọn vệ sinh",
-                            VisitQuantity = 2,
-                            VisitType = "ProcessWeek"
-                        },
-                        new
-                        {
-                            VisitId = 6,
-                            AcceptLevel = 2,
-                            CreateById = 4,
-                            DateRegister = new DateTime(2024, 9, 26, 17, 44, 35, 268, DateTimeKind.Utc).AddTicks(684),
-                            UpdateById = 4,
-                            VisitName = "Dọn vệ sinh",
-                            VisitQuantity = 2,
-                            VisitType = "ProcessWeek"
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitDetail", b =>
@@ -1367,392 +812,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("VisitorId");
 
                     b.ToTable("VisitDetails");
-
-                    b.HasData(
-                        new
-                        {
-                            VisitDetailId = 1,
-                            Description = "Sit qui voluptas temporibus voluptatem. Odit sit laborum dolorem deleniti laborum voluptatem. Enim distinctio consequuntur dolor maiores corrupti.",
-                            ExpectedEndDate = new DateTime(2024, 10, 26, 0, 44, 35, 266, DateTimeKind.Local).AddTicks(7169),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 0, 44, 35, 266, DateTimeKind.Local).AddTicks(7112),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 1,
-                            VisitorId = 2
-                        },
-                        new
-                        {
-                            VisitDetailId = 2,
-                            Description = "Atque voluptatem quidem nihil. Nisi ut facilis velit recusandae ducimus sint natus quia. Fugiat optio at sint repellat consectetur blanditiis molestiae mollitia repellat.",
-                            ExpectedEndDate = new DateTime(2024, 10, 26, 0, 44, 35, 266, DateTimeKind.Local).AddTicks(7693),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 0, 44, 35, 266, DateTimeKind.Local).AddTicks(7687),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 1,
-                            VisitorId = 1
-                        },
-                        new
-                        {
-                            VisitDetailId = 3,
-                            Description = "Earum voluptates est dolor voluptatem quis maiores. Natus vitae dolores voluptas et eum ipsa et aut. Eos consequatur nostrum.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 269, DateTimeKind.Local).AddTicks(6613),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 269, DateTimeKind.Local).AddTicks(6551),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 1
-                        },
-                        new
-                        {
-                            VisitDetailId = 4,
-                            Description = "Quaerat exercitationem omnis at consectetur magnam. Voluptas delectus ut. Earum quod asperiores impedit quibusdam optio nemo odit minus quia. Voluptas voluptatem cupiditate autem. Et aut consectetur ea ex repellendus tenetur voluptatem quos.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 269, DateTimeKind.Local).AddTicks(6979),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 269, DateTimeKind.Local).AddTicks(6975),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 10
-                        },
-                        new
-                        {
-                            VisitDetailId = 5,
-                            Description = "Voluptatem ut dignissimos ut doloribus aut sed exercitationem. Cum quia ex quibusdam sapiente earum quo illo inventore. Mollitia aut non itaque unde sunt dolorem. Ut corrupti nulla maxime et officiis. Nam veritatis iste quis sed iusto fugiat in quasi. Voluptas optio aut aperiam velit.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 271, DateTimeKind.Local).AddTicks(188),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 271, DateTimeKind.Local).AddTicks(150),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 1
-                        },
-                        new
-                        {
-                            VisitDetailId = 6,
-                            Description = "Facilis reiciendis aut molestiae dolor molestiae quis aperiam quo. Quam est tenetur numquam. Ut odio nulla ea velit voluptas velit. Fuga ullam et laborum officiis sunt labore qui.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 271, DateTimeKind.Local).AddTicks(475),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 271, DateTimeKind.Local).AddTicks(471),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 7,
-                            Description = "Et dignissimos enim officia. Cum est rerum occaecati quas et aliquid ea. Ex hic aut voluptatibus et fugiat quidem architecto hic qui. Quam non reprehenderit illo quia dignissimos.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 272, DateTimeKind.Local).AddTicks(1978),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 272, DateTimeKind.Local).AddTicks(1946),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 6
-                        },
-                        new
-                        {
-                            VisitDetailId = 8,
-                            Description = "Accusantium eveniet delectus aut dolor sed mollitia optio. Fuga rerum in unde sint sit est sed laudantium. Voluptate aperiam quibusdam. Corporis porro voluptatem qui et ut quia aspernatur qui. Dicta enim minus labore. Eum facilis qui sit delectus distinctio.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 272, DateTimeKind.Local).AddTicks(2273),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 272, DateTimeKind.Local).AddTicks(2269),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 2,
-                            VisitorId = 2
-                        },
-                        new
-                        {
-                            VisitDetailId = 9,
-                            Description = "Ut enim expedita voluptas rerum nisi. Sapiente saepe neque aut voluptas dignissimos eum eum. Aut et laborum voluptas blanditiis. Consequuntur aut atque dolorem et deserunt saepe ipsam totam. Sapiente possimus temporibus. Et explicabo exercitationem earum velit.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 273, DateTimeKind.Local).AddTicks(3558),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 273, DateTimeKind.Local).AddTicks(3524),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 5
-                        },
-                        new
-                        {
-                            VisitDetailId = 10,
-                            Description = "Neque sit delectus facilis consectetur eos unde. Odit enim fugiat voluptatibus. Sed et eaque. Blanditiis nihil voluptatem sit iusto sunt corrupti quos quasi voluptatum. Laudantium vero blanditiis.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 273, DateTimeKind.Local).AddTicks(3817),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 273, DateTimeKind.Local).AddTicks(3813),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 11,
-                            Description = "Et perferendis voluptatem. Expedita voluptatem odit quos nesciunt occaecati voluptate deserunt dolores quibusdam. Dicta aut exercitationem eos eligendi atque. Sunt ipsa aut et odio sed mollitia rerum modi neque.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 274, DateTimeKind.Local).AddTicks(6000),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 274, DateTimeKind.Local).AddTicks(5957),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 4
-                        },
-                        new
-                        {
-                            VisitDetailId = 12,
-                            Description = "Distinctio incidunt et et. Commodi eligendi eum ad tenetur non dolor quasi porro. Ex voluptas et amet ratione ea. Molestiae qui blanditiis ab dolores quia mollitia ullam et excepturi.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 274, DateTimeKind.Local).AddTicks(6274),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 274, DateTimeKind.Local).AddTicks(6270),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 5
-                        },
-                        new
-                        {
-                            VisitDetailId = 13,
-                            Description = "Reiciendis nostrum et et maxime eaque fugit ducimus. Et molestias voluptates corporis. Sed nulla consequatur ut libero dolores reiciendis. Laboriosam facere suscipit expedita ratione maiores ut et.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 277, DateTimeKind.Local).AddTicks(6703),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 277, DateTimeKind.Local).AddTicks(6653),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 10
-                        },
-                        new
-                        {
-                            VisitDetailId = 14,
-                            Description = "A blanditiis vero aut aut non molestiae. Molestiae at dolorum iusto id maxime. Ipsum sit corrupti quasi sunt.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 277, DateTimeKind.Local).AddTicks(7066),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 277, DateTimeKind.Local).AddTicks(7061),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 3,
-                            VisitorId = 9
-                        },
-                        new
-                        {
-                            VisitDetailId = 15,
-                            Description = "Assumenda vel est totam et iusto similique quia sit enim. Sed mollitia corrupti consectetur. Nulla culpa aut non assumenda. Possimus quasi nulla quod aspernatur in unde impedit iste et.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 278, DateTimeKind.Local).AddTicks(9707),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 278, DateTimeKind.Local).AddTicks(9670),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 4
-                        },
-                        new
-                        {
-                            VisitDetailId = 16,
-                            Description = "Voluptatem qui tenetur. Optio consequatur voluptatem veniam. Ut ipsam neque. Fugit nulla praesentium minima doloremque nam doloribus exercitationem velit quia. Quas consectetur error vel facere aspernatur est.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 278, DateTimeKind.Local).AddTicks(9995),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 278, DateTimeKind.Local).AddTicks(9991),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 4
-                        },
-                        new
-                        {
-                            VisitDetailId = 17,
-                            Description = "Eum aut suscipit. Modi autem qui repudiandae sequi. Delectus consequatur minima similique rerum omnis qui quia tempora rerum. Quam veniam neque quas. Pariatur rem repellendus aut doloremque nesciunt ad aliquam voluptatem soluta. Rem necessitatibus omnis consequatur omnis odio in aliquid.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 280, DateTimeKind.Local).AddTicks(2002),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 280, DateTimeKind.Local).AddTicks(1967),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 18,
-                            Description = "Quia non saepe sit aperiam. Veritatis facere aperiam corrupti velit est. Quo explicabo delectus.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 280, DateTimeKind.Local).AddTicks(2249),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 280, DateTimeKind.Local).AddTicks(2245),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 19,
-                            Description = "Odit nobis quis repudiandae ut. Laboriosam voluptatem et dolorem quae. Eos repudiandae culpa nulla.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 281, DateTimeKind.Local).AddTicks(3950),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 281, DateTimeKind.Local).AddTicks(3913),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 5
-                        },
-                        new
-                        {
-                            VisitDetailId = 20,
-                            Description = "Optio impedit sint veniam in quis quae quo maxime. Possimus dicta architecto aliquid ut qui tempora. Voluptates mollitia modi officiis repudiandae similique.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 281, DateTimeKind.Local).AddTicks(4223),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 281, DateTimeKind.Local).AddTicks(4219),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 4,
-                            VisitorId = 5
-                        },
-                        new
-                        {
-                            VisitDetailId = 21,
-                            Description = "Perferendis earum eum ea incidunt ducimus. Dolores tenetur consequatur minima. Id quis debitis et sint necessitatibus hic. Blanditiis omnis quia exercitationem quia sed. In eos totam voluptas cupiditate quidem modi commodi. Eveniet voluptas sequi error fuga.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 282, DateTimeKind.Local).AddTicks(5708),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 282, DateTimeKind.Local).AddTicks(5671),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 7
-                        },
-                        new
-                        {
-                            VisitDetailId = 22,
-                            Description = "Officia laboriosam quos laboriosam ut et nesciunt optio laudantium totam. Voluptates magnam enim. Reprehenderit eveniet sunt nam est.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 282, DateTimeKind.Local).AddTicks(5949),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 282, DateTimeKind.Local).AddTicks(5945),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 4
-                        },
-                        new
-                        {
-                            VisitDetailId = 23,
-                            Description = "Sunt consequatur consequuntur ut minima ducimus. Dolores et qui perferendis. Voluptas dolorem cupiditate natus.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 283, DateTimeKind.Local).AddTicks(7312),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 283, DateTimeKind.Local).AddTicks(7273),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 5
-                        },
-                        new
-                        {
-                            VisitDetailId = 24,
-                            Description = "Consequatur maiores neque. Quis voluptates odio. Rerum non deserunt aut eligendi dolores itaque maiores iste.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 283, DateTimeKind.Local).AddTicks(7550),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 283, DateTimeKind.Local).AddTicks(7546),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 4
-                        },
-                        new
-                        {
-                            VisitDetailId = 25,
-                            Description = "Nobis omnis soluta. A pariatur sed sint sunt magnam sit doloribus natus quae. Qui est repellat. Unde eius sit consequatur repudiandae adipisci ratione. Repellendus illo impedit sapiente molestiae recusandae consequuntur.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 285, DateTimeKind.Local).AddTicks(248),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 285, DateTimeKind.Local).AddTicks(208),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 3
-                        },
-                        new
-                        {
-                            VisitDetailId = 26,
-                            Description = "Officia blanditiis sit amet occaecati tempore. Vero sit eius qui assumenda. Sint tempora unde dicta adipisci sint sit.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 285, DateTimeKind.Local).AddTicks(500),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 285, DateTimeKind.Local).AddTicks(497),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 5,
-                            VisitorId = 8
-                        },
-                        new
-                        {
-                            VisitDetailId = 27,
-                            Description = "Totam perspiciatis et eveniet omnis sit illo non est. Corrupti unde voluptas rem omnis voluptatum aut possimus praesentium. Asperiores incidunt est. Enim repellat at est omnis suscipit et ea. Ipsum commodi qui fugit quod rerum corporis ut. Blanditiis a eos et officiis.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 286, DateTimeKind.Local).AddTicks(1996),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 286, DateTimeKind.Local).AddTicks(1957),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 4
-                        },
-                        new
-                        {
-                            VisitDetailId = 28,
-                            Description = "Omnis quos ab vitae nihil. Vel numquam consequatur facilis. Similique velit et quis ipsa et nesciunt quia earum. Possimus voluptatem earum beatae qui et qui inventore perspiciatis. Necessitatibus cumque sint. Amet velit qui.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 286, DateTimeKind.Local).AddTicks(2311),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 286, DateTimeKind.Local).AddTicks(2307),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 8
-                        },
-                        new
-                        {
-                            VisitDetailId = 29,
-                            Description = "Odio ad nihil quam modi dolores deleniti ut quo dicta. Eum a dolores sed aliquam similique voluptatibus velit praesentium. Assumenda quas voluptatem consectetur. Et in doloremque dolore. Laborum et quis ut dolorem totam. Autem quae qui optio rerum non voluptatem dolorem sapiente facilis.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 288, DateTimeKind.Local).AddTicks(3543),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 288, DateTimeKind.Local).AddTicks(3503),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 9
-                        },
-                        new
-                        {
-                            VisitDetailId = 30,
-                            Description = "Dolorem voluptate et sequi voluptatibus quasi voluptatibus. Nihil consequatur ipsam explicabo sit error rerum quia quo similique. Facilis rerum consequuntur. Qui voluptas qui dolor totam unde. Aperiam illum laborum quidem.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 288, DateTimeKind.Local).AddTicks(3834),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 288, DateTimeKind.Local).AddTicks(3830),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 7
-                        },
-                        new
-                        {
-                            VisitDetailId = 31,
-                            Description = "Assumenda aut doloremque ut. Sit saepe molestiae itaque voluptatem aut voluptatem sed. Quia maiores voluptas quia voluptate.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 289, DateTimeKind.Local).AddTicks(5685),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 289, DateTimeKind.Local).AddTicks(5649),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 1
-                        },
-                        new
-                        {
-                            VisitDetailId = 32,
-                            Description = "Voluptas aspernatur et. Neque ratione ea. Accusantium et nostrum.",
-                            ExpectedEndDate = new DateTime(2024, 9, 28, 0, 44, 35, 289, DateTimeKind.Local).AddTicks(5912),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 27, 0, 44, 35, 289, DateTimeKind.Local).AddTicks(5902),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            Status = true,
-                            VisitId = 6,
-                            VisitorId = 4
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitProcess", b =>
@@ -1799,21 +858,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("VisitId");
 
                     b.ToTable("VisitProcesses");
-
-                    b.HasData(
-                        new
-                        {
-                            VisitProcessId = 1,
-                            DaysOfProcess = "Monday",
-                            ExpectedEndDate = new DateTime(2024, 10, 26, 0, 44, 35, 265, DateTimeKind.Local).AddTicks(1121),
-                            ExpectedEndTime = new TimeSpan(0, 12, 0, 0, 0),
-                            ExpectedStartDate = new DateTime(2024, 9, 26, 0, 44, 35, 265, DateTimeKind.Local).AddTicks(1059),
-                            ExpectedStartTime = new TimeSpan(0, 7, 0, 0, 0),
-                            ProcessId = 1,
-                            Status = "Processing",
-                            VisitId = 1,
-                            VisitQuantity = 2
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitType", b =>
@@ -1881,12 +925,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CreateById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("CredentialCardTypeId")
                         .HasColumnType("int");
 
@@ -1898,22 +936,17 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VisitorImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VisitorName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VisitorId");
-
-                    b.HasIndex("CreateById");
 
                     b.HasIndex("CredentialCardTypeId");
 
@@ -1922,138 +955,39 @@ namespace SecurityGateApv.Infras.Migrations
                         .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Visitors");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            VisitorId = 1,
-                            CompanyName = "Becker - Stokes",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 26, 12, 48, 17, 550, DateTimeKind.Unspecified).AddTicks(3469),
-                            CredentialCardTypeId = 1,
-                            CredentialsCard = "hmzd45t8kq",
-                            PhoneNumber = "0853799750",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 26, 12, 48, 17, 550, DateTimeKind.Unspecified).AddTicks(3469),
-                            VisitorName = "Dominic Williamson"
-                        },
-                        new
-                        {
-                            VisitorId = 2,
-                            CompanyName = "Koss, Douglas and Hegmann",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 5, 1, 5, 23, 828, DateTimeKind.Unspecified).AddTicks(2468),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "y35vdtmnuu",
-                            PhoneNumber = "0788662882",
-                            Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 5, 1, 5, 23, 828, DateTimeKind.Unspecified).AddTicks(2468),
-                            VisitorName = "Keith Hackett"
-                        },
-                        new
-                        {
-                            VisitorId = 3,
-                            CompanyName = "Lockman LLC",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 24, 3, 31, 18, 141, DateTimeKind.Unspecified).AddTicks(1184),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "2czgaebm2q",
-                            PhoneNumber = "0433830887",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 24, 3, 31, 18, 141, DateTimeKind.Unspecified).AddTicks(1184),
-                            VisitorName = "Ashlee Braun"
-                        },
-                        new
-                        {
-                            VisitorId = 4,
-                            CompanyName = "Swift - Kling",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 18, 13, 56, 6, 309, DateTimeKind.Unspecified).AddTicks(3245),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "9v2aebajpq",
-                            PhoneNumber = "0255123828",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 18, 13, 56, 6, 309, DateTimeKind.Unspecified).AddTicks(3245),
-                            VisitorName = "Keshawn Hickle"
-                        },
-                        new
-                        {
-                            VisitorId = 5,
-                            CompanyName = "Gaylord - Lynch",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 10, 8, 3, 12, 369, DateTimeKind.Unspecified).AddTicks(8176),
-                            CredentialCardTypeId = 1,
-                            CredentialsCard = "c90usnsnqe",
-                            PhoneNumber = "0331274585",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 10, 8, 3, 12, 369, DateTimeKind.Unspecified).AddTicks(8176),
-                            VisitorName = "Pauline Hegmann"
-                        },
-                        new
-                        {
-                            VisitorId = 6,
-                            CompanyName = "Toy, Bode and Schuster",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 14, 18, 14, 10, 547, DateTimeKind.Unspecified).AddTicks(388),
-                            CredentialCardTypeId = 1,
-                            CredentialsCard = "qmsqphh7d3",
-                            PhoneNumber = "0108962028",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 14, 18, 14, 10, 547, DateTimeKind.Unspecified).AddTicks(388),
-                            VisitorName = "Milton Tromp"
-                        },
-                        new
-                        {
-                            VisitorId = 7,
-                            CompanyName = "Mertz, Cole and Abernathy",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 8, 19, 2, 44, 447, DateTimeKind.Unspecified).AddTicks(8471),
-                            CredentialCardTypeId = 1,
-                            CredentialsCard = "nakn16hn0t",
-                            PhoneNumber = "0737561338",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 8, 19, 2, 44, 447, DateTimeKind.Unspecified).AddTicks(8471),
-                            VisitorName = "Chanelle Kuhn"
-                        },
-                        new
-                        {
-                            VisitorId = 8,
-                            CompanyName = "Lueilwitz - Hammes",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 19, 13, 0, 2, 28, DateTimeKind.Unspecified).AddTicks(3782),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "asz53w3i38",
-                            PhoneNumber = "0799065748",
-                            Status = false,
-                            UpdatedDate = new DateTime(2024, 9, 19, 13, 0, 2, 28, DateTimeKind.Unspecified).AddTicks(3782),
-                            VisitorName = "Kyla Gusikowski"
-                        },
-                        new
-                        {
-                            VisitorId = 9,
-                            CompanyName = "Gerhold Group",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 18, 6, 15, 57, 750, DateTimeKind.Unspecified).AddTicks(224),
-                            CredentialCardTypeId = 1,
-                            CredentialsCard = "lege78crxr",
-                            PhoneNumber = "0964428277",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 18, 6, 15, 57, 750, DateTimeKind.Unspecified).AddTicks(224),
-                            VisitorName = "Savion Gerlach"
-                        },
-                        new
-                        {
-                            VisitorId = 10,
-                            CompanyName = "Wuckert, Kilback and Legros",
-                            CreateById = 1,
-                            CreatedDate = new DateTime(2024, 9, 1, 19, 55, 45, 516, DateTimeKind.Unspecified).AddTicks(2638),
-                            CredentialCardTypeId = 2,
-                            CredentialsCard = "bcgmq0fzka",
-                            PhoneNumber = "0484624694",
-                            Status = true,
-                            UpdatedDate = new DateTime(2024, 9, 1, 19, 55, 45, 516, DateTimeKind.Unspecified).AddTicks(2638),
-                            VisitorName = "Makayla Jacobson"
-                        });
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorDepartment", b =>
+                {
+                    b.Property<int>("VisitorDepartmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitorDepartmentId"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VisitorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("VisitorDepartmentId");
+
+                    b.HasIndex("UserDepartmentId");
+
+                    b.HasIndex("VisitorId");
+
+                    b.ToTable("VisitorDepartment");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
@@ -2273,16 +1207,21 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasOne("SecurityGateApv.Domain.Models.User", "CreateBy")
                         .WithMany("CreatedVisits")
                         .HasForeignKey("CreateById")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.Department", "Department")
+                        .WithMany("Visit")
+                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("SecurityGateApv.Domain.Models.User", "UpdateBy")
                         .WithMany("UpdatedVisits")
                         .HasForeignKey("UpdateById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreateBy");
+
+                    b.Navigation("Department");
 
                     b.Navigation("UpdateBy");
                 });
@@ -2296,7 +1235,7 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired();
 
                     b.HasOne("SecurityGateApv.Domain.Models.Visitor", "Visitor")
-                        .WithMany("VisitDetail")
+                        .WithMany("VisitDetails")
                         .HasForeignKey("VisitorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2309,7 +1248,7 @@ namespace SecurityGateApv.Infras.Migrations
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitProcess", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.Process", "Process")
-                        .WithMany("VisitProject")
+                        .WithMany("VisitProcesses")
                         .HasForeignKey("ProcessId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2325,12 +1264,6 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.UserDepartment", "UserDepartment")
-                        .WithMany("Visitors")
-                        .HasForeignKey("CreateById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SecurityGateApv.Domain.Models.CredentialCardType", "CredentialCardType")
                         .WithMany("Visitor")
                         .HasForeignKey("CredentialCardTypeId")
@@ -2344,8 +1277,25 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("CredentialCardType");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorDepartment", b =>
+                {
+                    b.HasOne("SecurityGateApv.Domain.Models.UserDepartment", "UserDepartment")
+                        .WithMany("VisitorDepartments")
+                        .HasForeignKey("UserDepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.Visitor", "Visitor")
+                        .WithMany("VisitorDepartments")
+                        .HasForeignKey("VisitorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserDepartment");
+
+                    b.Navigation("Visitor");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
@@ -2416,6 +1366,8 @@ namespace SecurityGateApv.Infras.Migrations
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Department", b =>
                 {
                     b.Navigation("UserDepartment");
+
+                    b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Gate", b =>
@@ -2434,7 +1386,7 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Process", b =>
                 {
-                    b.Navigation("VisitProject");
+                    b.Navigation("VisitProcesses");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.QRCard", b =>
@@ -2483,7 +1435,7 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.UserDepartment", b =>
                 {
-                    b.Navigation("Visitors");
+                    b.Navigation("VisitorDepartments");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>
@@ -2512,7 +1464,9 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
                 {
-                    b.Navigation("VisitDetail");
+                    b.Navigation("VisitDetails");
+
+                    b.Navigation("VisitorDepartments");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
