@@ -13,7 +13,7 @@ namespace SecurityGateApv.Application.DTOs.Req
     {
         public string ProcessName { get; set; }
         public string Description { get; set; }
-        public bool Status { get; set; }
+        //public bool Status { get; set; }
         public int VisitTypeId { get; set; }
         public int CreateBy { get; set; }
         public ICollection<VisitProcessCommand> VisitProject { get; set; }
@@ -26,6 +26,6 @@ namespace SecurityGateApv.Application.DTOs.Req
         public TimeSpan ExpectedEndTime { get; set; }
         public string DaysOfProcess { get; set; }
         public int VisitQuantity { get; set; }
-        public string Status { get; set; }
+        //public string Status { get; set; }
     }
 }

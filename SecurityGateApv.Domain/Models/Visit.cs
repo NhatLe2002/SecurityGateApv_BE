@@ -45,6 +45,10 @@ namespace SecurityGateApv.Domain.Models
         [ForeignKey("UpdateBy")]
         public int? UpdateById { get; private set; }
         public User? UpdateBy { get; private set; }
+        
+        [ForeignKey("Department")]
+        public int? DepartmentId { get; private set; }
+        public Department? Department { get; private set; }
 
         public ICollection<VisitProcess> VisitProcess { get; private set; } = new List<VisitProcess>();
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();

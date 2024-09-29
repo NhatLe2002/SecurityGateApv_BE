@@ -66,14 +66,6 @@ namespace SecurityGateApv.Domain.Models
         {
             var days = daysOfProcess.Split(new char[] { ',' }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
             var flag = true;
-            foreach(var item in days)
-            {
-                if(item.Equals("Mon") || item.Equals("Tue") || item.Equals("Wed") || item.Equals("Thu") || item.Equals("Fri") || item.Equals("Sat") || item.Equals("Sun"))
-                {
-                    continue;
-                }
-                return Result.Failure<VisitProcess>(Error.ProcessVisitCreateDateError);
-            }
             var visitProcess = new VisitProcess(expectedStartDate, expectedEndDate, expectedStartTime, expectedEndTime, daysOfProcess,
                  visitQuantity, status, processId);
             return visitProcess;
@@ -82,14 +74,7 @@ namespace SecurityGateApv.Domain.Models
             int visitQuantity, string status, Process process)
         {
             var days = daysOfProcess.Split(new char[] { ',' }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            foreach (var item in days)
-            {
-                if (item.Equals("Mon") || item.Equals("Tue") || item.Equals("Wed") || item.Equals("Thu") || item.Equals("Fri") || item.Equals("Sat") || item.Equals("Sun"))
-                {
-                    continue;
-                }
-                return Result.Failure<VisitProcess>(Error.ProcessVisitCreateDateError);
-            }
+            
             var visitProcess = new VisitProcess(expectedStartDate, expectedEndDate, expectedStartTime, expectedEndTime, daysOfProcess,
                  visitQuantity, status, process);
             return visitProcess;

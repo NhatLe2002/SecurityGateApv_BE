@@ -65,11 +65,13 @@ namespace SecurityGateApv.Infras.DBContext
                 .OnDelete(DeleteBehavior.Restrict);
 
 
+            
+            
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.CreateBy)
                 .WithMany(u => u.CreatedVisits)
                 .HasForeignKey(v => v.CreateById)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.UpdateBy)

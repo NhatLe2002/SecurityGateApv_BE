@@ -24,6 +24,17 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        
+        [HttpGet("GetAllProcessDetailByDepartmentmanagerId/{departmentManagerId}")]
+        public async Task<IActionResult> GetAllProcessDetailByDepartmentmanagerId(int departmentManagerId)
+        {
+            var result = await _processService.GetAllProcessDetailByDepartmentManagerId(departmentManagerId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("GetAllProcessDetailById/{processId}")]
         public async Task<IActionResult> GetAllProcessDetailById(int processId)
         {
