@@ -27,13 +27,17 @@ namespace SecurityGateApv.Application.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAWSService _awsService;
-        public QRCodeService(IExtractQRCode extractQRCode, IMapper mapper, IUnitOfWork unitOfWork, IAWSService awsService)
+        private readonly IPrivateKeyRepo _privateKeyRepo;
+
+        public QRCodeService(IExtractQRCode extractQRCode, IMapper mapper, IUnitOfWork unitOfWork,
+            IAWSService awsService, IQRCardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo)
         {
             _extractQRCode = extractQRCode;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _qrRCardRepo = qrRCardRepo;
             _awsService = awsService;
+            _privateKeyRepo = privateKeyRepo;
         }
 
 
@@ -84,7 +88,8 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<AWSDomainDTO>> DetectShoe(IFormFile image)
         {
             var result = new AWSDomainDTO();
-            var label = await _awsService.DetectLabelService(image);
+            var key = (await _privateKeyRepo.GetAllAsync()).FirstOrDefault();
+            var label = await _awsService.DetectLabelService(image, key);
             label = label.Where(s => s.Label.Equals("Sandal",StringComparison.OrdinalIgnoreCase) || s.Label.Equals("Shoe", StringComparison.OrdinalIgnoreCase)).ToArray();
             if (label.Count == 0)
             {

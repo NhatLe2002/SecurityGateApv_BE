@@ -8,12 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SecurityGateApv.Domain.Models;
 
 namespace SecurityGateApv.Infras.AWS
 {
     public class AWSServices : IAWSService
     {
-        public async Task<ICollection<AWSDomainDTO>> DetectLabelService(IFormFile image)
+        public async Task<ICollection<AWSDomainDTO>> DetectLabelService(IFormFile image, PrivateKeyService key)
         {
             MemoryStream stream = new MemoryStream();
             await image.CopyToAsync(stream);

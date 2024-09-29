@@ -49,6 +49,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IJwt, JwtHelper>();
             services.AddScoped<IAWSService, AWSServices>();
             services.AddScoped<IExtractQRCode, ExtractQRCode>();
+            services.AddScoped<IPrivateKeyRepo, PrivateKeyRepo>();
 
             //JWT
             var key = configuration["Jwt:Key"];
