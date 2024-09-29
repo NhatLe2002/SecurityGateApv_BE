@@ -28,6 +28,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<ProcessByDepartmentManagerIdRes, Process>().ReverseMap();
             CreateMap<ProcessDetailByDepartmentManagerIdRes, Process>().ReverseMap();
             CreateMap<ProcessDetailRes, VisitProcess>().ReverseMap();
+            CreateMap<GetDepartmentRes, Department>().ReverseMap();
             CreateMap<GetCardRes, QRCard>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.QRCardType.CardTypeName))
                 .ForMember(dest => dest.QrCardStatusName, opt => opt.MapFrom(src => src.QRCardStatus.StatusName));

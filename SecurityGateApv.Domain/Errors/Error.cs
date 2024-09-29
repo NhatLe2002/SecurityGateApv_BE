@@ -20,12 +20,19 @@ namespace SecurityGateApv.Domain.Errors
         public string Code { get; }
         public string Message { get; }
 
+
+        //Author error
+        public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
+
+
+
         public static implicit operator string(Error error) { return error.Code; }
         //Domain Errors
         public static readonly Error NotFound = new("Error.Notfound", "Not found item");
 
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
+        public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
 
 
@@ -57,5 +64,13 @@ namespace SecurityGateApv.Domain.Errors
 
         //ProcessVisit Error
         public static readonly Error ProcessVisitCreateDateError = new("Error.ProcessVisitCreateDateError", @"Date format is ""Mon,Tue,Sun""");
+    
+        
+        
+        
+        //Department Error
+        public static readonly Error NotFoundDepartment = new("Error.NotfoundDepartment", "Not found this department");
+        public static readonly Error NotFoundDepartmentByDepartmentManagerId = new("Error.NotfoundDepartment", "Not found department by department manager id");
+        public static readonly Error NotFoundDepartmentById = new("Error.NotfoundDepartment", "Not found department by id");
     }
 }

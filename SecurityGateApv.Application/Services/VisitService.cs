@@ -223,7 +223,7 @@ namespace SecurityGateApv.Application.Services
                     ExpectedStartTime = item.ExpectedStartTime,
                     ExpectedEndTime = item.ExpectedEndTime,
                     VisitorName = item.Visitor.VisitorName,
-                    CompanyName = item.Visitor.CompanyName,
+                    //CompanyName = item.Visitor.CompanyName,
                     PhoneNumber = item.Visitor.PhoneNumber,
                     CredentialsCard = item.Visitor.CredentialsCard,
                 });
@@ -276,7 +276,7 @@ namespace SecurityGateApv.Application.Services
                     ExpectedStartTime = item.ExpectedStartTime,
                     ExpectedEndTime = item.ExpectedEndTime,
                     VisitorName = item.Visitor.VisitorName,
-                    CompanyName = item.Visitor.CompanyName,
+                    //CompanyName = item.Visitor.CompanyName,
                     PhoneNumber = item.Visitor.PhoneNumber,
                     CredentialsCard = item.Visitor.CredentialsCard,
                 });

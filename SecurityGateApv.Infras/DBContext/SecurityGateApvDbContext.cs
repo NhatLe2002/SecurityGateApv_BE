@@ -32,7 +32,6 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<QRCardType> QRCardType { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserDepartment> UserDepartments { get; set; }
         public DbSet<VehicleSessionImage> VehicleSessionImages { get; set; }
         public DbSet<Visit> Visits { get; set; }
         public DbSet<VisitDetail> VisitDetails { get; set; }
