@@ -26,6 +26,9 @@ namespace SecurityGateApv.Application.Extensions
             services.AddScoped<IQRCodeService, QRCodeService>();
             services.AddScoped<IProcessService, ProcessSerivce>();
             services.AddScoped<IGateService, GateService>();
+
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddFluentValidation();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

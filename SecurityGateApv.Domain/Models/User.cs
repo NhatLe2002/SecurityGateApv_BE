@@ -15,7 +15,7 @@ namespace SecurityGateApv.Domain.Models
         {
             
         }
-        internal User(int userId, string userName, string password, string fullName, string email, string phoneNumber, string image, DateTime createdDate, DateTime updatedDate, string status, int roleId)
+        internal User(int userId, string userName, string password, string fullName, string email, string phoneNumber, string image, DateTime createdDate, DateTime updatedDate, string status, int roleId, int? departmentId)
         {
             UserId = userId;
             UserName = userName;
@@ -28,8 +28,22 @@ namespace SecurityGateApv.Domain.Models
             UpdatedDate = updatedDate;
             Status = status;
             RoleId = roleId;
+            DepartmentId = departmentId;
         }
-
+        internal User( string userName, string password, string fullName, string email, string phoneNumber, string image, DateTime createdDate, DateTime updatedDate, string status, int roleId, int departmentId)
+        {
+            UserName = userName;
+            Password = password;
+            FullName = fullName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            Image = image;
+            CreatedDate = createdDate;
+            UpdatedDate = updatedDate;
+            Status = status;
+            RoleId = roleId;
+            DepartmentId = departmentId;
+        }
         [Key]
         public int UserId { get; set; }
         public string UserName { get; private set; }
@@ -45,9 +59,13 @@ namespace SecurityGateApv.Domain.Models
         [ForeignKey("Role")]
         public int RoleId { get; private set; }
         public Role Role { get; private set; }
+        
+        [ForeignKey("Department")]
+        public int? DepartmentId { get; private set; }
+        public Department? Department { get; private set; }
 
         public ICollection<Process> Project { get; private set; }
-        public ICollection<UserDepartment> UserDepartment { get; private set; }
+        //public ICollection<UserDepartment> UserDepartment { get; private set; }
         [InverseProperty("Sender")]
         public ICollection<NotificationUsers> SentNotifications { get; private set; }
 
@@ -67,12 +85,17 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<VisitorSession> SecurityOutSessions { get; private set; }
 
         public ICollection<VehicleSession> VehicleSession { get; private set; }
-        public Visitor Visitor { get; private set; }
+        //public Visitor Visitor { get; private set; }
 
 
-        public static Result<User> Create(int userId, string userName, string password, string fullName, string email, string phoneNumber, string? image, DateTime createdDate, DateTime updatedDate, string status, int roleId)
+        public static Result<User> Create(int userId, string userName, string password, string fullName, string email, string phoneNumber, string? image, DateTime createdDate, DateTime updatedDate, string status, int roleId, int? departmentId)
         {
-            var result = new User(userId, userName,password,fullName,email,phoneNumber,image,createdDate,updatedDate,status,roleId);
+            var result = new User(userId, userName,password,fullName,email,phoneNumber,image,createdDate,updatedDate,status,roleId, departmentId);
+            return result;
+        }
+        public static Result<User> Create( string userName, string password, string fullName, string email, string phoneNumber, string? image, DateTime createdDate, DateTime updatedDate, string status, int roleId, int departmentId)
+        {
+            var result = new User(userName, password, fullName, email, phoneNumber, image, createdDate, updatedDate, status, roleId, departmentId);
             return result;
         }
     }

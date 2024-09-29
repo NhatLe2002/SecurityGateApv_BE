@@ -10,6 +10,7 @@ namespace SecurityGateApv.Domain.Models
     public class VisitorDepartment
     {
         public int VisitorDepartmentId { get; set; }
+        public string CompanyName { get; private set; }
         public DateTime CreateDate { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public string Status { get; private set; }
@@ -19,8 +20,12 @@ namespace SecurityGateApv.Domain.Models
         public int VisitorId { get; private set; }
         public Visitor Visitor { get; private set; }
 
-        [ForeignKey("UserDepartment")]
-        public int UserDepartmentId { get; private set; }
-        public UserDepartment UserDepartment { get; private set; }
+        [ForeignKey("Department")]
+        public int DepartmentId { get; private set; }
+        public Department Department { get; private set; }
+
+        /* [ForeignKey("UserDepartment")]
+         public int UserDepartmentId { get; private set; }
+         public UserDepartment UserDepartment { get; private set; }*/
     }
 }

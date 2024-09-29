@@ -44,6 +44,8 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitTypeRepo, VisitTypeRepo>();
             services.AddScoped<IProcessRepo, ProcessRepo>();
             services.AddScoped<IVistProcessRepo, VisitProcessRepo>();
+            services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+            services.AddScoped<IRoleRepo, RoleRepo>();
             services.AddScoped<IJwt, JwtHelper>();
             services.AddScoped<IAWSService, AWSServices>();
             services.AddScoped<IExtractQRCode, ExtractQRCode>();

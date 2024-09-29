@@ -37,5 +37,28 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _userService.GetUserByRolePaging(pageNumber, pageSize, role);
             return Ok(result.Value);
         }
+        [HttpGet("GetAllStaffPagingByDepartmentManagerId/{departmentManagerId}")]
+        public async Task<ActionResult> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int departmentManagerId)
+        {
+            if (pageNumber <= 0 || pageSize <= 0 || departmentManagerId == null)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+
+            var result = await _userService.GetAllStaffPagingByDepartmentId(pageNumber, pageSize, departmentManagerId);
+            return Ok(result.Value);
+        }
+        [HttpPost("CreateStaff/{departmentManagerId}")]
+        public async Task<ActionResult> CreateStaff([FromBody] CreateUserComman command, int departmentManagerId)
+        {
+            var result = await _userService.CreateStaff(command, departmentManagerId);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+
     }
 }

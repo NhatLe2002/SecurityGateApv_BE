@@ -56,11 +56,11 @@ namespace SecurityGateApv.Domain.Models
         public static Result<Visit> Create(int visitQuantity, int acceptLevel,string visitName, int createById, int updateById, User createBy)
         {
             var visitType = VisitTypeEnum.NONE;
-            if (createBy.Role.RoleName == UserRole.Staff.ToString())
+            if (createBy.Role.RoleName == UserRoleEnum.Staff.ToString())
             {
                 visitType = VisitTypeEnum.VisitStaff;
             }
-            else if (createBy.Role.RoleName == UserRole.Security.ToString())
+            else if (createBy.Role.RoleName == UserRoleEnum.Security.ToString())
             {
                 visitType = VisitTypeEnum.VisitSecurity;
             }

@@ -19,7 +19,7 @@ namespace SecurityGateApv.Domain.Models
             int credentialCardTypeId)
         {
             VisitorName = visitorName;
-            CompanyName = companyName;
+            //CompanyName = companyName;
             PhoneNumber = phoneNumber;
             //CreatedDate = createdDate;
             //UpdatedDate = updatedDate;
@@ -32,15 +32,8 @@ namespace SecurityGateApv.Domain.Models
         [Key]
         public int VisitorId { get; private set; }
         public string VisitorName { get; private set; }
-        public string CompanyName { get; private set; }
         public string PhoneNumber { get; private set; }
         public string CredentialsCard { get; private set; }
-        public string? VisitorImage { get; private set; }
-
-        [ForeignKey("User")]
-        public int? UserId { get; private set; }
-        public User? User { get; private set; } 
-        
 
         [ForeignKey("CredentialCardType")]
         public int CredentialCardTypeId { get; private set; }
