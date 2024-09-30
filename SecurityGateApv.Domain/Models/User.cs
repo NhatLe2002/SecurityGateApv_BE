@@ -64,15 +64,11 @@ namespace SecurityGateApv.Domain.Models
         public int? DepartmentId { get; private set; }
         public Department? Department { get; private set; }
 
-        public ICollection<Process> Project { get; private set; }
-        //public ICollection<UserDepartment> UserDepartment { get; private set; }
         [InverseProperty("Sender")]
         public ICollection<NotificationUsers> SentNotifications { get; private set; }
 
         [InverseProperty("Receiver")]
         public ICollection<NotificationUsers> ReceivedNotifications { get; private set; }
-
-
 
         [InverseProperty("CreateBy")]
         public ICollection<Visit> CreatedVisits { get; private set; }
@@ -80,9 +76,11 @@ namespace SecurityGateApv.Domain.Models
         [InverseProperty("UpdateBy")]
         public ICollection<Visit> UpdatedVisits { get; private set; }
 
-
         public ICollection<VisitorSession> SecurityInSessions { get; private set; } 
         public ICollection<VisitorSession> SecurityOutSessions { get; private set; }
+        
+        public ICollection<Schedule> ScheduleCreate { get; private set; } 
+        public ICollection<Schedule> ScheduleAssignTo { get; private set; }
 
         public ICollection<VehicleSession> VehicleSession { get; private set; }
         //public Visitor Visitor { get; private set; }

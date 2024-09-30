@@ -16,22 +16,22 @@ namespace SecurityGateApv.Domain.Models
         }
         internal VisitDetail( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, Visit visit, Visitor visitor)
         {
-            Description = description;
-            ExpectedStartDate = expectedStartDate;
-            ExpectedEndDate = expectedEndDate;
-            ExpectedStartTime = expectedTimeIn;
-            ExpectedEndTime = expectedTimeOut;
+            //Description = description;
+            //ExpectedStartDate = expectedStartDate;
+            //ExpectedEndDate = expectedEndDate;
+            //ExpectedStartTime = expectedTimeIn;
+            //ExpectedEndTime = expectedTimeOut;
             Status = status;
             Visit = visit;
             Visitor = visitor;
         }
         internal VisitDetail( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, Visit visit, int visitorId)
         {
-            Description = description;
-            ExpectedStartDate = expectedStartDate;
-            ExpectedEndDate = expectedEndDate;
-            ExpectedStartTime = expectedTimeIn;
-            ExpectedEndTime = expectedTimeOut;
+            //Description = description;
+            //ExpectedStartDate = expectedStartDate;
+            //ExpectedEndDate = expectedEndDate;
+            //ExpectedStartTime = expectedTimeIn;
+            //ExpectedEndTime = expectedTimeOut;
             Status = status;
             Visit = visit;
             VisitorId = visitorId;
@@ -39,11 +39,8 @@ namespace SecurityGateApv.Domain.Models
 
         [Key]
         public int VisitDetailId { get; private set; }
-        public DateTime ExpectedStartDate { get; private set; }
-        public DateTime ExpectedEndDate { get; private set; }
-        public TimeSpan ExpectedStartTime { get; private set; }
-        public TimeSpan ExpectedEndTime { get; private set; }
-        public string? Description { get; private set; }
+        public TimeSpan ExpectedStartHour { get; private set; }
+        public TimeSpan ExpectedEndHour { get; private set; }
         public bool Status { get; private set; }
 
         [ForeignKey("Visit")]

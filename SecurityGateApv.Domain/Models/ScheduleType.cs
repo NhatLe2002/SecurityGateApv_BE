@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Models
 {
-    public class VisitType
+    public class ScheduleType
     {
         [Key]
-        public int VisitTypeId { get; set; }
-        public string VisitTypeName { get; set; }
+        public int ScheduleTypeId { get; set; }
+        public string ScheduleTypeName { get; set; }
         public string Description { get; set; }
-
-        public ICollection<Process> VisitTypes { get; set; }
+        public bool Status { get; set; }
+        public ICollection<Schedule> VisitTypes { get; set; }
     }
 }

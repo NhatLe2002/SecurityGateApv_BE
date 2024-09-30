@@ -58,9 +58,11 @@ namespace SecurityGateApv.Domain.Errors
 
 
 
-        //Process Error
-        public static readonly Error ProcessCreateError = new("Error.Create", "Can not create process");
-        public static readonly Error ProcessNotFoundError = new("Error.ProcessNotFoundError", "Can not found process");
+        //Schedule Error
+        public static readonly Error ScheduleCreateError = new("Error.Schedule", "Can not create schedule");
+        public static readonly Error ScheduleUpdateError = new("Error.Schedule", "Can not update schedule");
+        public static readonly Error ScheduleSaveError = new("Error.Schedule", "Can not save schedule");
+        public static readonly Error NotFoundSchedule = new("Error.Schedule", "Can not found Schedule");
 
         //ProcessVisit Error
         public static readonly Error ProcessVisitCreateDateError = new("Error.ProcessVisitCreateDateError", @"Date format is ""Mon,Tue,Sun""");

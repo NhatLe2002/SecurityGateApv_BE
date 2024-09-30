@@ -16,7 +16,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string Description { get; private set; }
         public bool Status { get; private set; }
         public int VisitTypeId { get; private set; }
-        public VisitType VisitType { get; private set; }
+        public ScheduleType VisitType { get; private set; }
         public int CreateBy { get; private set; }
     }
     public class ProcessDetailByDepartmentManagerIdRes
@@ -27,9 +27,9 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string Description { get; private set; }
         public bool Status { get; private set; }
         public int VisitTypeId { get; private set; }
-        public VisitType VisitType { get; private set; }
+        public ScheduleType VisitType { get; private set; }
         public int CreateBy { get; private set; }
 
-        public ICollection<ProcessDetailRes> VisitProcesses { get; private set; }
+        public ICollection<GetScheduleRes> VisitProcesses { get; private set; }
     }
 }

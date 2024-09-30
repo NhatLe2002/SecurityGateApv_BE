@@ -20,16 +20,15 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<User, GetUserRes>().ReverseMap();
             CreateMap<Role, RoleRes>().ReverseMap();
             //CreateMap<Role, RoleRes>().ReverseMap();
-            CreateMap<VisitProcess, VisitProcessRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
             CreateMap<Visitor, VisitorRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
             CreateMap<Gate, GetGateRes>().ReverseMap();
             CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
-            CreateMap<ProcessByDepartmentManagerIdRes, Process>().ReverseMap();
-            CreateMap<ProcessDetailByDepartmentManagerIdRes, Process>().ReverseMap();
-            CreateMap<ProcessDetailRes, VisitProcess>().ReverseMap();
+            CreateMap<ProcessByDepartmentManagerIdRes, Schedule>().ReverseMap();
+            CreateMap<ProcessDetailByDepartmentManagerIdRes, Schedule>().ReverseMap();
             CreateMap<GetDepartmentRes, Department>().ReverseMap();
+            CreateMap<GetScheduleRes, Schedule>().ReverseMap();
             CreateMap<GetCardRes, QRCard>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.QRCardType.CardTypeName))
                 .ForMember(dest => dest.QrCardStatusName, opt => opt.MapFrom(src => src.QRCardStatus.StatusName));

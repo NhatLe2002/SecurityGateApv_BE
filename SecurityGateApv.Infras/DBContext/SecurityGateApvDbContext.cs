@@ -27,7 +27,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationUsers> NotificationUsers { get; set; }
         public DbSet<PrivateKeyService> PrivateKeyServices { get; set; }
-        public DbSet<Process> Processes { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
         public DbSet<QRCard> QRCards { get; set; }
         public DbSet<QRCardStatus> QRCardStatus { get; set; }
         public DbSet<QRCardType> QRCardType { get; set; }
@@ -40,8 +40,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
-        public DbSet<VisitProcess> VisitProcesses { get; set; }
-        public DbSet<VisitType> VisitTypes { get; set; }
+        public DbSet<ScheduleType> ScheduleTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -71,12 +70,24 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasOne(v => v.CreateBy)
                 .WithMany(u => u.CreatedVisits)
                 .HasForeignKey(v => v.CreateById)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.UpdateBy)
                 .WithMany(u => u.UpdatedVisits)
                 .HasForeignKey(v => v.UpdateById)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Schedule>()
+                .HasOne(v => v.CreateBy)
+                .WithMany(u => u.ScheduleCreate)
+                .HasForeignKey(v => v.CreateById)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<Schedule>()
+                .HasOne(v => v.AssignTo)
+                .WithMany(u => u.ScheduleAssignTo)
+                .HasForeignKey(v => v.AssignToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
 
@@ -84,7 +95,7 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasOne(vs => vs.SecurityIn)
                 .WithMany(g => g.SecurityInSessions) 
                 .HasForeignKey(vs => vs.SecurityInId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.SecurityOut)
@@ -96,7 +107,7 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasOne(vs => vs.GateIn)
                 .WithMany(g => g.VisitorSessionsIn) 
                 .HasForeignKey(vs => vs.GateInId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Restrict); 
 
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.GateOut)

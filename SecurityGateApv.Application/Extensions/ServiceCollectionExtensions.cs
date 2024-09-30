@@ -25,7 +25,7 @@ namespace SecurityGateApv.Application.Extensions
             services.AddScoped<IVisitService, VisitService>();
             services.AddScoped<IQRCodeService, QRCodeService>();
             services.AddScoped<IGateService, GateService>();
-            services.AddScoped<IProcessService, ProcessSerivce>();
+            services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IUserService, UserService>();
             services.AddFluentValidation();

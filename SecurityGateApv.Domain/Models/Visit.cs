@@ -15,13 +15,13 @@ namespace SecurityGateApv.Domain.Models
     {
         internal Visit(DateTime dateRegister, int visitQuantity, string visitName, int acceptLevel, int createById, int updateById, string visitType)
         {
-            DateRegister = dateRegister;
+            //DateRegister = dateRegister;
             VisitQuantity = visitQuantity;
-            AcceptLevel = acceptLevel;
+            //AcceptLevel = acceptLevel;
             CreateById = createById;
             VisitName = visitName;
             UpdateById = updateById;
-            VisitType = visitType;
+            //VisitType = visitType;
         }
 
         public Visit()
@@ -31,12 +31,14 @@ namespace SecurityGateApv.Domain.Models
 
         [Key]
         public int VisitId { get;  set; }
-        public DateTime DateRegister { get; private set; }
         public string VisitName { get; private set; }
         public int VisitQuantity { get; private set; }
-        public int AcceptLevel { get; private set; }
+        public DateTime ExpectedStartTime { get; private set; }
+        public DateTime ExpectedEndTime { get; private set; }
+        public DateTime CreateTime { get; private set; }
+        public DateTime UpdateTime { get; private set; }
         public string? Description { get; private set; }
-        public string VisitType { get; private set; }
+        public string VisitStatus { get; private set; }
 
         [ForeignKey("CreateBy")]
         public int CreateById { get; private set; }
@@ -46,32 +48,31 @@ namespace SecurityGateApv.Domain.Models
         public int? UpdateById { get; private set; }
         public User? UpdateBy { get; private set; }
         
-        [ForeignKey("Department")]
-        public int? DepartmentId { get; private set; }
-        public Department? Department { get; private set; }
+        [ForeignKey("Schedule")]
+        public int ScheduleId { get; private set; }
+        public Schedule Schedule { get; private set; }
 
-        public ICollection<VisitProcess> VisitProcess { get; private set; } = new List<VisitProcess>();
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
 
         public static Result<Visit> Create(int visitQuantity, int acceptLevel,string visitName, int createById, int updateById, User createBy)
         {
-            var visitType = VisitTypeEnum.NONE;
+            /*var visitType = ScheduleTypeEnum.NONE;
             if (createBy.Role.RoleName == UserRoleEnum.Staff.ToString())
             {
-                visitType = VisitTypeEnum.VisitStaff;
+                visitType = ScheduleTypeEnum.VisitStaff;
             }
             else if (createBy.Role.RoleName == UserRoleEnum.Security.ToString())
             {
-                visitType = VisitTypeEnum.VisitSecurity;
+                visitType = ScheduleTypeEnum.VisitSecurity;
             }
             else
             {
                 return Result.Failure<Visit>(Error.NotRoleNotPermission);
             }
-            var result = new Visit(DateTime.UtcNow,  visitQuantity, visitName,  acceptLevel,  createById,  updateById, visitType.ToString());
-            return result;
+            var result = new Visit(DateTime.UtcNow,  visitQuantity, visitName,  acceptLevel,  createById,  updateById, visitType.ToString());*/
+            return null;
         }
-        public static Result<Visit> CreateVisitOfProcess(int visitQuantity, int acceptLevel, string visitName, int createById, int updateById, VisitTypeEnum visitTypeEnum)
+        public static Result<Visit> CreateVisitOfProcess(int visitQuantity, int acceptLevel, string visitName, int createById, int updateById, ScheduleTypeEnum visitTypeEnum)
         {              
             /*if (createBy.Role.RoleName == UserRole.Staff.ToString())
             {

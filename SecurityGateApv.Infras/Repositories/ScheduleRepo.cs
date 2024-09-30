@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Infras.Repositories
 {
-    public class ProcessRepo : RepoBase<Process>, IProcessRepo
+    public class ScheduleRepo : RepoBase<Schedule>, IScheduleRepo
     {
-        public ProcessRepo(SecurityGateApvDbContext context) : base(context)
+        public ScheduleRepo(SecurityGateApvDbContext context) : base(context)
         {
         }
     }

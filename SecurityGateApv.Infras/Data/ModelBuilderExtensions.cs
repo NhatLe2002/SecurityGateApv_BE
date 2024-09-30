@@ -20,7 +20,7 @@ namespace SecurityGateApv.Infras.Data
             //SeedUserDepartments(modelBuilder);
             SeedCredentialCardTypes(modelBuilder);
             //SeedVisitors(modelBuilder);
-            SeedVisitType(modelBuilder);
+            //SeedVisitType(modelBuilder);
             //SeedProcess(modelBuilder);
             //SeedVisits(modelBuilder);
             //SeedVisitDetails(modelBuilder);
@@ -189,8 +189,9 @@ namespace SecurityGateApv.Infras.Data
         {
             var cardTypeFaker = new Faker<CredentialCardType>()
                 .RuleFor(c => c.CredentialCardTypeId, f => f.IndexFaker + 1)
-                .RuleFor(c => c.CredentialCardTypeName, f => f.PickRandom(new[] { "Căn cước công dân", "Giấy phép lái xe" }));
-
+                .RuleFor(c => c.CredentialCardTypeName, f => f.PickRandom(new[] { "Căn cước công dân", "Giấy phép lái xe" }))
+                .RuleFor(c => c.Description, f => f.Lorem.Sentence())
+                .RuleFor(c => c.Status, f => true);
             var cardTypes = cardTypeFaker.Generate(2);
 
             modelBuilder.Entity<CredentialCardType>().HasData(cardTypes);
@@ -215,19 +216,19 @@ namespace SecurityGateApv.Infras.Data
 
             modelBuilder.Entity<Visitor>().HasData(visitors);
         }
-        private static void SeedVisitType(ModelBuilder modelBuilder)
+        /*private static void SeedVisitType(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<VisitType>().HasData(
-                new VisitType { VisitTypeId = 1, VisitTypeName = "ProcessWeek", Description = "Process trong tuần" },
-                new VisitType { VisitTypeId = 2, VisitTypeName = "ProcessMonth", Description = "Process trong tháng" },
-                new VisitType { VisitTypeId = 3, VisitTypeName = "Project", Description = "Project" },
-                new VisitType { VisitTypeId = 4, VisitTypeName = "VisitStaff", Description = "Visit được tạo bởi staff" },
-                new VisitType { VisitTypeId = 5, VisitTypeName = "VisitSecurity", Description = "Visit được tạo bởi security" }
+            modelBuilder.Entity<ScheduleType>().HasData(
+                new ScheduleType { VisitTypeId = 1, VisitTypeName = "ProcessWeek", Description = "Process trong tuần" },
+                new ScheduleType { VisitTypeId = 2, VisitTypeName = "ProcessMonth", Description = "Process trong tháng" },
+                new ScheduleType { VisitTypeId = 3, VisitTypeName = "Project", Description = "Project" },
+                new ScheduleType { VisitTypeId = 4, VisitTypeName = "VisitStaff", Description = "Visit được tạo bởi staff" },
+                new ScheduleType { VisitTypeId = 5, VisitTypeName = "VisitSecurity", Description = "Visit được tạo bởi security" }
             );
-        }
-        private static void SeedProcess(ModelBuilder modelBuilder)
+        }*/
+        /*private static void SeedProcess(ModelBuilder modelBuilder)
         {
-            var ProcessFaker = new Faker<Process>()
+            var ProcessFaker = new Faker<Schedule>()
              .RuleFor(p => p.ProcessId, f => f.IndexFaker + 1)
              .RuleFor(p => p.ProcessName, f => f.Commerce.ProductName())
              .RuleFor(p => p.CreateTime, f => DateTime.UtcNow.AddDays(-2))
@@ -238,7 +239,7 @@ namespace SecurityGateApv.Infras.Data
 
             var processes = ProcessFaker.Generate(5);
 
-            modelBuilder.Entity<Process>().HasData(processes);
+            modelBuilder.Entity<Schedule>().HasData(processes);
 
             var visitFaker = new Faker<Visit>()
                 .RuleFor(v => v.VisitId, f => f.IndexFaker + 1)
@@ -286,8 +287,8 @@ namespace SecurityGateApv.Infras.Data
 
             modelBuilder.Entity<VisitDetail>().HasData(visitDetails);
 
-        }
-        private static void SeedVisits(ModelBuilder modelBuilder)
+        }*/
+       /* private static void SeedVisits(ModelBuilder modelBuilder)
         {
             var visitFaker = new Faker<Visit>()
                 .RuleFor(v => v.VisitId, f => f.IndexFaker + 2)
@@ -327,7 +328,7 @@ namespace SecurityGateApv.Infras.Data
                 }
             }
 
-        }
+        }*/
 
         private static void SeedVisitDetails(ModelBuilder modelBuilder)
         {
