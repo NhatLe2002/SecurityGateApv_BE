@@ -8,10 +8,11 @@ namespace SecurityGateApv.Domain.Enums
 {
     public enum UserRoleEnum
     {
+        NONE,
         Admin,
+        Manager,
         DepartmentManager,
         Staff,
-        Security,
-        Manager
+        Security
     }
 }

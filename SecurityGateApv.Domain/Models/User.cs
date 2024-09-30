@@ -98,5 +98,22 @@ namespace SecurityGateApv.Domain.Models
             var result = new User(userName, password, fullName, email, phoneNumber, image, createdDate, updatedDate, status, roleId, departmentId);
             return result;
         }
+        public Result<User> Update()
+        {
+            this.UpdatedDate = DateTime.Now;
+            return this;
+        }
+        public Result<User> Unactive()
+        {
+            if(this.Status == "Active")
+            {
+                this.Status = "Unactive";
+            }
+            else
+            {
+                this.Status = "Active";
+            }
+            return this;
+        }
     }
 }

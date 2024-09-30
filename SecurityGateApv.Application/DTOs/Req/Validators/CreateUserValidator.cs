@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SecurityGateApv.Domain.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,17 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class CreateUserValidator: AbstractValidator<CreateUserComman>
     {
-        public CreateUserValidator()
+        public CreateUserValidator(IUserRepo userRepo)
         {
             RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("UserName cannot be empty")
-            .MinimumLength(3).WithMessage("UserName must be at least 3 characters long");
+            .MinimumLength(3).WithMessage("UserName must be at least 3 characters long")
+            .Must( s =>
+            {
+                return !userRepo.IsAny(x => x.UserName == s).GetAwaiter().GetResult();
+
+            }).WithMessage("Duplicate Username")
+            ;
 
             RuleFor(x => x.Password)
           .NotEmpty().WithMessage("Password cannot be empty")

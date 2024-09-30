@@ -18,6 +18,17 @@ namespace SecurityGateApv.Infras.Helpers
         {
             _configuration = configuration;
         }
+
+        public string DecodeJwt(string header)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            header = header.Replace("Bearer ", "");
+            var jsonToken = handler.ReadToken(header);
+            var tokenS = handler.ReadToken(header) as JwtSecurityToken;
+            var role = tokenS.Claims.First(claim => claim.Type == "role").Value;
+            return role;
+        }
+
         public string GenerateJwtToken(string role)
         {
             var jwtKey = _configuration["JWT:Key"];

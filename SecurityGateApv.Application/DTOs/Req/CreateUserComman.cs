@@ -14,5 +14,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public string Email { get;  set; }
         public string PhoneNumber { get;  set; }
         public string? Image { get;  set; }
+        public int RoleID { get; set; }
+        public int DepartmentId { get; set; }
     }
 }

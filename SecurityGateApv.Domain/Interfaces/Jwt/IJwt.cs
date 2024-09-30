@@ -9,5 +9,6 @@ namespace SecurityGateApv.Domain.Interfaces.Jwt
     public interface IJwt
     {
         public string GenerateJwtToken(string role);
+        public string DecodeJwt(string header);
     }
 }
