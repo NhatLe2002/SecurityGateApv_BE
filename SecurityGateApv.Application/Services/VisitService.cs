@@ -27,7 +27,8 @@ namespace SecurityGateApv.Application.Services
         private readonly IUserRepo _userRepo;
         private readonly IVistProcessRepo _vistProcessRepo;
 
-        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitTypeRepo visitTypeRepo, IUserRepo userRepo, IVistProcessRepo visitProcessRepo, IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo)
+        public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IVisitTypeRepo visitTypeRepo,
+            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IVistProcessRepo visitProcessRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -37,6 +38,8 @@ namespace SecurityGateApv.Application.Services
             _visitTypeRepo = visitTypeRepo;
             _userRepo = userRepo;
             _vistProcessRepo = visitProcessRepo;
+            _visitDetailRepo = visitDetailRepo;
+            _visitorRepo = visitorRepo;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command)

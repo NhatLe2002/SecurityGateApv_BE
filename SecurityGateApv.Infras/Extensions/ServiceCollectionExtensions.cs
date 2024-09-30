@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SecurityGateApv.Domain.Interfaces.AWS;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
+using SecurityGateApv.Infras.AWS;
 using SecurityGateApv.Infras.DBContext;
 using SecurityGateApv.Infras.Helpers;
 using SecurityGateApv.Infras.Repositories;
@@ -46,7 +48,11 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IDepartmentRepo, DepartmentRepo>();
             services.AddScoped<IRoleRepo, RoleRepo>();
             services.AddScoped<IJwt, JwtHelper>();
+            services.AddScoped<IAWSService, AWSServices>();
             services.AddScoped<IExtractQRCode, ExtractQRCode>();
+            services.AddScoped<IPrivateKeyRepo, PrivateKeyRepo>();
+            services.AddScoped<IGateRepo, GateRepo>();
+
 
             //JWT
             var key = configuration["Jwt:Key"];

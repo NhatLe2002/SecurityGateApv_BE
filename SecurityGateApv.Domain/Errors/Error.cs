@@ -72,5 +72,8 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundDepartment = new("Error.NotfoundDepartment", "Not found this department");
         public static readonly Error NotFoundDepartmentByDepartmentManagerId = new("Error.NotfoundDepartment", "Not found department by department manager id");
         public static readonly Error NotFoundDepartmentById = new("Error.NotfoundDepartment", "Not found department by id");
+
+        //Detection Error
+        public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
     }
 }
