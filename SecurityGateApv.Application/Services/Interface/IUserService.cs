@@ -13,8 +13,9 @@ namespace SecurityGateApv.Application.Services.Interface
     {
         public Task<Result<LoginRes>> Login(LoginModel loginModel);
         public Task<Result<List<GetUserRes>>> GetUserByRolePaging(int pageNumber, int pageSize, string role);
-        public Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int  departmentManagerId);
-        public Task<Result<CreateUserComman>> CreateStaff(CreateUserComman command, int departmentManagerId);
+        public Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int  departmentId);
+        public Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int  departmentManagerId);
+        public Task<Result<CreateUserComman>> CreateStaff(CreateUserComman command, int departmentId);
         public Task<Result<CreateUserComman>> CreateDepartmentManager(CreateUserComman command);
 
     }

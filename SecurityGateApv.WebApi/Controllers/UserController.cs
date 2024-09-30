@@ -26,7 +26,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("GetAllUserPaging")]
+        [HttpGet()]
         public async Task<ActionResult> GetAllUserPaging(int pageNumber, int pageSize, string role)
         {
             if (pageNumber <= 0 || pageSize <= 0)
@@ -37,7 +37,7 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _userService.GetUserByRolePaging(pageNumber, pageSize, role);
             return Ok(result.Value);
         }
-        [HttpGet("GetAllStaffPagingByDepartmentManagerId/{departmentManagerId}")]
+        [HttpGet("Staff/DepartmentManager/{departmentManagerId}")]
         public async Task<ActionResult> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int departmentManagerId)
         {
             if (pageNumber <= 0 || pageSize <= 0 || departmentManagerId == null)
@@ -45,13 +45,25 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest("Page number and page size must be greater than zero.");
             }
 
-            var result = await _userService.GetAllStaffPagingByDepartmentId(pageNumber, pageSize, departmentManagerId);
+            var result = await _userService.GetAllStaffPagingByDepartmentManagerId(pageNumber, pageSize, departmentManagerId);
+            return Ok(result.Value);
+        } 
+        
+        [HttpGet("Staff/Department/{departmentId}")]
+        public async Task<ActionResult> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int departmentId)
+        {
+            if (pageNumber <= 0 || pageSize <= 0 || departmentId == null)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+
+            var result = await _userService.GetAllStaffPagingByDepartmentId(pageNumber, pageSize, departmentId);
             return Ok(result.Value);
         }
-        [HttpPost("CreateStaff/{departmentManagerId}")]
-        public async Task<ActionResult> CreateStaff([FromBody] CreateUserComman command, int departmentManagerId)
+        [HttpPost("Staff/{departmentId}")]
+        public async Task<ActionResult> CreateStaff([FromBody] CreateUserComman command, int departmentId)
         {
-            var result = await _userService.CreateStaff(command, departmentManagerId);
+            var result = await _userService.CreateStaff(command, departmentId);
 
             if (result.IsFailure)
             {

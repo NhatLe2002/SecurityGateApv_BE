@@ -17,7 +17,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string? Image { get;  set; }
         public string Status { get;  set; }
 
-        //public RoleRes Role { get;  set; }
+        public RoleRes Role { get;  set; }
     }
 
     public class RoleRes
