@@ -37,9 +37,19 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotPermission = new("Error.User.NotPermission", "Permission not allow");
 
 
+        #region VisitError
         //Visit error
-        public static readonly Error NotFoundVisit = new("Error.NotfoundVisit", "Not found this visit");
+        public static readonly Error NotFoundVisit = new("Error.Visit", "Not found this visit");
+        public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
+        #endregion
+
+        #region VisitDetailError
+        //Visit error
+        public static readonly Error NotFoundVisitDetail = new("Error.VisitDetail", "Not found this VisitDetail");
+        //public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
+        //public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
+        #endregion
 
         //QRCard error
         public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");

@@ -207,55 +207,85 @@ namespace SecurityGateApv.Application.Services
             return res;
         }
 
-        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCurrentDate(int pageSize, int pageNumber)
+        public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date)
         {
-            /* var visitDetails = await _visitDetailRepo.FindAsync(
-                 s => s.ExpectedStartDate.Date <= DateTime.Now.Date ,
-                 pageSize, pageNumber, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
-                 );
-             var result = new List<GetVisitByCurrentDateRes>();
-             foreach (var item in visitDetails)
-             {
-                 result.Add(new GetVisitByCurrentDateRes
-                 {
-                     VisitId = item.VisitId,
-                     VisitDetailId = item.VisitDetailId,
-                     VisitName = item.Visit.VisitName,
-                     ExpectedStartDate = item.ExpectedStartDate,
-                     ExpectedEndDate = item.ExpectedEndDate,
-                     ExpectedStartTime = item.ExpectedStartTime,
-                     ExpectedEndTime = item.ExpectedEndTime,
-                     VisitorName = item.Visitor.VisitorName,
-                     //CompanyName = item.Visitor.CompanyName,
-                     PhoneNumber = item.Visitor.PhoneNumber,
-                     CredentialsCard = item.Visitor.CredentialsCard,
-                 });
-             }
-
-             if (result.Count == 0)
-             {
-                 return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
-             }
-             return result;*/
-            return null;
-        }
-
-        public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
-        {
-            /*var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,VisitProcess"
+            var visit = await _visitRepo.FindAsync(
+                    s => s.ExpectedStartTime.Date <= date.Date
+                    && s.ExpectedEndTime.Date >= date.Date
+                    && s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()),
+                    pageSize, pageNumber, includeProperties: "Schedule.ScheduleType"
                 );
-
-            if (visit == null)
+            var visitResult = new List<Visit>();
+            if(visit.Count() == 0)
             {
-                return Result.Failure<GetVisitRes>(Error.NotFound);
+                return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisitCurrentDate);
             }
-            var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
-            visitRes.DaysOfProcess = visit.FirstOrDefault().VisitProcess.FirstOrDefault().DaysOfProcess;
-            return Result.Success(visitRes);
+            foreach( var item in visit)
+            {
+                if (item.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()))
+                {
+                    visitResult.Add(item);
+                }
+                string[] daysOfSchedule = item.Schedule.DaysOfSchedule.Split(',');
+                int dateOfWeekInput = ((int) date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
+
+                if (item.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString()) 
+                    && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
+                {
+                    visitResult.Add(item);
+                }
+
+                if (item.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString()))
+                {
+                    if (daysOfSchedule.Contains(date.Day.ToString()))
+                    {
+                        visitResult.Add(item);
+                    }
+                }
+            }
+
+            if (visitResult.Count == 0)
+            {
+                return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisit);
+            }
+
+            var result = _mapper.Map<List<GetVisitByDateRes>>(visitResult);
+
+            return result;
         }
 
-        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        public async Task<Result<List<GetVisitDetailRes>>> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize)
+        {
+            if (! await _visitRepo.IsAny(s => s.VisitId == visitId))
+            {
+                return Result.Failure<List<GetVisitDetailRes>>(Error.NotFoundVisit);
+            }
+
+            IEnumerable<VisitDetail> visitDetail;
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                visitDetail = await _visitDetailRepo.GetAllAsync();
+            }
+            else
+            {
+                visitDetail = await _visitDetailRepo.FindAsync(
+                        s => s.VisitId == visitId,
+                        pageSize, pageNumber,
+                        orderBy: s => s.OrderBy(s => s.ExpectedStartHour),
+                        includeProperties: "Visitor"
+                    );
+            }
+
+            if (visitDetail == null)
+            {
+                return Result.Failure<List<GetVisitDetailRes>>(Error.NotFoundVisitDetail);
+            }
+
+            var visitRes = _mapper.Map<List<GetVisitDetailRes>>(visitDetail);
+            return visitRes;
+        }
+
+       /* public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
                 s => s.Visitor.CredentialsCard.Equals(credentialCard) && s.ExpectedStartDate <= DateTime.Now && s.ExpectedEndDate >= DateTime.Now,
@@ -286,11 +316,11 @@ namespace SecurityGateApv.Application.Services
                 });
             }
 
-            return Result.Success(result);*/
+            return Result.Success(result);
             return null;
         }
-
-        public Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+*/
+        public Task<Result<List<GetVisitByDateRes>>> GetVisitByCredentialCard(string credentialCard)
         {
             throw new NotImplementedException();
         }

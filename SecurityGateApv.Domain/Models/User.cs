@@ -79,8 +79,7 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<VisitorSession> SecurityInSessions { get; private set; } 
         public ICollection<VisitorSession> SecurityOutSessions { get; private set; }
         
-        public ICollection<Schedule> ScheduleCreate { get; private set; } 
-        public ICollection<Schedule> ScheduleAssignTo { get; private set; }
+        public ICollection<Schedule> Schedules { get; private set; } 
 
         public ICollection<VehicleSession> VehicleSession { get; private set; }
         //public Visitor Visitor { get; private set; }

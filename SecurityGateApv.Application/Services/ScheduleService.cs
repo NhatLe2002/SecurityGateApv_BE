@@ -76,7 +76,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<ICollection<GetScheduleRes>>> GetAllSchedule(int pageNumber, int pageSize)
         {
             IEnumerable<Schedule> schedule;
-            if (pageNumber < 0 || pageSize < 0)
+            if (pageNumber <= 0 || pageSize <= 0)
             {
                 schedule = await _scheduleRepo.GetAllAsync();
             }

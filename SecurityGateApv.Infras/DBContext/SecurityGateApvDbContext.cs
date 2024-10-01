@@ -80,7 +80,7 @@ namespace SecurityGateApv.Infras.DBContext
             
             modelBuilder.Entity<Schedule>()
                 .HasOne(v => v.CreateBy)
-                .WithMany(u => u.ScheduleCreate)
+                .WithMany(u => u.Schedules)
                 .HasForeignKey(v => v.CreateById)
                 .OnDelete(DeleteBehavior.Restrict); 
 

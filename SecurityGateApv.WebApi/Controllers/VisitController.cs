@@ -28,17 +28,29 @@ namespace SecurityGateApv.WebApi.Controllers
         }
        
         
-        [HttpGet("GetAllVisitsByCurrentDate")]
-        public async Task<ActionResult> GetAllVisitsByCurrentDate(int pageSize, int pageNumber)
+        [HttpGet("Day")]
+        public async Task<ActionResult> GetAllVisitsByCurrentDate(int pageSize, int pageNumber, DateTime date)
         {
-            var result = await _visitService.GetVisitByCurrentDate(pageSize, pageNumber);
+            var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
         }
-        [HttpGet("GetAllPaging")]
+        [HttpGet("VisitDetail/VisitId/{visitId}")]
+        public async Task<ActionResult> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize)
+        {
+            var result = await _visitService.GetVisitDetailByVisitId(visitId,  pageNumber,  pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+        /*[HttpGet("GetAllPaging")]
         public async Task<ActionResult> GetAllPaging([FromQuery] int pageNumber , [FromQuery] int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0)
@@ -49,18 +61,7 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _visitService.GetAllByPaging(pageNumber, pageSize);
             return Ok(result.Value);
         }
-        [HttpGet("GetVisitDetailByVisitId/{visitId}")]
-        public async Task<ActionResult> GetVisitDetailByVisitId(int visitId)
-        {
-            var result = await _visitService.GetVisitDetailByVisitId(visitId);
-
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error); 
-            }
-
-            return Ok(result.Value);
-        }
+        
         [HttpGet("GetVisitByCredentialCard/{credentialCard}")]
         public async Task<ActionResult> GetVisitByCredentialCard(string credentialCard)
         {
@@ -107,6 +108,6 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             return Ok(result.Value);
-        }
+        }*/
     }
 }
