@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240930142225_Update_Schedule")]
+    partial class Update_Schedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,14 +53,14 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             CredentialCardTypeId = 1,
                             CredentialCardTypeName = "Giấy phép lái xe",
-                            Description = "Magnam laborum laudantium consequatur aut quo.",
+                            Description = "Dolorem dolores consectetur consequuntur.",
                             Status = true
                         },
                         new
                         {
                             CredentialCardTypeId = 2,
-                            CredentialCardTypeName = "Giấy phép lái xe",
-                            Description = "Rerum rerum consectetur dolores blanditiis ut fugiat molestias voluptatibus praesentium.",
+                            CredentialCardTypeName = "Căn cước công dân",
+                            Description = "Sit aut repellat explicabo architecto cupiditate blanditiis voluptatem necessitatibus.",
                             Status = true
                         });
                 });
@@ -97,8 +100,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 1,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Hành chính",
-                            Description = "Quia maiores maxime minima veniam fugiat sint veritatis minus qui.",
+                            DepartmentName = "Phòng Pháp chế",
+                            Description = "Temporibus saepe et voluptas qui architecto quaerat est officiis.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -106,8 +109,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 2,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Kế toán",
-                            Description = "A consequatur et at atque molestiae eos molestiae eos.",
+                            DepartmentName = "Phòng IT",
+                            Description = "Laboriosam officiis voluptatem totam dolores.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -115,8 +118,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 3,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Kế toán",
-                            Description = "Qui corporis cumque maiores omnis sit quam non.",
+                            DepartmentName = "Phòng IT",
+                            Description = "Sed non tempora repellat non accusantium suscipit totam architecto voluptatem.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -124,8 +127,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 4,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Kế toán",
-                            Description = "Quis dolore ducimus nam culpa soluta quos numquam.",
+                            DepartmentName = "Phòng Marketing",
+                            Description = "Fugit porro velit et nesciunt et dicta earum qui dolor.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -133,8 +136,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 5,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Chăm sóc khách hàng",
-                            Description = "Qui beatae enim quibusdam dolores voluptatem voluptatibus cupiditate.",
+                            DepartmentName = "Phòng IT",
+                            Description = "Illum tenetur sed rerum sunt similique molestias error similique.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -142,8 +145,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 6,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Chăm sóc khách hàng",
-                            Description = "Et quam ipsam autem.",
+                            DepartmentName = "Phòng Marketing",
+                            Description = "Saepe impedit sequi doloribus non incidunt.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -151,8 +154,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 7,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng R&D",
-                            Description = "Doloribus perferendis voluptatem eos.",
+                            DepartmentName = "Phòng Kế toán",
+                            Description = "Libero tempora sed suscipit nam aut debitis quas.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -160,8 +163,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 8,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng IT",
-                            Description = "Officiis quae nihil voluptates eos quis.",
+                            DepartmentName = "Phòng R&D",
+                            Description = "In et impedit quasi omnis odit.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -169,8 +172,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 9,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Pháp chế",
-                            Description = "Sed rerum blanditiis nulla officiis quia assumenda voluptas nisi voluptatem.",
+                            DepartmentName = "Phòng Chăm sóc khách hàng",
+                            Description = "Iste debitis dolor dolores nam quia aut.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -178,8 +181,8 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 10,
                             AcceptLevel = 2,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng R&D",
-                            Description = "Dolorem voluptatem sunt.",
+                            DepartmentName = "Phòng Nhân sự",
+                            Description = "Eum reiciendis odit molestiae recusandae odio harum consectetur.",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -478,6 +481,9 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleId"));
 
+                    b.Property<int>("AssignToId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CreateById")
                         .HasColumnType("int");
 
@@ -508,16 +514,13 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("ScheduleId");
+
+                    b.HasIndex("AssignToId");
 
                     b.HasIndex("CreateById");
 
                     b.HasIndex("ScheduleTypeId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Schedules");
                 });
@@ -1016,6 +1019,12 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Schedule", b =>
                 {
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "AssignTo")
+                        .WithMany("ScheduleAssignTo")
+                        .HasForeignKey("AssignToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SecurityGateApv.Domain.Models.User", "CreateBy")
                         .WithMany("ScheduleCreate")
                         .HasForeignKey("CreateById")
@@ -1028,9 +1037,7 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SecurityGateApv.Domain.Models.User", null)
-                        .WithMany("ScheduleAssignTo")
-                        .HasForeignKey("UserId");
+                    b.Navigation("AssignTo");
 
                     b.Navigation("CreateBy");
 

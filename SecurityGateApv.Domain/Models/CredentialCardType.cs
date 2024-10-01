@@ -10,9 +10,10 @@ namespace SecurityGateApv.Domain.Models
     public class CredentialCardType
     {
         [Key]
-        public int CredentialCardTypeId { get; set; }
-        public string CredentialCardTypeName { get; set; }
-
-        public ICollection<Visitor> Visitor { get; set; }
+        public int CredentialCardTypeId { get; private set; }
+        public string CredentialCardTypeName { get; private set; }
+        public string Description { get; private set; }
+        public bool Status { get; private set; }
+        public ICollection<Visitor> Visitor { get; private set; }
     }
 }

@@ -32,18 +32,19 @@ namespace SecurityGateApv.Domain.Models
         [Key]
         public int VisitorId { get; private set; }
         public string VisitorName { get; private set; }
+        public string CompanyName { get; private set; }
         public string PhoneNumber { get; private set; }
         public string CredentialsCard { get; private set; }
+        public string VisitorCredentialImage { get; private set; }
+        public DateTime CreateDate { get; private set; }
+        public DateTime UpdateDate { get; private set; }
+        public string Status { get; private set; }
 
         [ForeignKey("CredentialCardType")]
         public int CredentialCardTypeId { get; private set; }
-        public CredentialCardType CredentialCardType { get; private set; }  
-        
-
-        
+        public CredentialCardType CredentialCardType { get; private set; }
 
         public ICollection<VisitDetail> VisitDetails { get; private set; }
-        public ICollection<VisitorDepartment> VisitorDepartments { get; private set; }
         public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, int createById, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
             int credentialCardTypeId)
         {

@@ -7,16 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityGateApv.Application.DTOs.Req
+namespace SecurityGateApv.Application.DTOs.Req.CreateReq
 {
-    public class ProcessCreateCommand
+    public class CreateScheduleCommand
     {
-        public string ProcessName { get; set; }
+        public string ScheduleName { get; set; }
+        public string DaysOfProcess { get; set; }
+        public int Duration { get; set; }
         public string Description { get; set; }
-        //public bool Status { get; set; }
-        public int VisitTypeId { get; set; }
-        public int CreateBy { get; set; }
-        //public ICollection<VisitProcessCommand> VisitProject { get; set; }
+        public int ScheduleTypeId { get; set; }
+        public int CreateById { get; set; }
+
     }
     public class ProcessCreateAndDetailCommand
     {

@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Enums
 {
-    public enum VisitTypeEnum
+    public enum ScheduleTypeEnum
     {
         NONE,
         ProcessWeek,
         ProcessMonth,
-        Project,
-        VisitStaff,
-        VisitSecurity
+        VisitDaily
     }
 }

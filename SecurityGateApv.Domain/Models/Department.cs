@@ -31,9 +31,7 @@ namespace SecurityGateApv.Domain.Models
         public DateTime CreateDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public int AcceptLevel { get; set; }
-        public ICollection<Visit> Visit { get; set; }
         public ICollection<User> User { get; set; }
-        public ICollection<VisitorDepartment> VisitorDepartment { get; set; }
         public static Result<Department> Create(string departmentName, string description,
              int acceptLevel)
         {
