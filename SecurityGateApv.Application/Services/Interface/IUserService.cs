@@ -13,7 +13,7 @@ namespace SecurityGateApv.Application.Services.Interface
     {
         public Task<Result<LoginRes>> Login(LoginModel loginModel);
         public Task<Result<List<GetUserRes>>> GetUserByRolePaging(int pageNumber, int pageSize, string role);
-        public Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int  departmentId);
+        public Task<Result<List<GetUserRes>>> GetAllUserPagingByDepartmentId(int pageNumber, int pageSize, int  departmentId);
         public Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int  departmentManagerId);
         public Task<Result<CreateUserComman>> CreateUser(CreateUserComman command, string token);
         public Task<Result<CreateUserComman>> UpdateUser(int userId, CreateUserComman command, string token);

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Models;
+using SecurityGateApv.Domain.Shared;
 
 namespace SecurityGateApv.WebApi.Controllers
 {
@@ -51,15 +53,14 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         } 
         
-        [HttpGet("Staff/Department/{departmentId}")]
-        public async Task<ActionResult> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int departmentId)
+        [HttpGet("Department/{departmentId}")]
+        public async Task<ActionResult> GetAllUserByDepartmentId(int pageNumber, int pageSize, int departmentId)
         {
-            if (pageNumber <= 0 || pageSize <= 0 || departmentId == null)
+            if ( departmentId == null)
             {
-                return BadRequest("Page number and page size must be greater than zero.");
+                return BadRequest(Result.Failure<List<GetUserRes>>(Error.NullInput));
             }
-
-            var result = await _userService.GetAllStaffPagingByDepartmentId(pageNumber, pageSize, departmentId);
+            var result = await _userService.GetAllUserPagingByDepartmentId(pageNumber, pageSize, departmentId);
             return Ok(result.Value);
         }
 

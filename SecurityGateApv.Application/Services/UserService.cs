@@ -66,7 +66,7 @@ namespace SecurityGateApv.Application.Services
             return command;
         }
         
-        public async Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int departmentId)
+        public async Task<Result<List<GetUserRes>>> GetAllUserPagingByDepartmentId(int pageNumber, int pageSize, int departmentId)
         {
             var department = (await _departmentRepo.FindAsync(
             s => s.DepartmentId == departmentId
@@ -76,7 +76,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<List<GetUserRes>>(Error.NotFoundDepartment);
             }
             var user = await _userRepo.FindAsync(
-                    s => s.DepartmentId == department.DepartmentId && s.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()),
+                    s => s.DepartmentId == department.DepartmentId ,
                     pageSize, pageNumber, includeProperties: "Role"
                 );
             if (user.Count() == 0)

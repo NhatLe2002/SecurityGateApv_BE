@@ -83,7 +83,7 @@ namespace SecurityGateApv.Application.Services
             else
             {
                 schedule = await _scheduleRepo.FindAsync(
-                s => true, pageSize, pageNumber
+                s => true, pageSize, pageNumber, includeProperties: "ScheduleType,CreateBy"
                 );
             }
             if (schedule == null || !schedule.Any())
@@ -97,7 +97,9 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetScheduleRes>> GetScheduleById(int scheduleId)
         {
-            var schedule = await _scheduleRepo.GetByIdAsync(scheduleId);
+            var schedule = (await _scheduleRepo.FindAsync(
+                s => s.ScheduleId == scheduleId ,includeProperties: "ScheduleType,CreateBy"
+                )).FirstOrDefault();
             if (schedule == null)
             {
                 return Result.Failure<GetScheduleRes>(Error.NotFoundSchedule);

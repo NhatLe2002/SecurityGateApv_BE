@@ -19,7 +19,9 @@ namespace SecurityGateApv.Domain.Errors
 
         public string Code { get; }
         public string Message { get; }
-
+        #region Valid input
+        public static readonly Error NullInput = new("Error.Input", "Input param can't null");
+        #endregion
 
         //Author error
         public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
