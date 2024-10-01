@@ -56,11 +56,12 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundQRCard = new("Error.NotfoundQRCard", "Not found this QRCard");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
 
-
+        #region
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
-
+        public static readonly Error ValidSession = new("Error.VisitSesson", "Session check in can't check in duplicate");
+        #endregion
 
 
         //Visitor eror

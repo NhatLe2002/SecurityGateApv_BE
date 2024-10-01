@@ -26,7 +26,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("ScheduleId/{schduleId}")]
+        [HttpGet("{schduleId}")]
         public async Task<IActionResult> GetScheduleById(int schduleId)
         {
             var result = await _scheduleService.GetScheduleById(schduleId);
@@ -47,7 +47,7 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPut("ScheduleId/{scheduleId}")]
+        [HttpPut("{scheduleId}")]
         public async Task<IActionResult> UpdateSchedule([FromBody] UpdateScheduleCommand request,  int scheduleId)
         {
             var result = await _scheduleService.UpdateSchedule(request, scheduleId);
@@ -57,7 +57,7 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpDelete("ScheduleId/{scheduleId}")]
+        [HttpDelete("{scheduleId}")]
         public async Task<IActionResult> DeleteSchedule( int scheduleId)
         {
             var result = await _scheduleService.DeleteSchedule( scheduleId);

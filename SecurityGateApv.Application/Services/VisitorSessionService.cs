@@ -65,7 +65,14 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundVisit);
             }
-
+            var visitSesson = (await _visitorSessionRepo.FindAsync(
+                   s => s.VisitDetailId == command.VisitDetailId && s.Status == VisitorSessonStatus.CheckIn.ToString(),
+                   1, 1
+               )).FirstOrDefault();
+            if (visitSesson != null)
+            {
+                return Result.Failure<bool>(Error.ValidSession);
+            }
             var qrCard = (await _qRCardRepo.FindAsync(
                s => s.CardVerification.Equals(command.QRCardVerification)))
                .FirstOrDefault();

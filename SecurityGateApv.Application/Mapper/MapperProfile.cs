@@ -39,11 +39,14 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GetVisitByDateRes, Visit>().ReverseMap()
                 .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.Schedule.ScheduleName))
                 .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
-
+            CreateMap<VisitRes, Visit>().ReverseMap()
+                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.Schedule.ScheduleName))
+                .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
             #endregion
 
             #region VisitDetail map
             CreateMap<GetVisitDetailRes, VisitDetail>().ReverseMap();
+            CreateMap<GetVisitByCredentialCardRes, VisitDetail>().ReverseMap();
             #endregion
 
             #region Visitor map

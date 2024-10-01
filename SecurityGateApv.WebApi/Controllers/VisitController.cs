@@ -29,7 +29,7 @@ namespace SecurityGateApv.WebApi.Controllers
        
         
         [HttpGet("Day")]
-        public async Task<ActionResult> GetAllVisitsByCurrentDate(int pageSize, int pageNumber, DateTime date)
+        public async Task<ActionResult> GetAllVisitsByDate(int pageSize, int pageNumber, DateTime date)
         {
             var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date);
             if (result.IsFailure)
@@ -38,10 +38,22 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("VisitDetail/VisitId/{visitId}")]
+        [HttpGet("VisitDetail/{visitId}")]
         public async Task<ActionResult> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize)
         {
             var result = await _visitService.GetVisitDetailByVisitId(visitId,  pageNumber,  pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+        [HttpGet("CredentialCard/{credentialCard}")]
+        public async Task<ActionResult> GetVisitByCredentialCard(string credentialCard)
+        {
+            var result = await _visitService.GetVisitByCredentialCard(credentialCard);
 
             if (result.IsFailure)
             {
@@ -62,18 +74,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         
-        [HttpGet("GetVisitByCredentialCard/{credentialCard}")]
-        public async Task<ActionResult> GetVisitByCredentialCard(string credentialCard)
-        {
-            var result = await _visitService.GetVisitByCredentialCard(credentialCard);
-
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error); 
-            }
-
-            return Ok(result.Value);
-        }
+       
         [HttpPost("CreateVisit")]
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {

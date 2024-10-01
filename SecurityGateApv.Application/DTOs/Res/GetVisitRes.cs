@@ -11,12 +11,12 @@ namespace SecurityGateApv.Application.DTOs.Res
 {
     public class GetVisitRes
     {
-        public int VisitDetailId { get;  set; }
-        public TimeSpan ExpectedStartHour { get;  set; }
-        public TimeSpan ExpectedEndHour { get;  set; }
-        public bool Status { get;  set; }
-        public VisitorRes Visitor { get;  set; }
-
+        public int VisitId { get; set; }
+        public string VisitName { get; set; }
+        public int VisitQuantity { get; set; }
+        public string? Description { get; set; }
+        public string CreateByname { get; set; }
+        public string ScheduleTypeName { get; set; }
     }
     public class GetVisitNoDetailRes
     {

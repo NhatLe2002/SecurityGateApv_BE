@@ -215,32 +215,18 @@ namespace SecurityGateApv.Application.Services
                     && s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()),
                     pageSize, pageNumber, includeProperties: "Schedule.ScheduleType"
                 );
-            var visitResult = new List<Visit>();
-            if(visit.Count() == 0)
+
+            if (visit.Count() == 0)
             {
                 return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisitCurrentDate);
             }
-            foreach( var item in visit)
+
+            var visitResult = new List<Visit>();
+            foreach (var item in visit)
             {
-                if (item.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()))
+                if (IsValidVisit(item, date))
                 {
                     visitResult.Add(item);
-                }
-                string[] daysOfSchedule = item.Schedule.DaysOfSchedule.Split(',');
-                int dateOfWeekInput = ((int) date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
-
-                if (item.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString()) 
-                    && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
-                {
-                    visitResult.Add(item);
-                }
-
-                if (item.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString()))
-                {
-                    if (daysOfSchedule.Contains(date.Day.ToString()))
-                    {
-                        visitResult.Add(item);
-                    }
                 }
             }
 
@@ -254,6 +240,7 @@ namespace SecurityGateApv.Application.Services
             return result;
         }
 
+
         public async Task<Result<List<GetVisitDetailRes>>> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize)
         {
             if (! await _visitRepo.IsAny(s => s.VisitId == visitId))
@@ -264,7 +251,12 @@ namespace SecurityGateApv.Application.Services
             IEnumerable<VisitDetail> visitDetail;
             if (pageNumber <= 0 || pageSize <= 0)
             {
-                visitDetail = await _visitDetailRepo.GetAllAsync();
+                visitDetail = await _visitDetailRepo.FindAsync(
+                        s => s.VisitId == visitId,
+                        int.MaxValue, 1,
+                        orderBy: s => s.OrderBy(s => s.ExpectedStartHour),
+                        includeProperties: "Visitor"
+                    );
             }
             else
             {
@@ -285,44 +277,44 @@ namespace SecurityGateApv.Application.Services
             return visitRes;
         }
 
-       /* public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCredentialCard(string credentialCard)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
-                s => s.Visitor.CredentialsCard.Equals(credentialCard) && s.ExpectedStartDate <= DateTime.Now && s.ExpectedEndDate >= DateTime.Now,
-                10, 1, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
+                s => s.Visitor.CredentialsCard.Equals(credentialCard) 
+                && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date 
+                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+                int.MaxValue, 1, s => s.OrderBy(s => s.ExpectedStartHour), "Visit,Visitor"
                 );
-
 
             if (visitDetails == null || !visitDetails.Any())
             {
-                return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
             }
-            var result = new List<GetVisitByCurrentDateRes>();
-            foreach (var item in visitDetails)
-            {
-                result.Add(new GetVisitByCurrentDateRes
-                {
-                    VisitDetailId = item.VisitDetailId,
-                    VisitId = item.VisitId,
-                    VisitName = item.Visit.VisitName,
-                    ExpectedStartDate = item.ExpectedStartDate,
-                    ExpectedEndDate = item.ExpectedEndDate,
-                    ExpectedStartTime = item.ExpectedStartTime,
-                    ExpectedEndTime = item.ExpectedEndTime,
-                    VisitorName = item.Visitor.VisitorName,
-                    //CompanyName = item.Visitor.CompanyName,
-                    PhoneNumber = item.Visitor.PhoneNumber,
-                    CredentialsCard = item.Visitor.CredentialsCard,
-                });
-            }
+            var result = _mapper.Map<List<GetVisitByCredentialCardRes>>(visitDetails);
 
-            return Result.Success(result);
-            return null;
+            return result;
         }
-*/
-        public Task<Result<List<GetVisitByDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        private bool IsValidVisit(Visit visit, DateTime date)
         {
-            throw new NotImplementedException();
+            string[] daysOfSchedule = visit.Schedule.DaysOfSchedule.Split(',');
+            int dateOfWeekInput = ((int)date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
+            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()))
+            {
+                return true;
+            }
+            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
+                && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
+            {
+                return true;
+            }
+            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
+                && daysOfSchedule.Contains(date.Day.ToString()))
+            {
+                return true;
+            }
+            return false;
         }
+
+
     }
 }

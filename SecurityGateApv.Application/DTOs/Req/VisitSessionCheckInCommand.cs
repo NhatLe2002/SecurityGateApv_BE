@@ -16,8 +16,6 @@ namespace SecurityGateApv.Application.DTOs.Req
         public int GateInId { get; set; }
         public string QRCardVerification {  get; set; }
         public List<VisitorSessionsImageCheckinCommand> Images { get; set; }
-        [JsonIgnore]
-        public string Status { get; set; } = string.Empty;
     }
     public class VisitorSessionsImageCheckinCommand
     {
