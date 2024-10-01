@@ -16,8 +16,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public string VisitName { get; set; }
         public int CreateById { get; set; }
         public int UpdateById { get; set; }
-        public ICollection<VisitDetailCommand> VisitDetailOfNewVisitor { get; set; }
-        public ICollection<VisitDetailOldCommand> VisitDetailOfOldVisitor { get; set; }
+        public ICollection<VisitDetailOldCommand> VisitDetailOfVisitor { get; set; }
     }
     public class VisitProjectCommand
     {
@@ -44,9 +43,8 @@ namespace SecurityGateApv.Application.DTOs.Req
         public string Description { get; set; }
         public DateTime ExpectedStartDate { get; private set; }
         public DateTime ExpectedEndDate { get; private set; }
-        public TimeSpan ExpectedTimeIn { get; set; }
-        public TimeSpan ExpectedTimeOut { get; set; }
-        public bool Status { get; set; }
+        public TimeSpan ExpectedStartTime { get; set; }
+        public TimeSpan ExpectedEndTime { get; set; }
         public int VisitorId { get; set; }
     }
     public class VisitorCommand

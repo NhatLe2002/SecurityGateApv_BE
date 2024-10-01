@@ -31,6 +31,11 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllUserPaging(int pageNumber, int pageSize, string role)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _userService.GetUserByRolePaging(pageNumber, int.MaxValue, role);
+                return Ok(resultAll.Value);
+            }
             if (pageNumber <= 0 || pageSize <= 0)
             {
                 return BadRequest("Page number and page size must be greater than zero.");
@@ -42,6 +47,11 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("Staff/DepartmentManager/{departmentManagerId}")]
         public async Task<ActionResult> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int departmentManagerId)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _userService.GetAllStaffPagingByDepartmentManagerId(pageNumber, int.MaxValue, departmentManagerId);
+                return Ok(resultAll.Value);
+            }
             if (pageNumber <= 0 || pageSize <= 0 || departmentManagerId == null)
             {
                 return BadRequest("Page number and page size must be greater than zero.");
@@ -54,6 +64,11 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("Staff/Department/{departmentId}")]
         public async Task<ActionResult> GetAllStaffPagingByDepartmentId(int pageNumber, int pageSize, int departmentId)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _userService.GetAllStaffPagingByDepartmentId(pageNumber, int.MaxValue, departmentId);
+                return Ok(resultAll.Value);
+            }
             if (pageNumber <= 0 || pageSize <= 0 || departmentId == null)
             {
                 return BadRequest("Page number and page size must be greater than zero.");

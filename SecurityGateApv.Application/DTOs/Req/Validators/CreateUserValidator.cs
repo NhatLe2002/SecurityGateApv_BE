@@ -10,7 +10,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class CreateUserValidator: AbstractValidator<CreateUserComman>
     {
-        public CreateUserValidator(IUserRepo userRepo)
+        public CreateUserValidator(IUserRepo userRepo, IDepartmentRepo departmentRepo)
         {
             RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("UserName cannot be empty")
@@ -23,12 +23,12 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             ;
 
             RuleFor(x => x.Password)
-          .NotEmpty().WithMessage("Password cannot be empty")
-          .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
+            .NotEmpty().WithMessage("Password cannot be empty")
+            .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
 
             RuleFor(x => x.FullName)
-           .NotEmpty().WithMessage("FullName cannot be empty")
-           .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
+            .NotEmpty().WithMessage("FullName cannot be empty")
+            .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
@@ -38,6 +38,12 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             .NotEmpty().WithMessage("PhoneNumber cannot be empty")
             .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
 
+
+            RuleFor(x => x.DepartmentId)
+                .NotNull().NotEmpty().Must(s =>
+                {
+                    return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
+                }).WithMessage("Department Id is not exist");
         }
     }
 }
