@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,8 +51,10 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IAWSService, AWSServices>();
             services.AddScoped<IExtractQRCode, ExtractQRCode>();
             services.AddScoped<IPrivateKeyRepo, PrivateKeyRepo>();
-            services.AddScoped<IGateRepo, GateRepo>();
 
+
+            //Email DI
+            services.AddScoped<IEmailSender, EmailSender.EmailSender>();
 
             //JWT
             var key = configuration["Jwt:Key"];

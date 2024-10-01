@@ -84,12 +84,6 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasForeignKey(v => v.CreateById)
                 .OnDelete(DeleteBehavior.Restrict); 
 
-            modelBuilder.Entity<Schedule>()
-                .HasOne(v => v.AssignTo)
-                .WithMany(u => u.ScheduleAssignTo)
-                .HasForeignKey(v => v.AssignToId)
-                .OnDelete(DeleteBehavior.Restrict);
-
 
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.SecurityIn)

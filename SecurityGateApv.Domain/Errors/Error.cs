@@ -34,6 +34,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
+        public static readonly Error NotPermission = new("Error.User.NotPermission", "Permission not allow");
 
 
         //Visit error
@@ -74,6 +75,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundDepartment = new("Error.NotfoundDepartment", "Not found this department");
         public static readonly Error NotFoundDepartmentByDepartmentManagerId = new("Error.NotfoundDepartment", "Not found department by department manager id");
         public static readonly Error NotFoundDepartmentById = new("Error.NotfoundDepartment", "Not found department by id");
+        public static readonly Error CreateDepartment = new("Error.CreateDepartment", "Create department error");
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");

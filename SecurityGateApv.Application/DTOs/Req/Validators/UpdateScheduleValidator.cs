@@ -52,18 +52,6 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 {
                     return _userRepo.IsAny(x => x.UserId == id.CreateById).GetAwaiter().GetResult();
                 }).WithMessage("Creator ID does not exist.");
-
-            RuleFor(s => s.AssignToId)
-                .NotEmpty()
-                .WithMessage("Assign to ID is required.")
-                .Must((id, cancellation) =>
-                {
-                    var staff = (_userRepo.FindAsync(s => s.UserId == id.AssignToId, includeProperties: "Role").GetAwaiter().GetResult()).FirstOrDefault();
-                    if (staff == null || !staff.Role.RoleName.Equals(UserRoleEnum.Staff.ToString())) { return false; }
-                    return true;
-                })
-                .WithMessage("Assign to ID does not exist || wrong role assign");
-
             RuleFor(s => s)
                .Must((command) => ValidateDaysOfProcess(command).GetAwaiter().GetResult())
                .WithMessage("DaysOfProcess is not valid for the selected Visit Type.");

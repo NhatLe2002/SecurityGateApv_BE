@@ -2,6 +2,8 @@
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Models;
 
 namespace SecurityGateApv.WebApi.Controllers
 {
@@ -26,7 +28,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult> GetAllUserPaging(int pageNumber, int pageSize, string role)
         {
             if (pageNumber <= 0 || pageSize <= 0)
@@ -60,10 +62,16 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _userService.GetAllStaffPagingByDepartmentId(pageNumber, pageSize, departmentId);
             return Ok(result.Value);
         }
-        [HttpPost("Staff/{departmentId}")]
-        public async Task<ActionResult> CreateStaff([FromBody] CreateUserComman command, int departmentId)
+
+        [HttpPost]
+        public async Task<ActionResult> CreateUser([FromBody] CreateUserComman command)
         {
-            var result = await _userService.CreateStaff(command, departmentId);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            var result = await _userService.CreateUser(command, token);
 
             if (result.IsFailure)
             {
@@ -72,5 +80,108 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
 
+        [HttpPut("{userId}")]
+        public async Task<ActionResult> UpdateUser(int userId, [FromBody] CreateUserComman command)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            var result = await _userService.UpdateUser(userId, command, token);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpDelete("{userId}")]
+        public async Task<ActionResult> UnactiveUser(int userId)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            var result = await _userService.UnactiveUser(userId, token);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost("Testemail")]
+        public async Task<ActionResult> TestEmail([FromQuery] string email)
+        {
+            var result = await _userService.SendEmailTest(email);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+
+        /* [HttpPost("Staff/{departmentId}")]
+         public async Task<ActionResult> CreateStaff([FromBody] CreateUserComman command, int departmentId)
+         {
+             var result = await _userService.CreateUser(command, departmentId, 4);
+
+             if (result.IsFailure)
+             {
+                 return BadRequest(result.Error);
+             }
+             return Ok(result.Value);
+         }
+
+
+         [HttpPost("DeparmentManager/{departmentId}")]
+         public async Task<ActionResult> CreateDepartmentManager([FromBody] CreateUserComman command, int departmentId)
+         {
+             var result = await _userService.CreateUser(command, departmentId, 3);
+
+             if (result.IsFailure)
+             {
+                 return BadRequest(result.Error);
+             }
+             return Ok(result.Value);
+         }
+         [HttpPut("DeparmentManager/{departmentManagerId}")]
+         public async Task<ActionResult> UpdateDepartmentManager([FromBody] CreateUserComman command, int departmentManagerId)
+         {
+             var result = await _userService.CreateUser(command, departmentId, 3);
+
+             if (result.IsFailure)
+             {
+                 return BadRequest(result.Error);
+             }
+             return Ok(result.Value);
+         }
+
+         [HttpPost("Manager/{departmentId}")]
+         public async Task<ActionResult> CreateManager([FromBody] CreateUserComman command, int departmentId)
+         {
+             var result = await _userService.CreateUser(command, departmentId, 2);
+
+             if (result.IsFailure)
+             {
+                 return BadRequest(result.Error);
+             }
+             return Ok(result.Value);
+         }
+
+         [HttpPost("Security/{departmentId}")]
+         public async Task<ActionResult> CreateSecurity([FromBody] CreateUserComman command, int departmentId)
+         {
+             var result = await _userService.CreateUser(command, departmentId, 5);
+
+             if (result.IsFailure)
+             {
+                 return BadRequest(result.Error);
+             }
+             return Ok(result.Value);
+         }*/
     }
 }

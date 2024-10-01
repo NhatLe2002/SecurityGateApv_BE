@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.Services.Interface;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -12,7 +13,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             _departmentService = departmentService;
         }
-        [HttpGet("GetAllDepartmentPaging")]
+        [HttpGet]
         public async Task<ActionResult> GetAllDepartmentPaging( int pageNumber, int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0)
@@ -21,6 +22,24 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _departmentService.GetAllByPaging(pageNumber, pageSize);
+            return Ok(result.Value);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateDepartment(DepartmentCreateCommand command)
+        {
+            var result = await _departmentService.CreateDepartment(command);
+            return Ok(result.Value);
+        }
+        [HttpPut("{departmentId}")]
+        public async Task<ActionResult> UpdateDepartment(int departmentId, DepartmentCreateCommand command)
+        {
+            var result = await _departmentService.UpdateDepartment(departmentId,command);
+            return Ok(result.Value);
+        }        
+        [HttpDelete("{departmentId}")]
+        public async Task<ActionResult> DeleteDepartment(int departmentId)
+        {
+            var result = await _departmentService.UnactiveDepartment(departmentId);
             return Ok(result.Value);
         }
     }

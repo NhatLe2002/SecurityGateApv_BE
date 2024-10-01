@@ -20,7 +20,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public bool Status { get; private set; }
         public int ScheduleTypeId { get;  set; }
         public int CreateById { get;  set; }
-        public int AssignToId { get;  set; }
 
     }
 }

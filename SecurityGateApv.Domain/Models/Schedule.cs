@@ -16,7 +16,7 @@ namespace SecurityGateApv.Domain.Models
 
         }
 
-        public Schedule( string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId,  int createById,  int assignToId)
+        public Schedule( string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId,  int createById)
         {
             ScheduleName = scheduleName;
             DaysOfSchedule = daysOfSchedule;
@@ -27,7 +27,6 @@ namespace SecurityGateApv.Domain.Models
             Status = status;
             ScheduleTypeId = scheduleTypeId;
             CreateById = createById;
-            AssignToId = assignToId;
         }
 
         private Schedule( string processName , string description, bool status, int visitTypeId, int createBy)
@@ -57,19 +56,15 @@ namespace SecurityGateApv.Domain.Models
         public int CreateById { get; private set; }
         public User CreateBy { get; private set; }
 
-        [ForeignKey("AssignTo")]
-        public int AssignToId { get; private set; }
-        public User AssignTo { get; private set; }
-
         public ICollection<Visit> Visit { get; private set; } 
 
-        public static Result<Schedule> Create(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById, int assignToId)
+        public static Result<Schedule> Create(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
-            Schedule schedule = new Schedule( scheduleName, daysOfSchedule,  duration,  description,  createTime,  updateTime,  status,  scheduleTypeId,  createById,  assignToId);
+            Schedule schedule = new Schedule( scheduleName, daysOfSchedule,  duration,  description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
             return schedule;
         }
         
-        public Result<Schedule> Update(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById, int assignToId)
+        public Result<Schedule> Update(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
             ScheduleName = scheduleName;
             DaysOfSchedule = daysOfSchedule;
@@ -79,7 +74,6 @@ namespace SecurityGateApv.Domain.Models
             Status = status;
             ScheduleTypeId = scheduleTypeId;
             CreateById = createById; 
-            AssignToId = assignToId;
             return this;
         }public Result<Schedule> UpdateStatus( bool status)
         {

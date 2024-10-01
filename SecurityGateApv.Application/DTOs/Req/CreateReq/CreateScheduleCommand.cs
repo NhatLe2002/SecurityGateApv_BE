@@ -17,7 +17,6 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         public string Description { get; set; }
         public int ScheduleTypeId { get; set; }
         public int CreateById { get; set; }
-        public int AssignToId { get; set; }
 
     }
     public class ProcessCreateAndDetailCommand

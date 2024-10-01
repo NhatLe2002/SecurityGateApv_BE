@@ -15,6 +15,5 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
         public bool Status { get;  set; }
         public int ScheduleTypeId { get; set; }
         public int CreateById { get; set; }
-        public int AssignToId { get; set; }
     }
 }

@@ -43,8 +43,7 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 true,
                 request.ScheduleTypeId,
-                request.CreateById,
-                request.AssignToId
+                request.CreateById
                );
             if (scheduleCreate.IsFailure)
             {
@@ -114,7 +113,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetScheduleRes>(Error.NotFoundSchedule);
             }
-            schedule.Update(request.ScheduleName, request.DaysOfProcess, request.Duration, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById, request.AssignToId);
+            schedule.Update(request.ScheduleName, request.DaysOfProcess, request.Duration, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById);
             if(!await _scheduleRepo.UpdateAsync(schedule))
             {
                 return Result.Failure<GetScheduleRes> (Error.ScheduleCreateError);
