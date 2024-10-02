@@ -25,9 +25,10 @@ namespace SecurityGateApv.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScheduleTypeRepo _visitTypeRepo;
         private readonly IUserRepo _userRepo;
+        private readonly IScheduleRepo _scheduleRepo;
 
         public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IScheduleTypeRepo visitTypeRepo,
-            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo)
+            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -38,20 +39,155 @@ namespace SecurityGateApv.Application.Services
             _userRepo = userRepo;
             _visitDetailRepo = visitDetailRepo;
             _visitorRepo = visitorRepo;
+            _scheduleRepo = scheduleRepo;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command)
         {
-
-            var visitCreate = await NewVisit(ScheduleTypeEnum.NONE, command);
-            if (visitCreate.IsFailure)
+            //var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == command.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
+            var createVisit = Visit.Create(
+                command.VisitName,
+                command.VisitQuantity,
+                command.ExpectedStartTime,
+                command.ExpectedEndTime,
+                DateTime.Now,
+                DateTime.Now,
+                command.Description,
+                "Pending",
+                command.CreateById,
+                command.ScheduleId
+                );
+            if (createVisit.IsFailure)
             {
-                return Result.Failure<VisitCreateCommand>(visitCreate.Error);
+                return Result.Failure<VisitCreateCommand>(createVisit.Error);
             }
-            await _visitRepo.AddAsync(visitCreate.Value);
-
-            await _unitOfWork.CommitAsync();
+            var visit = createVisit.Value;
+            foreach (var item in command.VisitDetail)
+            {
+                visit.AddVisitDetailOfOldVisitor(
+                    item.ExpectedStartHour,
+                    item.ExpectedEndHour,
+                    true,
+                    item.VisitorId);
+            }
+            await _visitRepo.AddAsync(visit);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<VisitCreateCommand>(Error.CommitError);
+            }
             return command;
+        }
+        
+        public async Task<Result<List<GetVisitRes>>> GetAllByFilterOrderbyIncludePaging(QueryParameters<Visit> queryParameters)
+        {
+            var visits = await _visitRepo.GetAllByFilterOrderbyIncludePaging(
+                queryParameters.Filter,
+                queryParameters.OrderBy,
+                queryParameters.IncludeProperties,
+                queryParameters.PageIndex,
+                queryParameters.PageSize
+                );
+            var visitRes = _mapper.Map<List<GetVisitRes>>(visits);
+            return Result.Success(visitRes);
+        }
+
+        public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
+        {
+            var visit = await _visitRepo.FindAsync(s=>true, pageSize, pageNumber,s=>s.OrderBy(x=>x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy");
+            if(visit.Count() == 0)
+            {
+                return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
+            }
+            var res = _mapper.Map<List<GetVisitNoDetailRes>>(visit);
+            return res;
+        }
+
+        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCurrentDate(int pageSize, int pageNumber)
+        {
+            /* var visitDetails = await _visitDetailRepo.FindAsync(
+                 s => s.ExpectedStartDate.Date <= DateTime.Now.Date ,
+                 pageSize, pageNumber, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
+                 );
+             var result = new List<GetVisitByCurrentDateRes>();
+             foreach (var item in visitDetails)
+             {
+                 result.Add(new GetVisitByCurrentDateRes
+                 {
+                     VisitId = item.VisitId,
+                     VisitDetailId = item.VisitDetailId,
+                     VisitName = item.Visit.VisitName,
+                     ExpectedStartDate = item.ExpectedStartDate,
+                     ExpectedEndDate = item.ExpectedEndDate,
+                     ExpectedStartTime = item.ExpectedStartTime,
+                     ExpectedEndTime = item.ExpectedEndTime,
+                     VisitorName = item.Visitor.VisitorName,
+                     //CompanyName = item.Visitor.CompanyName,
+                     PhoneNumber = item.Visitor.PhoneNumber,
+                     CredentialsCard = item.Visitor.CredentialsCard,
+                 });
+             }
+
+             if (result.Count == 0)
+             {
+                 return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
+             }
+             return result;*/
+            return null;
+        }
+
+        public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
+        {
+            var visit = await _visitRepo.FindAsync(
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy"
+                );
+
+            if (visit == null)
+            {
+                return Result.Failure<GetVisitRes>(Error.NotFound);
+            }
+            var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
+            return Result.Success(visitRes);
+        }
+
+      /*  public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        {
+            var visitDetails = await _visitDetailRepo.FindAsync(
+                s => s.Visitor.CredentialsCard.Equals(credentialCard) && s.ExpectedStartDate <= DateTime.Now && s.ExpectedEndDate >= DateTime.Now,
+                10, 1, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
+                );
+
+
+            if (visitDetails == null || !visitDetails.Any())
+            {
+                return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
+            }
+            var result = new List<GetVisitByCurrentDateRes>();
+            foreach (var item in visitDetails)
+            {
+                result.Add(new GetVisitByCurrentDateRes
+                {
+                    VisitDetailId = item.VisitDetailId,
+                    VisitId = item.VisitId,
+                    VisitName = item.Visit.VisitName,
+                    ExpectedStartDate = item.ExpectedStartDate,
+                    ExpectedEndDate = item.ExpectedEndDate,
+                    ExpectedStartTime = item.ExpectedStartTime,
+                    ExpectedEndTime = item.ExpectedEndTime,
+                    VisitorName = item.Visitor.VisitorName,
+                    //CompanyName = item.Visitor.CompanyName,
+                    PhoneNumber = item.Visitor.PhoneNumber,
+                    CredentialsCard = item.Visitor.CredentialsCard,
+                });
+            }
+
+            return Result.Success(result);
+            return null;
+        }*/
+
+        public Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        {
+            throw new NotImplementedException();
         }
         private async Task<Result<Visit>> NewVisit(ScheduleTypeEnum visitType, VisitCreateCommand command)
         {
@@ -173,124 +309,26 @@ namespace SecurityGateApv.Application.Services
             return null;
         }
 
-        public async Task<Result<List<GetVisitRes>>> GetAllByFilterOrderbyIncludePaging(QueryParameters<Visit> queryParameters)
+        public async Task<Result<VisitCreateCommand>> UpdateVisit(int visitId, VisitCreateCommand command)
         {
-            var visits = await _visitRepo.GetAllByFilterOrderbyIncludePaging(
-                queryParameters.Filter,
-                queryParameters.OrderBy,
-                queryParameters.IncludeProperties,
-                queryParameters.PageIndex,
-                queryParameters.PageSize
-                );
-            var visitRes = _mapper.Map<List<GetVisitRes>>(visits);
-            return Result.Success(visitRes);
-        }
-
-        public async Task<Result<List<GetVisitNoDetailRes>>> GetAllByPaging(int pageNumber, int pageSize)
-        {
-            var visits = await _visitRepo.FindAsync(
-                s => true, pageSize, pageNumber, s => s.OrderBy(s => s.ExpectedStartTime), "CreateBy"
-                );
-            var result = _mapper.Map<List<GetVisitNoDetailRes>>(visits);
-            
-            if (result.Count == 0)
-            {
-                return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
+            var visit = (await _visitRepo.FindAsync(s => s.VisitId == visitId, includeProperties: "VisitDetail")).FirstOrDefault();
+            if (visit == null) {
+                return Result.Failure<VisitCreateCommand>(Error.NotFoundVisit);
             }
-            return result;
-        }
-
-        public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit()
-        {
-            var visit = await _visitRepo.GetAllAsync();
-            var res = _mapper.Map<List<GetVisitNoDetailRes>>(visit);
-            return res;
-        }
-
-        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCurrentDate(int pageSize, int pageNumber)
-        {
-            /* var visitDetails = await _visitDetailRepo.FindAsync(
-                 s => s.ExpectedStartDate.Date <= DateTime.Now.Date ,
-                 pageSize, pageNumber, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
-                 );
-             var result = new List<GetVisitByCurrentDateRes>();
-             foreach (var item in visitDetails)
-             {
-                 result.Add(new GetVisitByCurrentDateRes
-                 {
-                     VisitId = item.VisitId,
-                     VisitDetailId = item.VisitDetailId,
-                     VisitName = item.Visit.VisitName,
-                     ExpectedStartDate = item.ExpectedStartDate,
-                     ExpectedEndDate = item.ExpectedEndDate,
-                     ExpectedStartTime = item.ExpectedStartTime,
-                     ExpectedEndTime = item.ExpectedEndTime,
-                     VisitorName = item.Visitor.VisitorName,
-                     //CompanyName = item.Visitor.CompanyName,
-                     PhoneNumber = item.Visitor.PhoneNumber,
-                     CredentialsCard = item.Visitor.CredentialsCard,
-                 });
-             }
-
-             if (result.Count == 0)
-             {
-                 return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
-             }
-             return result;*/
-            return null;
-        }
-
-        public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
-        {
-            /*var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,VisitProcess"
-                );
-
-            if (visit == null)
+            await _visitDetailRepo.RemoveRange(visit.VisitDetail);
+            visit = _mapper.Map(command, visit);
+            visit.Update(command.CreateById);
+            await _visitRepo.UpdateAsync(visit);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
             {
-                return Result.Failure<GetVisitRes>(Error.NotFound);
-            }
-            var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
-            visitRes.DaysOfProcess = visit.FirstOrDefault().VisitProcess.FirstOrDefault().DaysOfProcess;
-            return Result.Success(visitRes);
-        }
-
-        public async Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
-        {
-            var visitDetails = await _visitDetailRepo.FindAsync(
-                s => s.Visitor.CredentialsCard.Equals(credentialCard) && s.ExpectedStartDate <= DateTime.Now && s.ExpectedEndDate >= DateTime.Now,
-                10, 1, s => s.OrderBy(s => s.ExpectedStartTime), "Visit,Visitor"
-                );
-
-
-            if (visitDetails == null || !visitDetails.Any())
-            {
-                return Result.Failure<List<GetVisitByCurrentDateRes>>(Error.NotFoundVisit);
-            }
-            var result = new List<GetVisitByCurrentDateRes>();
-            foreach (var item in visitDetails)
-            {
-                result.Add(new GetVisitByCurrentDateRes
-                {
-                    VisitDetailId = item.VisitDetailId,
-                    VisitId = item.VisitId,
-                    VisitName = item.Visit.VisitName,
-                    ExpectedStartDate = item.ExpectedStartDate,
-                    ExpectedEndDate = item.ExpectedEndDate,
-                    ExpectedStartTime = item.ExpectedStartTime,
-                    ExpectedEndTime = item.ExpectedEndTime,
-                    VisitorName = item.Visitor.VisitorName,
-                    //CompanyName = item.Visitor.CompanyName,
-                    PhoneNumber = item.Visitor.PhoneNumber,
-                    CredentialsCard = item.Visitor.CredentialsCard,
-                });
+                return Result.Failure<VisitCreateCommand>(Error.CommitError);
             }
 
-            return Result.Success(result);*/
-            return null;
+            return command;
         }
 
-        public Task<Result<List<GetVisitByCurrentDateRes>>> GetVisitByCredentialCard(string credentialCard)
+        public Task<Result<bool>> DeleteVisit(int visitId)
         {
             throw new NotImplementedException();
         }

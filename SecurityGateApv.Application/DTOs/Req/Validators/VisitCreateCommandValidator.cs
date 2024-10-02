@@ -11,96 +11,43 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class VisitCreateCommandValidator : AbstractValidator<VisitCreateCommand>
     {
-        public VisitCreateCommandValidator(IUserRepo userRepo)
+        public VisitCreateCommandValidator(IUserRepo userRepo, IVisitorRepo visitorRepo)
         {
-            RuleFor(s => s.AcceptLevel).Must(s => s > 0).NotNull();
-            RuleFor(s => s.VisitQuantity).Must(s => s > 0).NotNull();
-            RuleFor(s => s.CreateById).Must(s =>
+            RuleFor(s => s.VisitName).NotNull().NotEmpty();
+            RuleFor(s => s.ExpectedEndTime).NotNull().NotEmpty();
+            RuleFor(s => s.ExpectedStartTime).NotNull().NotEmpty();
+            RuleFor(s => s.Description).NotNull().NotEmpty();
+            RuleFor(s => s.VisitQuantity).NotNull().NotEmpty().Must(s =>s>0).WithMessage("Must greater than zero");
+            RuleFor(s => new {s.VisitQuantity, s.VisitDetail}).NotNull().NotEmpty().Must(s =>
             {
-                var user = userRepo.FindAsync(t => t.UserId == s).GetAwaiter().GetResult();
-                if(user != null)
+                if(s.VisitQuantity != s.VisitDetail.Count)
                 {
                     return true;
                 }
-                return false;
-            });
-            RuleFor(s => s.UpdateById).Must(s =>
+                return true;
+            }).WithMessage("Quantity not match");
+            RuleFor(s => s.CreateById).NotNull().NotEmpty().Must(s =>
             {
-                var user = userRepo.FindAsync(t => t.UserId == s).GetAwaiter().GetResult();
-                if (user != null)
-                {
-                    return true;
-                }
-                return false;
-            }).WithMessage("User Id not exist");
-/*            RuleForEach(s => s.VisitProject).Must(s =>
+                return userRepo.IsAny(t=> t.UserId == s).GetAwaiter().GetResult();
+            }).WithMessage("User Id is not exist");
+/*            RuleFor(s => s.ScheduleId).NotNull().NotEmpty().Must(s =>
             {
-                if(s == null)
-                {
-                    return true;
-                }
-                var project = projectRepo.FindAsync(t => t.ProjectId == s.ProjectId).GetAwaiter().GetResult();
-                if (project != null)
-                {
-                    return true;
-                }
-                return false;
-            }).WithMessage("Project Id not exist");*/
-/*            RuleFor(s => s.DepartmentReasonId).Must(s =>
+                return userRepo.IsAny(t => t.UserId == s).GetAwaiter().GetResult();
+            }).WithMessage("User Id is not exist");*/
+            RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
-                var deReason = departmentReasonRepo.FindAsync(t => t.DepartmentReasonId == s).GetAwaiter().GetResult();
-                if (deReason != null)
+                if (x.ExpectedEndHour < x.ExpectedStartHour)
                 {
-                    return true;
-                }
-                return false;
-            }).WithMessage("DeparmentReason Id not exist");*/
-        }
-        class VisitDetailCommandValidator : AbstractValidator<VisitDetailCommand>
-        {
-            public VisitDetailCommandValidator(IVisitorRepo visitorRepo)
-            {
-                /*RuleFor(s => s.ExpectedTimeOut).NotEmpty().Must(s =>
-                {
-                    if(s > DateTime.Now)
-                    {
-                        return true;
-                    }
                     return false;
-                });
-                RuleFor(s => s.ExpectedTimeIn).NotEmpty().Must(s =>
+                }
+                if(!visitorRepo.IsAny(s=>s.VisitorId == x.VisitorId).GetAwaiter().GetResult())
                 {
-                    if (s > DateTime.Now)
-                    {
-                        return true;
-                    }
                     return false;
-                });*/
-                RuleFor(s => new { s.ExpectedTimeIn, s.ExpectedTimeOut }).Must(s =>
-                {
-                    if (s.ExpectedTimeIn < s.ExpectedTimeOut)
-                    {
-                        return true;
-                    }
-                    return false;
-                });
-                RuleFor(s => s.Description).NotEmpty().NotNull();
-                RuleFor(s => s.Visitor).Must(s =>
-                {
-                    var visitor = visitorRepo.FindAsync(t => t.CredentialsCard == s.CredentialsCard).GetAwaiter().GetResult();
-                    if(visitor != null)
-                    {
-                        return false;
-                    }
-                    if(s.CreatedDate < DateTime.Now && s.UpdatedDate < DateTime.Now && String.IsNullOrEmpty(s.CompanyName) && String.IsNullOrEmpty(s.VisitorName))
-                    {
-                        return false;
-                    }
-
-                    return true;
-                
-                });
+                }
+                return true;
             }
+            ).WithMessage("Time, visitor id not valid");
         }
+            
     }
 }

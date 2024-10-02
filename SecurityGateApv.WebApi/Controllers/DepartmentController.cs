@@ -26,7 +26,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _departmentService.GetAllByPaging(pageNumber, int.MaxValue);
+                var resultAll = await _departmentService.GetAllByPaging(1, int.MaxValue);
                 return Ok(resultAll.Value);
             }
             if (pageNumber <= 0 || pageSize <= 0)

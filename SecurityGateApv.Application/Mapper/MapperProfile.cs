@@ -29,8 +29,12 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<ProcessDetailByDepartmentManagerIdRes, Schedule>().ReverseMap();
             CreateMap<GetDepartmentRes, Department>().ReverseMap();
             CreateMap<GetScheduleRes, Schedule>().ReverseMap();
+            CreateMap<ScheduleResForVisit, Schedule>().ReverseMap();
             CreateMap<CreateUserComman, User>().ReverseMap();
             CreateMap<DepartmentCreateCommand, Department>().ReverseMap();
+            CreateMap<VisitCreateCommand, Visit>().ReverseMap();
+            CreateMap<GetVisitorRes, Visitor>().ReverseMap();
+            CreateMap<VisitDetailOldCommand, VisitDetail>().ReverseMap();
             CreateMap<GetCardRes, QRCard>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.QRCardType.CardTypeName))
                 .ForMember(dest => dest.QrCardStatusName, opt => opt.MapFrom(src => src.QRCardStatus.StatusName));

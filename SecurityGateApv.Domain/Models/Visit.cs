@@ -3,6 +3,7 @@ using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -13,20 +14,24 @@ namespace SecurityGateApv.Domain.Models
 {
     public class Visit
     {
-        internal Visit(DateTime dateRegister, int visitQuantity, string visitName, int acceptLevel, int createById, int updateById, string visitType)
-        {
-            //DateRegister = dateRegister;
-            VisitQuantity = visitQuantity;
-            //AcceptLevel = acceptLevel;
-            CreateById = createById;
-            VisitName = visitName;
-            UpdateById = updateById;
-            //VisitType = visitType;
-        }
-
         public Visit()
         {
             
+        }
+
+        public Visit(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
+            , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId)
+        {
+            VisitName = visitName;
+            VisitQuantity = visitQuantity;
+            ExpectedStartTime = expectedStartTime;
+            ExpectedEndTime = expectedEndTime;
+            CreateTime = createTime;
+            UpdateTime = updateTime;
+            Description = description;
+            VisitStatus = visitStatus;
+            CreateById = createById;
+            ScheduleId = scheduleId;
         }
 
         [Key]
@@ -54,51 +59,25 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
 
-        public static Result<Visit> Create(int visitQuantity, int acceptLevel,string visitName, int createById, int updateById, User createBy)
+        public static Result<Visit> Create(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
+            , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId)
         {
-            /*var visitType = ScheduleTypeEnum.NONE;
-            if (createBy.Role.RoleName == UserRoleEnum.Staff.ToString())
-            {
-                visitType = ScheduleTypeEnum.VisitStaff;
-            }
-            else if (createBy.Role.RoleName == UserRoleEnum.Security.ToString())
-            {
-                visitType = ScheduleTypeEnum.VisitSecurity;
-            }
-            else
-            {
-                return Result.Failure<Visit>(Error.NotRoleNotPermission);
-            }
-            var result = new Visit(DateTime.UtcNow,  visitQuantity, visitName,  acceptLevel,  createById,  updateById, visitType.ToString());*/
-            return null;
-        }
-        public static Result<Visit> CreateVisitOfProcess(int visitQuantity, int acceptLevel, string visitName, int createById, int updateById, ScheduleTypeEnum visitTypeEnum)
-        {              
-            /*if (createBy.Role.RoleName == UserRole.Staff.ToString())
-            {
-                visitType = VisitTypeEnum.VisitStaff;
-            }
-            else if (createBy.Role.RoleName == UserRole.Security.ToString())
-            {
-                visitType = VisitTypeEnum.VisitSecurity;
-            }
-            else
-            {
-                return Result.Failure<Visit>(Error.NotRoleNotPermission);
-            }*/
-            var result = new Visit(DateTime.UtcNow, visitQuantity, visitName, acceptLevel, createById, updateById, visitTypeEnum.ToString());
+            var result = new Visit(visitName, visitQuantity, expectedStartTime, expectedEndTime, createTime
+            , updateTime, description, visitStatus, createById, scheduleId);
             return result;
         }
-        public Result<Visit> AddVisitDetailOfOldVisitor( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, int visitorId)
+
+        public Result<Visit> AddVisitDetailOfOldVisitor(TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status, int visitorId)
         {
-            var visitDetail = new VisitDetail( description, expectedStartDate, expectedEndDate, expectedTimeIn, expectedTimeOut, status, this, visitorId);
+            var visitDetail = new VisitDetail(expectedStartHour, expectedEndHour, status
+            , this, visitorId);
             VisitDetail.Add(visitDetail);
             return this;
         }
-        public Result<Visit> AddVisitDetailOfNewVisitor( string description, DateTime expectedStartDate, DateTime expectedEndDate, TimeSpan expectedTimeIn, TimeSpan expectedTimeOut, bool status, Visitor visitor)
+        public Result<Visit> Update(int updateById)
         {
-            var visitDetail = new VisitDetail( description, expectedStartDate, expectedEndDate, expectedTimeIn, expectedTimeOut, status, this, visitor);
-            VisitDetail.Add(visitDetail);
+            this.UpdateById = updateById;
+            this.UpdateTime = DateTime.Now;
             return this;
         }
     }
