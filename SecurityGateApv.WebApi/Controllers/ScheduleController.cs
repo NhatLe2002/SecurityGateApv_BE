@@ -23,6 +23,7 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest(result.Error);
             }
+
             return Ok(result.Value);
         }
 

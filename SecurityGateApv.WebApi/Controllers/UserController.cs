@@ -35,7 +35,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _userService.GetUserByRolePaging(pageNumber, int.MaxValue, role);
+                var resultAll = await _userService.GetUserByRolePaging(1, int.MaxValue, role);
                 return Ok(resultAll.Value);
             }
             if (pageNumber <= 0 || pageSize <= 0)
@@ -51,7 +51,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _userService.GetAllStaffPagingByDepartmentManagerId(pageNumber, int.MaxValue, departmentManagerId);
+                var resultAll = await _userService.GetAllStaffPagingByDepartmentManagerId(1, int.MaxValue, departmentManagerId);
                 return Ok(resultAll.Value);
             }
             if (pageNumber <= 0 || pageSize <= 0 || departmentManagerId == null)
@@ -134,65 +134,5 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-
-        /* [HttpPost("Staff/{departmentId}")]
-         public async Task<ActionResult> CreateStaff([FromBody] CreateUserComman command, int departmentId)
-         {
-             var result = await _userService.CreateUser(command, departmentId, 4);
-
-             if (result.IsFailure)
-             {
-                 return BadRequest(result.Error);
-             }
-             return Ok(result.Value);
-         }
-
-
-         [HttpPost("DeparmentManager/{departmentId}")]
-         public async Task<ActionResult> CreateDepartmentManager([FromBody] CreateUserComman command, int departmentId)
-         {
-             var result = await _userService.CreateUser(command, departmentId, 3);
-
-             if (result.IsFailure)
-             {
-                 return BadRequest(result.Error);
-             }
-             return Ok(result.Value);
-         }
-         [HttpPut("DeparmentManager/{departmentManagerId}")]
-         public async Task<ActionResult> UpdateDepartmentManager([FromBody] CreateUserComman command, int departmentManagerId)
-         {
-             var result = await _userService.CreateUser(command, departmentId, 3);
-
-             if (result.IsFailure)
-             {
-                 return BadRequest(result.Error);
-             }
-             return Ok(result.Value);
-         }
-
-         [HttpPost("Manager/{departmentId}")]
-         public async Task<ActionResult> CreateManager([FromBody] CreateUserComman command, int departmentId)
-         {
-             var result = await _userService.CreateUser(command, departmentId, 2);
-
-             if (result.IsFailure)
-             {
-                 return BadRequest(result.Error);
-             }
-             return Ok(result.Value);
-         }
-
-         [HttpPost("Security/{departmentId}")]
-         public async Task<ActionResult> CreateSecurity([FromBody] CreateUserComman command, int departmentId)
-         {
-             var result = await _userService.CreateUser(command, departmentId, 5);
-
-             if (result.IsFailure)
-             {
-                 return BadRequest(result.Error);
-             }
-             return Ok(result.Value);
-         }*/
     }
 }
