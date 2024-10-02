@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
-using SecurityGateApv.Application.DTOs.Res;
+using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
-using SecurityGateApv.Domain.Enums;
-using SecurityGateApv.Domain.Models;
 
 namespace SecurityGateApv.WebApi.Controllers
 {
@@ -17,9 +15,22 @@ namespace SecurityGateApv.WebApi.Controllers
             _visitService = visitService;
         }
         [HttpGet]
-        public async Task<ActionResult> GetAllVisits()
+        public async Task<ActionResult> GetAllVisits([FromQuery]int pageSize, [FromQuery] int pageNumber)
         {
-            var result = await _visitService.GetAllVisit();
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetAllVisit(int.MaxValue, 1);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetAllVisit(pageSize, pageNumber);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -47,9 +58,9 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest(result.Error);
             }
-
             return Ok(result.Value);
         }
+       
         [HttpGet("CredentialCard/{credentialCard}")]
         public async Task<ActionResult> GetVisitByCredentialCard(string credentialCard)
         {
@@ -62,20 +73,7 @@ namespace SecurityGateApv.WebApi.Controllers
 
             return Ok(result.Value);
         }
-        /*[HttpGet("GetAllPaging")]
-        public async Task<ActionResult> GetAllPaging([FromQuery] int pageNumber , [FromQuery] int pageSize)
-        {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                return BadRequest("Page number and page size must be greater than zero.");
-            }
-
-            var result = await _visitService.GetAllByPaging(pageNumber, pageSize);
-            return Ok(result.Value);
-        }
-        
-       
-        [HttpPost("CreateVisit")]
+        [HttpPost()]
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {
             var result = await _visitService.CreateVisit(command);
@@ -86,29 +84,27 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPost("CreateVisitOfProcess/{visitProcessId}")]
-        public async Task<ActionResult> CreateVisitOfProcess(int visitProcessId, VisitCreateCommand command)
+        [HttpPut("{visitId}")]
+        public async Task<ActionResult> UpdateVisit(int visitId, VisitCreateCommand command)
         {
-            var result = await _visitService.CreateVisitOfProcess(visitProcessId, command, true);
+            var result = await _visitService.UpdateVisit(visitId, command);
 
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
-
             return Ok(result.Value);
         }
-        [HttpPost("CreateVisitOfProject/{visitProcessId}")]
-        public async Task<ActionResult> CreateVisitOfProject(int visitProcessId, VisitCreateCommand command)
+        [HttpDelete("{visitId}")]
+        public async Task<ActionResult> DeleteVisit(int visitId)
         {
-            var result = await _visitService.CreateVisitOfProcess(visitProcessId, command, false);
-
+            var result = await _visitService.DeleteVisit(visitId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
-
             return Ok(result.Value);
-        }*/
+        }
+       
     }
 }

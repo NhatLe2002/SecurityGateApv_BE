@@ -14,14 +14,14 @@ namespace SecurityGateApv.Application.Services.Interface
 {
     public interface IVisitService
     {
-        public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit( );
         public Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date);
-        public Task<Result<List<GetVisitRes>>> GetAllByFilterOrderbyIncludePaging(QueryParameters<Visit> queryParameters);
-        public Task<Result<List<GetVisitNoDetailRes>>> GetAllByPaging(int pageNumber, int pageSize);
+        public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber);      
         public Task<Result<List<GetVisitDetailRes>>> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize);
+        public Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId);
         public Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCredentialCard(string credentialCard);
         public Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command);
-        public Task<Result<VisitCreateCommand>> CreateVisitOfProcess(int processVisitId, VisitCreateCommand command, bool visitType);
+        public Task<Result<VisitCreateCommand>> UpdateVisit(int visitId, VisitCreateCommand command);
+        public Task<Result<bool>> DeleteVisit(int visitId);
 
 
     }

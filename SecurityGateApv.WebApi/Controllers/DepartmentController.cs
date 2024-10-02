@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Models;
 
 namespace SecurityGateApv.WebApi.Controllers
 {
@@ -13,9 +15,20 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             _departmentService = departmentService;
         }
+        [HttpGet("{deparmentId}")]
+        public async Task<ActionResult> GetAllDepartmentPaging(int deparmentId)
+        {
+            var result = await _departmentService.GetById(deparmentId);
+            return Ok(result.Value);
+        }
         [HttpGet]
         public async Task<ActionResult> GetAllDepartmentPaging( int pageNumber, int pageSize)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _departmentService.GetAllByPaging(1, int.MaxValue);
+                return Ok(resultAll.Value);
+            }
             if (pageNumber <= 0 || pageSize <= 0)
             {
                 return BadRequest("Page number and page size must be greater than zero.");

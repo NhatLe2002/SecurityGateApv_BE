@@ -28,6 +28,7 @@ namespace SecurityGateApv.Application.Extensions
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IVisitorService, VisitorService>();
             services.AddScoped<IScheduleTypeService, ScheduleTypeService>();
             services.AddFluentValidation();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();

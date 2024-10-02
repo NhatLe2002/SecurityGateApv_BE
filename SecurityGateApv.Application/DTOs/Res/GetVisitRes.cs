@@ -11,23 +11,49 @@ namespace SecurityGateApv.Application.DTOs.Res
 {
     public class GetVisitRes
     {
-        public int VisitId { get; set; }
-        public string VisitName { get; set; }
-        public int VisitQuantity { get; set; }
-        public string? Description { get; set; }
-        public string CreateByname { get; set; }
-        public string ScheduleTypeName { get; set; }
+        public string VisitName { get; private set; }
+        public int VisitQuantity { get; private set; }
+        public DateTime ExpectedStartTime { get; private set; }
+        public DateTime ExpectedEndTime { get; private set; }
+        public DateTime CreateTime { get; private set; }
+        public DateTime UpdateTime { get; private set; }
+        public string? Description { get; private set; }
+        public string VisitStatus { get; private set; }
+        public CreateByRes CreateBy { get; private set; }
+
+        public CreateByRes? UpdateBy { get; private set; }
+
+        public ScheduleResForVisit Schedule { get; private set; }
+        public ICollection<VisitDetailRes> VisitDetail { get; set; }
+        //public ICollection<VisitProcessRes> VisitProcess { get;  set; }
+
     }
     public class GetVisitNoDetailRes
     {
         public int VisitId { get; set; }
-        public DateTime DateRegister { get; private set; }
         public string VisitName { get; private set; }
         public int VisitQuantity { get; private set; }
-        public int AcceptLevel { get; private set; }
-        public string Description { get; private set; }
-        public string VisitType { get; private set; }
-        public CreateByRes CreateBy { get;  set; }
+        public DateTime ExpectedStartTime { get; private set; }
+        public DateTime ExpectedEndTime { get; private set; }
+        public DateTime CreateTime { get; private set; }
+        public DateTime UpdateTime { get; private set; }
+        public string? Description { get; private set; }
+        public string VisitStatus { get; private set; }
+        public CreateByRes CreateBy { get; private set; }
+
+        public CreateByRes? UpdateBy { get; private set; }
+
+        public ScheduleResForVisit Schedule { get; private set; }
+    }
+    public class VisitDetailRes
+    {
+        public int VisitDetailId { get; set; }
+        public DateTime ExpectedStartDate { get; set; }
+        public DateTime ExpectedEndDate { get; set; }
+        public TimeSpan ExpectedStartTime { get; set; }
+        public TimeSpan ExpectedEndTime { get; set; }
+        public bool Status { get; private set; }
+        public VisitorRes Visitor { get; set; }
     }
     public class GetVisitByDateRes
     {
@@ -55,5 +81,10 @@ namespace SecurityGateApv.Application.DTOs.Res
     public class VisitProcessRes
     {
         public string DaysOfProcess { get; set; }
+    }
+    public class ScheduleResForVisit
+    {
+        public int ScheduleId { get; private set; }
+        public string ScheduleName { get; private set; }
     }
 }

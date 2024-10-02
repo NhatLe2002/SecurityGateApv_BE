@@ -10,7 +10,7 @@ namespace SecurityGateApv.Domain.Errors
     {
         public static readonly Error None = new(string.Empty, string.Empty);
         public static readonly Error NullValue = new("Error.NullValue", "The specified result value is null");
-
+        public static readonly Error CommitError = new("Error.CommitError", "Error when saving to database see log for details");
         public Error(string code, string message)
         {
             Code = code;
