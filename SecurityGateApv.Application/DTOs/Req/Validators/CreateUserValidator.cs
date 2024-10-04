@@ -27,8 +27,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
 
             RuleFor(x => x.FullName)
-            .NotEmpty().WithMessage("FullName cannot be empty")
-            .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
+            .NotEmpty().WithMessage("FullName cannot be empty");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
