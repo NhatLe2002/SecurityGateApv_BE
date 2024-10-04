@@ -20,12 +20,12 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(s => s.VisitQuantity).NotNull().NotEmpty().Must(s =>s>0).WithMessage("Must greater than zero");
             RuleFor(s => new {s.VisitQuantity, s.VisitDetail}).NotNull().NotEmpty().Must(s =>
             {
-                if(s.VisitQuantity != s.VisitDetail.Count)
+                if(s.VisitQuantity == s.VisitDetail.Count)
                 {
                     return true;
                 }
-                return true;
-            }).WithMessage("Quantity not match");
+                return false;
+            }).WithMessage("Quantity not match visit detail");
             RuleFor(s => s.CreateById).NotNull().NotEmpty().Must(s =>
             {
                 return userRepo.IsAny(t=> t.UserId == s).GetAwaiter().GetResult();

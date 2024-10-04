@@ -53,7 +53,7 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 DateTime.Now,
                 command.Description,
-                "Pending",
+                VisitProcessEnum.Active.ToString(),
                 command.CreateById,
                 command.ScheduleId
                 );

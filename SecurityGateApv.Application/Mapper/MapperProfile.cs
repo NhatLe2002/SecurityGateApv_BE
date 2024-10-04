@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Domain.Models;
 using System;
@@ -32,9 +33,11 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<VisitCreateCommand, Visit>().ReverseMap();
             CreateMap<GetVisitorRes, Visitor>().ReverseMap();
             CreateMap<VisitDetailOldCommand, VisitDetail>().ReverseMap();
+            CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
             CreateMap<GetCardRes, QRCard>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.QRCardType.CardTypeName))
                 .ForMember(dest => dest.QrCardStatusName, opt => opt.MapFrom(src => src.QRCardStatus.StatusName));
+
 
 
             #region Visit map
@@ -55,6 +58,7 @@ namespace SecurityGateApv.Application.Mapper
 
             #region Visitor map
             CreateMap<Visitor, VisitorRes>().ReverseMap();
+            CreateMap<Visitor, CreateVisitorCommand>().ReverseMap();
             #endregion
             #region
             CreateMap<GetScheduleTypeRes, ScheduleType>().ReverseMap();

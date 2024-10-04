@@ -15,17 +15,17 @@ namespace SecurityGateApv.Domain.Models
         {
             
         }
-        internal Visitor(string visitorName, string companyName, string phoneNumber, int createById, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
+        internal Visitor(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard,string visitorCredentialImage, string status,
             int credentialCardTypeId)
         {
             VisitorName = visitorName;
-            //CompanyName = companyName;
+            CompanyName = companyName;
             PhoneNumber = phoneNumber;
-            //CreatedDate = createdDate;
-            //UpdatedDate = updatedDate;
-            //CreateById = createById;
+            CreateDate = createdDate;
+            UpdateDate = updatedDate;
             CredentialsCard = credentialsCard;
-            //Status = status;
+            VisitorCredentialImage = visitorCredentialImage;
+            Status = status;
             CredentialCardTypeId = credentialCardTypeId;
         }
 
@@ -45,11 +45,37 @@ namespace SecurityGateApv.Domain.Models
         public CredentialCardType CredentialCardType { get; private set; }
 
         public ICollection<VisitDetail> VisitDetails { get; private set; }
-        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, int createById, DateTime createdDate, DateTime updatedDate, string credentialsCard, bool status,
+        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImage, string status,
             int credentialCardTypeId)
         {
-            var result = new Visitor(visitorName, companyName, phoneNumber, createById, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId);
+            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, visitorCredentialImage, status,
+                 credentialCardTypeId);
             return result;
+        }
+        public Result<Visitor> Update(string visitorCredentialImage)
+        {
+            this.VisitorCredentialImage = visitorCredentialImage;
+            this.UpdateDate = DateTime.Now;
+            return this;
+        }
+        public Result<Visitor> Delete()
+        {
+            if(this.Status == "Active")
+            {
+                this.Status = "Unactive";
+            }
+            else
+            {
+                this.Status = "Active";
+            }
+
+            this.UpdateDate = DateTime.Now;
+            return this;
+        }
+        public Result<Visitor> DecrypCredentialCard(string visitorCredentialImage)
+        {
+            this.VisitorCredentialImage = visitorCredentialImage;
+            return this;
         }
     }
 }

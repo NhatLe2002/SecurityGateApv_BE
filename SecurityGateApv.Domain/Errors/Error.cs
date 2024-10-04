@@ -11,6 +11,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error None = new(string.Empty, string.Empty);
         public static readonly Error NullValue = new("Error.NullValue", "The specified result value is null");
         public static readonly Error CommitError = new("Error.CommitError", "Error when saving to database see log for details");
+        public static readonly Error DecryptError = new("Error.DecryptError", "Error when decrypt text");
         public Error(string code, string message)
         {
             Code = code;
@@ -68,6 +69,7 @@ namespace SecurityGateApv.Domain.Errors
 
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Not found this visitor");
+        public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
 
 
 
