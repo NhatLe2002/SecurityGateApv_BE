@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Domain.Models;
 using System;
@@ -32,6 +33,8 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<DepartmentCreateCommand, Department>().ReverseMap();
             CreateMap<VisitCreateCommand, Visit>().ReverseMap();
             CreateMap<GetVisitorRes, Visitor>().ReverseMap();
+            CreateMap<User, UpdateUserCommand>().ReverseMap();
+            CreateMap<User, UpdateUserNoDepartmentIdCommand>().ReverseMap();
             CreateMap<VisitDetailOldCommand, VisitDetail>().ReverseMap();
             CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
             CreateMap<GetCardRes, QRCard>().ReverseMap()

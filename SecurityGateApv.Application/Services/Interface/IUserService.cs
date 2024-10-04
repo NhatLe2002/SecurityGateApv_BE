@@ -19,6 +19,8 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int  departmentManagerId);
         public Task<Result<CreateUserComman>> CreateUser(CreateUserComman command, string token);
         public Task<Result<UpdateUserCommand>> UpdateUser(int userId, UpdateUserCommand command, string token);
+        public Task<Result<UpdateUserNoDepartmentIdCommand>> UpdateUserNodepartmentId(int userId, UpdateUserNoDepartmentIdCommand command, string token);
+        public Task<Result<bool>> UpdateUserPassword(int userId, UpdateUserPasswordCommand command);
         public Task<Result<bool>> UnactiveUser(int userId, string token);
         public Task<Result<bool>> SendEmailTest(string email);
     }

@@ -117,6 +117,38 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpPut("Password/{userId}")]
+        public async Task<ActionResult> UpdatePassWord(int userId, [FromBody] UpdateUserPasswordCommand command)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("UpdatePassWord", "Invalid Token"));
+            }
+            var result = await _userService.UpdateUserPassword(userId, command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("NoDepartmentId/{userId}")]
+        public async Task<ActionResult> UpdateUserNodepartmentId(int userId, [FromBody] UpdateUserNoDepartmentIdCommand command)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("UpdatePassWord", "Invalid Token"));
+            }
+            var result = await _userService.UpdateUserNodepartmentId(userId, command, token);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpDelete("{userId}")]
         public async Task<ActionResult> UnactiveUser(int userId)
         {

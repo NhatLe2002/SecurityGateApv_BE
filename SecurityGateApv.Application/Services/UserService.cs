@@ -232,5 +232,43 @@ namespace SecurityGateApv.Application.Services
             }
             return _mapper.Map<GetUserRes>(user);
         }
+
+        public async Task<Result<bool>> UpdateUserPassword(int userId, UpdateUserPasswordCommand command)
+        {
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
+            if (user == null) {
+                return Result.Failure<bool>(Error.NotFoundUser);
+            }
+            if(user.Password != command.OldPassword)
+            {
+                return Result.Failure<bool>(Error.PasswordNotMatch);
+            }
+            if (command.NewPassword != command.NewPasswordCheck)
+            {
+                return Result.Failure<bool>(Error.CheckPasswordError);
+            }
+            user.UpdatePassword(command.NewPassword);
+            await _userRepo.UpdateAsync(user);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            return true;
+        }
+
+        public async Task<Result<UpdateUserNoDepartmentIdCommand>> UpdateUserNodepartmentId(int userId, UpdateUserNoDepartmentIdCommand command, string token)
+        {
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<UpdateUserNoDepartmentIdCommand>(Error.NotFoundUser);
+            }
+            user = _mapper.Map(command, user);
+            user.Update();
+            await _userRepo.UpdateAsync(user);
+            await _unitOfWork.CommitAsync();
+            return command;
+        }
     }
 }
