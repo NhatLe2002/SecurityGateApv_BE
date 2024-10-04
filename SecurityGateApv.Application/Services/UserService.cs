@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
@@ -176,18 +177,18 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
-        public async Task<Result<CreateUserComman>> UpdateUser(int userId, CreateUserComman command, string token)
+        public async Task<Result<UpdateUserCommand>> UpdateUser(int userId, UpdateUserCommand command, string token)
         {
             var role = _jwt.DecodeJwt(token);
             var permission = await PermissionCheck(role, command.RoleID);
             if (!permission)
             {
-                return Result.Failure<CreateUserComman>(Error.NotPermission);
+                return Result.Failure<UpdateUserCommand>(Error.NotPermission);
             }
             var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
             if (user == null)
             {
-                return Result.Failure<CreateUserComman>(Error.NotFoundUser);
+                return Result.Failure<UpdateUserCommand>(Error.NotFoundUser);
             }
             user = _mapper.Map(command, user);
             user.Update() ;

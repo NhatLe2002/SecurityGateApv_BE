@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
@@ -101,7 +102,7 @@ namespace SecurityGateApv.WebApi.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<ActionResult> UpdateUser(int userId, [FromBody] CreateUserComman command)
+        public async Task<ActionResult> UpdateUser(int userId, [FromBody] UpdateUserCommand command)
         {
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
