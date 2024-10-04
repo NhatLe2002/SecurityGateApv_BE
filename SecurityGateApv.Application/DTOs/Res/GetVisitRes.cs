@@ -67,11 +67,6 @@ namespace SecurityGateApv.Application.DTOs.Res
 
     }
     
-
-    public class CredentialCardType
-    {
-        public string CredentialCardTypeName { get; set; }
-    } 
     
     public class CreateByRes
     {

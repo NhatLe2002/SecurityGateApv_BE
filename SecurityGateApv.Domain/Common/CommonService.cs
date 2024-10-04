@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SecurityGateApv.Domain.Interfaces.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +6,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SecurityGateApv.Infras.Common
+namespace SecurityGateApv.Domain.Common
 {
-    public class CommonService : ICommonService
+    public class CommonService 
     {
-        public async Task<string> ImageToBase64(IFormFile image)
+        public static async Task<string> ImageToBase64(IFormFile image)
         {
             var ms = new MemoryStream();
             await image.CopyToAsync(ms);          
             return System.Convert.ToBase64String(ms.ToArray());
         }
-        public static string Encrypt(string clearText)
+        public async static Task<string> Encrypt(string clearText)
         {
             string EncryptionKey = "SecurityAPV17";
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
@@ -38,7 +37,7 @@ namespace SecurityGateApv.Infras.Common
             }
             return clearText;
         }
-        public static string Decrypt(string cipherText)
+        public static async Task<string> Decrypt(string cipherText)
         {
             string EncryptionKey = "SecurityAPV17";
             cipherText = cipherText.Replace(" ", "+");

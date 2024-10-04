@@ -47,6 +47,10 @@ namespace SecurityGateApv.WebApi.Controllers
             try
             {
                 var result = await _qrCodeService.DetectShoe(request.Image);
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
                 return Ok(result.Value);
             }
             catch (Exception ex)

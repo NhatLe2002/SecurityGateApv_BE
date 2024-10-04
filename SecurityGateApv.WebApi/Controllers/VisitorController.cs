@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -18,6 +19,11 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllVisitor(int pageNumber, int pageSize)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitorService.GetAllByPaging(1, int.MaxValue);
+                return Ok(resultAll.Value);
+            }
             var result = await _visitorService.GetAllByPaging(pageNumber, pageSize);
             if (result.IsFailure)
             {
@@ -25,10 +31,29 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateVisitor([FromBody] IFormFile image,[FromQuery] CreateVisitorCommand command)
+        [HttpGet("{visitorId}")]
+        public async Task<IActionResult> GetVisitorById(int visitorId)
         {
-            command.VisitorCredentialImage = image;
+            var result = await _visitorService.GetById(visitorId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("CredentialCard/{creadentialCard}")]
+        public async Task<IActionResult> GetVisitorByCreadentialCard(string creadentialCard)
+        {
+            var result = await _visitorService.GetByCredentialCard(creadentialCard);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateVisitor([FromForm] CreateVisitorCommand command)
+        {
             var result = await _visitorService.CreateVisitor(command);
             if (result.IsFailure)
             {
@@ -37,10 +62,9 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPut("{visitorId}")]
-        public async Task<IActionResult> CreateVisitor(int visitorId, [FromBody] IFormFile image, [FromQuery] CreateVisitorCommand command)
+        public async Task<IActionResult> CreateVisitor(int visitorId, [FromForm] CreateVisitorCommand command)
         {
-            command.VisitorCredentialImage = image;
-            var result = await _visitorService.CreateVisitor(command);
+            var result = await _visitorService.UpdateVisitor(visitorId, command);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

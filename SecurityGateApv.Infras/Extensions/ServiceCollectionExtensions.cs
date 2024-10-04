@@ -5,12 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SecurityGateApv.Domain.Interfaces.AWS;
-using SecurityGateApv.Domain.Interfaces.Common;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Infras.AWS;
-using SecurityGateApv.Infras.Common;
 using SecurityGateApv.Infras.DBContext;
 using SecurityGateApv.Infras.Helpers;
 using SecurityGateApv.Infras.Repositories;
@@ -54,7 +52,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IExtractQRCode, ExtractQRCode>();
             services.AddScoped<IPrivateKeyRepo, PrivateKeyRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
-            services.AddScoped<ICommonService, CommonService>();
+            services.AddScoped<ICredentialCardTypeRepo, CredentialCardTypeRepo>();
 
 
             //Email DI
