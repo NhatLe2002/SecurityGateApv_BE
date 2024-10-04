@@ -60,7 +60,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Visitor, VisitorRes>().ReverseMap();
             CreateMap<Visitor, CreateVisitorCommand>().ReverseMap();
             #endregion
-            #region
+            #region ScheduleType
             CreateMap<GetScheduleTypeRes, ScheduleType>().ReverseMap();
             #endregion
         }

@@ -31,17 +31,22 @@ namespace SecurityGateApv.Application.Services
             _qRCardRepo = qRCardRepo;
             _visitDetailRepo = visitDetailRepo;
         }
-        public async Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, int qrCardId)
+        public async Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
-            var qRCard = await _qRCardRepo.GetByIdAsync(qrCardId);
+            var qRCard = (await _qRCardRepo.FindAsync(
+                s => s.CardVerification.Equals(qrCardVerifi)
+                ) ).FirstOrDefault();
             if (qRCard == null)
             {
                 return Result.Failure<bool>(Error.NotFoundQRCardById);
             }
-
+            if (qRCard.QRCardStatusId == 2)
+            {
+                return Result.Failure<bool>(Error.NotFoundQRCardById);
+            }
 
             var visitSesson =  await _visitorSessionRepo.FindAsync(
-                    s => s.QRCardId == qrCardId && s.Status == VisitorSessonStatus.CheckIn.ToString(),
+                    s => s.QRCard.CardVerification.Equals( qrCardVerifi) && s.Status == VisitorSessonStatus.CheckIn.ToString(),
                     1,1
                 );
             if (visitSesson.Count() == 0 )
