@@ -221,5 +221,15 @@ namespace SecurityGateApv.Application.Services
                 return false;
             }
         }
+
+        public async Task<Result<GetUserRes>> GetUserById(int userId)
+        {
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId, includeProperties: "Role")).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<GetUserRes>(Error.NotFoundUser);
+            }
+            return _mapper.Map<GetUserRes>(user);
+        }
     }
 }

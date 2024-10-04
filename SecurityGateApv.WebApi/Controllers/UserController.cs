@@ -46,6 +46,15 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _userService.GetUserByRolePaging(pageNumber, pageSize, role);
             return Ok(result.Value);
         }
+        [HttpGet("{userId}")]
+        public async Task<ActionResult> GetAllUserDetail(int userId)
+        {
+            var result = await _userService.GetUserById(userId);
+            if (result.IsFailure) {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("Staff/DepartmentManager/{departmentManagerId}")]
         public async Task<ActionResult> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int departmentManagerId)
         {

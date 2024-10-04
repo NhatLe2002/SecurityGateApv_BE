@@ -81,7 +81,7 @@ namespace SecurityGateApv.Application.Services
         
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
         {
-            var visit = await _visitRepo.FindAsync(s=>true, pageSize, pageNumber,s=>s.OrderBy(x=>x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy");
+            var visit = await _visitRepo.FindAsync(s=>true, pageSize, pageNumber,s=>s.OrderBy(x=>x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule");
             if(visit.Count() == 0)
             {
                 return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
@@ -92,7 +92,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy"
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,Schedule"
                 );
 
             if (visit == null)

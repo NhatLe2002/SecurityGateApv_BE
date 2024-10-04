@@ -37,8 +37,18 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-       
-        
+        [HttpGet("{visitId}")]
+        public async Task<ActionResult> GetVisitDetailByVisitId(int visitId)
+        {
+            var result = await _visitService.GetVisitDetailByVisitId(visitId);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+
         [HttpGet("Day")]
         public async Task<ActionResult> GetAllVisitsByDate(int pageSize, int pageNumber, DateTime date)
         {

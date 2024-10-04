@@ -48,12 +48,18 @@ namespace SecurityGateApv.Application.DTOs.Res
     public class VisitDetailRes
     {
         public int VisitDetailId { get; set; }
-        public DateTime ExpectedStartDate { get; set; }
-        public DateTime ExpectedEndDate { get; set; }
-        public TimeSpan ExpectedStartTime { get; set; }
-        public TimeSpan ExpectedEndTime { get; set; }
+        public TimeSpan ExpectedStartHour { get; private set; }
+        public TimeSpan ExpectedEndHour { get; private set; }
         public bool Status { get; private set; }
-        public VisitorRes Visitor { get; set; }
+        public VisitorDetailRes Visitor { get; set; }
+    }
+    public class VisitorDetailRes
+    {
+        public int VisitorId { get; set; }
+        public string VisitorName { get; set; }
+        public string CompanyName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string CredentialsCard { get; set; }
     }
     public class GetVisitByDateRes
     {
