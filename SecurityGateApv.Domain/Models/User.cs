@@ -100,6 +100,11 @@ namespace SecurityGateApv.Domain.Models
             this.UpdatedDate = DateTime.Now;
             return this;
         }
+        public Result<User> UpdatePassword(string password)
+        {
+            this.Password = password;
+            return this;
+        }
         public Result<User> Unactive()
         {
             if(this.Status == "Active")

@@ -26,7 +26,8 @@ namespace SecurityGateApv.Domain.Errors
 
         //Author error
         public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
-
+        public static readonly Error PasswordNotMatch = new("Error.PasswordNotMatch", "Password doesn't match");
+        public static readonly Error CheckPasswordError = new("Error.CheckPasswordError", "Password double check doesn't match");
 
 
         public static implicit operator string(Error error) { return error.Code; }

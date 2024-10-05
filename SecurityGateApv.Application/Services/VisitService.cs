@@ -81,7 +81,7 @@ namespace SecurityGateApv.Application.Services
         
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
         {
-            var visit = await _visitRepo.FindAsync(s=>true, pageSize, pageNumber,s=>s.OrderBy(x=>x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy");
+            var visit = await _visitRepo.FindAsync(s=>true, pageSize, pageNumber,s=>s.OrderBy(x=>x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule");
             if(visit.Count() == 0)
             {
                 return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
@@ -92,7 +92,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy"
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,Schedule"
                 );
 
             if (visit == null)
@@ -241,6 +241,31 @@ namespace SecurityGateApv.Application.Services
             throw new NotImplementedException();
         }
 
+        public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int createById, int pageNumber, int pageSize)
+        {
+            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            if (visit == null)
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            return visitRes.ToList();
+        }
 
+        public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentManagerId(int departmentManagerId, int pageNumber, int pageSize)
+        {
+            var department = (await _userRepo.FindAsync(s => s.UserId == departmentManagerId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
+            if (department == null)
+            {   
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundUser);
+            }
+            var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == department.DepartmentId, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            if (visit == null)
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            return visitRes.ToList();
+        }
     }
 }
