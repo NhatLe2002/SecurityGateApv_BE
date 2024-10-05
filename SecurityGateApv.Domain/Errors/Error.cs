@@ -61,9 +61,10 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
 
-        #region
+        # region VisitSesson
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
+        public static readonly Error NotFoundVisitSesson = new("Error.NotFound", "Not found this VisitorSession");
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
         public static readonly Error ValidSession = new("Error.VisitSesson", "Session check in can't check in duplicate");
         #endregion
@@ -75,12 +76,16 @@ namespace SecurityGateApv.Domain.Errors
 
 
 
+        #region Schedule
 
         //Schedule Error
         public static readonly Error ScheduleCreateError = new("Error.Schedule", "Can not create schedule");
         public static readonly Error ScheduleUpdateError = new("Error.Schedule", "Can not update schedule");
         public static readonly Error ScheduleSaveError = new("Error.Schedule", "Can not save schedule");
         public static readonly Error NotFoundSchedule = new("Error.Schedule", "Can not found Schedule");
+        public static readonly Error ScheduleValid = new("Error.Schedule", "DaysOfProcess is not valid for the selected Visit Type.");
+        public static readonly Error ScheduleCannotUpdate = new("Error.Schedule", "Can not update Schedule daily");
+        #endregion
 
         //ProcessVisit Error
         public static readonly Error ProcessVisitCreateDateError = new("Error.ProcessVisitCreateDateError", @"Date format is ""Mon,Tue,Sun""");

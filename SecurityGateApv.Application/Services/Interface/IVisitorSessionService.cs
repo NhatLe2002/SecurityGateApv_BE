@@ -1,4 +1,5 @@
 ﻿using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace SecurityGateApv.Application.Services.Interface
     {
         public Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi);
         public Task<Result<bool>> CheckIn(VisitSessionCheckInCommand command);
+        public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize);
+        public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitorId(int pageNumber, int pageSize, int VisitorId);
+        public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId);
 
+        
     }
 }

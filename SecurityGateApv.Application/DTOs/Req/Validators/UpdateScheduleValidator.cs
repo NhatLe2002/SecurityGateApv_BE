@@ -39,7 +39,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 .NotNull()
                 .WithMessage("Status is required.");
 
-            RuleFor(s => s.ScheduleTypeId)
+           /* RuleFor(s => s.ScheduleTypeId)
                 .NotEmpty()
                 .WithMessage("Schedule type ID is required.")
                 .Must((id, cancellation) => _scheduleTypeRepo.IsAny(x => x.ScheduleTypeId == id.ScheduleTypeId).GetAwaiter().GetResult()
@@ -51,10 +51,10 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 .Must((id, cancellation) =>
                 {
                     return _userRepo.IsAny(x => x.UserId == id.CreateById).GetAwaiter().GetResult();
-                }).WithMessage("Creator ID does not exist.");
-            RuleFor(s => s)
+                }).WithMessage("Creator ID does not exist.");*/
+            /*RuleFor(s => s)
                .Must((command) => ValidateDaysOfProcess(command).GetAwaiter().GetResult())
-               .WithMessage("DaysOfProcess is not valid for the selected Visit Type.");
+               .WithMessage("DaysOfProcess is not valid for the selected Visit Type.");*/
         }
         private async Task<bool> ValidateDaysOfProcess(UpdateScheduleCommand command)
         {
