@@ -12,7 +12,7 @@ namespace SecurityGateApv.Application.DTOs.Req
 {
     public  class VisitorSessionCheckOutCommand
     {
-        public DateTime CheckOutTime { get; set; }
+        public DateTime CheckoutTime { get; set; }
         public int SecurityOutId { get; set; }
         public int GateOutId { get; set; }
         [JsonIgnore]

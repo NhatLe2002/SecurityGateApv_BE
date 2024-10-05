@@ -26,14 +26,14 @@ namespace SecurityGateApv.Application.Services
             _scheduleTypeRepo = scheduleTypeRepo;
         }
 
-        public async Task<Result<ICollection<GetScheduleTypeRes>>> GetAllScheduleType()
+        public async Task<Result<List<GetScheduleTypeRes>>> GetAllScheduleType()
         {
-           var scheduleType = _scheduleTypeRepo.GetAllAsync();
+           var scheduleType = await _scheduleTypeRepo.GetAllAsync();
             if (scheduleType == null)
             {
-                return Result.Failure<ICollection<GetScheduleTypeRes>>(Error.NotFoundSchedule);
+                return Result.Failure<List<GetScheduleTypeRes>>(Error.NotFoundSchedule);
             }
-            var result = _mapper.Map<ICollection<GetScheduleTypeRes>>(scheduleType);
+            var result = _mapper.Map<IEnumerable<GetScheduleTypeRes>>(scheduleType);
             return result.ToList();
         }
     }

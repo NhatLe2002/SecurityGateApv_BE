@@ -60,6 +60,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");
         public static readonly Error NotFoundQRCard = new("Error.NotfoundQRCard", "Not found this QRCard");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
+        public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
 
         #region
         //VisitSesson error 

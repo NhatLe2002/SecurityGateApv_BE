@@ -36,7 +36,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 .NotEmpty()
                 .WithMessage("Description is required.");
             RuleFor(s => s.Status)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Status is required.");
 
             RuleFor(s => s.ScheduleTypeId)

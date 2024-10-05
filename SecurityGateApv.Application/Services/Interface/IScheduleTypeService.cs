@@ -10,7 +10,7 @@ namespace SecurityGateApv.Application.Services.Interface
 {
     public interface IScheduleTypeService
     {
-        public Task<Result<ICollection<GetScheduleTypeRes>>> GetAllScheduleType();
+        public Task<Result<List<GetScheduleTypeRes>>> GetAllScheduleType();
 
     }
 }

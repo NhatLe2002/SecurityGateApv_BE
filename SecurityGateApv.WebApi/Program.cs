@@ -55,19 +55,6 @@ namespace SecurityGateApv.WebApi
                 });
                 }
                 );
-/*            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAllOrigins",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyHeader()
-                               .AllowAnyMethod()
-                               .AllowCredentials();
-                    });
-            });*/
-
-           
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -76,7 +63,6 @@ namespace SecurityGateApv.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
 
             app.UseHttpsRedirection();
 
