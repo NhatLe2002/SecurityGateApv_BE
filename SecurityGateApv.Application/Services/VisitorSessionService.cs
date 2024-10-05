@@ -42,7 +42,7 @@ namespace SecurityGateApv.Application.Services
             }
             if (qRCard.QRCardStatusId == 2)
             {
-                return Result.Failure<bool>(Error.NotFoundQRCardById);
+                return Result.Failure<bool>(Error.CardInActive);
             }
 
             var visitSesson =  await _visitorSessionRepo.FindAsync(
