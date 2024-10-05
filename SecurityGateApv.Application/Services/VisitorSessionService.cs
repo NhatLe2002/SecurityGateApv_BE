@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure.Core;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
@@ -100,6 +101,54 @@ namespace SecurityGateApv.Application.Services
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             await _unitOfWork.CommitAsync();
             return true;
+        }
+
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize)
+        {
+            var visitSession = await _visitorSessionRepo.FindAsync(
+                    s => true,
+                    pageSize, pageNumber,
+                    orderBy: s => s.OrderBy(s => s.CheckinTime),
+                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                );
+            if (visitSession.Count() == 0)
+            {
+                return  Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
+            return result.ToList();
+        }
+
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitorId(int pageNumber, int pageSize, int visitorId)
+        {
+            var visitSession = await _visitorSessionRepo.FindAsync(
+                    s => s.VisitDetail.VisitorId == visitorId,
+                    pageSize, pageNumber,
+                    orderBy: s => s.OrderBy(s => s.CheckinTime),
+                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                );
+            if (visitSession.Count() == 0)
+            {
+                return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
+            return result.ToList();
+        }
+
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId)
+        {
+            var visitSession = await _visitorSessionRepo.FindAsync(
+                 s => s.VisitDetail.VisitId == visitId,
+                   pageSize, pageNumber,
+                   orderBy: s => s.OrderBy(s => s.CheckinTime),
+                   includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+               );
+            if (visitSession.Count() == 0)
+            {
+                return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
+            return result.ToList();
         }
     }
 }
