@@ -25,7 +25,11 @@ namespace SecurityGateApv.Infras.AWS
             MemoryStream stream = new MemoryStream();
             await image.CopyToAsync(stream);
             System.Drawing.Image resizeImage = System.Drawing.Image.FromStream(stream);
-            resizeImage = ResizeImage(resizeImage, new Size(500, 500));
+            var newHeight = (resizeImage.Width);
+            int ss = (int)((800 / (float)newHeight) * resizeImage.Height);
+            if (resizeImage.Width >1000 || resizeImage.Height > 800) {
+                    resizeImage = ResizeImage(resizeImage, new Size(800, ss));
+             }
             MemoryStream streamResize = new MemoryStream();
             resizeImage.Save(streamResize, ImageFormat.Png);
             AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient(key.KeyName, key.Key, Amazon.RegionEndpoint.APSoutheast1);

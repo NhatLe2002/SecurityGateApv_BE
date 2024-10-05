@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
@@ -44,6 +45,15 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _userService.GetUserByRolePaging(pageNumber, pageSize, role);
+            return Ok(result.Value);
+        }
+        [HttpGet("{userId}")]
+        public async Task<ActionResult> GetAllUserDetail(int userId)
+        {
+            var result = await _userService.GetUserById(userId);
+            if (result.IsFailure) {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
         }
         [HttpGet("Staff/DepartmentManager/{departmentManagerId}")]
@@ -92,7 +102,7 @@ namespace SecurityGateApv.WebApi.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<ActionResult> UpdateUser(int userId, [FromBody] CreateUserComman command)
+        public async Task<ActionResult> UpdateUser(int userId, [FromBody] UpdateUserCommand command)
         {
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
@@ -100,6 +110,38 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(new Error("CreateUser", "Invalid Token"));
             }
             var result = await _userService.UpdateUser(userId, command, token);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("Password/{userId}")]
+        public async Task<ActionResult> UpdatePassWord(int userId, [FromBody] UpdateUserPasswordCommand command)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("UpdatePassWord", "Invalid Token"));
+            }
+            var result = await _userService.UpdateUserPassword(userId, command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("NoDepartmentId/{userId}")]
+        public async Task<ActionResult> UpdateUserNodepartmentId(int userId, [FromBody] UpdateUserNoDepartmentIdCommand command)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("UpdatePassWord", "Invalid Token"));
+            }
+            var result = await _userService.UpdateUserNodepartmentId(userId, command, token);
 
             if (result.IsFailure)
             {

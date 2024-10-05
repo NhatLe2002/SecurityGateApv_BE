@@ -37,8 +37,65 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-       
-        
+        [HttpGet("{visitId}")]
+        public async Task<ActionResult> GetVisitDetailByVisitId(int visitId)
+        {
+            var result = await _visitService.GetVisitDetailByVisitId(visitId);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("CreateBy/{createById}")]
+        public async Task<ActionResult> GetVisitDetailByCreateById(int createById,[FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitDetailByCreateById(createById, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitDetailByCreateById(createById, pageNumber, pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("DepartmentManagerId/{DepartmentManagerId}")]
+        public async Task<ActionResult> GetVisitDetailByDepartmentIdId(int DepartmentManagerId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitByDepartmentManagerId(DepartmentManagerId, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitByDepartmentManagerId(DepartmentManagerId, pageNumber, pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("Day")]
         public async Task<ActionResult> GetAllVisitsByDate(int pageSize, int pageNumber, DateTime date)
         {

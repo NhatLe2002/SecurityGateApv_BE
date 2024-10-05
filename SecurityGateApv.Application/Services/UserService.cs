@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
@@ -176,18 +177,18 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
-        public async Task<Result<CreateUserComman>> UpdateUser(int userId, CreateUserComman command, string token)
+        public async Task<Result<UpdateUserCommand>> UpdateUser(int userId, UpdateUserCommand command, string token)
         {
             var role = _jwt.DecodeJwt(token);
             var permission = await PermissionCheck(role, command.RoleID);
             if (!permission)
             {
-                return Result.Failure<CreateUserComman>(Error.NotPermission);
+                return Result.Failure<UpdateUserCommand>(Error.NotPermission);
             }
             var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
             if (user == null)
             {
-                return Result.Failure<CreateUserComman>(Error.NotFoundUser);
+                return Result.Failure<UpdateUserCommand>(Error.NotFoundUser);
             }
             user = _mapper.Map(command, user);
             user.Update() ;
@@ -220,6 +221,54 @@ namespace SecurityGateApv.Application.Services
             {
                 return false;
             }
+        }
+
+        public async Task<Result<GetUserRes>> GetUserById(int userId)
+        {
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId, includeProperties: "Role")).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<GetUserRes>(Error.NotFoundUser);
+            }
+            return _mapper.Map<GetUserRes>(user);
+        }
+
+        public async Task<Result<bool>> UpdateUserPassword(int userId, UpdateUserPasswordCommand command)
+        {
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
+            if (user == null) {
+                return Result.Failure<bool>(Error.NotFoundUser);
+            }
+            if(user.Password != command.OldPassword)
+            {
+                return Result.Failure<bool>(Error.PasswordNotMatch);
+            }
+            if (command.NewPassword != command.NewPasswordCheck)
+            {
+                return Result.Failure<bool>(Error.CheckPasswordError);
+            }
+            user.UpdatePassword(command.NewPassword);
+            await _userRepo.UpdateAsync(user);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            return true;
+        }
+
+        public async Task<Result<UpdateUserNoDepartmentIdCommand>> UpdateUserNodepartmentId(int userId, UpdateUserNoDepartmentIdCommand command, string token)
+        {
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<UpdateUserNoDepartmentIdCommand>(Error.NotFoundUser);
+            }
+            user = _mapper.Map(command, user);
+            user.Update();
+            await _userRepo.UpdateAsync(user);
+            await _unitOfWork.CommitAsync();
+            return command;
         }
     }
 }
