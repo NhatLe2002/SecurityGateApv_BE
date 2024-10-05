@@ -139,7 +139,7 @@ namespace SecurityGateApv.WebApi.Controllers
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
             {
-                return BadRequest(new Error("UpdatePassWord", "Invalid Token"));
+                return BadRequest(new Error("UpdateUserNodepartmentId", "Invalid Token"));
             }
             var result = await _userService.UpdateUserNodepartmentId(userId, command, token);
 

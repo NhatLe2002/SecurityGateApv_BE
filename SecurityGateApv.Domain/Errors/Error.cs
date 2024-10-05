@@ -36,6 +36,7 @@ namespace SecurityGateApv.Domain.Errors
 
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
+        public static readonly Error CanNotUpdateUserName = new("Error.CanNotUpdateUserName", "Username can not change");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
         public static readonly Error NotPermission = new("Error.User.NotPermission", "Permission not allow");
@@ -95,5 +96,8 @@ namespace SecurityGateApv.Domain.Errors
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
+
+        //CardType Repo
+        public static readonly Error CardFoundError = new("Error.CardFoundError", "Card not found");
     }
 }

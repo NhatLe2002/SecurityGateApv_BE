@@ -44,12 +44,12 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command)
         {
-            //var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == command.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
+            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == command.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
             var createVisit = Visit.Create(
                 command.VisitName,
                 command.VisitQuantity,
                 command.ExpectedStartTime,
-                command.ExpectedEndTime,
+                command.ExpectedStartTime.AddDays(schedule.Duration),
                 DateTime.Now,
                 DateTime.Now,
                 command.Description,
@@ -95,7 +95,7 @@ namespace SecurityGateApv.Application.Services
                 s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,Schedule"
                 );
 
-            if (visit == null)
+            if (visit.Count() == 0 || visit == null)
             {
                 return Result.Failure<GetVisitRes>(Error.NotFound);
             }

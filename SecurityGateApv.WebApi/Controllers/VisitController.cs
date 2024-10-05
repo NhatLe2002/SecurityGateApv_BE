@@ -130,7 +130,7 @@ namespace SecurityGateApv.WebApi.Controllers
 
             return Ok(result.Value);
         }
-        [HttpPost()]
+        [HttpPost]
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {
             var result = await _visitService.CreateVisit(command);

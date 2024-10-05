@@ -95,7 +95,7 @@ namespace SecurityGateApv.Application.Services
                  )).FirstOrDefault();
             var user = await _userRepo.FindAsync(
                     s => s.DepartmentId == department.DepartmentId && s.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()),
-                    pageSize, pageNumber, includeProperties: "Role"
+                    pageSize, pageNumber, includeProperties: "Role,Department"
                 );
             if (user.Count() == 0)
             {
@@ -112,14 +112,14 @@ namespace SecurityGateApv.Application.Services
             {
                 user = (await _userRepo.FindAsync(
                     s => true,
-                    pageSize, pageNumber, includeProperties: "Role"
+                    pageSize, pageNumber, includeProperties: "Role,Department"
                     )).ToList();
             }
             else
             {
                 user = (await _userRepo.FindAsync(
                     s => s.Role.RoleName.Equals(role),
-                    pageSize, pageNumber, includeProperties: "Role"
+                    pageSize, pageNumber, includeProperties: "Role,Department"
                     )).ToList();
             }
 
@@ -133,7 +133,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<LoginRes>> Login(LoginModel loginModel)
         {
-            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Username, includeProperties: "Role")).FirstOrDefault();
+            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Username, includeProperties: "Role,Department")).FirstOrDefault();
             if (login == null)
             {
                 return Result.Failure<LoginRes>(Error.NotFoundUser);
@@ -146,7 +146,7 @@ namespace SecurityGateApv.Application.Services
             {
                 UserId = login.UserId,
                 UserName = login.UserName,
-                JwtToken = _jwt.GenerateJwtToken(login.Role.RoleName)
+                JwtToken = _jwt.GenerateJwtToken(login)
             };
             return result;
         }
@@ -190,6 +190,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<UpdateUserCommand>(Error.NotFoundUser);
             }
+            if (user.UserName != command.UserName)
+            {
+                return Result.Failure<UpdateUserCommand>(Error.CanNotUpdateUserName);
+            }
             user = _mapper.Map(command, user);
             user.Update() ;
             await _userRepo.UpdateAsync(user);  
@@ -225,7 +229,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetUserRes>> GetUserById(int userId)
         {
-            var user = (await _userRepo.FindAsync(s => s.UserId == userId, includeProperties: "Role")).FirstOrDefault();
+            var user = (await _userRepo.FindAsync(s => s.UserId == userId, includeProperties: "Role,Department")).FirstOrDefault();
             if (user == null)
             {
                 return Result.Failure<GetUserRes>(Error.NotFoundUser);
@@ -263,6 +267,10 @@ namespace SecurityGateApv.Application.Services
             if (user == null)
             {
                 return Result.Failure<UpdateUserNoDepartmentIdCommand>(Error.NotFoundUser);
+            }
+            if(user.UserName != command.UserName)
+            {
+                return Result.Failure<UpdateUserNoDepartmentIdCommand>(Error.CanNotUpdateUserName);
             }
             user = _mapper.Map(command, user);
             user.Update();

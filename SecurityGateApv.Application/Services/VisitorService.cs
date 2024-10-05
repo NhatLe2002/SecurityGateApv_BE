@@ -27,7 +27,7 @@ namespace SecurityGateApv.Application.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<Result<CreateVisitorCommand>> CreateVisitor(CreateVisitorCommand command)
+        public async Task<Result<CreateVisitorRes>> CreateVisitor(CreateVisitorCommand command)
         {
             var imageString = await CommonService.ImageToBase64(command.VisitorCredentialImageFromRequest);
             var imageEncrypt = await CommonService.Encrypt(imageString);
@@ -44,15 +44,15 @@ namespace SecurityGateApv.Application.Services
                 );
             if (visitorCreate.IsFailure)
             {
-                return Result.Failure<CreateVisitorCommand>(Error.CreateVisitor);
+                return Result.Failure<CreateVisitorRes>(Error.CreateVisitor);
             }
             await _visitorRepo.AddAsync(visitorCreate.Value);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {
-                return Result.Failure<CreateVisitorCommand>(Error.CommitError);
+                return Result.Failure<CreateVisitorRes>(Error.CommitError);
             }
-            return command;
+            return _mapper.Map<CreateVisitorRes>(visitorCreate.Value);
         }
 
         public async Task<Result<bool>> DeleteVisitor(int visitorId)
@@ -74,10 +74,20 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitorRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
-            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber);
+            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber, includeProperties: "CredentialCardType");
             if(list.Count() == 0)
             {
                 return Result.Failure<List<GetVisitorRes>>(Error.NotFound);
+            }
+            foreach (var item in list) {
+                try
+                {
+                    item.DecrypCredentialCard(await CommonService.Decrypt(item.VisitorCredentialImage));
+                }
+                catch (Exception ex)
+                {
+                    
+                }
             }
             return _mapper.Map<List<GetVisitorRes>>(list);
         }

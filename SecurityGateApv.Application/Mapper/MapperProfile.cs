@@ -36,11 +36,15 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<User, UpdateUserCommand>().ReverseMap();
             CreateMap<User, UpdateUserNoDepartmentIdCommand>().ReverseMap();
             CreateMap<VisitDetailOldCommand, VisitDetail>().ReverseMap();
+            CreateMap<Department, DeparmentRes>().ReverseMap();
             CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
             CreateMap<GetCardRes, QRCard>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.QRCardType.CardTypeName))
                 .ForMember(dest => dest.QrCardStatusName, opt => opt.MapFrom(src => src.QRCardStatus.StatusName));
 
+            #region Visitor map
+            CreateMap<CreateVisitorRes, Visitor>().ReverseMap();
+            #endregion
 
 
             #region Visit map

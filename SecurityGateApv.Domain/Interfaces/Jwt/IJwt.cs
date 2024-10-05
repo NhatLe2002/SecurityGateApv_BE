@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityGateApv.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace SecurityGateApv.Domain.Interfaces.Jwt
 {
     public interface IJwt
     {
-        public string GenerateJwtToken(string role);
+        public string GenerateJwtToken(User user);
         public string DecodeJwt(string header);
     }
 }

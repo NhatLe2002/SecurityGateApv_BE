@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SecurityGateApv.Domain.Interfaces.Jwt;
+using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,7 +30,7 @@ namespace SecurityGateApv.Infras.Helpers
             return role;
         }
 
-        public string GenerateJwtToken(string role)
+        public string GenerateJwtToken(User user)
         {
             var jwtKey = _configuration["JWT:Key"];
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey ?? ""));
@@ -37,7 +38,8 @@ namespace SecurityGateApv.Infras.Helpers
 
             var claims = new[]
             {
-                new Claim("role", role.ToString())
+                new Claim("role", user.Role.RoleName.ToString()),
+                new Claim("departmentId", user.DepartmentId.ToString())
             };
 
             var token = new JwtSecurityToken(

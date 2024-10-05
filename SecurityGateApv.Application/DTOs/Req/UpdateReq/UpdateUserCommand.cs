@@ -13,6 +13,7 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string? Image { get; set; }
+        public string Status { get; set; }
         public int RoleID { get; set; }
         public int DepartmentId { get; set; }
     }
