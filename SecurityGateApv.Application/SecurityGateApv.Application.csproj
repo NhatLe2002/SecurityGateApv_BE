@@ -21,8 +21,5 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
-	<ItemGroup>
-		<RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
-	</ItemGroup>
 
 </Project>

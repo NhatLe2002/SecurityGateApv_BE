@@ -3,15 +3,10 @@ using Amazon.Rekognition;
 using Microsoft.AspNetCore.Http;
 using SecurityGateApv.Domain.Interfaces.AWS;
 using SecurityGateApv.Domain.Interfaces.DomainDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SecurityGateApv.Domain.Models;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace SecurityGateApv.Infras.AWS
 {
@@ -22,16 +17,13 @@ namespace SecurityGateApv.Infras.AWS
             List<AWSDomainDTO> list = new List<AWSDomainDTO>();
             try
             {
-            MemoryStream stream = new MemoryStream();
-            await image.CopyToAsync(stream);
-            System.Drawing.Image resizeImage = System.Drawing.Image.FromStream(stream);
-            var newHeight = (resizeImage.Width);
-            int ss = (int)((800 / (float)newHeight) * resizeImage.Height);
+            SixLabors.ImageSharp.Image resizeImage = SixLabors.ImageSharp.Image.Load(image.OpenReadStream());
+            int height = (int)((800 / (float)resizeImage.Width) * resizeImage.Height);
             if (resizeImage.Width >1000 || resizeImage.Height > 800) {
-                    resizeImage = ResizeImage(resizeImage, new Size(800, ss));
-             }
+                resizeImage.Mutate(x => x.Resize(800, height));
+            }
             MemoryStream streamResize = new MemoryStream();
-            resizeImage.Save(streamResize, ImageFormat.Png);
+            resizeImage.Save(streamResize,new PngEncoder());
             AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient(key.KeyName, key.Key, Amazon.RegionEndpoint.APSoutheast1);
 
             DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
@@ -64,7 +56,7 @@ namespace SecurityGateApv.Infras.AWS
             }
             return list;
         }
-        private static System.Drawing.Image ResizeImage(System.Drawing.Image imgToResize, Size size)
+       /* private static System.Drawing.Image ResizeImage(System.Drawing.Image imgToResize, Size size)
         {
             int sourceWidth = imgToResize.Width;
             int sourceHeight = imgToResize.Height;
@@ -83,6 +75,6 @@ namespace SecurityGateApv.Infras.AWS
             g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
             g.Dispose();
             return (System.Drawing.Image)b;
-        }
+        }*/
     }
 }
