@@ -18,8 +18,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
            .MinimumLength(3).WithMessage("UserName must be at least 3 characters long");
 
             RuleFor(x => x.FullName)
-            .NotEmpty().WithMessage("FullName cannot be empty")
-            .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
+            .NotEmpty().WithMessage("FullName cannot be empty");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
