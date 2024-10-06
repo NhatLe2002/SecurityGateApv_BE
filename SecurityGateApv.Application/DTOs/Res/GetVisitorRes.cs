@@ -9,6 +9,7 @@ namespace SecurityGateApv.Application.DTOs.Res
 {
     public class GetVisitorRes
     {
+        public int VisitorId { get; set; }
         public string VisitorName { get; private set; }
         public string CompanyName { get; private set; }
         public string PhoneNumber { get; private set; }
