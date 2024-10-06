@@ -16,9 +16,10 @@ namespace SecurityGateApv.Application.Mapper
     {
         public MapperProfile()
         {
-            #region
+            #region User
             CreateMap<User, CreateByRes>().ReverseMap();
             CreateMap<User, GetUserRes>().ReverseMap();
+            CreateMap<SecurityRes, User>().ReverseMap();
             #endregion
 
             #region Role
@@ -69,8 +70,22 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Visitor, CreateVisitorCommand>().ReverseMap();
             CreateMap<VisitorDetailRes, Visitor>().ReverseMap();
             #endregion
+
             #region ScheduleType
             CreateMap<GetScheduleTypeRes, ScheduleType>().ReverseMap();
+            #endregion
+
+            #region SessionsImageRes
+            CreateMap<SessionsImageRes, VisitorSessionsImage>().ReverseMap();
+
+            #endregion
+
+            #region Gate
+            CreateMap<GateRes, Gate>().ReverseMap();
+            #endregion
+
+            #region VisitSession
+                CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap();
             #endregion
         }
     }

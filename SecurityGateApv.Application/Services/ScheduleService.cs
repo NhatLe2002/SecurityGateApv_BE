@@ -36,7 +36,7 @@ namespace SecurityGateApv.Application.Services
         {
             var scheduleCreate = Schedule.Create(
                 request.ScheduleName,
-                request.DaysOfProcess,
+                request.DaysOfSchedule,
                 request.Duration,
                 request.Description,
                 DateTime.Now,
@@ -117,6 +117,16 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetScheduleRes>(Error.NotFoundSchedule);
             }
+            if(schedule.ScheduleName.Equals(ScheduleTypeEnum.VisitDaily.ToString()))
+            {
+                return Result.Failure<GetScheduleRes>(Error.ScheduleCannotUpdate);
+            }
+            request.CreateById = schedule.CreateById;
+            request.ScheduleTypeId = schedule.ScheduleTypeId;
+            if(! await ValidateDaysOfProcess(request))
+            {
+                return Result.Failure<GetScheduleRes>(Error.ScheduleValid);
+            }
             schedule.Update(request.ScheduleName, request.DaysOfProcess, request.Duration, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById);
             if(!await _scheduleRepo.UpdateAsync(schedule))
             {
@@ -128,6 +138,43 @@ namespace SecurityGateApv.Application.Services
             }
             var result = _mapper.Map<GetScheduleRes>(schedule);
             return result;
+        }
+        private async Task<bool> ValidateDaysOfProcess(UpdateScheduleCommand command)
+        {
+            var scheduleType = await _scheduleTypeRepo.GetByIdAsync(command.ScheduleTypeId);
+            if (scheduleType == null) return false;
+
+
+            if (scheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString()))
+            {
+
+                return IsValidDaysOfProcess(command.DaysOfProcess, 1, 7);
+            }
+
+            if (scheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString()))
+            {
+                return IsValidDaysOfProcess(command.DaysOfProcess, 1, 31);
+            }
+            var days = command.DaysOfProcess.Split(',')
+                            .Select(d => d.Trim());
+            if (days.Count() > command.Duration)
+            {
+                return false;
+            }
+            if (days.Any())
+            {
+                return days.All(day =>
+                        int.TryParse(day, out int result) &&
+                        result >= 1 && result <= 31
+                    );
+            }
+
+            return true;
+        }
+        private bool IsValidDaysOfProcess(string daysOfProcess, int min, int max)
+        {
+            var days = daysOfProcess.Split(',').Select(d => d.Trim());
+            return days.All(day => int.TryParse(day, out int result) && result >= min && result <= max);
         }
     }
 }
