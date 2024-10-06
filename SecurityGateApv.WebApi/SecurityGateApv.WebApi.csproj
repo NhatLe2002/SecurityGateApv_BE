@@ -19,5 +19,8 @@
     <ProjectReference Include="..\SecurityGateApv.Application\SecurityGateApv.Application.csproj" />
     <ProjectReference Include="..\SecurityGateApv.Infras\SecurityGateApv.Infras.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="System.Drawing.EnableUnixSupport" Value="true" />
+	</ItemGroup>
 
 </Project>
