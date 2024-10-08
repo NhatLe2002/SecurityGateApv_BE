@@ -83,12 +83,12 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("DepartmentManagerId/{DepartmentManagerId}")]
-        public async Task<ActionResult> GetVisitDetailByDepartmentIdId(int DepartmentManagerId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        [HttpGet("UserId/{userId}")]
+        public async Task<ActionResult> GetVisitByUserId(int userId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _visitService.GetVisitByDepartmentManagerId(DepartmentManagerId, 1, int.MaxValue);
+                var resultAll = await _visitService.GetVisitByUserId(userId, 1, int.MaxValue);
                 if (resultAll.IsFailure)
                 {
                     return BadRequest(resultAll.Error);
@@ -99,7 +99,7 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest("Page number and page size must be greater than zero.");
             }
-            var result = await _visitService.GetVisitByDepartmentManagerId(DepartmentManagerId, pageNumber, pageSize);
+            var result = await _visitService.GetVisitByUserId(userId, pageNumber, pageSize);
 
             if (result.IsFailure)
             {
