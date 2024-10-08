@@ -48,6 +48,17 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("Status/{status}")]
+        public async Task<ActionResult> GetVisitDetailByStatus(string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            var result = await _visitService.GetVisitDetailByStatus(status, pageNumber,  pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("CreateBy/{createById}")]
         public async Task<ActionResult> GetVisitDetailByCreateById(int createById,[FromQuery] int pageNumber, [FromQuery] int pageSize)
         {

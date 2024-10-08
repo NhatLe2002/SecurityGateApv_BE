@@ -11,6 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Res
 {
     public class GetVisitRes
     {
+        public int VisitId { get; set; }
         public string VisitName { get; private set; }
         public int VisitQuantity { get; private set; }
         public DateTime ExpectedStartTime { get; private set; }
