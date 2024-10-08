@@ -87,5 +87,16 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _visitorSessionService.GetAllVisitorSessionByVisitId(pageNumber, pageSize, visitId);
             return Ok(result.Value);
         }
+        [HttpGet("QrCard/{qrCardVerified}")]
+        public async Task<IActionResult> GetAllVisitorSessionByVisitId(string qrCardVerified)
+        {
+            var result = await _visitorSessionService.GetVisitSessionByQRCardVerification(qrCardVerified);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
     }
 }
