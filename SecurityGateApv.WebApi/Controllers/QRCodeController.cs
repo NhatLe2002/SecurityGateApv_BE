@@ -35,7 +35,14 @@ namespace SecurityGateApv.WebApi.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+        [HttpPost("TestDocker")]
+        public async Task<IActionResult> TestDocker(IFormFile image)
+        {
+            // Kiểm tra xem file có tồn tại không
 
+
+              return Ok(new { Text = image });
+        }
         [HttpPost("ShoeDetect")]
         public async Task<IActionResult> ShoeDetect(DetectImageCommand request)
         {
