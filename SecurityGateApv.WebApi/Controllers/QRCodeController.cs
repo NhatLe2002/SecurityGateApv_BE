@@ -40,6 +40,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             // Kiểm tra xem file có tồn tại không
 
+
               return Ok(new { Text = image });
         }
         [HttpPost("ShoeDetect")]
