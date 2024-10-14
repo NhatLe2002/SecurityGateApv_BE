@@ -47,7 +47,7 @@ namespace SecurityGateApv.Application.Services
             }
 
             var visitSesson =  await _visitorSessionRepo.FindAsync(
-                    s => s.QRCard.CardVerification.Equals( qrCardVerifi) && s.Status == VisitorSessonStatus.CheckIn.ToString(),
+                    s => s.QRCard.CardVerification.Equals( qrCardVerifi) && s.Status == VisitorSessionStatus.CheckIn.ToString(),
                     1,1
                 );
             if (visitSesson.Count() == 0 )
@@ -72,7 +72,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<bool>(Error.NotFoundVisit);
             }
             var visitSesson = (await _visitorSessionRepo.FindAsync(
-                   s => s.VisitDetailId == command.VisitDetailId && s.Status == VisitorSessonStatus.CheckIn.ToString(),
+                   s => s.VisitDetailId == command.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
                    1, 1
                )).FirstOrDefault();
             if (visitSesson != null)
@@ -97,7 +97,16 @@ namespace SecurityGateApv.Application.Services
 
 
             var checkinSession =  VisitorSession.Checkin(qrCard.QRCardId, command.VisitDetailId, command.SecurityInId, command.GateInId);
+            if (checkinSession.IsFailure)
+            {
+                return Result.Failure<bool>(checkinSession.Error);
+            }
+            var session = checkinSession.Value;
 
+            foreach ( var item in command.Images)
+            {
+                session.AddVisitorImage(item.ImageType, item.ImageURL);
+            }
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             await _unitOfWork.CommitAsync();
             return true;
@@ -143,6 +152,20 @@ namespace SecurityGateApv.Application.Services
                    orderBy: s => s.OrderBy(s => s.CheckinTime),
                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                );
+            if (visitSession.Count() == 0)
+            {
+                return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
+            return result.ToList();
+        }
+
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetVisitSessionByQRCardVerification(string qrCardVerified)
+        {
+            var visitSession = await _visitorSessionRepo.FindAsync(
+                  s => s.QRCard.CardVerification.Equals(qrCardVerified) && s.Status.Equals(VisitorSessionStatus.CheckIn.ToString()),
+                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                );
             if (visitSession.Count() == 0)
             {
                 return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);

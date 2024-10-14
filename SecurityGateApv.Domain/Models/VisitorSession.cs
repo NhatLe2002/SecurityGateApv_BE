@@ -64,16 +64,21 @@ namespace SecurityGateApv.Domain.Models
         public Gate? GateOut { get; private set; }
 
         public string Status { get; private set; }
-        public ICollection<VisitorSessionsImage> Images { get; private set; }
+        public ICollection<VisitorSessionsImage> Images { get; private set; } = new List<VisitorSessionsImage>();
 
 
         public static Result<VisitorSession> Checkin(int qRCard, int visitdetailId, int securityInId, int gateInId)
         {
-            var visitorSession = new VisitorSession(DateTime.Now, null, qRCard, visitdetailId, securityInId, null, gateInId, null, VisitorSessonStatus.CheckIn.ToString());
+            var visitorSession = new VisitorSession(DateTime.Now, null, qRCard, visitdetailId, securityInId, null, gateInId, null, VisitorSessionStatus.CheckIn.ToString());
 
             return Result.Success(visitorSession);
         }
-
+        public Result<VisitorSession> AddVisitorImage(string imageType, string imageURL)
+        {
+            var imageVisitorSession = new VisitorSessionsImage(imageType, imageURL, this);
+            Images.Add(imageVisitorSession);
+            return this;
+        }
         /*public Result<VisitorSession> UpdateVisitorSesson()
         {
             var visitorSesson = new VisitorSession
