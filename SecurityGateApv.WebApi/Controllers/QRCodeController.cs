@@ -35,6 +35,7 @@ namespace SecurityGateApv.WebApi.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+
         [HttpPost("ShoeDetect")]
         public async Task<IActionResult> ShoeDetect(DetectImageCommand request)
         {
