@@ -39,6 +39,7 @@ namespace SecurityGateApv.WebApi.Controllers
         public async Task<IActionResult> TestDocker(IFormFile image)
         {
             // Kiểm tra xem file có tồn tại không
+
               return Ok(new { Text = image });
         }
         [HttpPost("ShoeDetect")]
