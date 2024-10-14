@@ -387,10 +387,10 @@ namespace SecurityGateApv.Infras.Data
 
             var visitorSessions = visitorSessionFaker.Generate(5);
             modelBuilder.Entity<VisitorSession>().HasData(visitorSessions);
-            SeedVisitorSessionImages(modelBuilder, visitorSessions);
+            //SeedVisitorSessionImages(modelBuilder, visitorSessions);
         }
 
-        private static void SeedVisitorSessionImages(ModelBuilder modelBuilder, List<VisitorSession> visitorSessions)
+        /*private static void SeedVisitorSessionImages(ModelBuilder modelBuilder, List<VisitorSession> visitorSessions)
         {
             var visitorSessionImages = new List<VisitorSessionsImage>();
 
@@ -409,7 +409,7 @@ namespace SecurityGateApv.Infras.Data
             }
 
             modelBuilder.Entity<VisitorSessionsImage>().HasData(visitorSessionImages);
-        }
+        }*/
 
 
 
