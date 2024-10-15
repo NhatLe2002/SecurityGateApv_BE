@@ -41,6 +41,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
         public DbSet<ScheduleType> ScheduleTypes { get; set; }
+        public DbSet<ScheduleUser> ScheduleUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -55,14 +56,24 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasOne(n => n.Sender)
                 .WithMany(u => u.SentNotifications)
                 .HasForeignKey(n => n.SenderID)
-                .OnDelete(DeleteBehavior.Restrict); 
-
-            modelBuilder.Entity<NotificationUsers>()
-                .HasOne(n => n.Receiver)
-                .WithMany(u => u.ReceivedNotifications)
-                .HasForeignKey(n => n.ReceiverID)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<NotificationUsers>()
+               .HasOne(n => n.Sender)
+               .WithMany(u => u.SentNotifications)
+               .HasForeignKey(n => n.SenderID)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ScheduleUser>()
+                .HasOne(n => n.AssignFrom)
+                .WithMany(u => u.ScheduleUserFrom)
+                .HasForeignKey(n => n.AssignFromId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ScheduleUser>()
+                .HasOne(n => n.AssignTo)
+                .WithMany(u => u.ScheduleUserTo)
+                .HasForeignKey(n => n.AssignToId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             
             

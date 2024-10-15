@@ -72,12 +72,12 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("DepartmentManagerId/{DepartmentManagerId}")]
-        public async Task<ActionResult> GetVisitDetailByDepartmentIdId(int DepartmentManagerId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        [HttpGet("DepartmentId/{departmentId}")]
+        public async Task<ActionResult> GetVisitDetailByDepartmentIdId(int departmentId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _visitService.GetVisitByDepartmentManagerId(DepartmentManagerId, 1, int.MaxValue);
+                var resultAll = await _visitService.GetVisitByDepartmentId(departmentId, 1, int.MaxValue);
                 if (resultAll.IsFailure)
                 {
                     return BadRequest(resultAll.Error);
@@ -88,7 +88,7 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest("Page number and page size must be greater than zero.");
             }
-            var result = await _visitService.GetVisitByDepartmentManagerId(DepartmentManagerId, pageNumber, pageSize);
+            var result = await _visitService.GetVisitByDepartmentId(departmentId, pageNumber, pageSize);
 
             if (result.IsFailure)
             {
@@ -134,6 +134,17 @@ namespace SecurityGateApv.WebApi.Controllers
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {
             var result = await _visitService.CreateVisit(command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost("Daily")]
+        public async Task<ActionResult> CreateVisitDaily(VisitCreateCommandDaily command)
+        {
+            var result = await _visitService.CreateVisitDaily(command);
 
             if (result.IsFailure)
             {

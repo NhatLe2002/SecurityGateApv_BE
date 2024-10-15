@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SecurityGateApv.Domain.Enums;
+using SecurityGateApv.Domain.Interfaces.DomainDTOs;
+using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +40,95 @@ namespace SecurityGateApv.Domain.Common
             }
             return clearText;
         }
+
+        public static async Task<IEnumerable<ValidateVisitDateDTO>> CaculateBusyDates(VisitDetail visit)
+        {
+            var returnDate = new List<ValidateVisitDateDTO>();
+            if (visit.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessMonth.ToString())
+            {
+                var dateOfMonth = visit.Visit.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (var day in dateOfMonth) {
+                    var yearDiff = visit.Visit.ExpectedEndTime.Year - visit.Visit.ExpectedStartTime.Year;
+                    var newDate = new DateTime();
+                    
+                    var monthDiff = 0;
+                    if (yearDiff > 0)
+                    {
+                        monthDiff = (12 - visit.Visit.ExpectedStartTime.Month) + (visit.Visit.ExpectedEndTime.Month - 0) + (yearDiff - 1) * 12 ; 
+                    }  
+                    else
+                    {
+                        monthDiff = visit.Visit.ExpectedEndTime.Month - visit.Visit.ExpectedStartTime.Month;
+                    }
+                    for(int i = 0; i <= monthDiff; i++)
+                    {
+                        try
+                        {
+                            var currentYear = visit.Visit.ExpectedStartTime.AddMonths(i).Year;
+                            newDate = new DateTime(currentYear, visit.Visit.ExpectedStartTime.AddMonths(i).Month, int.Parse(day));
+                            if(newDate > visit.Visit.ExpectedEndTime || newDate < visit.Visit.ExpectedStartTime)
+                            {
+                                continue;
+                            }
+                            returnDate.Add(new ValidateVisitDateDTO
+                            {
+                                VisitDate = newDate,
+                                TimeIn = visit.ExpectedStartHour,
+                                TimeOut = visit.ExpectedEndHour,
+                                VisitId = visit.VisitId,
+                            });
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+   
+                    }
+                }
+            }else if (visit.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessWeek.ToString())
+            {
+                var dateOfWeek = visit.Visit.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (var day in dateOfWeek) { 
+                    var weekDiff = ((int)(((visit.Visit.ExpectedEndTime - visit.Visit.ExpectedStartTime).TotalDays)/7));
+                    var startDate = new DateTime();
+                    if (int.Parse(day)-1 >= (int)visit.Visit.ExpectedStartTime.DayOfWeek)
+                    {
+                        startDate = new DateTime(visit.Visit.ExpectedStartTime.Year, visit.Visit.ExpectedStartTime.Month, visit.Visit.ExpectedStartTime.Day).AddDays(int.Parse(day)-1 - (int)visit.Visit.ExpectedStartTime.DayOfWeek);
+                    }
+                    else
+                    {
+                        startDate = new DateTime(visit.Visit.ExpectedStartTime.Year, visit.Visit.ExpectedStartTime.Month, visit.Visit.ExpectedStartTime.Day).AddDays(7 + int.Parse(day)-1 - (int)visit.Visit.ExpectedStartTime.DayOfWeek);
+                    }
+                    for (int i = 0; i <= weekDiff; i++)
+                    {
+                        startDate.AddDays(i*7);
+                        if (startDate > visit.Visit.ExpectedEndTime || startDate < visit.Visit.ExpectedStartTime)
+                        {
+                            continue;
+                        }
+                        returnDate.Add(new ValidateVisitDateDTO
+                        {
+                            VisitDate = startDate,
+                            TimeIn = visit.ExpectedStartHour,
+                            TimeOut = visit.ExpectedEndHour,
+                            VisitId = visit.VisitId,
+                        });
+                    }
+                }
+            }
+            else if (visit.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString())
+            {
+                returnDate.Add(new ValidateVisitDateDTO
+                {
+                    VisitDate = visit.Visit.ExpectedStartTime,
+                    TimeIn = visit.ExpectedStartHour,
+                    TimeOut = visit.ExpectedEndHour,
+                    VisitId = visit.VisitId,
+                });
+            }
+            return returnDate;
+        }
+
         public static async Task<string> Decrypt(string cipherText)
         {
             string EncryptionKey = "SecurityAPV17";
