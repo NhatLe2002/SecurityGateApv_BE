@@ -17,6 +17,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<string>> GenerateQrCar(string data);
         public Task<Result<bool>> CreateQRCard( string guid);
         public Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize);
+        public Task<Result<GetCardRes>> GetQrCardByCardVerification(string cardVerified);
 
     }
 }

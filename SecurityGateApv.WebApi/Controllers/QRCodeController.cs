@@ -83,6 +83,16 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _qrCodeService.GetAllByPaging(pageNumber, pageSize);
             return Ok(result.Value);
         }
+        [HttpGet("{cardVerification}")]
+        public async Task<ActionResult> GetQrCardByCardVerification(string cardVerification)
+        {
+            if (cardVerification == null)
+            {
+                return BadRequest("CardVerification can not null");
+            }
 
+            var result = await _qrCodeService.GetQrCardByCardVerification(cardVerification);
+            return Ok(result.Value);
+        }
     }
 }

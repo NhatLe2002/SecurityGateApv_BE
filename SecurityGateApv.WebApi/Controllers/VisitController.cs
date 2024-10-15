@@ -108,7 +108,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpGet("Day")]
-        public async Task<ActionResult> GetAllVisitsByDate(int pageSize, int pageNumber, DateTime date)
+        public async Task<ActionResult> GetAllVisitsByDate([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] DateTime date)
         {
             var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date);
             if (result.IsFailure)
@@ -129,10 +129,10 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
        
-        [HttpGet("CredentialCard/{credentialCard}")]
-        public async Task<ActionResult> GetVisitByCredentialCard(string credentialCard)
+        [HttpGet("CurrentDate/CredentialCard/{credentialCard}")]
+        public async Task<ActionResult> GetVisitByCurrentDateAndCredentialCard( string credentialCard, [FromQuery] DateTime date)
         {
-            var result = await _visitService.GetVisitByCredentialCard(credentialCard);
+            var result = await _visitService.GetVisitByCurrentDateAndCredentialCard(credentialCard, date);
 
             if (result.IsFailure)
             {

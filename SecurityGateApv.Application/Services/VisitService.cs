@@ -180,20 +180,33 @@ namespace SecurityGateApv.Application.Services
             return visitRes;
         }
 
-        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCredentialCard(string credentialCard)
+        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
                 s => s.Visitor.CredentialsCard.Equals(credentialCard) 
                 && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date 
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
-                int.MaxValue, 1, s => s.OrderBy(s => s.ExpectedStartHour), "Visit,Visitor"
+                int.MaxValue, 1, s => s.OrderBy(s => s.ExpectedStartHour), "Visit.Schedule.ScheduleType,Visitor"
                 );
 
             if (visitDetails == null || !visitDetails.Any())
             {
                 return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
             }
-            var result = _mapper.Map<List<GetVisitByCredentialCardRes>>(visitDetails);
+            var visitResult = new List<VisitDetail>();
+            foreach (var item in visitDetails)
+            {
+                if (IsValidVisit(item.Visit, date))
+                {
+                    visitResult.Add(item);
+                }
+            }
+
+            if (visitResult.Count == 0)
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
+            }
+            var result = _mapper.Map<List<GetVisitByCredentialCardRes>>(visitResult);
 
             return result;
         }
