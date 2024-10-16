@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace SecurityGateApv.Application.DTOs.Req
 {
@@ -18,6 +19,18 @@ namespace SecurityGateApv.Application.DTOs.Req
         public int CreateById { get; set; }
         public string? Description { get; set; }
         public int ScheduleId { get;  set; }
+        public ICollection<VisitDetailOldCommand> VisitDetail { get; set; }
+    }
+    public class VisitCreateCommandDaily
+    {
+        public string VisitName { get; set; }
+        public int VisitQuantity { get; set; }
+        public DateTime ExpectedStartTime { get; set; }
+        public DateTime ExpectedEndTime { get; set; }
+        public int CreateById { get; set; }
+        public string? Description { get; set; }
+        [JsonIgnore]
+        public int? ScheduleId { get; set; }
         public ICollection<VisitDetailOldCommand> VisitDetail { get; set; }
     }
     public class VisitProjectCommand

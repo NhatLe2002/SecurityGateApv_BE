@@ -97,6 +97,30 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("DepartmentId/{departmentId}")]
+        public async Task<ActionResult> GetVisitDetailByDepartmentIdId(int departmentId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitByDepartmentId(departmentId, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitByDepartmentId(departmentId, pageNumber, pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("UserId/{userId}")]
         public async Task<ActionResult> GetVisitByUserId(int userId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
@@ -172,6 +196,17 @@ namespace SecurityGateApv.WebApi.Controllers
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {
             var result = await _visitService.CreateVisit(command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost("Daily")]
+        public async Task<ActionResult> CreateVisitDaily(VisitCreateCommandDaily command)
+        {
+            var result = await _visitService.CreateVisitDaily(command);
 
             if (result.IsFailure)
             {

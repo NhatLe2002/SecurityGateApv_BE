@@ -64,17 +64,68 @@ namespace SecurityGateApv.Application.Services
             var visit = createVisit.Value;
             foreach (var item in command.VisitDetail)
             {
-                visit.AddVisitDetailOfOldVisitor(
+                var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
+               
+                var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
+                    visitorSchedule,
+                    schedule,
                     item.ExpectedStartHour,
                     item.ExpectedEndHour,
                     true,
                     item.VisitorId);
+                if (addVisitDetailResult.IsFailure)
+                {
+                    return Result.Failure<VisitCreateCommand>(addVisitDetailResult.Error);
+                }
             }
             await _visitRepo.AddAsync(visit);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {
                 return Result.Failure<VisitCreateCommand>(Error.CommitError);
+            }
+            return command;
+        }
+        public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command)
+        {
+            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == 6, includeProperties: "ScheduleType")).FirstOrDefault();
+            var createVisit = Visit.Create(
+                command.VisitName,
+                command.VisitQuantity,
+                command.ExpectedStartTime,
+                command.ExpectedStartTime,
+                DateTime.Now,
+                DateTime.Now,
+                command.Description,
+                VisitProcessEnum.Active.ToString(),
+                command.CreateById,
+                6
+                );
+            if (createVisit.IsFailure)
+            {
+                return Result.Failure<VisitCreateCommandDaily>(createVisit.Error);
+            }
+            var visit = createVisit.Value;
+            foreach (var item in command.VisitDetail)
+            {
+                var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
+                var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
+                    visitorSchedule,
+                    schedule,
+                    item.ExpectedStartHour,
+                    item.ExpectedEndHour,
+                    true,
+                    item.VisitorId);
+                if (addVisitDetailResult.IsFailure)
+                {
+                    return Result.Failure<VisitCreateCommandDaily>(addVisitDetailResult.Error);
+                }
+            }
+            await _visitRepo.AddAsync(visit);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<VisitCreateCommandDaily>(Error.CommitError);
             }
             return command;
         }
@@ -265,25 +316,35 @@ namespace SecurityGateApv.Application.Services
             return visitRes.ToList();
         }
 
+        public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
+        {
+            var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            if (visit.Count == 0)
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            return visitRes.ToList();
+        }
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByUserId(int userId, int pageNumber, int pageSize)
         {
             var user = (await _userRepo.FindAsync(
-                    s => s.UserId == userId, includeProperties : "Role"
+                    s => s.UserId == userId, includeProperties: "Role"
                 )).FirstOrDefault();
-            if(user == null)
+            if (user == null)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundUser);
             }
             List<Visit> visit;
 
-            if (user.Role.RoleName.Equals(UserRoleEnum.Admin.ToString())|| 
+            if (user.Role.RoleName.Equals(UserRoleEnum.Admin.ToString()) ||
                 user.Role.RoleName.Equals(UserRoleEnum.Manager.ToString()))
             {
-                 visit = (await _visitRepo.FindAsync(s => true, 
-                     pageSize, 
-                     pageNumber, 
-                     s => s.OrderBy(x => x.CreateTime), 
-                     includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+                visit = (await _visitRepo.FindAsync(s => true,
+                    pageSize,
+                    pageNumber,
+                    s => s.OrderBy(x => x.CreateTime),
+                    includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
             }
             else if (user.Role.RoleName.Equals(UserRoleEnum.DepartmentManager.ToString()))
             {
@@ -298,10 +359,11 @@ namespace SecurityGateApv.Application.Services
                         pageNumber,
                         s => s.OrderBy(x => x.CreateTime),
                         includeProperties: "CreateBy,UpdateBy,Schedule");
-            }else if (user.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()) ||
+            }
+            else if (user.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()) ||
                     user.Role.RoleName.Equals(UserRoleEnum.Security.ToString()))
             {
-                
+
                 visit = (List<Visit>)await _visitRepo.FindAsync(
                         s => s.CreateById == userId,
                         pageSize,

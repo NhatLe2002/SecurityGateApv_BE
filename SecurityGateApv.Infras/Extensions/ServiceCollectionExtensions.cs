@@ -53,6 +53,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IPrivateKeyRepo, PrivateKeyRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<ICredentialCardTypeRepo, CredentialCardTypeRepo>();
+            services.AddScoped<IScheduleUserRepo, ScheduleUserRepo>();
 
 
             //Email DI

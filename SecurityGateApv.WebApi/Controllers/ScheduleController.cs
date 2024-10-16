@@ -48,6 +48,17 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+
+        [HttpPost("AssignSchedule")]
+        public async Task<IActionResult> CreateScheduleUser([FromBody] CreateScheduleUserCommand request)
+        {
+            var result = await _scheduleService.CreateScheduleUser(request);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpPut("{scheduleId}")]
         public async Task<IActionResult> UpdateSchedule([FromBody] UpdateScheduleCommand request,  int scheduleId)
         {
