@@ -17,5 +17,6 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<CreateScheduleCommand>> CreateSchedule(CreateScheduleCommand request);
         public Task<Result<GetScheduleRes>> UpdateSchedule(UpdateScheduleCommand request, int scheduleId);
         public Task<Result<bool>> DeleteSchedule( int scheduleId);
+        public Task<Result<CreateScheduleUserCommand>> CreateScheduleUser(CreateScheduleUserCommand command);
     }
 }

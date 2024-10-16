@@ -48,6 +48,9 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundVisit = new("Error.Visit", "Not found this visit");
         public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
+        public static readonly Error DuplicateVisitorDetail = new("Error.DuplicateVisitorDetail", "Duplicate visitor");
+        public static readonly Error VisitorIsBusy = new("Error.VisitorIsBusy", "Visitor busy at ...");
+        public static readonly Error NoValidDateForVisit = new("Error.NoValidDateForVisit", "No Date Valid for this schedule");
         #endregion
 
         #region VisitDetailError

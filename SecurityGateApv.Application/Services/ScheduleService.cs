@@ -22,14 +22,16 @@ namespace SecurityGateApv.Application.Services
         private readonly IScheduleRepo _scheduleRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScheduleTypeRepo _scheduleTypeRepo;
+        private readonly IScheduleUserRepo _scheduleUserRepo;
         private readonly IMapper _mapper;
 
-        public ScheduleService(IScheduleRepo scheduleRepo, IUnitOfWork unitOfWork, IMapper mapper, IScheduleTypeRepo scheduleTypeRepo)
+        public ScheduleService(IScheduleRepo scheduleRepo, IUnitOfWork unitOfWork, IMapper mapper, IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo)
         {
             _scheduleRepo = scheduleRepo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _scheduleTypeRepo = scheduleTypeRepo;
+            _scheduleUserRepo = scheduleUserRepo;
         }
 
         public async Task<Result<CreateScheduleCommand>> CreateSchedule(CreateScheduleCommand request)
@@ -175,6 +177,32 @@ namespace SecurityGateApv.Application.Services
         {
             var days = daysOfProcess.Split(',').Select(d => d.Trim());
             return days.All(day => int.TryParse(day, out int result) && result >= min && result <= max);
+        }
+
+        public async Task<Result<CreateScheduleUserCommand>> CreateScheduleUser(CreateScheduleUserCommand command)
+        {
+            var scheduleUser = ScheduleUser.Create(
+                command.Title,
+                command.Description,
+                command.Note,
+                DateTime.Now,
+                command.DeadlineTime,
+                "Assigned",
+                command.ScheduleId,
+                command.AssignFromId,
+                command.AssignToId
+                );
+            if (scheduleUser.IsFailure)
+            {
+                return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleSaveError);
+            }
+            await _scheduleUserRepo.AddAsync(scheduleUser.Value);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<CreateScheduleUserCommand>(Error.CommitError);
+            }
+            return command;
         }
     }
 }

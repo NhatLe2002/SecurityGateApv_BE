@@ -1,5 +1,7 @@
-﻿using SecurityGateApv.Domain.Enums;
+﻿using SecurityGateApv.Domain.Common;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.DomainDTOs;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
@@ -67,11 +69,62 @@ namespace SecurityGateApv.Domain.Models
             return result;
         }
 
-        public Result<Visit> AddVisitDetailOfOldVisitor(TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status, int visitorId)
+        public async Task<Result<Visit>> AddVisitDetailOfOldVisitor(IEnumerable<VisitDetail> visitSchedule, Schedule schedule,TimeSpan expectedStartHour, TimeSpan expectedEndHour,bool status
+            , int visitorId)
         {
-            var visitDetail = new VisitDetail(expectedStartHour, expectedEndHour, status
+            if(VisitDetail.Any(s => s.VisitorId == visitorId))
+            {
+                return Result.Failure<Visit>(Error.DuplicateVisitorDetail);
+            }
+            var visitDetailAdd = new VisitDetail(expectedStartHour, expectedEndHour, status
             , this, visitorId);
-            VisitDetail.Add(visitDetail);
+            var visitBusyOfVisitor = new List<ValidateVisitDateDTO>();
+            foreach (VisitDetail visit in visitSchedule) {
+                visitBusyOfVisitor.AddRange(await CommonService.CaculateBusyDates(visit));
+            }
+
+            visitDetailAdd.Visit.Schedule = schedule;
+            var visitorFutureBusy = await CommonService.CaculateBusyDates(visitDetailAdd);
+            if(visitorFutureBusy.Count() == 0)
+            {
+                return Result.Failure<Visit>(Error.NoValidDateForVisit);
+            }
+            var error = new List<int>();
+            foreach (var dateOfBusy in visitorFutureBusy)
+            {
+ 
+                var check = visitBusyOfVisitor.Where(s => dateOfBusy.VisitDate.Year == s.VisitDate.Year && dateOfBusy.VisitDate.Month == s.VisitDate.Month && dateOfBusy.VisitDate.Day == s.VisitDate.Day);
+
+                if (check != null)
+                {
+/*                    if(check.Any(s => s.TimeIn >= dateOfBusy.TimeIn) && check.Any(s => s.TimeIn < dateOfBusy.TimeOut))
+                    {
+                        error.Add(check.)
+                    }
+                    if (check.Any(s => s.TimeOut > dateOfBusy.TimeIn) && check.Any(s => s.TimeOut <= dateOfBusy.TimeOut))
+                    {
+
+                    }*/
+                    foreach (var day in check)
+                    {
+                        if (day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut)
+                        {
+                            error.Add((int)day.VisitId);
+                            continue;
+                        }
+                        if (day.TimeOut > dateOfBusy.TimeIn && day.TimeOut <= dateOfBusy.TimeOut)
+                        {
+                            error.Add((int)day.VisitId);
+                            continue;
+                        }
+                    }
+                }
+            }
+            if (error.Distinct().Count() > 0)
+            {
+                return Result.Failure<Visit>(new Error("CreateVisit", "Visitor busy at visit Id: " + string.Join(", ", error)));
+            }
+            VisitDetail.Add(visitDetailAdd);
             return this;
         }
         public Result<Visit> Update(int updateById)
