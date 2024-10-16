@@ -48,9 +48,23 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("Status/{status}")]
-        public async Task<ActionResult> GetVisitDetailByStatus(string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        [HttpGet("Status")]
+        public async Task<ActionResult> GetVisitDetailByStatus([FromQuery] string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
+
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitDetailByStatus(status, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
             var result = await _visitService.GetVisitDetailByStatus(status, pageNumber,  pageSize);
 
             if (result.IsFailure)
@@ -110,6 +124,19 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("Day")]
         public async Task<ActionResult> GetAllVisitsByDate([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] DateTime date)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitByDate(int.MaxValue, 1, date);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
             var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date);
             if (result.IsFailure)
             {
