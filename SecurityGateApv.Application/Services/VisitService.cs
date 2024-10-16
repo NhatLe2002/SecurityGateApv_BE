@@ -116,7 +116,7 @@ namespace SecurityGateApv.Application.Services
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
                     && s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()),
-                    pageSize, pageNumber, includeProperties: "Schedule.ScheduleType"
+                    pageSize, pageNumber, includeProperties: "Schedule.ScheduleType,CreateBy"
                 );
 
             if (visit.Count() == 0)
