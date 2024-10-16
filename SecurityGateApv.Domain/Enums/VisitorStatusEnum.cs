@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Enums
 {
-    public enum UserStatusEnum
+    public enum VisitorStatusEnum
     {
-        None,
+        None ,
         Active,
-        Inactive,
-        Blook
+        InActive,
+        Block,
     }
 }
