@@ -65,7 +65,7 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId
-                 && s.Visit.ExpectedStartTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
+                 && s.Visit.ExpectedEndTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
                
                 var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
@@ -110,7 +110,7 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId
-                    && s.Visit.ExpectedStartTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
+                    && s.Visit.ExpectedEndTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
                 var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
                     schedule,
