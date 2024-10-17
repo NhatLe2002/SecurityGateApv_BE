@@ -73,6 +73,11 @@ namespace SecurityGateApv.Application.Mapper
 
             #region ScheduleType
             CreateMap<GetScheduleTypeRes, ScheduleType>().ReverseMap();
+            CreateMap<GetScheduleUserRes, ScheduleUser>().ReverseMap();
+            CreateMap<ScheduleGetScheduleUserRes, Schedule>().ReverseMap();
+            CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
+            CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
+            CreateMap<UserGetScheduleUserRes, User>().ReverseMap();
             #endregion
 
             #region SessionsImageRes

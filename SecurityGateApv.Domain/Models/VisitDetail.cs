@@ -42,5 +42,6 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<VisitorSession> VisitorSession { get; private set; }
         public ICollection<VehicleSession> VehicleSession { get; private set; }
+
     }
 }

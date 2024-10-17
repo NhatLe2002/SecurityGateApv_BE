@@ -11,12 +11,19 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class CreateVisitorValidator : AbstractValidator<CreateVisitorCommand>
     {
-        public CreateVisitorValidator(ICredentialCardTypeRepo credentialCardTypeRepo)
+        public CreateVisitorValidator(ICredentialCardTypeRepo credentialCardTypeRepo, IVisitorRepo visitorRepo)
         {
             RuleFor(s =>s.VisitorName).NotNull().NotEmpty()
                 .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
             RuleFor(s => s.CompanyName).NotNull().NotEmpty();
-            RuleFor(s => s.CredentialsCard).NotNull().NotEmpty();
+            RuleFor(s => s.CredentialsCard).NotNull().NotEmpty().Must(s =>
+            {
+                if(visitorRepo.IsAny(t => t.CredentialsCard == s).GetAwaiter().GetResult())
+                {
+                    return false;
+                }
+                return true;
+            }).WithMessage("This credential Card is exist");
             RuleFor(s => s.PhoneNumber).NotNull().NotEmpty()
                            .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number"); 
             RuleFor(s => s.CredentialCardTypeId).NotNull().NotEmpty().Must(s => {

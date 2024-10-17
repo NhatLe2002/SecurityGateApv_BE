@@ -25,7 +25,8 @@ namespace SecurityGateApv.Application.Services
         private readonly IScheduleUserRepo _scheduleUserRepo;
         private readonly IMapper _mapper;
 
-        public ScheduleService(IScheduleRepo scheduleRepo, IUnitOfWork unitOfWork, IMapper mapper, IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo)
+        public ScheduleService(IScheduleRepo scheduleRepo, IUnitOfWork unitOfWork, IMapper mapper, 
+            IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo)
         {
             _scheduleRepo = scheduleRepo;
             _unitOfWork = unitOfWork;
@@ -203,6 +204,32 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CreateScheduleUserCommand>(Error.CommitError);
             }
             return command;
+        }
+
+        public async Task<Result<List<GetScheduleRes>>> GetScheduleByDepartmentManagerId(int departmentManagerId, int pageNumber, int pageSize)
+        {
+            var schedule = (await _scheduleRepo.FindAsync(
+                s => s.CreateById == departmentManagerId,pageSize,pageNumber, includeProperties: "ScheduleType,CreateBy"
+                ));
+            if (schedule == null)
+            {
+                return Result.Failure<List<GetScheduleRes>>(Error.NotFoundSchedule);
+            }
+            var result = _mapper.Map<List<GetScheduleRes>>(schedule);
+            return result;
+        }
+
+        public async Task<Result<List<GetScheduleUserRes>>> GetScheduleUserByStaffId(int staffId, int pageNumber, int pageSize)
+        {
+            var schedule = (await _scheduleUserRepo.FindAsync(
+                s => s.AssignToId == staffId, pageSize, pageNumber, includeProperties: "Schedule,AssignTo,AssignFrom,Schedule.ScheduleType"
+                ));
+            if (schedule == null)
+            {
+                return Result.Failure<List<GetScheduleUserRes>>(Error.NotFoundSchedule);
+            }
+            var result = _mapper.Map<List<GetScheduleUserRes>>(schedule);
+            return result;
         }
     }
 }
