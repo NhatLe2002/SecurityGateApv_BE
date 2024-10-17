@@ -8,7 +8,9 @@ namespace SecurityGateApv.Domain.Enums
 {
     public enum VisitorSessionStatus
     {
-       CheckIn,
-       CheckOut,
+        None ,
+        CheckIn,
+        CheckOut,
+        Lost
     }
 }

@@ -11,6 +11,7 @@ namespace SecurityGateApv.Domain.Enums
         NONE,
         ProcessWeek,
         ProcessMonth,
-        VisitDaily
+        VisitDaily,
+        Project
     }
 }

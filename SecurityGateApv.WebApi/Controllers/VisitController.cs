@@ -48,6 +48,31 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("Status")]
+        public async Task<ActionResult> GetVisitDetailByStatus([FromQuery] string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitDetailByStatus(status, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitDetailByStatus(status, pageNumber,  pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("CreateBy/{createById}")]
         public async Task<ActionResult> GetVisitDetailByCreateById(int createById,[FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
@@ -96,9 +121,46 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("Day")]
-        public async Task<ActionResult> GetAllVisitsByDate(int pageSize, int pageNumber, DateTime date)
+        [HttpGet("UserId/{userId}")]
+        public async Task<ActionResult> GetVisitByUserId(int userId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitByUserId(userId, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitByUserId(userId, pageNumber, pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("Day")]
+        public async Task<ActionResult> GetAllVisitsByDate([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] DateTime date)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitByDate(int.MaxValue, 1, date);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
             var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date);
             if (result.IsFailure)
             {
@@ -118,10 +180,10 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
        
-        [HttpGet("CredentialCard/{credentialCard}")]
-        public async Task<ActionResult> GetVisitByCredentialCard(string credentialCard)
+        [HttpGet("CurrentDate/CredentialCard/{credentialCard}")]
+        public async Task<ActionResult> GetVisitByCurrentDateAndCredentialCard( string credentialCard, [FromQuery] DateTime date)
         {
-            var result = await _visitService.GetVisitByCredentialCard(credentialCard);
+            var result = await _visitService.GetVisitByCurrentDateAndCredentialCard(credentialCard, date);
 
             if (result.IsFailure)
             {

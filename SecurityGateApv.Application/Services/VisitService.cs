@@ -169,7 +169,7 @@ namespace SecurityGateApv.Application.Services
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
                     && s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()),
-                    pageSize, pageNumber, includeProperties: "Schedule.ScheduleType"
+                    pageSize, pageNumber, includeProperties: "Schedule.ScheduleType,CreateBy"
                 );
 
             if (visit.Count() == 0)
@@ -233,20 +233,33 @@ namespace SecurityGateApv.Application.Services
             return visitRes;
         }
 
-        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCredentialCard(string credentialCard)
+        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
                 s => s.Visitor.CredentialsCard.Equals(credentialCard) 
                 && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date 
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
-                int.MaxValue, 1, s => s.OrderBy(s => s.ExpectedStartHour), "Visit,Visitor"
+                int.MaxValue, 1, s => s.OrderBy(s => s.ExpectedStartHour), "Visit.Schedule.ScheduleType,Visitor"
                 );
 
             if (visitDetails == null || !visitDetails.Any())
             {
                 return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
             }
-            var result = _mapper.Map<List<GetVisitByCredentialCardRes>>(visitDetails);
+            var visitResult = new List<VisitDetail>();
+            foreach (var item in visitDetails)
+            {
+                if (IsValidVisit(item.Visit, date))
+                {
+                    visitResult.Add(item);
+                }
+            }
+
+            if (visitResult.Count == 0)
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
+            }
+            var result = _mapper.Map<List<GetVisitByCredentialCardRes>>(visitResult);
 
             return result;
         }
@@ -319,7 +332,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int createById, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderBy(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
             if (visit == null)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
@@ -332,6 +345,70 @@ namespace SecurityGateApv.Application.Services
         {
             var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
             if (visit.Count == 0)
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            return visitRes.ToList();
+        }
+        public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByUserId(int userId, int pageNumber, int pageSize)
+        {
+            var user = (await _userRepo.FindAsync(
+                    s => s.UserId == userId, includeProperties: "Role"
+                )).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundUser);
+            }
+            List<Visit> visit;
+
+            if (user.Role.RoleName.Equals(UserRoleEnum.Admin.ToString()) ||
+                user.Role.RoleName.Equals(UserRoleEnum.Manager.ToString()))
+            {
+                visit = (await _visitRepo.FindAsync(s => true,
+                    pageSize,
+                    pageNumber,
+                    s => s.OrderBy(x => x.CreateTime),
+                    includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            }
+            else if (user.Role.RoleName.Equals(UserRoleEnum.DepartmentManager.ToString()))
+            {
+                var staffIds = (await _userRepo.FindAsync(
+                        s => s.DepartmentId == user.DepartmentId,
+                        int.MaxValue, 1
+                        )).Select(s => s.UserId).ToList();
+
+                visit = (List<Visit>)await _visitRepo.FindAsync(
+                        s => staffIds.Contains(s.CreateById),
+                        pageSize,
+                        pageNumber,
+                        s => s.OrderBy(x => x.CreateTime),
+                        includeProperties: "CreateBy,UpdateBy,Schedule");
+            }
+            else if (user.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()) ||
+                    user.Role.RoleName.Equals(UserRoleEnum.Security.ToString()))
+            {
+
+                visit = (List<Visit>)await _visitRepo.FindAsync(
+                        s => s.CreateById == userId,
+                        pageSize,
+                        pageNumber,
+                        s => s.OrderBy(x => x.CreateTime),
+                        includeProperties: "CreateBy,UpdateBy,Schedule");
+            }
+            else
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.Unauthorized);
+            }
+            var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+
+            return Result.Success(visitRes);
+        }
+
+        public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatus(string status, int pageNumber, int pageSize)
+        {
+            var visit = (await _visitRepo.FindAsync(s => s.VisitStatus.Equals(status), pageSize, pageNumber, s => s.OrderBy(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            if (visit == null)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
             }

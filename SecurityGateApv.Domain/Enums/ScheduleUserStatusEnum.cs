@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Enums
 {
-    public enum UserStatusEnum
+    public enum ScheduleUserStatusEnum
     {
-        None,
-        Active,
-        Inactive,
-        Blook
+        None ,
+        Assigned,
+        Pending,
+        Approve,
+        Reject,
     }
 }

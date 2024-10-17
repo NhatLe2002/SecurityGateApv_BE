@@ -100,5 +100,19 @@ namespace SecurityGateApv.Application.Services
             }
             return result;
         }
+
+        public async Task<Result<GetCardRes>> GetQrCardByCardVerification(string cardVerified)
+        {
+            var card = (await _qrRCardRepo.FindAsync(
+                s => s.CardVerification.Equals(cardVerified), includeProperties: "QRCardStatus,QRCardType"
+                )).FirstOrDefault();
+            if (card == null)
+            {
+                return Result.Failure<GetCardRes>(Error.NotFoundQRCard);
+            }
+
+            var result = _mapper.Map<GetCardRes>(card);
+            return result;
+        }
     }
 }

@@ -11,7 +11,6 @@ namespace SecurityGateApv.Domain.Enums
         NONE,
         Pending,
         Active,
-        InActive,
         Cancel,
     }
 }
