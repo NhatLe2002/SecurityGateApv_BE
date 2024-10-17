@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Common;
@@ -27,7 +28,7 @@ namespace SecurityGateApv.Application.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<Result<CreateVisitorRes>> CreateVisitor(CreateVisitorCommand command)
+        public async Task<Result<GetVisitorCreateRes>> CreateVisitor(CreateVisitorCommand command)
         {
             var imageString = await CommonService.ImageToBase64(command.VisitorCredentialImageFromRequest);
             var imageEncrypt = await CommonService.Encrypt(imageString);
@@ -44,15 +45,17 @@ namespace SecurityGateApv.Application.Services
                 );
             if (visitorCreate.IsFailure)
             {
-                return Result.Failure<CreateVisitorRes>(Error.CreateVisitor);
+                return Result.Failure<GetVisitorCreateRes>(Error.CreateVisitor);
             }
             await _visitorRepo.AddAsync(visitorCreate.Value);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {
-                return Result.Failure<CreateVisitorRes>(Error.CommitError);
+                return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
-            return _mapper.Map<CreateVisitorRes>(visitorCreate.Value);
+            var res = _mapper.Map<GetVisitorCreateRes>(visitorCreate.Value);
+            res.VisitorCredentialImage = imageString;
+            return res;
         }
 
         public async Task<Result<bool>> DeleteVisitor(int visitorId)
@@ -127,12 +130,17 @@ namespace SecurityGateApv.Application.Services
             return _mapper.Map<GetVisitorRes>(visitor);
         }
 
-        public async Task<Result<CreateVisitorCommand>> UpdateVisitor(int visitorId, CreateVisitorCommand command)
+        public async Task<Result<GetVisitorCreateRes>> UpdateVisitor(int visitorId, UpdateVisitorCommand command)
         {
+            var duplicateCard = await _visitorRepo.IsAny(s => s.CredentialsCard == command.CredentialsCard && s.CredentialCardTypeId == command.CredentialCardTypeId && s.VisitorId != visitorId);
+            if (duplicateCard)
+            {
+                return Result.Failure<GetVisitorCreateRes>(Error.DuplicateCardNumber);
+            }
             var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId)).FirstOrDefault();
             if (visitor == null)
             {
-                return Result.Failure<CreateVisitorCommand>(Error.NotFound);
+                return Result.Failure<GetVisitorCreateRes>(Error.NotFound);
             }
             var imageString = await CommonService.ImageToBase64(command.VisitorCredentialImageFromRequest);
             var imageEncrypt = await CommonService.Encrypt(imageString);
@@ -142,9 +150,11 @@ namespace SecurityGateApv.Application.Services
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {
-                return Result.Failure<CreateVisitorCommand>(Error.CommitError);
+                return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
-            return command;
+            var res = _mapper.Map<GetVisitorCreateRes>(visitor);
+            res.VisitorCredentialImage = imageString;
+            return res;
         }
     }
 }

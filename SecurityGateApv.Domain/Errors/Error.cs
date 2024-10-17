@@ -78,6 +78,7 @@ namespace SecurityGateApv.Domain.Errors
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Not found this visitor");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
+        public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Update error");
 
 
 
