@@ -133,5 +133,15 @@ namespace SecurityGateApv.Domain.Models
             this.UpdateTime = DateTime.Now;
             return this;
         }
+        public Result<Visit> RemoveDetail()
+        {
+            this.VisitDetail.Clear();
+            return this;
+        }
+        public Result<Visit> AddEndTime(int days)
+        {
+            this.ExpectedEndTime = this.ExpectedStartTime.AddDays(days);
+            return this;
+        }
     }
 }

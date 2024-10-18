@@ -101,7 +101,7 @@ namespace SecurityGateApv.Domain.Common
                     }
                     for (int i = 0; i <= weekDiff; i++)
                     {
-                        startDate.AddDays(i*7);
+                        startDate = startDate.AddDays(i*7);
                         if (startDate > visit.Visit.ExpectedEndTime || startDate < visit.Visit.ExpectedStartTime)
                         {
                             continue;

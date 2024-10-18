@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
+using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
+using System.Drawing.Printing;
 
 namespace SecurityGateApv.WebApi.Controllers
 {
@@ -37,7 +39,37 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        
+        [HttpGet("DepartmenManager/{departmenManagerId}")]
+        public async Task<IActionResult> GetScheduleByDepartmenManagerId(int departmenManagerId, int pageNumber, int pageSize)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _scheduleService.GetScheduleByDepartmentManagerId(departmenManagerId, 1, int.MaxValue);
+                return Ok(resultAll.Value);
+            }
+            var result = await _scheduleService.GetScheduleByDepartmentManagerId(departmenManagerId, pageNumber, pageSize);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("ScheduleUser/Staff/{staffId}")]
+        public async Task<IActionResult> GetScheduleUserByStaffId(int staffId, int pageNumber, int pageSize)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _scheduleService.GetScheduleUserByStaffId(staffId, 1, int.MaxValue);
+                return Ok(resultAll.Value);
+            }
+            var result = await _scheduleService.GetScheduleUserByStaffId(staffId, pageNumber, pageSize);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+
         [HttpPost()]
         public async Task<IActionResult> CreateSchedule([FromBody] CreateScheduleCommand request)
         {

@@ -47,5 +47,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public TimeSpan ExpectedStartHour { get; set; }
         public TimeSpan ExpectedEndHour { get; set; }
         public int VisitorId { get; set; }
+        [JsonIgnore]
+        public bool Status { set; get; } = true;
     }
 }

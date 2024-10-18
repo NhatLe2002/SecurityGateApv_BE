@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
@@ -52,7 +53,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateVisitor([FromForm] CreateVisitorCommand command)
+        public async Task<IActionResult> CreateVisitor([FromForm] CreateVisitorCommand command)
         {
             var result = await _visitorService.CreateVisitor(command);
             if (result.IsFailure)
@@ -62,7 +63,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPut("{visitorId}")]
-        public async Task<IActionResult> CreateVisitor(int visitorId, [FromForm] CreateVisitorCommand command)
+        public async Task<IActionResult> UpdateVisitor(int visitorId, [FromForm] UpdateVisitorCommand command)
         {
             var result = await _visitorService.UpdateVisitor(visitorId, command);
             if (result.IsFailure)
