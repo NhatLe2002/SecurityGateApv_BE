@@ -173,5 +173,19 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
             return result.ToList();
         }
+
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByCredentialIdId(string credentialId)
+        {
+            var visitSession = await _visitorSessionRepo.FindAsync(
+                  s => s.VisitDetail.Visitor.CredentialsCard.Equals(credentialId) && s.Status.Equals(VisitorSessionStatus.CheckIn.ToString()),
+                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                );
+            if (visitSession.Count() == 0)
+            {
+                return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
+            return result.ToList();
+        }
     }
 }
