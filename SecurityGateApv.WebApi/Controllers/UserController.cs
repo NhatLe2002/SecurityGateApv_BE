@@ -2,11 +2,10 @@
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
-using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
-using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
+using Error = SecurityGateApv.Domain.Errors.Error;
 
 namespace SecurityGateApv.WebApi.Controllers
 {
