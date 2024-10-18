@@ -2,6 +2,7 @@
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Common;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Repositories;
@@ -66,7 +67,7 @@ namespace SecurityGateApv.Application.Services
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId
                  && s.Visit.ExpectedEndTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.Schedule,Visit.Schedule.ScheduleType");
-               
+
                 var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
                     schedule,
@@ -131,11 +132,11 @@ namespace SecurityGateApv.Application.Services
             }
             return command;
         }
-        
+
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
         {
-            var visit = await _visitRepo.FindAsync(s=>true, pageSize, pageNumber,s=>s.OrderBy(x=>x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule");
-            if(visit.Count() == 0)
+            var visit = await _visitRepo.FindAsync(s => true, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule");
+            if (visit.Count() == 0)
             {
                 return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
             }
@@ -199,7 +200,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitDetailRes>>> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize)
         {
-            if (! await _visitRepo.IsAny(s => s.VisitId == visitId))
+            if (!await _visitRepo.IsAny(s => s.VisitId == visitId))
             {
                 return Result.Failure<List<GetVisitDetailRes>>(Error.NotFoundVisit);
             }
@@ -228,6 +229,17 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<List<GetVisitDetailRes>>(Error.NotFoundVisitDetail);
             }
+            foreach (var item in visitDetail)
+            {
+                try
+                {
+                    item.Visitor.DecrypCredentialCard(await CommonService.Decrypt(item.Visitor.VisitorCredentialImage));
+                }
+                catch (Exception ex)
+                {
+                    return Result.Failure<List<GetVisitDetailRes>>(Error.DecryptError);
+                }
+            }
 
             var visitRes = _mapper.Map<List<GetVisitDetailRes>>(visitDetail);
             return visitRes;
@@ -236,8 +248,8 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
-                s => s.Visitor.CredentialsCard.Equals(credentialCard) 
-                && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date 
+                s => s.Visitor.CredentialsCard.Equals(credentialCard)
+                && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
                 int.MaxValue, 1, s => s.OrderBy(s => s.ExpectedStartHour), "Visit.Schedule.ScheduleType,Visitor"
                 );
@@ -286,7 +298,8 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<VisitCreateCommand>> UpdateVisit(int visitId, VisitCreateCommand command)
         {
             var visit = (await _visitRepo.FindAsync(s => s.VisitId == visitId, includeProperties: "VisitDetail")).FirstOrDefault();
-            if (visit == null) {
+            if (visit == null)
+            {
                 return Result.Failure<VisitCreateCommand>(Error.NotFoundVisit);
             }
 
