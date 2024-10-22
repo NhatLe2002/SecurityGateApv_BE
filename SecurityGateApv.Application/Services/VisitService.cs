@@ -168,7 +168,7 @@ namespace SecurityGateApv.Application.Services
             var visit = await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
-                    && s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()),
+                    && s.VisitStatus.Equals(VisitStatusEnum.Started.ToString()),
                     pageSize, pageNumber, includeProperties: "Schedule.ScheduleType,CreateBy"
                 );
 

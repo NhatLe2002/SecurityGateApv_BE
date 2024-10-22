@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
@@ -8,6 +9,10 @@ using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +35,13 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<GetVisitorCreateRes>> CreateVisitor(CreateVisitorCommand command)
         {
-            var imageString = await CommonService.ImageToBase64(command.VisitorCredentialImageFromRequest);
+            SixLabors.ImageSharp.Image resizeImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialImageFromRequest.OpenReadStream());
+            int height = (int)((300 / (float)resizeImage.Width) * resizeImage.Height);
+            if (resizeImage.Width > 300 || resizeImage.Height > 200)
+            {
+                resizeImage.Mutate(x => x.Resize(300, height));
+            }
+            var imageString = await ImageToBase64(resizeImage);
             var imageEncrypt = await CommonService.Encrypt(imageString);
             var visitorCreate = Visitor.Create(
                 command.VisitorName,
@@ -155,6 +166,12 @@ namespace SecurityGateApv.Application.Services
             var res = _mapper.Map<GetVisitorCreateRes>(visitor);
             res.VisitorCredentialImage = imageString;
             return res;
+        }
+        private async Task<string> ImageToBase64(Image image)
+        {
+            var ms = new MemoryStream();
+            await image.SaveAsync(ms, new PngEncoder());
+            return System.Convert.ToBase64String(ms.ToArray());
         }
     }
 }
