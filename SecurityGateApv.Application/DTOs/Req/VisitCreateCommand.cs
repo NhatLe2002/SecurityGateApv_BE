@@ -19,6 +19,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public int CreateById { get; set; }
         public string? Description { get; set; }
         public int ScheduleId { get;  set; }
+        public int ResponsiblePersonId { get; set; }
         public ICollection<VisitDetailOldCommand> VisitDetail { get; set; }
     }
     public class VisitCreateCommandDaily
@@ -31,6 +32,8 @@ namespace SecurityGateApv.Application.DTOs.Req
         public string? Description { get; set; }
         [JsonIgnore]
         public int? ScheduleId { get; set; }
+        public int ResponsiblePersonId { get; set; }
+
         public ICollection<VisitDetailOldCommand> VisitDetail { get; set; }
     }
     public class VisitProjectCommand

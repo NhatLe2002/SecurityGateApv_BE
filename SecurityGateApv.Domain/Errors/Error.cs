@@ -93,6 +93,25 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ScheduleCannotUpdate = new("Error.Schedule", "Can not update Schedule daily");
         #endregion
 
+
+        #region ScheduleType
+        //ScheduleType Error
+        public static readonly Error ScheduleTypeCreateError = new("Error.ScheduleType", "Can not create schedule type");
+        public static readonly Error ScheduleTypeUpdateError = new("Error.ScheduleType", "Can not update schedule type");
+        public static readonly Error ScheduleTypeSaveError = new("Error.ScheduleType", "Can not save schedule type");
+        //error when schedule type not found
+        public static readonly Error NotFoundScheduleType = new("Error.ScheduleType", "Can not found Schedule Type");
+        //error when schedule input is not valid
+        public static readonly Error ScheduleTypeInputValid = new("Error.ScheduleType", "Wrong when input Schedule Type");
+        #endregion
+        #region CredentialCardType
+        //CredentialCardType Error
+        public static readonly Error CredentialCardTypeCreateError = new("Error.CredentialCardType", "Can not create Credential Card Type");
+        public static readonly Error CredentialCardTypeUpdateError = new("Error.CredentialCardType", "Can not update Credential Card Type");
+        //invalid input
+        public static readonly Error CredentialCardTypeInputValid = new("Error.CredentialCardType", "Wrong when input Credential Card Type");
+        #endregion
+
         //ProcessVisit Error
         public static readonly Error ProcessVisitCreateDateError = new("Error.ProcessVisitCreateDateError", @"Date format is ""Mon,Tue,Sun""");
     

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Infras.Repositories
 {
-    public class QRCardRepo : RepoBase<QRCard>, IQRCardRepo
+    public class QRCardRepo : RepoBase<Card>, IQRCardRepo
     {
         private readonly SecurityGateApvDbContext _context;
         private readonly DbSet<Visit> _dbSet;

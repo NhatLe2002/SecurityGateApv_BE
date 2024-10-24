@@ -2,195 +2,178 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace SecurityGateApv.Infras.Migrations
 {
     /// <inheritdoc />
-    public partial class Update_Schedule : Migration
+    public partial class Update_Type1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "DaysOfProcess",
-                table: "Schedules",
-                newName: "DaysOfSchedule");
-
-            migrationBuilder.UpdateData(
+            migrationBuilder.InsertData(
                 table: "CredentialCardTypes",
-                keyColumn: "CredentialCardTypeId",
-                keyValue: 1,
-                column: "Description",
-                value: "Dolorem dolores consectetur consequuntur.");
-
-            migrationBuilder.UpdateData(
-                table: "CredentialCardTypes",
-                keyColumn: "CredentialCardTypeId",
-                keyValue: 2,
-                columns: new[] { "CredentialCardTypeName", "Description" },
-                values: new object[] { "Căn cước công dân", "Sit aut repellat explicabo architecto cupiditate blanditiis voluptatem necessitatibus." });
+                columns: new[] { "CredentialCardTypeId", "CredentialCardTypeName", "Description", "Status" },
+                values: new object[,]
+                {
+                    { 1, "Căn cước công dân", "Căn cước công dân", true },
+                    { 2, "Giấy phép lái xe", "Giấy phép lái xe", true }
+                });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 1,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Pháp chế", "Temporibus saepe et voluptas qui architecto quaerat est officiis." });
+                values: new object[] { "Phòng Sản xuất", "Enim odio ut veniam dolore cum." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 2,
-                column: "Description",
-                value: "Laboriosam officiis voluptatem totam dolores.");
+                columns: new[] { "DepartmentName", "Description" },
+                values: new object[] { "Phòng Sản xuất", "Praesentium dolor quia hic deleniti." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 3,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng IT", "Sed non tempora repellat non accusantium suscipit totam architecto voluptatem." });
+                values: new object[] { "Phòng Kế toán", "Qui alias recusandae adipisci ipsam vel et minus ut atque." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 4,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Marketing", "Fugit porro velit et nesciunt et dicta earum qui dolor." });
+                values: new object[] { "Phòng Nhân sự", "Ea neque dolorem architecto esse expedita et quod rem voluptas." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 5,
-                column: "Description",
-                value: "Illum tenetur sed rerum sunt similique molestias error similique.");
+                columns: new[] { "DepartmentName", "Description" },
+                values: new object[] { "Phòng R&D", "Aut rerum voluptatibus dolorem." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 6,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Marketing", "Saepe impedit sequi doloribus non incidunt." });
+                values: new object[] { "Phòng R&D", "Reprehenderit modi enim corporis sint maxime quisquam minus nesciunt." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 7,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Kế toán", "Libero tempora sed suscipit nam aut debitis quas." });
+                values: new object[] { "Phòng Nhân sự", "Exercitationem molestias at nihil facilis consectetur sit nesciunt earum." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 8,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng R&D", "In et impedit quasi omnis odit." });
+                values: new object[] { "Phòng Marketing", "Ea labore minima ut id suscipit dicta natus molestias quaerat." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 9,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Chăm sóc khách hàng", "Iste debitis dolor dolores nam quia aut." });
+                values: new object[] { "Phòng Kế toán", "Quia illum dignissimos nulla impedit sed velit." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 10,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Nhân sự", "Eum reiciendis odit molestiae recusandae odio harum consectetur." });
+                values: new object[] { "Phòng Nhân sự", "Sit sequi sequi facere quae molestiae earum in ex qui." });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "DaysOfSchedule",
-                table: "Schedules",
-                newName: "DaysOfProcess");
-
-            migrationBuilder.UpdateData(
+            migrationBuilder.DeleteData(
                 table: "CredentialCardTypes",
                 keyColumn: "CredentialCardTypeId",
-                keyValue: 1,
-                column: "Description",
-                value: "Incidunt aliquid molestiae tempora sint.");
+                keyValue: 1);
 
-            migrationBuilder.UpdateData(
+            migrationBuilder.DeleteData(
                 table: "CredentialCardTypes",
                 keyColumn: "CredentialCardTypeId",
-                keyValue: 2,
-                columns: new[] { "CredentialCardTypeName", "Description" },
-                values: new object[] { "Giấy phép lái xe", "Eligendi eos eaque vitae accusamus aliquid sunt ducimus accusantium hic." });
+                keyValue: 2);
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 1,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Marketing", "Illum deleniti id excepturi." });
+                values: new object[] { "Phòng Kế toán", "Occaecati accusamus temporibus modi voluptate quis." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 2,
-                column: "Description",
-                value: "Ea deserunt commodi deleniti dolor maiores nam aut.");
+                columns: new[] { "DepartmentName", "Description" },
+                values: new object[] { "Phòng IT", "Ea eum qui ipsam aut maiores." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 3,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Pháp chế", "Quia quam sed." });
+                values: new object[] { "Phòng R&D", "Fuga pariatur temporibus velit possimus." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 4,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Hành chính", "Velit impedit blanditiis dolores." });
+                values: new object[] { "Phòng R&D", "Fuga et sunt alias eveniet nam odit ea ullam aut." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 5,
-                column: "Description",
-                value: "Veniam dolorem consequatur sed.");
+                columns: new[] { "DepartmentName", "Description" },
+                values: new object[] { "Phòng Chăm sóc khách hàng", "Accusamus similique distinctio sequi aut architecto enim itaque autem." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 6,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng R&D", "Hic voluptas et dolorum." });
+                values: new object[] { "Phòng Marketing", "Totam corporis quidem perferendis." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 7,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Pháp chế", "Et consequatur rerum veniam velit eum omnis sunt fuga quia." });
+                values: new object[] { "Phòng IT", "Et rem aut incidunt consequatur dolorem corporis fugit ut deleniti." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 8,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Nhân sự", "Minima esse ratione at qui quasi voluptas." });
+                values: new object[] { "Phòng IT", "Dicta quia nemo et repudiandae aliquam asperiores ut et aliquam." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 9,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Sản xuất", "Ut dolores molestias impedit ab necessitatibus qui suscipit iusto." });
+                values: new object[] { "Phòng Hành chính", "Dolorem nihil assumenda." });
 
             migrationBuilder.UpdateData(
                 table: "Departments",
                 keyColumn: "DepartmentId",
                 keyValue: 10,
                 columns: new[] { "DepartmentName", "Description" },
-                values: new object[] { "Phòng Kế toán", "Debitis facilis fugiat molestias illo est eligendi numquam cupiditate." });
+                values: new object[] { "Phòng Marketing", "Eligendi veniam voluptas." });
         }
     }
 }

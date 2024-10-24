@@ -41,13 +41,13 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundQRCardById);
             }
-            if (qRCard.QRCardStatusId == 2)
+            if (qRCard.CardStatus.Equals(QrCardStatusEnum.Inactive.ToString()))
             {
                 return Result.Failure<bool>(Error.CardInActive);
             }
 
             var visitSesson =  await _visitorSessionRepo.FindAsync(
-                    s => s.QRCard.CardVerification.Equals( qrCardVerifi) && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                    s => s.Card.CardVerification.Equals( qrCardVerifi) && s.Status == VisitorSessionStatus.CheckIn.ToString(),
                     1,1
                 );
             if (visitSesson.Count() == 0 )
@@ -87,7 +87,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundQRCard);
             }
-            if (qrCard.QRCardStatusId == 1)
+            if (qrCard.CardStatus.Equals(QrCardStatusEnum.Active.ToString()))
             {
                 return Result.Failure<bool>(Error.CardAcctive);
             }
@@ -96,7 +96,7 @@ namespace SecurityGateApv.Application.Services
 
 
 
-            var checkinSession =  VisitorSession.Checkin(qrCard.QRCardId, command.VisitDetailId, command.SecurityInId, command.GateInId);
+            var checkinSession =  VisitorSession.Checkin(qrCard.CardId, command.VisitDetailId, command.SecurityInId, command.GateInId);
             if (checkinSession.IsFailure)
             {
                 return Result.Failure<bool>(checkinSession.Error);
@@ -163,7 +163,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<ICollection<GetVisitorSessionRes>>> GetVisitSessionByQRCardVerification(string qrCardVerified)
         {
             var visitSession = await _visitorSessionRepo.FindAsync(
-                  s => s.QRCard.CardVerification.Equals(qrCardVerified) && s.Status.Equals(VisitorSessionStatus.CheckIn.ToString()),
+                  s => s.Card.CardVerification.Equals(qrCardVerified) && s.Status.Equals(VisitorSessionStatus.CheckIn.ToString()),
                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                 );
             if (visitSession.Count() == 0)

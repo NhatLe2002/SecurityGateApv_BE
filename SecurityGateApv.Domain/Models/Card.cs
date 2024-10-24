@@ -9,23 +9,21 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Models
 {
-    public class QRCard
+    public class Card
     {
         [Key]
-        public int QRCardId { get; set; }
+        public int CardId { get; set; }
         public string CardVerification { get; private set; }
         public DateTime CreateDate { get; private set; }
         public DateTime LastCancelDate { get; private set; }
+        public DateTime IssuedDate { get; private set; }
+        public DateTime ReturnDate { get; private set; }
         public string CardImage { get; private set; }
+        public string CardStatus { get; private set; }
 
         [ForeignKey("QRCardType")]
         public int QRCardTypeId { get; private set; }
-        public QRCardType QRCardType { get; private set; }
-
-
-        [ForeignKey("QRCardStatus")]
-        public int QRCardStatusId { get; private set; }
-        public QRCardStatus QRCardStatus { get; private set; }
+        public CardType QRCardType { get; private set; }
 
         public ICollection<VisitorSession> VisitorSession { get; private set; }
        /* public Result<QRCard> Update(Guid cardGuidId)
@@ -33,21 +31,21 @@ namespace SecurityGateApv.Domain.Models
             this.CardGuidId = cardGuidId;
             return this;
         }*/
-        public Result<QRCard> UpdateQRCardStatus(int status)
+        public Result<Card> UpdateQRCardStatus(int status)
         {
-            this.QRCardStatusId = status;
+            //this.QRCardStatusId = status;
             return this;
         }
-        public static QRCard Create(int qrCardTypeId, int qrCardStatusId, string guid, string cardImage)
+        public static Card Create(int qrCardTypeId, int qrCardStatusId, string guid, string cardImage)
         {
-            var qrCard = new QRCard
+            var qrCard = new Card
             {
                 CardVerification = guid,
                 CreateDate = DateTime.Now,
                 LastCancelDate = DateTime.Now,
                 CardImage = cardImage,
                 QRCardTypeId = qrCardTypeId,
-                QRCardStatusId = qrCardStatusId
+                //QRCardStatusId = qrCardStatusId
             };
 
             return qrCard;

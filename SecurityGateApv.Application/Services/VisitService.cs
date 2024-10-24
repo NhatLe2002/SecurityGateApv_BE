@@ -56,7 +56,8 @@ namespace SecurityGateApv.Application.Services
                 command.Description,
                 VisitProcessEnum.Active.ToString(),
                 command.CreateById,
-                command.ScheduleId
+                command.ScheduleId,
+                command.ResponsiblePersonId
                 );
             if (createVisit.IsFailure)
             {
@@ -101,7 +102,8 @@ namespace SecurityGateApv.Application.Services
                 command.Description,
                 VisitProcessEnum.Active.ToString(),
                 command.CreateById,
-                6
+                6,
+                command.ResponsiblePersonId
                 );
             if (createVisit.IsFailure)
             {
@@ -135,7 +137,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
         {
-            var visit = await _visitRepo.FindAsync(s => true, pageSize, pageNumber, s => s.OrderBy(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule");
+            var visit = await _visitRepo.FindAsync(s => true, pageSize, pageNumber, s => s.OrderBy(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,Schedule");
             if (visit.Count() == 0)
             {
                 return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);

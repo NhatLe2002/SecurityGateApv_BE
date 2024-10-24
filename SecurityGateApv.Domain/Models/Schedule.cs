@@ -16,7 +16,7 @@ namespace SecurityGateApv.Domain.Models
 
         }
 
-        public Schedule( string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId,  int createById)
+        private Schedule( string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId,  int createById)
         {
             ScheduleName = scheduleName;
             DaysOfSchedule = daysOfSchedule;
@@ -36,6 +36,20 @@ namespace SecurityGateApv.Domain.Models
             Status = status;
             //VisitTypeId = visitTypeId;
             //CreateBy = createBy;
+        }
+
+        private Schedule(int scheduleId, string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
+        {
+            ScheduleId = scheduleId;
+            ScheduleName = scheduleName;
+            DaysOfSchedule = daysOfSchedule;
+            Duration = duration;
+            Description = description;
+            CreateTime = createTime;
+            UpdateTime = updateTime;
+            Status = status;
+            ScheduleTypeId = scheduleTypeId;
+            CreateById = createById;
         }
 
         [Key]
@@ -62,6 +76,11 @@ namespace SecurityGateApv.Domain.Models
         public static Result<Schedule> Create(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
             Schedule schedule = new Schedule( scheduleName, daysOfSchedule,  duration,  description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
+            return schedule;
+        }
+        public static Result<Schedule> Create(int scheduleId, string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
+        {
+            var schedule = new Schedule(scheduleId, scheduleName, daysOfSchedule,  duration,  description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
             return schedule;
         }
         
