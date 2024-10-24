@@ -35,12 +35,18 @@ namespace SecurityGateApv.Domain.Errors
         //Domain Errors
         public static readonly Error NotFound = new("Error.Notfound", "Not found item");
 
+        #region UserError
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
         public static readonly Error CanNotUpdateUserName = new("Error.CanNotUpdateUserName", "Username can not change");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
         public static readonly Error NotPermission = new("Error.User.NotPermission", "Permission not allow");
+        //user canot update departement
+        public static readonly Error CanNotUpdateDepartment = new("Error.CanNotUpdateDepartment", "Department can not change for account admin, manager, security");
+        //user role does not match department
+        public static readonly Error UserRoleNotMatchDepartment = new("Error.UserRoleNotMatchDepartment", "User role does not match department");
+        #endregion
 
 
         #region VisitError
@@ -123,6 +129,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundDepartmentByDepartmentManagerId = new("Error.NotfoundDepartment", "Not found department by department manager id");
         public static readonly Error NotFoundDepartmentById = new("Error.NotfoundDepartment", "Not found department by id");
         public static readonly Error CreateDepartment = new("Error.CreateDepartment", "Create department error");
+        public static readonly Error UpdateDepartment = new("Error.UpdateDepartment", "Update department error");
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");

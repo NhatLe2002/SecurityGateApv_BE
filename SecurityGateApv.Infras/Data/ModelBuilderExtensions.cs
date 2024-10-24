@@ -37,7 +37,7 @@ namespace SecurityGateApv.Infras.Data
             modelBuilder.Entity<Role>().HasData(
                 new Role { RoleId = 1, RoleName = "Admin", Description = "Quản lý toàn bộ hệ thống" },
                 new Role { RoleId = 2, RoleName = "Manager", Description = "Quản lý toàn bộ công ty" },
-                new Role { RoleId = 3, RoleName = "DepartmentManaager", Description = "Quản lý toàn bộ phòng ban" },
+                new Role { RoleId = 3, RoleName = "DepartmentManager", Description = "Quản lý toàn bộ phòng ban" },
                 new Role { RoleId = 4, RoleName = "Staff", Description = "Tạo và quản lý khách ra vào của phòng ban" },
                 new Role { RoleId = 5, RoleName = "Security", Description = "Quản lý khách ra vào tại cổng" }
             );
@@ -52,7 +52,7 @@ namespace SecurityGateApv.Infras.Data
                      new DateTime(2024, 09, 29),
                     "Active",
                    1,
-                   null
+                   1
                 ).Value,
 
 
@@ -68,7 +68,7 @@ namespace SecurityGateApv.Infras.Data
                      new DateTime(2024, 09, 29),
                      new DateTime(2024, 09, 29),
                     "Active",
-                    2, null
+                    2, 2
                 ).Value,
                 User.Create(
                     3,
@@ -82,7 +82,7 @@ namespace SecurityGateApv.Infras.Data
                  new DateTime(2024, 09, 29),
                     "Active",
                      3,
-                     1
+                     4
                 ).Value,
                 User.Create(
                      4,
@@ -96,7 +96,7 @@ namespace SecurityGateApv.Infras.Data
                  new DateTime(2024, 09, 29),
                     "Active",
                      4,
-                     1
+                     4
                 ).Value,
                 User.Create(
                      5,
@@ -110,7 +110,7 @@ namespace SecurityGateApv.Infras.Data
                  new DateTime(2024, 09, 29),
                     "Active",
                      4,
-                     1
+                     4
                 ).Value,
                User.Create(
                     6,
@@ -124,7 +124,7 @@ namespace SecurityGateApv.Infras.Data
                  new DateTime(2024, 09, 29),
                     "Active",
                      5,
-                     null
+                     3
                 ).Value
             );
         }
@@ -149,31 +149,39 @@ namespace SecurityGateApv.Infras.Data
         }
         private static void SeedDepartments(ModelBuilder modelBuilder)
         {
-            var departmentNames = new List<string>
-            {
-                "Phòng Nhân sự",
-                "Phòng Kế toán",
-                "Phòng IT",
-                "Phòng Kinh doanh",
-                "Phòng Marketing",
-                "Phòng Hành chính",
-                "Phòng Chăm sóc khách hàng",
-                "Phòng Pháp chế",
-                "Phòng R&D",
-                "Phòng Sản xuất"
-            };
+            //var departmentNames = new List<string>
+            //{
+            //    "Phòng Nhân sự",
+            //    "Phòng Kế toán",
+            //    "Phòng IT",
+            //    "Phòng Kinh doanh",
+            //    "Phòng Marketing",
+            //    "Phòng Hành chính",
+            //    "Phòng Chăm sóc khách hàng",
+            //    "Phòng Pháp chế",
+            //    "Phòng R&D",
+            //    "Phòng Sản xuất"
+            //};
 
-            var departmentFaker = new Faker<Department>()
-                .RuleFor(d => d.DepartmentId, f => f.IndexFaker + 1)
-                .RuleFor(d => d.DepartmentName, f => f.PickRandom(departmentNames))
-                .RuleFor(d => d.Description, f => f.Lorem.Sentence())
-                .RuleFor(d => d.CreateDate, f => new DateTime(2024, 09, 29))
-                .RuleFor(d => d.UpdatedDate, (f, d) => d.CreateDate)
-                .RuleFor(d => d.AcceptLevel, f => 2);
+            //var departmentFaker = new Faker<Department>()
+            //    .RuleFor(d => d.DepartmentId, f => f.IndexFaker + 1)
+            //    .RuleFor(d => d.DepartmentName, f => f.PickRandom(departmentNames))
+            //    .RuleFor(d => d.Description, f => f.Lorem.Sentence())
+            //    .RuleFor(d => d.CreateDate, f => new DateTime(2024, 09, 29))
+            //    .RuleFor(d => d.UpdatedDate, (f, d) => d.CreateDate)
+            //    .RuleFor(d => d.AcceptLevel, f => 2);
 
-            var randomDepartments = departmentFaker.Generate(10);
+            //var randomDepartments = departmentFaker.Generate(10);
 
-            modelBuilder.Entity<Department>().HasData(randomDepartments);
+            var departmentList = new List<Department>();
+                departmentList.Add(Department.Create(1, "AdminDepartment", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho admin", 1, "Active").Value);
+                departmentList.Add(Department.Create(2, "ManagerDepartment", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản lý", 1, "Active").Value);
+                departmentList.Add(Department.Create(3, "SecurityDepartment", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản security", 1, "Active").Value);
+                departmentList.Add(Department.Create(4, "Phòng Nhân sự", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng nhân sự", 1, "Active").Value);
+                departmentList.Add(Department.Create(5, "Phòng Sản xuất", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng Sản xuất", 1, "Active").Value);
+            
+
+            modelBuilder.Entity<Department>().HasData(departmentList);
         }
         /*private static void SeedUserDepartments(ModelBuilder modelBuilder)
         {

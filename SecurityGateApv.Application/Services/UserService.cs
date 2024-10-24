@@ -30,7 +30,8 @@ namespace SecurityGateApv.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         public UserService(IUserRepo userRepo, IMapper mapper, IJwt jwt, IDepartmentRepo departmentRepo,
-            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender) {
+            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender)
+        {
             _userRepo = userRepo;
             _mapper = mapper;
             _jwt = jwt;
@@ -53,7 +54,14 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<CreateUserComman>(Error.NotPermission);
             }
-            
+            var department = _departmentRepo.FindAsync(s => s.DepartmentId == command.DepartmentId).Result.FirstOrDefault();
+            if ((command.RoleID.Equals(UserRoleEnum.Admin)&& !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.AdminDepartment.ToString()))
+                || (command.RoleID.Equals(UserRoleEnum.Manager) && !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.ManagerDepartment.ToString()))
+                || (command.RoleID.Equals(UserRoleEnum.Security) && !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.SecurityDepartment.ToString()))
+                )
+            {
+                return Result.Failure<CreateUserComman>(Error.UserRoleNotMatchDepartment);
+            }
             var userResult = User.Create(command.UserName, command.Password, command.FullName, command.Email, command.PhoneNumber, command.Image, DateTime.Now, DateTime.Now,
                     UserStatusEnum.Active.ToString(), command.RoleID, command.DepartmentId);
             if (userResult.IsFailure)
@@ -66,7 +74,7 @@ namespace SecurityGateApv.Application.Services
 
             return command;
         }
-        
+
         public async Task<Result<List<GetUserRes>>> GetAllUserPagingByDepartmentId(int pageNumber, int pageSize, int departmentId)
         {
             var department = (await _departmentRepo.FindAsync(
@@ -77,7 +85,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<List<GetUserRes>>(Error.NotFoundDepartment);
             }
             var user = await _userRepo.FindAsync(
-                    s => s.DepartmentId == department.DepartmentId ,
+                    s => s.DepartmentId == department.DepartmentId,
                     pageSize, pageNumber, includeProperties: "Role"
                 );
             if (user.Count() == 0)
@@ -108,7 +116,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetUserRes>>> GetUserByRolePaging(int pageNumber, int pageSize, string role)
         {
             var user = new List<User>();
-            if(role == "All")
+            if (role == "All")
             {
                 user = (await _userRepo.FindAsync(
                     s => true,
@@ -123,11 +131,11 @@ namespace SecurityGateApv.Application.Services
                     )).ToList();
             }
 
-            if(user.Count() == 0)
+            if (user.Count() == 0)
             {
-                return  Result.Failure<List<GetUserRes>>(Error.NotFoundUser);
+                return Result.Failure<List<GetUserRes>>(Error.NotFoundUser);
             }
-            var result = _mapper.Map<List<GetUserRes>>( user );
+            var result = _mapper.Map<List<GetUserRes>>(user);
             return result;
         }
 
@@ -138,7 +146,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<LoginRes>(Error.NotFoundUser);
             }
-            if(login.Password != loginModel.Password)
+            if (login.Password != loginModel.Password)
             {
                 return Result.Failure<LoginRes>(Error.IncorrectPassword);
             }
@@ -179,25 +187,79 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<UpdateUserCommand>> UpdateUser(int userId, UpdateUserCommand command, string token)
         {
+            // Decode the JWT token to get the role of the user making the request
             var role = _jwt.DecodeJwt(token);
+
+            // Check if the user has permission to update the specified role
             var permission = await PermissionCheck(role, command.RoleID);
             if (!permission)
             {
                 return Result.Failure<UpdateUserCommand>(Error.NotPermission);
             }
+
+            // Retrieve the user by userId from the repository
             var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
             if (user == null)
             {
                 return Result.Failure<UpdateUserCommand>(Error.NotFoundUser);
             }
+
+            // Check if the username in the command matches the existing username of the user
             if (user.UserName != command.UserName)
             {
                 return Result.Failure<UpdateUserCommand>(Error.CanNotUpdateUserName);
             }
-            user = _mapper.Map(command, user);
-            user.Update() ;
-            await _userRepo.UpdateAsync(user);  
-            await _unitOfWork.CommitAsync();
+
+            var department = _departmentRepo.FindAsync(s => s.DepartmentId == command.DepartmentId).Result.FirstOrDefault();
+            // If the user's role is not Admin, Manager, or Security, check the department
+            if (user.RoleId == (int)UserRoleEnum.Staff ||
+                user.RoleId == (int)UserRoleEnum.DepartmentManager )
+            {
+                // Check if the specified DepartmentId in the command exists in the repository
+                if (department == null 
+                    || department.DepartmentName.Equals(DepartmentSpecialCaseEnum.AdminDepartment.ToString())
+                    || department.DepartmentName.Equals(DepartmentSpecialCaseEnum.ManagerDepartment.ToString())
+                    || department.DepartmentName.Equals(DepartmentSpecialCaseEnum.SecurityDepartment.ToString()))
+                {
+                    return Result.Failure<UpdateUserCommand>(Error.NotFoundDepartment);
+                }
+            }
+            if (user.RoleId == (int)UserRoleEnum.Admin 
+                || user.RoleId == (int)UserRoleEnum.Manager
+                || user.RoleId == (int)UserRoleEnum.Security)
+            {
+                if(command.DepartmentId != null )
+                {
+                    return Result.Failure<UpdateUserCommand>(Error.CanNotUpdateDepartment);
+                }
+            }
+
+
+            // Map the properties from the command to the user object
+            var result = _mapper.Map(command, user);
+
+            // Call the Update method on the user object to apply any additional logic required for updating
+            user.Update();
+
+            // Update the user in the repository and commit the changes to the database
+            if(!await _userRepo.UpdateAsync(result))
+            {
+                return Result.Failure<UpdateUserCommand>(Error.UpdateDepartment);
+            }
+            try
+            {
+                if (!await _unitOfWork.CommitAsync())
+                {
+                    return Result.Failure<UpdateUserCommand>(Error.UpdateDepartment);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception details here
+                Console.WriteLine($"Error committing changes: {ex.Message}");
+                return Result.Failure<UpdateUserCommand>(Error.UpdateDepartment);
+            }
+
             return command;
         }
         private async Task<bool> PermissionCheck(string userRole, int checkRole)
@@ -240,10 +302,11 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<bool>> UpdateUserPassword(int userId, UpdateUserPasswordCommand command)
         {
             var user = (await _userRepo.FindAsync(s => s.UserId == userId)).FirstOrDefault();
-            if (user == null) {
+            if (user == null)
+            {
                 return Result.Failure<bool>(Error.NotFoundUser);
             }
-            if(user.Password != command.OldPassword)
+            if (user.Password != command.OldPassword)
             {
                 return Result.Failure<bool>(Error.PasswordNotMatch);
             }
@@ -268,7 +331,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<UpdateUserNoDepartmentIdCommand>(Error.NotFoundUser);
             }
-            if(user.UserName != command.UserName)
+            if (user.UserName != command.UserName)
             {
                 return Result.Failure<UpdateUserNoDepartmentIdCommand>(Error.CanNotUpdateUserName);
             }
