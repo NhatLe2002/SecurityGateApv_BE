@@ -6,7 +6,7 @@ namespace SecurityGateApv.WebApi.Query
 {
     public class QueryExample
     {
-        [UseOffsetPaging(MaxPageSize = 100)]
+        [UseOffsetPaging(MaxPageSize = int.MaxValue, IncludeTotalCount = true)]
         [UseFiltering]
         [UseSorting]
         public async Task<IEnumerable<GetVisitNoDetailRes>> GetVisit([Service] IVisitService _visitService)
