@@ -45,7 +45,7 @@ namespace SecurityGateApv.Application.Services
         {
             var qrCoder = _qrRCardRepo.GenerateQRCard(guid);
 
-            var qrCard = QRCard.Create(2, 2, guid, qrCoder.Result);
+            var qrCard = Card.Create(2, 2, guid, qrCoder.Result);
             await _qrRCardRepo.AddAsync(qrCard);
             await _unitOfWork.CommitAsync();
             return true;

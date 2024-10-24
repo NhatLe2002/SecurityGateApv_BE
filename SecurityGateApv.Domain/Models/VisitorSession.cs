@@ -21,7 +21,7 @@ namespace SecurityGateApv.Domain.Models
         {
             CheckinTime = checkin;
             CheckoutTime = checkout;
-            QRCardId = qrCardId;
+            CardId = qrCardId;
             VisitDetailId = visitDetailId;
             SecurityInId = securityInId;
             SecurityOutId = securityOutId;
@@ -35,9 +35,9 @@ namespace SecurityGateApv.Domain.Models
         public DateTime? CheckoutTime { get; private set; }
 
 
-        [ForeignKey("QRCard")]
-        public int QRCardId { get; private set; }
-        public QRCard QRCard { get; private set; }
+        [ForeignKey("Card")]
+        public int CardId { get; private set; }
+        public Card Card { get; private set; }
 
 
         [ForeignKey("VisitDetail")]

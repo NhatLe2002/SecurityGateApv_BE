@@ -22,7 +22,7 @@ namespace SecurityGateApv.Domain.Models
         }
 
         public Visit(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
-            , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId)
+     , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId, int responsiblePersonId)
         {
             VisitName = visitName;
             VisitQuantity = visitQuantity;
@@ -34,10 +34,11 @@ namespace SecurityGateApv.Domain.Models
             VisitStatus = visitStatus;
             CreateById = createById;
             ScheduleId = scheduleId;
+            ResponsiblePersonId = responsiblePersonId;
         }
 
         [Key]
-        public int VisitId { get;  set; }
+        public int VisitId { get; set; }
         public string VisitName { get; private set; }
         public int VisitQuantity { get; private set; }
         public DateTime ExpectedStartTime { get; private set; }
@@ -54,57 +55,62 @@ namespace SecurityGateApv.Domain.Models
         [ForeignKey("UpdateBy")]
         public int? UpdateById { get; private set; }
         public User? UpdateBy { get; private set; }
-        
+
         [ForeignKey("Schedule")]
         public int ScheduleId { get; private set; }
         public Schedule Schedule { get; private set; }
 
+        [ForeignKey("ResponsiblePerson")]
+        public int? ResponsiblePersonId { get; private set; }
+        public User ResponsiblePerson { get; private set; }
+
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
 
         public static Result<Visit> Create(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
-            , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId)
+            , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId, int responsiblePersonId)
         {
             var result = new Visit(visitName, visitQuantity, expectedStartTime, expectedEndTime, createTime
-            , updateTime, description, visitStatus, createById, scheduleId);
+            , updateTime, description, visitStatus, createById, scheduleId, responsiblePersonId);
             return result;
         }
 
-        public async Task<Result<Visit>> AddVisitDetailOfOldVisitor(IEnumerable<VisitDetail> visitSchedule, Schedule schedule,TimeSpan expectedStartHour, TimeSpan expectedEndHour,bool status
+        public async Task<Result<Visit>> AddVisitDetailOfOldVisitor(IEnumerable<VisitDetail> visitSchedule, Schedule schedule, TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
             , int visitorId)
         {
-            if(VisitDetail.Any(s => s.VisitorId == visitorId))
+            if (VisitDetail.Any(s => s.VisitorId == visitorId))
             {
                 return Result.Failure<Visit>(Error.DuplicateVisitorDetail);
             }
             var visitDetailAdd = new VisitDetail(expectedStartHour, expectedEndHour, status
             , this, visitorId);
             var visitBusyOfVisitor = new List<ValidateVisitDateDTO>();
-            foreach (VisitDetail visit in visitSchedule) {
+            foreach (VisitDetail visit in visitSchedule)
+            {
                 visitBusyOfVisitor.AddRange(await CommonService.CaculateBusyDates(visit));
             }
 
             visitDetailAdd.Visit.Schedule = schedule;
             var visitorFutureBusy = await CommonService.CaculateBusyDates(visitDetailAdd);
-            if(visitorFutureBusy.Count() == 0)
+            if (visitorFutureBusy.Count() == 0)
             {
                 return Result.Failure<Visit>(Error.NoValidDateForVisit);
             }
             var error = new List<int>();
             foreach (var dateOfBusy in visitorFutureBusy)
             {
- 
+
                 var check = visitBusyOfVisitor.Where(s => dateOfBusy.VisitDate.Year == s.VisitDate.Year && dateOfBusy.VisitDate.Month == s.VisitDate.Month && dateOfBusy.VisitDate.Day == s.VisitDate.Day);
 
                 if (check != null)
                 {
-/*                    if(check.Any(s => s.TimeIn >= dateOfBusy.TimeIn) && check.Any(s => s.TimeIn < dateOfBusy.TimeOut))
-                    {
-                        error.Add(check.)
-                    }
-                    if (check.Any(s => s.TimeOut > dateOfBusy.TimeIn) && check.Any(s => s.TimeOut <= dateOfBusy.TimeOut))
-                    {
+                    /*                    if(check.Any(s => s.TimeIn >= dateOfBusy.TimeIn) && check.Any(s => s.TimeIn < dateOfBusy.TimeOut))
+                                        {
+                                            error.Add(check.)
+                                        }
+                                        if (check.Any(s => s.TimeOut > dateOfBusy.TimeIn) && check.Any(s => s.TimeOut <= dateOfBusy.TimeOut))
+                                        {
 
-                    }*/
+                                        } */
                     foreach (var day in check)
                     {
                         if (day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut)

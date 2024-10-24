@@ -75,6 +75,8 @@ namespace SecurityGateApv.Domain.Models
 
         [InverseProperty("UpdateBy")]
         public ICollection<Visit> UpdatedVisits { get; private set; }
+        [InverseProperty("ResponsiblePerson")]
+        public ICollection<Visit> ResponsiblePerson { get; private set; }
 
         public ICollection<VisitorSession> SecurityInSessions { get; private set; } 
         public ICollection<VisitorSession> SecurityOutSessions { get; private set; }

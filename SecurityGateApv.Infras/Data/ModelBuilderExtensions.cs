@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace SecurityGateApv.Infras.Data
             SeedDepartments(modelBuilder);
             //SeedUserDepartments(modelBuilder);
             SeedCredentialCardTypes(modelBuilder);
+            SeedScheduleTypes(modelBuilder);
             //SeedVisitors(modelBuilder);
             //SeedVisitType(modelBuilder);
             //SeedProcess(modelBuilder);
@@ -46,7 +48,7 @@ namespace SecurityGateApv.Infras.Data
             modelBuilder.Entity<User>().HasData(
                  User.Create(1, "admin1", "123", "Admin One", "admin1@example.com", "0123456789",
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
-                     new DateTime(2024,09,29),
+                     new DateTime(2024, 09, 29),
                      new DateTime(2024, 09, 29),
                     "Active",
                    1,
@@ -55,7 +57,7 @@ namespace SecurityGateApv.Infras.Data
 
 
                 User.Create(
-                
+
                      2,
                      "manager1",
                     "123",
@@ -124,7 +126,7 @@ namespace SecurityGateApv.Infras.Data
                      5,
                      null
                 ).Value
-            ); 
+            );
         }
 
         private static void SeedRandomUsers(ModelBuilder modelBuilder)
@@ -165,7 +167,7 @@ namespace SecurityGateApv.Infras.Data
                 .RuleFor(d => d.DepartmentId, f => f.IndexFaker + 1)
                 .RuleFor(d => d.DepartmentName, f => f.PickRandom(departmentNames))
                 .RuleFor(d => d.Description, f => f.Lorem.Sentence())
-                .RuleFor(d => d.CreateDate, f => new DateTime(2024,09,29))
+                .RuleFor(d => d.CreateDate, f => new DateTime(2024, 09, 29))
                 .RuleFor(d => d.UpdatedDate, (f, d) => d.CreateDate)
                 .RuleFor(d => d.AcceptLevel, f => 2);
 
@@ -187,14 +189,28 @@ namespace SecurityGateApv.Infras.Data
 
         private static void SeedCredentialCardTypes(ModelBuilder modelBuilder)
         {
-            var cardTypeFaker = new Faker<CredentialCardType>()
-                .RuleFor(c => c.CredentialCardTypeId, f => f.IndexFaker + 1)
-                .RuleFor(c => c.CredentialCardTypeName, f => f.PickRandom(new[] { "Căn cước công dân", "Giấy phép lái xe" }))
-                .RuleFor(c => c.Description, f => f.Lorem.Sentence())
-                .RuleFor(c => c.Status, f => true);
-            var cardTypes = cardTypeFaker.Generate(2);
+            var cardTypes = new List<CredentialCardType>();
+
+            var cardType1Result = CredentialCardType.Create(1, "Căn cước công dân", "Căn cước công dân", true);
+            var cardType3Result = CredentialCardType.Create(2, "Giấy phép lái xe", "Giấy phép lái xe", true);
+
+            if (cardType1Result.IsSuccess) cardTypes.Add(cardType1Result.Value);
+            if (cardType3Result.IsSuccess) cardTypes.Add(cardType3Result.Value);
 
             modelBuilder.Entity<CredentialCardType>().HasData(cardTypes);
+        }
+        private static void SeedScheduleTypes(ModelBuilder modelBuilder)
+        {
+            var scheduleTypeList = new List<ScheduleType>();
+            scheduleTypeList.Add(ScheduleType.Create(1, ScheduleTypeEnum.VisitDaily.ToString(), "Lịch trình đăng ký ra vào hàng ngày cho staff và bảo vệ", true).Value);
+            scheduleTypeList.Add(ScheduleType.Create(2, ScheduleTypeEnum.ProcessWeek.ToString(), "Lịch trình đăng ký ra vào theo tiến trình hàng tuần cho Department Manager", true).Value);
+            scheduleTypeList.Add(ScheduleType.Create(3, ScheduleTypeEnum.ProcessMonth.ToString(), "Lịch trình đăng ký ra vào theo tiến trình hàng tháng cho Department Manager", true).Value);
+            scheduleTypeList.Add(ScheduleType.Create(4, ScheduleTypeEnum.Project.ToString(), "Lịch trình đăng ký ra vào theo dự án cho Department Manager", true).Value);
+
+            modelBuilder.Entity<ScheduleType>().HasData(scheduleTypeList);
+
+            //var scheduleDaily = Schedule.Create(1,"Lịch đăng ký hằng ngày", "", 0, "Lịch đăng kí hàng ngày không được sửa hoặc thêm", new DateTime(2024, 09, 29), new DateTime(2024, 10, 24), true, 1, 1);
+            //modelBuilder.Entity<Schedule>().HasData(scheduleDaily);
         }
 
         private static void SeedVisitors(ModelBuilder modelBuilder)
@@ -210,7 +226,7 @@ namespace SecurityGateApv.Infras.Data
                 //.RuleFor(v => v.Status, f => f.Random.Bool())
                 //.RuleFor(v => v.UserId, f => null)
                 .RuleFor(v => v.CredentialCardTypeId, f => f.PickRandom(1, 2));
-                //.RuleFor(v => v.CreateById, f => 1);
+            //.RuleFor(v => v.CreateById, f => 1);
 
             var visitors = visitorFaker.Generate(10);
 
@@ -288,47 +304,47 @@ namespace SecurityGateApv.Infras.Data
             modelBuilder.Entity<VisitDetail>().HasData(visitDetails);
 
         }*/
-       /* private static void SeedVisits(ModelBuilder modelBuilder)
-        {
-            var visitFaker = new Faker<Visit>()
-                .RuleFor(v => v.VisitId, f => f.IndexFaker + 2)
-                .RuleFor(v => v.DateRegister, f => DateTime.UtcNow)
-                .RuleFor(v => v.VisitName, f => "Dọn vệ sinh")
-                .RuleFor(v => v.VisitQuantity, f => 2)
-                .RuleFor(v => v.AcceptLevel, f => 2)
-                .RuleFor(v => v.Description, f => null)
-                .RuleFor(v => v.VisitType, f => "ProcessWeek")
-                .RuleFor(v => v.CreateById, f => 4)
-                .RuleFor(v => v.UpdateById, f => 4);
-            var visits = visitFaker.Generate(5);
-            modelBuilder.Entity<Visit>().HasData(visits);
+        /* private static void SeedVisits(ModelBuilder modelBuilder)
+         {
+             var visitFaker = new Faker<Visit>()
+                 .RuleFor(v => v.VisitId, f => f.IndexFaker + 2)
+                 .RuleFor(v => v.DateRegister, f => DateTime.UtcNow)
+                 .RuleFor(v => v.VisitName, f => "Dọn vệ sinh")
+                 .RuleFor(v => v.VisitQuantity, f => 2)
+                 .RuleFor(v => v.AcceptLevel, f => 2)
+                 .RuleFor(v => v.Description, f => null)
+                 .RuleFor(v => v.VisitType, f => "ProcessWeek")
+                 .RuleFor(v => v.CreateById, f => 4)
+                 .RuleFor(v => v.UpdateById, f => 4);
+             var visits = visitFaker.Generate(5);
+             modelBuilder.Entity<Visit>().HasData(visits);
 
 
 
-            int visitDetailCounter = 3;
-            foreach (var v in visits)
-            {
-                for (var v2 = 0; v2 <= v.VisitQuantity; v2++)
-                {
+             int visitDetailCounter = 3;
+             foreach (var v in visits)
+             {
+                 for (var v2 = 0; v2 <= v.VisitQuantity; v2++)
+                 {
 
-                    var visitDetailFaker = new Faker<VisitDetail>()
-                      .RuleFor(vd => vd.VisitDetailId, f => visitDetailCounter++)
-                      .RuleFor(vd => vd.Description, f => f.Lorem.Paragraph())
-                      .RuleFor(vd => vd.ExpectedStartDate, f => DateTime.Now)
-                      .RuleFor(vd => vd.ExpectedEndDate, f => DateTime.Now.AddDays(1))
-                      .RuleFor(vd => vd.ExpectedStartTime, f => TimeSpan.FromHours(7))
-                      .RuleFor(vd => vd.ExpectedEndTime, f => TimeSpan.FromHours(12))
-                      .RuleFor(vd => vd.Status, f => true)
-                      .RuleFor(vd => vd.VisitId, f => v.VisitId)
-                      .RuleFor(vd => vd.VisitorId, f => f.Random.Int(1, 10));
+                     var visitDetailFaker = new Faker<VisitDetail>()
+                       .RuleFor(vd => vd.VisitDetailId, f => visitDetailCounter++)
+                       .RuleFor(vd => vd.Description, f => f.Lorem.Paragraph())
+                       .RuleFor(vd => vd.ExpectedStartDate, f => DateTime.Now)
+                       .RuleFor(vd => vd.ExpectedEndDate, f => DateTime.Now.AddDays(1))
+                       .RuleFor(vd => vd.ExpectedStartTime, f => TimeSpan.FromHours(7))
+                       .RuleFor(vd => vd.ExpectedEndTime, f => TimeSpan.FromHours(12))
+                       .RuleFor(vd => vd.Status, f => true)
+                       .RuleFor(vd => vd.VisitId, f => v.VisitId)
+                       .RuleFor(vd => vd.VisitorId, f => f.Random.Int(1, 10));
 
-                    var visitDetails = visitDetailFaker.Generate(v.VisitQuantity);
+                     var visitDetails = visitDetailFaker.Generate(v.VisitQuantity);
 
-                    modelBuilder.Entity<VisitDetail>().HasData(visitDetails);
-                }
-            }
+                     modelBuilder.Entity<VisitDetail>().HasData(visitDetails);
+                 }
+             }
 
-        }*/
+         }*/
 
         private static void SeedVisitDetails(ModelBuilder modelBuilder)
         {
@@ -338,16 +354,16 @@ namespace SecurityGateApv.Infras.Data
         private static void SeedQRCards(ModelBuilder modelBuilder)
         {
             // Seed QRCardStatus
-            modelBuilder.Entity<QRCardStatus>().HasData(
-                new QRCardStatus { QRCardStatusId = 1, StatusName = "Active", Description = "Thẻ đang được dùng checkin" },
-                new QRCardStatus { QRCardStatusId = 2, StatusName = "Inactive", Description = "Thẻ chưa dùng cho bảo vệ" },
-                new QRCardStatus { QRCardStatusId = 3, StatusName = "Disable", Description = "Thẻ đã hết hạn" }
-            );
+            //modelBuilder.Entity<QRCardStatus>().HasData(
+            //    new QRCardStatus { QRCardStatusId = 1, StatusName = "Active", Description = "Thẻ đang được dùng checkin" },
+            //    new QRCardStatus { QRCardStatusId = 2, StatusName = "Inactive", Description = "Thẻ chưa dùng cho bảo vệ" },
+            //    new QRCardStatus { QRCardStatusId = 3, StatusName = "Disable", Description = "Thẻ đã hết hạn" }
+            //);
 
             // Seed QRCardType
-            modelBuilder.Entity<QRCardType>().HasData(
-                new QRCardType { QRCardTypeId = 1, CardTypeName = "Vehicle", TypeDescription = "Vehicle QR Card" },
-                new QRCardType { QRCardTypeId = 2, CardTypeName = "Visitor", TypeDescription = "Visitor QR Card" }
+            modelBuilder.Entity<CardType>().HasData(
+                new CardType { QRCardTypeId = 1, CardTypeName = "Vehicle", TypeDescription = "Vehicle QR Card" },
+                new CardType { QRCardTypeId = 2, CardTypeName = "Visitor", TypeDescription = "Visitor QR Card" }
             );
 
             /*var cardFaker = new Faker<QRCard>()
@@ -377,7 +393,7 @@ namespace SecurityGateApv.Infras.Data
                 .RuleFor(vs => vs.VisitorSessionId, f => f.IndexFaker + 1)
                 .RuleFor(vs => vs.CheckinTime, f => DateTime.UtcNow.AddDays(1))
                 .RuleFor(vs => vs.CheckoutTime, f => null)
-                .RuleFor(vs => vs.QRCardId, f => f.Random.Int(1, 10))
+                .RuleFor(vs => vs.CardId, f => f.Random.Int(1, 10))
                 .RuleFor(vs => vs.VisitDetailId, f => f.Random.Int(1, 10))
                 .RuleFor(vs => vs.SecurityInId, 5)
                 .RuleFor(vs => vs.SecurityOutId, f => null)

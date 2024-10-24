@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Models
 {
-    public class QRCardType
+    public class CardType
     {
         [Key]
         public int QRCardTypeId { get; set; }
         public string CardTypeName { get; set; }
         public string TypeDescription { get; set; }
 
-        public ICollection<QRCard> QRCards { get; set; }
+        public ICollection<Card> QRCards { get; set; }
     }
 }

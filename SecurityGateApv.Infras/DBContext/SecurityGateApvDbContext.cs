@@ -28,9 +28,8 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<NotificationUsers> NotificationUsers { get; set; }
         public DbSet<PrivateKeyService> PrivateKeyServices { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<QRCard> QRCards { get; set; }
-        public DbSet<QRCardStatus> QRCardStatus { get; set; }
-        public DbSet<QRCardType> QRCardType { get; set; }
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<CardType> QRCardTypes { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<VehicleSessionImage> VehicleSessionImages { get; set; }
