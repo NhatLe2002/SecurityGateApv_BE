@@ -5,7 +5,10 @@ using Microsoft.OpenApi.Models;
 using SecurityGateApv.Application.Common;
 using SecurityGateApv.Application.DTOs.Req.Validators;
 using SecurityGateApv.Application.Extensions;
+using SecurityGateApv.Application.Services;
+using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Infras.Extentions;
+using SecurityGateApv.WebApi.Query;
 using System.Reflection;
 
 namespace SecurityGateApv.WebApi
@@ -19,7 +22,10 @@ namespace SecurityGateApv.WebApi
             // Add services to the container.
             builder.Services.AddInfrastructure(connectionString, builder.Configuration);
             builder.Services.AddServices();
-  
+            builder.Services.AddGraphQLServer()
+                .AddFiltering()
+                .AddSorting()
+                .AddQueryType<QueryExample>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -74,6 +80,7 @@ namespace SecurityGateApv.WebApi
                .SetIsOriginAllowed(_ => true)
                .AllowCredentials());
             app.MapControllers();
+            app.MapGraphQL();
 
             app.Run();
         }
