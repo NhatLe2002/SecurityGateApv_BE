@@ -264,7 +264,12 @@ namespace SecurityGateApv.Application.Services
         }
         private async Task<bool> PermissionCheck(string userRole, int checkRole)
         {
-            if (userRole == UserRoleEnum.Manager.ToString() && checkRole == (int)UserRoleEnum.DepartmentManager)
+            //check if userRole is Admin, Manager, DepartmentManager, Staff, or Security and checkRole is Admin, Manager, DepartmentManager, Staff, or Security respectively true
+            if (((UserRoleEnum)checkRole).ToString()==userRole)
+            {
+                return true;
+            }
+            if (userRole == UserRoleEnum.Manager.ToString() && (checkRole == (int)UserRoleEnum.DepartmentManager || checkRole == (int)UserRoleEnum.Staff || checkRole == (int)UserRoleEnum.Security))
             {
                 return true;
             }
@@ -275,11 +280,6 @@ namespace SecurityGateApv.Application.Services
             }
             else
             if (userRole == UserRoleEnum.Admin.ToString())
-            {
-                return true;
-            }
-            else
-            if (userRole == UserRoleEnum.Manager.ToString() && checkRole == (int)UserRoleEnum.Security)
             {
                 return true;
             }
