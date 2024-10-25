@@ -29,11 +29,11 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
 
 
-            RuleFor(x => x.DepartmentId)
-                .NotNull().NotEmpty().Must(s =>
-                {
-                    return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
-                }).WithMessage("Department Id is not exist");
+            //RuleFor(x => x.DepartmentId)
+            //    .NotNull().NotEmpty().Must(s =>
+            //    {
+            //        return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
+            //    }).WithMessage("Department Id is not exist");
         }
     }
     
