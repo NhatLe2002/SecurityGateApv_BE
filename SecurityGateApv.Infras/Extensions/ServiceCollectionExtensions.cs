@@ -1,16 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SecurityGateApv.Domain.Interfaces.AWS;
+using SecurityGateApv.Domain.Interfaces.DomainDTOs;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Jwt;
+using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Infras.AWS;
 using SecurityGateApv.Infras.DBContext;
 using SecurityGateApv.Infras.Helpers;
+using SecurityGateApv.Infras.Notifications;
 using SecurityGateApv.Infras.Repositories;
 using System;
 using System.Collections.Generic;
@@ -54,6 +59,9 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<ICredentialCardTypeRepo, CredentialCardTypeRepo>();
             services.AddScoped<IScheduleUserRepo, ScheduleUserRepo>();
+            services.AddScoped<INotifications, NotificationsService>();
+            services.AddSingleton<NotificationHub>();
+            services.AddSingleton<IDictionary<string, UserConnectionDTO>>(opt => new Dictionary<string, UserConnectionDTO>());
 
 
             //Email DI
@@ -78,7 +86,14 @@ namespace SecurityGateApv.Infras.Extentions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                     };
                 });
+            //signalR
+            services.AddSignalR();
             return services;
+        }
+        public static WebApplication UseInfras(this WebApplication app)
+        {
+            app.MapHub<NotificationHub>("/notificationHub");
+            return app;
         }
     }
 }

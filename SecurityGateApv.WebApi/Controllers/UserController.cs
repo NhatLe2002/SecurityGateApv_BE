@@ -165,9 +165,9 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPost("Testemail")]
-        public async Task<ActionResult> TestEmail([FromQuery] string email)
+        public async Task<ActionResult> TestEmail()
         {
-            var result = await _userService.SendEmailTest(email);
+            var result = await _userService.SendEmailTest("");
 
             if (result.IsFailure)
             {
