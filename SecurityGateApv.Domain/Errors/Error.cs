@@ -65,12 +65,15 @@ namespace SecurityGateApv.Domain.Errors
         //public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         //public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
         #endregion
-
-        //QRCard error
+        #region CardError
+        //Card error
         public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");
         public static readonly Error NotFoundQRCard = new("Error.NotfoundQRCard", "Not found this QRCard");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
+        //DuplicateQRCard
+        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "Duplicate Card");
+        #endregion
 
         # region VisitSesson
         //VisitSesson error 

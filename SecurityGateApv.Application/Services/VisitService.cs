@@ -91,7 +91,7 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command)
         {
-            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == 6, includeProperties: "ScheduleType")).FirstOrDefault();
+            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()), includeProperties: "ScheduleType")).FirstOrDefault();
             var createVisit = Visit.Create(
                 command.VisitName,
                 command.VisitQuantity,

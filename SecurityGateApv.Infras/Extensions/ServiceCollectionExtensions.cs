@@ -41,7 +41,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitDetailRepo, VisitDetailRepo>();
             services.AddScoped<IVisitorSessionRepo, VisitorSessionRepo>();
             services.AddScoped<IGateRepo, GateRepo>();
-            services.AddScoped<IQRCardRepo, QRCardRepo>();
+            services.AddScoped<ICardRepo, CardRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<IScheduleTypeRepo, ScheduleTypeRepo>();
             services.AddScoped<IScheduleRepo, ScheduleRepo>();

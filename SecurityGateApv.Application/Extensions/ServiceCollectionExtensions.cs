@@ -23,7 +23,7 @@ namespace SecurityGateApv.Application.Extensions
             //services.AddScoped<IVisitDetai, VisitService>();
             services.AddScoped<IVisitorSessionService, VisitorSessionService>();
             services.AddScoped<IVisitService, VisitService>();
-            services.AddScoped<IQRCodeService, QRCodeService>();
+            services.AddScoped<ICardService, CardService>();
             services.AddScoped<IGateService, GateService>();
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IDepartmentService, DepartmentService>();

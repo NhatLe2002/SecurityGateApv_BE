@@ -29,7 +29,8 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<PrivateKeyService> PrivateKeyServices { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Card> Cards { get; set; }
-        public DbSet<CardType> QRCardTypes { get; set; }
+        public DbSet<VisitCard> VisitCards { get; set; }
+        public DbSet<CardType> CardTypes { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<VehicleSessionImage> VehicleSessionImages { get; set; }
@@ -125,11 +126,11 @@ namespace SecurityGateApv.Infras.DBContext
                .HasForeignKey(v => v.VisitDetailId)
                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<VehicleSession>()
-               .HasOne(v => v.VisitDetail)
-               .WithMany(v => v.VehicleSession)
-               .HasForeignKey(v => v.VisitDetailId)
-               .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<VehicleSession>()
+            //   .HasOne(v => v.VisitDetail)
+            //   .WithMany(v => v.VehicleSession)
+            //   .HasForeignKey(v => v.VisitDetailId)
+            //   .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Seed();
         }

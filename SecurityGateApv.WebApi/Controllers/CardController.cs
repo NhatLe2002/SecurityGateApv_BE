@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
@@ -7,34 +8,34 @@ namespace SecurityGateApv.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class QRCodeController : Controller
+    public class CardController : Controller
     {
-        private readonly IQRCodeService _qrCodeService;
+        private readonly ICardService _qrCodeService;
 
-        public QRCodeController(IQRCodeService qrCodeService)
+        public CardController(ICardService qrCodeService)
         {
             _qrCodeService = qrCodeService;
         }
 
-        [HttpPost("decode")]
-        public async Task<IActionResult> DecodeQRCode( IFormFile image)
-        {
-            // Kiểm tra xem file có tồn tại không
-            if (image == null || image.Length == 0)
-            {
-                return BadRequest("Vui lòng chọn một file ảnh.");
-            }
+        //[HttpPost("decode")]
+        //public async Task<IActionResult> DecodeQRCode( IFormFile image)
+        //{
+        //    // Kiểm tra xem file có tồn tại không
+        //    if (image == null || image.Length == 0)
+        //    {
+        //        return BadRequest("Vui lòng chọn một file ảnh.");
+        //    }
 
-            try
-            {
-                var result = _qrCodeService.DecodeQRCodeFromImage(image);
-                return Ok(new { Text = result });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Lỗi: {ex.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        var result = _qrCodeService.DecodeQRCodeFromImage(image);
+        //        return Ok(new { Text = result });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Lỗi: {ex.Message}");
+        //    }
+        //}
         [HttpPost("ShoeDetect")]
         public async Task<IActionResult> ShoeDetect(DetectImageCommand request)
         {
@@ -59,17 +60,17 @@ namespace SecurityGateApv.WebApi.Controllers
             }
         }
 
-        [HttpPost("GenerateQrCard")]
-        public async Task<IActionResult> GenerateQrCar(string cardGuid)
+        [HttpPost("GenerateCard/{cardVerified}")]
+        public async Task<IActionResult> GenerateCard(string cardVerified)
         {
-            var result = _qrCodeService.GenerateQrCar(cardGuid);
-            return Ok(result.Result);
+            var result = _qrCodeService.GenerateCard(cardVerified);
+            return Ok(result.Result.Value);
         }
 
-        [HttpPost("CreateQRCard")]
-        public async Task<IActionResult> CreateQRCard( string cardGuid)
+        [HttpPost("CreateCard")]
+        public async Task<IActionResult> CreateCard( CreateCardCommand command)
         {
-            var result = _qrCodeService.CreateQRCard( cardGuid);
+            var result = _qrCodeService.CreateCard(command);
             return Ok(result.Result.Value);
         }
         [HttpGet("GetAllQrCardPaging")]

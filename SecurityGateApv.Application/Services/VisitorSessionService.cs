@@ -20,11 +20,11 @@ namespace SecurityGateApv.Application.Services
     public class VisitorSessionService : IVisitorSessionService
     {
         private readonly IVisitorSessionRepo _visitorSessionRepo;
-        private readonly IQRCardRepo _qRCardRepo;
+        private readonly ICardRepo _qRCardRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVisitDetailRepo _visitDetailRepo;
-        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, IQRCardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo)
+        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, ICardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo)
         {
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
@@ -41,7 +41,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundQRCardById);
             }
-            if (qRCard.CardStatus.Equals(QrCardStatusEnum.Inactive.ToString()))
+            if (qRCard.CardStatus.Equals(CardStatusEnum.Inactive.ToString()))
             {
                 return Result.Failure<bool>(Error.CardInActive);
             }
@@ -87,7 +87,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundQRCard);
             }
-            if (qrCard.CardStatus.Equals(QrCardStatusEnum.Active.ToString()))
+            if (qrCard.CardStatus.Equals(CardStatusEnum.Active.ToString()))
             {
                 return Result.Failure<bool>(Error.CardAcctive);
             }

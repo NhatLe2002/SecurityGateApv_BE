@@ -7,15 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SecurityGateApv.Application.DTOs.Req.CreateReq;
 
 namespace SecurityGateApv.Application.Services.Interface
 {
-    public interface IQRCodeService
+    public interface ICardService
     {
         public string DecodeQRCodeFromImage(IFormFile imageStream);
         public Task<Result<AWSDomainDTO>> DetectShoe(IFormFile image);
-        public Task<Result<string>> GenerateQrCar(string data);
-        public Task<Result<bool>> CreateQRCard( string guid);
+        public Task<Result<GetCardRes>> GenerateCard(string data);
+        public Task<Result<bool>> CreateCard( CreateCardCommand command);
         public Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize);
         public Task<Result<GetCardRes>> GetQrCardByCardVerification(string cardVerified);
 

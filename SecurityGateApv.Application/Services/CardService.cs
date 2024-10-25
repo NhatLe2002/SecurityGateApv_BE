@@ -16,20 +16,21 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SecurityGateApv.Application.DTOs.Req.CreateReq;
 
 namespace SecurityGateApv.Application.Services
 {
-    public class QRCodeService : IQRCodeService
+    public class CardService : ICardService
     {
         private readonly IExtractQRCode _extractQRCode;
-        private readonly IQRCardRepo _qrRCardRepo;
+        private readonly ICardRepo _qrRCardRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAWSService _awsService;
         private readonly IPrivateKeyRepo _privateKeyRepo;
 
-        public QRCodeService(IExtractQRCode extractQRCode, IMapper mapper, IUnitOfWork unitOfWork,
-            IAWSService awsService, IQRCardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo)
+        public CardService(IExtractQRCode extractQRCode, IMapper mapper, IUnitOfWork unitOfWork,
+            IAWSService awsService, ICardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo)
         {
             _extractQRCode = extractQRCode;
             _mapper = mapper;
@@ -41,15 +42,6 @@ namespace SecurityGateApv.Application.Services
         }
 
 
-        public async Task<Result<bool>> CreateQRCard(string guid)
-        {
-            var qrCoder = _qrRCardRepo.GenerateQRCard(guid);
-
-            var qrCard = Card.Create(2, 2, guid, qrCoder.Result);
-            await _qrRCardRepo.AddAsync(qrCard);
-            await _unitOfWork.CommitAsync();
-            return true;
-        }
 
         public string DecodeQRCodeFromImage(IFormFile imageStream)
         {
@@ -57,17 +49,19 @@ namespace SecurityGateApv.Application.Services
             return result;
         }
 
-        public async Task<Result<string>> GenerateQrCar( string cardGuid)
+        public async Task<Result<GetCardRes>> GenerateCard( string cardGuid)
         {
+
             //var qrCard = QRCard.Create(1, 2, cardGuid, );
-            var qrCoder = await _qrRCardRepo.GenerateQRCard(cardGuid);
+            var card = await _qrRCardRepo.GenerateQRCard(cardGuid);
+            var qrCoder = _mapper.Map<GetCardRes>(card);
             return qrCoder;
         }
 
         public async Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
             var card = await _qrRCardRepo.FindAsync(
-                s => true, pageSize, pageNumber,includeProperties: "QRCardStatus,QRCardType"
+                s => true, pageSize, pageNumber,includeProperties: "CardType"
                 );
             if(card == null)
             {
@@ -77,6 +71,7 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<List<GetCardRes>>(card);
             return result;
 
+        
 
         }
 
@@ -104,7 +99,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<GetCardRes>> GetQrCardByCardVerification(string cardVerified)
         {
             var card = (await _qrRCardRepo.FindAsync(
-                s => s.CardVerification.Equals(cardVerified), includeProperties: "QRCardStatus,QRCardType"
+                s => s.CardVerification.Equals(cardVerified), includeProperties: "CardType"
                 )).FirstOrDefault();
             if (card == null)
             {
@@ -113,6 +108,23 @@ namespace SecurityGateApv.Application.Services
 
             var result = _mapper.Map<GetCardRes>(card);
             return result;
+        }
+
+        public async Task<Result<bool>> CreateCard(CreateCardCommand command)
+        {
+            var card = (await _qrRCardRepo.FindAsync(
+                s => s.CardVerification.Equals(command.CardVerified)
+                )).FirstOrDefault();
+            if (card != null)
+            {
+                return Result.Failure<bool>(Error.DuplicateCard);
+            }
+            var qrCoder = _qrRCardRepo.GenerateQRCard(command.CardVerified).Result;
+
+            var qrCard = Card.Create(command.CardTypeId, command.CardVerified, qrCoder.CardImage);
+            await _qrRCardRepo.AddAsync(qrCard);
+            await _unitOfWork.CommitAsync();
+            return true;
         }
     }
 }

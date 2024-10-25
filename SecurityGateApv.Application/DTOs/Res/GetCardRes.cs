@@ -9,12 +9,12 @@ namespace SecurityGateApv.Application.DTOs.Res
 {
     public class GetCardRes
     {
-        public int QRCardId { get; set; }
+        public int CardId { get; set; }
         public string CardVerification { get;  set; }
         public DateTime CreateDate { get;  set; }
         public DateTime LastCancelDate { get;  set; }
         public string CardImage { get;  set; }
+        public string CardStatus { get;  set; }
         public string QrCardTypename { get;  set; }
-        public string QrCardStatusName { get;  set; }
     }
 }

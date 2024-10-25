@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Domain.Enums
 {
-    public enum QrCardStatusEnum
+    public enum CardStatusEnum
     {
         None,
         Active,
