@@ -7,6 +7,7 @@ using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Jwt;
+using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
@@ -29,8 +30,10 @@ namespace SecurityGateApv.Application.Services
         private readonly IJwt _jwt;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
+        private readonly INotifications _notifications;
+
         public UserService(IUserRepo userRepo, IMapper mapper, IJwt jwt, IDepartmentRepo departmentRepo,
-            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender) {
+            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender, INotifications notifications) {
             _userRepo = userRepo;
             _mapper = mapper;
             _jwt = jwt;
@@ -38,6 +41,7 @@ namespace SecurityGateApv.Application.Services
             _roleRepo = roleRepo;
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
+            _notifications = notifications;
         }
 
         public Task<Result<CreateUserComman>> CreateDepartmentManager(CreateUserComman command)
@@ -153,7 +157,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<bool>> SendEmailTest(string email)
         {
-            await _emailSender.SendEmailAsync(email, "Test subject", "haha");
+            await _notifications.SendMessage();
             return true;
         }
 

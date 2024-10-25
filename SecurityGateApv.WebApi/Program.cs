@@ -81,6 +81,7 @@ namespace SecurityGateApv.WebApi
                .AllowCredentials());
             app.MapControllers();
             app.MapGraphQL();
+            app.UseInfras();
 
             app.Run();
         }
