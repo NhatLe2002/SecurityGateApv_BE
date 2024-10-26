@@ -57,6 +57,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error DuplicateVisitorDetail = new("Error.DuplicateVisitorDetail", "Duplicate visitor");
         public static readonly Error VisitorIsBusy = new("Error.VisitorIsBusy", "Visitor busy at ...");
         public static readonly Error NoValidDateForVisit = new("Error.NoValidDateForVisit", "No Date Valid for this schedule");
+        public static readonly Error NoScheduleAssignForThisStaff = new("Error.NoScheduleAssignForThisStaff", "No Assigned Schedule for staff");
         #endregion
 
         #region VisitDetailError
