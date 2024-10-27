@@ -95,7 +95,7 @@ namespace SecurityGateApv.Domain.Models
             {
                 return Result.Failure<Visit>(Error.NoValidDateForVisit);
             }
-            var error = new List<int>();
+            var error = new Dictionary<int, string>();
             foreach (var dateOfBusy in visitorFutureBusy)
             {
 
@@ -115,12 +115,12 @@ namespace SecurityGateApv.Domain.Models
                     {
                         if (day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut)
                         {
-                            error.Add((int)day.VisitId);
+                            error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
                             continue;
                         }
                         if (day.TimeOut > dateOfBusy.TimeIn && day.TimeOut <= dateOfBusy.TimeOut)
                         {
-                            error.Add((int)day.VisitId);
+                            error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
                             continue;
                         }
                     }
@@ -128,7 +128,7 @@ namespace SecurityGateApv.Domain.Models
             }
             if (error.Distinct().Count() > 0)
             {
-                return Result.Failure<Visit>(new Error("CreateVisit", "Visitor busy at visit Id: " + string.Join(", ", error)));
+                return Result.Failure<Visit>(new Error("CreateVisit", "VisitorId " + visitorId + " busy at visit Id: " + string.Join(", ", error)));
             }
             VisitDetail.Add(visitDetailAdd);
             return this;

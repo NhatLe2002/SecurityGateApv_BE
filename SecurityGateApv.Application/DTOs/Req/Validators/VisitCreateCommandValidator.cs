@@ -34,10 +34,10 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             {
                 return userRepo.IsAny(t=> t.UserId == s).GetAwaiter().GetResult();
             }).WithMessage("ResponsiblePerson Id is not exist");
-/*            RuleFor(s => s.ScheduleId).NotNull().NotEmpty().Must(s =>
+            RuleFor(s => s.ScheduleId).NotNull().NotEmpty().Must(s =>
             {
                 return userRepo.IsAny(t => t.UserId == s).GetAwaiter().GetResult();
-            }).WithMessage("User Id is not exist");*/
+            }).WithMessage("Schedule Id is not exist");
             RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
                 if (x.ExpectedEndHour < x.ExpectedStartHour)

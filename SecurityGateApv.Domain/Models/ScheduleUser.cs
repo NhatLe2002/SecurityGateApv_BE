@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Domain.Shared;
+﻿using SecurityGateApv.Domain.Enums;
+using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,6 +51,11 @@ namespace SecurityGateApv.Domain.Models
             var scheduleUser = new ScheduleUser(title, description, note, assignTime, deadlineTime,
             status, scheduleId, assignFromId, assignToId);
             return scheduleUser;
+        }
+        public Result<ScheduleUser> UpdateVisitList()
+        {
+            this.Status = ScheduleUserStatusEnum.Pending.ToString();
+            return this;
         }
     }
 }
