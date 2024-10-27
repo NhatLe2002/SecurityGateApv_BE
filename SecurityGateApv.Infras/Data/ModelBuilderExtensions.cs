@@ -401,7 +401,7 @@ namespace SecurityGateApv.Infras.Data
                 .RuleFor(vs => vs.VisitorSessionId, f => f.IndexFaker + 1)
                 .RuleFor(vs => vs.CheckinTime, f => DateTime.UtcNow.AddDays(1))
                 .RuleFor(vs => vs.CheckoutTime, f => null)
-                .RuleFor(vs => vs.CardId, f => f.Random.Int(1, 10))
+                //.RuleFor(vs => vs.CardId, f => f.Random.Int(1, 10))
                 .RuleFor(vs => vs.VisitDetailId, f => f.Random.Int(1, 10))
                 .RuleFor(vs => vs.SecurityInId, 5)
                 .RuleFor(vs => vs.SecurityOutId, f => null)

@@ -83,6 +83,7 @@ namespace SecurityGateApv.Application.Mapper
 
             #region SessionsImageRes
             CreateMap<SessionsImageRes, VisitorSessionsImage>().ReverseMap();
+            CreateMap<VisitorSessionsImageCheckinCommand, VisitorSessionsImage>().ReverseMap();
 
             #endregion
 
@@ -92,9 +93,11 @@ namespace SecurityGateApv.Application.Mapper
 
             #region VisitSession
                 CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap();
+                CreateMap<SessionsRes, VisitorSession>().ReverseMap();
             #endregion
             #region Card
             CreateMap<Card, GetCardRes>().ReverseMap();
+            CreateMap<VisitCard, VisitCardRes>().ReverseMap();
             #endregion
         }
     }

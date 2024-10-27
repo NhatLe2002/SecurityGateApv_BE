@@ -65,7 +65,7 @@ namespace SecurityGateApv.Application.Services
                 );
             if(card == null)
             {
-                return Result.Failure<List<GetCardRes>>(Error.NotFoundQRCard);
+                return Result.Failure<List<GetCardRes>>(Error.NotFoundCard);
             }
 
             var result = _mapper.Map<List<GetCardRes>>(card);
@@ -103,7 +103,7 @@ namespace SecurityGateApv.Application.Services
                 )).FirstOrDefault();
             if (card == null)
             {
-                return Result.Failure<GetCardRes>(Error.NotFoundQRCard);
+                return Result.Failure<GetCardRes>(Error.NotFoundCard);
             }
 
             var result = _mapper.Map<GetCardRes>(card);

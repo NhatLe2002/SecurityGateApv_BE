@@ -62,17 +62,21 @@ namespace SecurityGateApv.Domain.Errors
         #region VisitDetailError
         //Visit error
         public static readonly Error NotFoundVisitDetail = new("Error.VisitDetail", "Not found this VisitDetail");
-        //public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
-        //public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
+        
         #endregion
         #region CardError
         //Card error
-        public static readonly Error NotFoundQRCardById = new("Error.Notfound", "Not found this QRCard");
-        public static readonly Error NotFoundQRCard = new("Error.NotfoundQRCard", "Not found this QRCard");
+        public static readonly Error NotFoundCardById = new("Error.Notfound", "Not found this Card");
+        public static readonly Error NotFoundCard = new("Error.NotfoundCard", "Not found this Card");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
         //DuplicateQRCard
-        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "Duplicate Card");
+        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "Cannot add more card with one visit detail");
+        public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "Cannot add more visit detail with one card");
+        #endregion
+        #region VisitCardError
+        //Can not found VisitCard
+        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Not found this VisitCard");
         #endregion
 
         # region VisitSesson
@@ -136,8 +140,23 @@ namespace SecurityGateApv.Domain.Errors
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
+        public static readonly Error DetectionExeption = new("Error.DetectionExeption", "Valid in process detect shoe");
+        //Not found shoe 
+        public static readonly Error NotFoundShoeTypeImage = new("Error.NotFoundShoe", "Not found shoe type image");
 
         //CardType Repo
         public static readonly Error CardFoundError = new("Error.CardFoundError", "Card not found");
+
+        //Checkin fail
+        public static readonly Error CheckInFail = new("Error.CheckInFail", "Check in fail");
+    }
+    public class Error<T> : Error
+    {
+        public Error(string code, string message, T data) : base(code, message)
+        {
+            Data = data;
+        }
+
+        public T Data { get; }
     }
 }

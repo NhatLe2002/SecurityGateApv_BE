@@ -59,6 +59,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<ICredentialCardTypeRepo, CredentialCardTypeRepo>();
             services.AddScoped<IScheduleUserRepo, ScheduleUserRepo>();
+            services.AddScoped<IVisitCardRepo, VisitCardRepo>();
             services.AddScoped<INotifications, NotificationsService>();
             services.AddSingleton<NotificationHub>();
             services.AddSingleton<IDictionary<string, UserConnectionDTO>>(opt => new Dictionary<string, UserConnectionDTO>());
