@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Domain.Models;
+﻿using Microsoft.AspNetCore.Http;
+using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace SecurityGateApv.Application.DTOs.Req
     {
         public string ImageType { get; set; }
         public string ImageURL { get; set; }
+        //[JsonIgnore]
+        public IFormFile Image { get; set; }
     }
 
 }

@@ -29,7 +29,7 @@ namespace SecurityGateApv.WebApi.Controllers
         
         
         [HttpPost("CheckIn")]
-        public async Task<ActionResult> CheckIn(VisitSessionCheckInCommand visitSessionCheckInCommand)
+        public async Task<ActionResult> CheckIn([FromForm] VisitSessionCheckInCommand visitSessionCheckInCommand)
         {
             var result = await _visitorSessionService.CheckIn(visitSessionCheckInCommand);
 
