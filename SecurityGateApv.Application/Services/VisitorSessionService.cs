@@ -42,13 +42,13 @@ namespace SecurityGateApv.Application.Services
         {
             var qRCard = (await _qRCardRepo.FindAsync(
                 s => s.CardVerification.Equals(qrCardVerifi)
-                ) ).FirstOrDefault();
+                )).FirstOrDefault();
             if (qRCard == null)
             {
                 return Result.Failure<bool>(Error.NotFoundCardById);
             }
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => s.CardId == qRCard.CardId 
+                               s => s.CardId == qRCard.CardId
                                               )).FirstOrDefault();
             if (visitCard == null)
             {
@@ -98,11 +98,11 @@ namespace SecurityGateApv.Application.Services
                                s => (s.CardId == qrCard.CardId || s.VisitDetailId == command.VisitDetailId)
                                && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
                                               )).FirstOrDefault();
-            if(visitCard != null && visitCard.CardId == qrCard.CardId)
+            if (visitCard != null && visitCard.CardId == qrCard.CardId)
             {
                 return Result.Failure<CheckInRes>(Error.DuplicateCard);
             }
-            if(visitCard != null && visitCard.VisitDetailId == command.VisitDetailId)
+            if (visitCard != null && visitCard.VisitDetailId == command.VisitDetailId)
             {
                 return Result.Failure<CheckInRes>(Error.DuplicateVisitDetail);
             }
@@ -149,20 +149,20 @@ namespace SecurityGateApv.Application.Services
             //qrCard.UpdateQRCardStatus(1);
             //await _qRCardRepo.UpdateAsync(qrCard);
 
-            if (visitCard == null )
+            if (visitCard == null)
             {
                 visitCard = VisitCard.Create(DateTime.Now, visitDetailCheck.Visit.ExpectedEndTime, "Issue", command.VisitDetailId, qrCard.CardId);
                 await _visitCardRepo.AddAsync(visitCard);
             }
 
-            var checkinSession =  VisitorSession.Checkin( command.VisitDetailId, command.SecurityInId, command.GateInId);
+            var checkinSession = VisitorSession.Checkin(command.VisitDetailId, command.SecurityInId, command.GateInId);
             if (checkinSession.IsFailure)
             {
                 return Result.Failure<CheckInRes>(checkinSession.Error);
             }
             var session = checkinSession.Value;
 
-            foreach ( var item in command.Images)
+            foreach (var item in command.Images)
             {
                 session.AddVisitorImage(item.ImageType, item.ImageURL);
             }
@@ -184,6 +184,61 @@ namespace SecurityGateApv.Application.Services
 
             return result;
         }
+        public async Task<Result<bool>> ValidCheckIn(ValidCheckInCommand command)
+        {
+            var visitDetailCheck = (await _visitDetailRepo.FindAsync(s => s.VisitDetailId == command.VisitDetailId, includeProperties: "Visit")).FirstOrDefault();
+            if (visitDetailCheck == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundVisit);
+            }
+            var qrCard = (await _qRCardRepo.FindAsync(
+               s => s.CardVerification.Equals(command.QRCardVerification)))
+               .FirstOrDefault();
+            if (qrCard == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundCard);
+            }
+            var visitCard = (await _visitCardRepo.FindAsync(
+                               s => (s.CardId == qrCard.CardId || s.VisitDetailId == command.VisitDetailId)
+                               && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
+                                              )).FirstOrDefault();
+            if (visitCard != null && visitCard.CardId == qrCard.CardId)
+            {
+                return Result.Failure<bool>(Error.DuplicateCard);
+            }
+            if (visitCard != null && visitCard.VisitDetailId == command.VisitDetailId)
+            {
+                return Result.Failure<bool>(Error.DuplicateVisitDetail);
+            }
+
+            var visitSesson = (await _visitorSessionRepo.FindAsync(
+                   s => s.VisitDetailId == command.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                   1, 1
+               )).FirstOrDefault();
+            if (visitSesson != null)
+            {
+                return Result.Failure<bool>(Error.ValidSession);
+            }
+            // Add Detect shoe
+            Result<AWSDomainDTO> detectShoeResult = null;
+            try
+            {
+                detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
+                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                {
+                    return Result.Failure<bool>(Error.NotShoe);
+                }
+                if (detectShoeResult.IsFailure)
+                {
+                    return Result.Failure<bool>(detectShoeResult.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<bool>(Error.DetectionExeption);
+            }
+            return true;
+        }
 
         public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize)
         {
@@ -195,7 +250,7 @@ namespace SecurityGateApv.Application.Services
                 );
             if (visitSession.Count() == 0)
             {
-                return  Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+                return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
             }
             var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
             return result.ToList();
@@ -261,5 +316,6 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
             return result.ToList();
         }
+
     }
 }

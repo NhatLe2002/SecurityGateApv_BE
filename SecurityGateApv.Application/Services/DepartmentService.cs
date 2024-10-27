@@ -37,6 +37,11 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<DepartmentCreateCommand> (Error.CreateDepartment);
             }
             await _departmentRepo1.AddAsync(department.Value);
+            if(!await _unitOfWork.CommitAsync())
+            {
+                return Result.Failure<DepartmentCreateCommand>(Error.SaveToDBError);
+
+            }
             await _unitOfWork.CommitAsync();
             return command;
         }
@@ -72,7 +77,8 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundDepartment);
             }
-            await _departmentRepo1.RemoveEntityAsync(department);
+            department.Delete();
+            await _departmentRepo1.UpdateAsync(department);
             await _unitOfWork.CommitAsync();
             return true;
         }

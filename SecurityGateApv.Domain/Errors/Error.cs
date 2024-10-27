@@ -34,6 +34,7 @@ namespace SecurityGateApv.Domain.Errors
         public static implicit operator string(Error error) { return error.Code; }
         //Domain Errors
         public static readonly Error NotFound = new("Error.Notfound", "Not found item");
+        public static readonly Error SaveToDBError = new("Error.CommitDataBase", "Save to DB error");
 
         #region UserError
         //User validation
@@ -143,6 +144,7 @@ namespace SecurityGateApv.Domain.Errors
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
+        public static readonly Error NotShoe = new("Error.DetectionError", "The detection result is not a shoe");
         public static readonly Error DetectionExeption = new("Error.DetectionExeption", "Valid in process detect shoe");
         //Not found shoe 
         public static readonly Error NotFoundShoeTypeImage = new("Error.NotFoundShoe", "Not found shoe type image");

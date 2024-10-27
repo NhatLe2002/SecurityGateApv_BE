@@ -39,6 +39,17 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpPost("ValidCheckIn")]
+        public async Task<ActionResult> ValidCheckIn([FromForm] ValidCheckInCommand validCheckInCommand)
+        {
+            var result = await _visitorSessionService.ValidCheckIn(validCheckInCommand);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet()]
         public async Task<IActionResult> GetAllVisitorSession(int pageNumber, int pageSize)
         {
