@@ -17,5 +17,15 @@ namespace SecurityGateApv.WebApi.Query
         {
             return (await _visitService.GetVisitDetailByVisitId(visitId)).Value;
         }
+
+
+
+        [UseOffsetPaging(MaxPageSize = int.MaxValue, IncludeTotalCount = true)]
+        [UseFiltering]
+        [UseSorting]
+        public async Task<IEnumerable<GetVisitorSessionRes>> GetVisitorSession([Service] IVisitorSessionService _visitorSessionService)
+        {
+            return (await _visitorSessionService.GetAllVisitorSession(1, int.MaxValue)).Value;
+        }
     }
 }

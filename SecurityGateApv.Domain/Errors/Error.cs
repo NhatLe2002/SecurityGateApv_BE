@@ -77,7 +77,9 @@ namespace SecurityGateApv.Domain.Errors
         #endregion
         #region VisitCardError
         //Can not found VisitCard
-        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Not found this VisitCard");
+        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Not found this VisitCard/ Card doesn't register visit");
+        // Card expried 
+        public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         #endregion
 
         # region VisitSesson

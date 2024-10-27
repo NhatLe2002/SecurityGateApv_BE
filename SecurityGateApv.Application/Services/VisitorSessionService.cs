@@ -47,26 +47,35 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundCardById);
             }
-            if (qRCard.CardStatus.Equals(CardStatusEnum.Inactive.ToString()))
+            var visitCard = (await _visitCardRepo.FindAsync(
+                               s => s.CardId == qRCard.CardId 
+                                              )).FirstOrDefault();
+            if (visitCard == null)
             {
-                return Result.Failure<bool>(Error.CardInActive);
+                return Result.Failure<bool>(Error.NotFoundVisitCard);
+            }
+            if (visitCard != null && visitCard.VisitCardStatus == VisitCardEnum.Expired.ToString())
+            {
+                return Result.Failure<bool>(Error.CardExpried);
             }
 
-            //var visitSesson =  await _visitorSessionRepo.FindAsync(
-            //        s => s.Card.CardVerification.Equals( qrCardVerifi) && s.Status == VisitorSessionStatus.CheckIn.ToString(),
-            //        1,1
-            //    );
-            //if (visitSesson.Count() == 0 )
-            //{
-            //    return Result.Failure<bool>( Error.NotFoundVisitSessonByQRId);
-            //}
-            qRCard.UpdateQRCardStatus(2);
-            await _qRCardRepo.UpdateAsync(qRCard);
+
+            var visitSesson = (await _visitorSessionRepo.FindAsync(
+                    s => s.VisitDetailId == visitCard.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                    1, 1
+                )).FirstOrDefault();
+            if (visitSesson == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundVisitSessonByQRId);
+            }
+            //qRCard.UpdateQRCardStatus(2);
+            //await _qRCardRepo.UpdateAsync(qRCard);
 
             command.Status = "CheckOut";
-            //var updateVisitorSesson = _mapper.Map(command, visitSesson.FirstOrDefault());
-            //await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
-            //await _unitOfWork.CommitAsync();
+            command.CheckoutTime = DateTime.Now;
+            var updateVisitorSesson = _mapper.Map(command, visitSesson);
+            await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
+            await _unitOfWork.CommitAsync();
             return true;
         }
 
@@ -108,32 +117,32 @@ namespace SecurityGateApv.Application.Services
             }
 
             // Add Detect shoe
-            //Result<AWSDomainDTO> detectShoeResult = null;
-            //bool shoeImageFound = false;
+            Result<AWSDomainDTO> detectShoeResult = null;
+            bool shoeImageFound = false;
 
-            //foreach (var item in command.Images  )
-            //{
-            //    if (item.ImageType == "Shoe")
-            //    {
-            //        shoeImageFound = true;
-            //        try
-            //        {
-            //             detectShoeResult = await _qrCodeService.DetectShoe(item.Image);
-            //            if (detectShoeResult.IsFailure)
-            //            {
-            //                return Result.Failure<CheckInRes>(detectShoeResult.Error);
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            return Result.Failure<CheckInRes>(Error.DetectionExeption);
-            //        }
-            //    }
-            //}
-            //if (!shoeImageFound)
-            //{
-            //    return Result.Failure<CheckInRes>(Error.NotFoundShoeTypeImage);
-            //}
+            foreach (var item in command.Images)
+            {
+                if (item.ImageType == "Shoe")
+                {
+                    shoeImageFound = true;
+                    try
+                    {
+                        detectShoeResult = await _qrCodeService.DetectShoe(item.Image);
+                        if (detectShoeResult.IsFailure)
+                        {
+                            return Result.Failure<CheckInRes>(detectShoeResult.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Result.Failure<CheckInRes>(Error.DetectionExeption);
+                    }
+                }
+            }
+            if (!shoeImageFound)
+            {
+                return Result.Failure<CheckInRes>(Error.NotFoundShoeTypeImage);
+            }
 
 
 
@@ -164,7 +173,7 @@ namespace SecurityGateApv.Application.Services
                 GateInId = command.GateInId,
                 Card = _mapper.Map<GetCardRes>(qrCard),
                 SessionsImageRes = _mapper.Map<SessionsRes>(checkinSession.Value),
-                DetectShoeRes = null,
+                DetectShoeRes = detectShoeResult.Value,
             };
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             if (!await _unitOfWork.CommitAsync())
