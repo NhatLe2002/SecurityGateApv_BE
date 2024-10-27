@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SecurityGateApv.Domain.Interfaces.DomainDTOs;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Models;
 using System;
@@ -29,6 +30,21 @@ namespace SecurityGateApv.Infras.Helpers
             var role = tokenS.Claims.First(claim => claim.Type == "role").Value;
             return role;
         }
+        public UserAuthorDTO DecodeAuthorJwt(string header)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            header = header.Replace("Bearer ", "");
+            var jsonToken = handler.ReadToken(header);
+            var tokenS = handler.ReadToken(header) as JwtSecurityToken;
+            var role = tokenS.Claims.First(claim => claim.Type == "role").Value;
+            var userId = tokenS.Claims.First(claim => claim.Type == "userId").Value;
+            var departmentId = tokenS.Claims.First(claim => claim.Type == "departmentId").Value;
+            return new UserAuthorDTO { 
+                UserId = int.Parse(userId),
+                DepartmentId = int.Parse(departmentId),
+                Role = role
+            };
+        }
 
         public string GenerateJwtToken(User user)
         {
@@ -39,7 +55,9 @@ namespace SecurityGateApv.Infras.Helpers
             var claims = new[]
             {
                 new Claim("role", user.Role.RoleName.ToString()),
-                new Claim("departmentId", user.DepartmentId.ToString())
+                new Claim("departmentId", user.DepartmentId.ToString()),
+                new Claim("userId", user.UserId.ToString()),
+
             };
 
             var token = new JwtSecurityToken(

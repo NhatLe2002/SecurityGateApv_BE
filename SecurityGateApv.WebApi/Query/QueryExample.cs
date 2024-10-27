@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Application.DTOs.Res;
+﻿using HotChocolate.Authorization;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 
 
@@ -18,14 +19,20 @@ namespace SecurityGateApv.WebApi.Query
             return (await _visitService.GetVisitDetailByVisitId(visitId)).Value;
         }
 
-
-
+        //[Authorize(Roles = new[] { "Admin" })]
         [UseOffsetPaging(MaxPageSize = int.MaxValue, IncludeTotalCount = true)]
         [UseFiltering]
         [UseSorting]
-        public async Task<IEnumerable<GetVisitorSessionRes>> GetVisitorSession([Service] IVisitorSessionService _visitorSessionService)
+        public async Task<IEnumerable<GetVisitorSessionRes>> GetVisitorSession([Service] IVisitorSessionService _visitorSessionService, [Service] IHttpContextAccessor httpContextAccessor)
         {
-            return (await _visitorSessionService.GetAllVisitorSession(1, int.MaxValue)).Value;
+            var token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _visitorSessionService.GetAllVisitorSession(1, int.MaxValue, token);
+
+            if (result.IsFailure)
+            {
+                throw new Exception(result.Error.Message);
+            }
+            return result.Value;
         }
     }
 }
