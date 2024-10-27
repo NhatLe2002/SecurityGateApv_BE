@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
@@ -216,10 +217,43 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPut("{visitId}")]
-        public async Task<ActionResult> UpdateVisit(int visitId, VisitCreateCommand command)
+        //[HttpPut("{visitId}")]
+        //public async Task<ActionResult> UpdateVisit(int visitId, VisitCreateCommand command)
+        //{
+        //    var result = await _visitService.UpdateVisit(visitId, command);
+
+        //    if (result.IsFailure)
+        //    {
+        //        return BadRequest(result.Error);
+        //    }
+        //    return Ok(result.Value);
+        //}        
+        [HttpPut("BeforeStartDate/{visitId}")]
+        public async Task<ActionResult> UpdateVisitBeforeStartDate(int visitId, UpdateVisitBeforeStartDateCommand command)
         {
-            var result = await _visitService.UpdateVisit(visitId, command);
+            var result = await _visitService.UpdateVisitBeforeStartDate(visitId, command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("AfterStartDate/{visitId}")]
+        public async Task<ActionResult> UpdateVisitAfterStartDate(int visitId, UpdateVisitAfterStartDateCommand command)
+        {
+            var result = await _visitService.UpdateVisitAfterStartDate(visitId, command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("AppendTime/{visitId}")]
+        public async Task<ActionResult> AppendTime(int visitId, UpdateAppendTimeForVisitCommand command)
+        {
+            var result = await _visitService.AppendTime(visitId, command);
 
             if (result.IsFailure)
             {

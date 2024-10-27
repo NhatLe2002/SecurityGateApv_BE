@@ -10,5 +10,6 @@ namespace SecurityGateApv.Domain.Interfaces.Repositories
     public interface IVisitRepo : IRepoBase<Visit>
     {
         public Task<IEnumerable<Visit>> GetAllVisitIncludeVisitor();
+        public Task<Visit> GetIdAsNoTracking(int id);
     }
 }

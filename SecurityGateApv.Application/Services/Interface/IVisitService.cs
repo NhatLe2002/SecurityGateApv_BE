@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Models;
@@ -26,6 +27,9 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command);
         public Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command);
         public Task<Result<VisitCreateCommand>> UpdateVisit(int visitId, VisitCreateCommand command);
+        public Task<Result<UpdateVisitBeforeStartDateCommand>> UpdateVisitBeforeStartDate(int visitId, UpdateVisitBeforeStartDateCommand command);
+        public Task<Result<UpdateVisitAfterStartDateCommand>> UpdateVisitAfterStartDate(int visitId, UpdateVisitAfterStartDateCommand command);
+        public Task<Result<UpdateAppendTimeForVisitCommand>> AppendTime(int visitId, UpdateAppendTimeForVisitCommand command);
         public Task<Result<bool>> DeleteVisit(int visitId);
 
 
