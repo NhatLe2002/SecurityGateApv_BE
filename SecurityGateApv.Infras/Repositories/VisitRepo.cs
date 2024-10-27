@@ -21,6 +21,11 @@ namespace SecurityGateApv.Infras.Repositories
             _dbSet = _context.Set<Visit>();
         }
 
+        public async Task<Visit> GetIdAsNoTracking(int id)
+        {
+            return await _dbSet.Where(s => s.VisitId == id).AsNoTracking().FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<Visit>> GetAllVisitIncludeVisitor()
         {
             return await _dbSet

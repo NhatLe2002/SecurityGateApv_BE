@@ -149,5 +149,10 @@ namespace SecurityGateApv.Domain.Models
             this.ExpectedEndTime = this.ExpectedStartTime.AddDays(days);
             return this;
         }
+        public Result<Visit> AppendTimne(DateTime date)
+        {
+            this.ExpectedEndTime = date;
+            return this;
+        }
     }
 }

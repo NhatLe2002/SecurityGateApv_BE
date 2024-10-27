@@ -12,10 +12,8 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
         public int VisitQuantity { get; set; }
         public DateTime ExpectedStartTime { get; set; }
         public DateTime ExpectedEndTime { get; set; }
-        public int CreateById { get; set; }
-        public string? Description { get; set; }
-        public int ScheduleId { get; set; }
-        public int ResponsiblePersonId { get; set; }
+        public int UpdateById {  get; set; }  
+        public string Description { get; set; }
         public ICollection<VisitDetailOldCommand> VisitDetail { get; set; }
     }
 }
