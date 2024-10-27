@@ -16,6 +16,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(s => s.VisitorName).NotNull().NotEmpty()
                 .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
             RuleFor(s => s.CompanyName).NotNull().NotEmpty();
+            RuleFor(s => s.VisitorCredentialImageFromRequest).NotNull().NotEmpty();
             RuleFor(s => s.PhoneNumber).NotNull().NotEmpty()
                            .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
             RuleFor(s => s.CredentialCardTypeId).NotNull().NotEmpty().Must(s => {

@@ -153,8 +153,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitorCreateRes>(Error.NotFound);
             }
-            var imageString = await CommonService.ImageToBase64(command.VisitorCredentialImageFromRequest);
-            var imageEncrypt = await CommonService.Encrypt(imageString);
+            var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
             visitor = _mapper.Map(command, visitor);
             visitor.Update(imageEncrypt);
             await _visitorRepo.UpdateAsync(visitor);
@@ -164,7 +163,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
             var res = _mapper.Map<GetVisitorCreateRes>(visitor);
-            res.VisitorCredentialImage = imageString;
+            res.VisitorCredentialImage = command.VisitorCredentialImageFromRequest;
             return res;
         }
         private async Task<string> ImageToBase64(Image image)
