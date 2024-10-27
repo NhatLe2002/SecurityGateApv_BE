@@ -6,6 +6,7 @@ using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.DomainDTOs;
+using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
@@ -27,8 +28,9 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitDetailRepo _visitDetailRepo;
         private readonly IVisitCardRepo _visitCardRepo;
         private readonly ICardService _qrCodeService;
+        private readonly IJwt _jwt;
 
-        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, ICardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo, IVisitCardRepo visitCardRepo, ICardService cardService)
+        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, ICardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo, IVisitCardRepo visitCardRepo, ICardService cardService, IJwt jwt)
         {
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
@@ -37,6 +39,7 @@ namespace SecurityGateApv.Application.Services
             _visitDetailRepo = visitDetailRepo;
             _visitCardRepo = visitCardRepo;
             _qrCodeService = cardService;
+            _jwt = jwt;
         }
         public async Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
@@ -83,9 +86,13 @@ namespace SecurityGateApv.Application.Services
         {
             //check visit detail id is exist, visit detail not exist card, 
             var visitDetailCheck = (await _visitDetailRepo.FindAsync(s => s.VisitDetailId == command.VisitDetailId, includeProperties: "Visit")).FirstOrDefault();
-            if (visitDetailCheck == null)
+            if (command.VisitDetailId != 0)
             {
-                return Result.Failure<CheckInRes>(Error.NotFoundVisit);
+                if (visitDetailCheck == null)
+                {
+                    return Result.Failure<CheckInRes>(Error.NotFoundVisit);
+                }
+
             }
             var qrCard = (await _qRCardRepo.FindAsync(
                s => s.CardVerification.Equals(command.QRCardVerification)))
@@ -186,10 +193,14 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<bool>> ValidCheckIn(ValidCheckInCommand command)
         {
-            var visitDetailCheck = (await _visitDetailRepo.FindAsync(s => s.VisitDetailId == command.VisitDetailId, includeProperties: "Visit")).FirstOrDefault();
-            if (visitDetailCheck == null)
+            if (command.VisitDetailId != 0)
             {
-                return Result.Failure<bool>(Error.NotFoundVisit);
+                var visitDetailCheck = (await _visitDetailRepo.FindAsync(s => s.VisitDetailId == command.VisitDetailId, includeProperties: "Visit")).FirstOrDefault();
+                if (visitDetailCheck == null)
+                {
+                    return Result.Failure<bool>(Error.NotFoundVisit);
+                }
+
             }
             var qrCard = (await _qRCardRepo.FindAsync(
                s => s.CardVerification.Equals(command.QRCardVerification)))
@@ -240,14 +251,38 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
-        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize)
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize, string token)
         {
-            var visitSession = await _visitorSessionRepo.FindAsync(
-                    s => true,
-                    pageSize, pageNumber,
-                    orderBy: s => s.OrderBy(s => s.CheckinTime),
-                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
-                );
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
+            var visitSession = new List<VisitorSession>();
+            if (userAuthor.Role == "Admin" || userAuthor.Role == "Manager")
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => true,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+            if (userAuthor.Role == "Department")
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+            if (userAuthor.Role == "Staff")
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+            
             if (visitSession.Count() == 0)
             {
                 return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
@@ -14,6 +15,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             _visitService = visitService;
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult> GetAllVisits([FromQuery]int pageSize, [FromQuery] int pageNumber)
         {

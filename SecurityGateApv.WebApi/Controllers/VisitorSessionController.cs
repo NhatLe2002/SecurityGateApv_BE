@@ -53,9 +53,14 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetAllVisitorSession(int pageNumber, int pageSize)
         {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _visitorSessionService.GetAllVisitorSession(1, int.MaxValue);
+                var resultAll = await _visitorSessionService.GetAllVisitorSession(1, int.MaxValue, token);
                 return Ok(resultAll.Value);
             }
             if (pageNumber <= 0 || pageSize <= 0)
@@ -63,7 +68,7 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest("Page number and page size must be greater than zero.");
             }
 
-            var result = await _visitorSessionService.GetAllVisitorSession(pageNumber, pageSize);
+            var result = await _visitorSessionService.GetAllVisitorSession(pageNumber, pageSize, token);
             return Ok(result.Value);
         } 
         [HttpGet("Visitor/{visitorId}")]
