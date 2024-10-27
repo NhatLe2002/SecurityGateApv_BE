@@ -51,6 +51,8 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Visit, GetVisitRes>().ReverseMap();
             CreateMap<Visit, GetVisitNoDetailRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
+            CreateMap<UpdateVisitBeforeStartDateCommand, Visit>().ReverseMap();
+            CreateMap<UpdateVisitAfterStartDateCommand, Visit>().ReverseMap();
             CreateMap<GetVisitByDateRes, Visit>().ReverseMap()
                 .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.Schedule.ScheduleName))
                 .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
@@ -62,6 +64,8 @@ namespace SecurityGateApv.Application.Mapper
             #region VisitDetail map
             CreateMap<GetVisitDetailRes, VisitDetail>().ReverseMap();
             CreateMap<GetVisitByCredentialCardRes, VisitDetail>().ReverseMap();
+            CreateMap<VisitDetaiUpdateVisitAfterStartDateCommand, VisitDetail>().ReverseMap();
+            CreateMap<UpdateAppendTimeForVisitCommand, Visit>().ReverseMap();
             #endregion
 
             #region Visitor map

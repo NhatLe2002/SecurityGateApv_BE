@@ -10,7 +10,7 @@ namespace SecurityGateApv.WebApi.Query
         [UseFiltering]
         [UseSorting]
         public async Task<IEnumerable<GetVisitNoDetailRes>> GetVisit([Service] IVisitService _visitService)
-        {
+        {            
             return (await _visitService.GetAllVisit(int.MaxValue,1)).Value;
         }
         public async Task<GetVisitRes> GetVisitById([Service] IVisitService _visitService, int visitId)
