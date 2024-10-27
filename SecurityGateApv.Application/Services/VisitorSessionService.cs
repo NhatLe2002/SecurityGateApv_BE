@@ -164,7 +164,7 @@ namespace SecurityGateApv.Application.Services
                 GateInId = command.GateInId,
                 Card = _mapper.Map<GetCardRes>(qrCard),
                 SessionsImageRes = _mapper.Map<SessionsRes>(checkinSession.Value),
-                DetectShoeRes = detectShoeResult.Value
+                DetectShoeRes = null,
             };
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             if (!await _unitOfWork.CommitAsync())
