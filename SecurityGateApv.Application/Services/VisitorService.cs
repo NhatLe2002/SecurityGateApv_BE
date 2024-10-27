@@ -35,14 +35,14 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<GetVisitorCreateRes>> CreateVisitor(CreateVisitorCommand command)
         {
-            SixLabors.ImageSharp.Image resizeImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialImageFromRequest.OpenReadStream());
+/*            SixLabors.ImageSharp.Image resizeImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialImageFromRequest.OpenReadStream());
             int height = (int)((300 / (float)resizeImage.Width) * resizeImage.Height);
             if (resizeImage.Width > 300 || resizeImage.Height > 200)
             {
                 resizeImage.Mutate(x => x.Resize(300, height));
             }
-            var imageString = await ImageToBase64(resizeImage);
-            var imageEncrypt = await CommonService.Encrypt(imageString);
+            var imageString = await ImageToBase64(resizeImage);*/
+            var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
             var visitorCreate = Visitor.Create(
                 command.VisitorName,
                 command.CompanyName,
@@ -65,7 +65,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
             var res = _mapper.Map<GetVisitorCreateRes>(visitorCreate.Value);
-            res.VisitorCredentialImage = imageString;
+            res.VisitorCredentialImage = command.VisitorCredentialImageFromRequest;
             return res;
         }
 
