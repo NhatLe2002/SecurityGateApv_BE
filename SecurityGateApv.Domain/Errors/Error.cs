@@ -106,6 +106,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundSchedule = new("Error.Schedule", "Can not found Schedule");
         public static readonly Error ScheduleValid = new("Error.Schedule", "DaysOfProcess is not valid for the selected Visit Type.");
         public static readonly Error ScheduleCannotUpdate = new("Error.Schedule", "Can not update Schedule daily");
+        public static readonly Error ScheduleCannotAssign = new("Error.ScheduleCannotAssign", "Can not Assign Schedule daily");
         #endregion
 
 

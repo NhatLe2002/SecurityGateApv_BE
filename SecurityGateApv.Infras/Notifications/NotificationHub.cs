@@ -26,6 +26,14 @@ namespace SecurityGateApv.Infras.Notifications
         {
             await Clients.All.SendAsync("ReceiveMessage", "admind", $"Test API");
         }
+        public async Task SendMessageAssignForStaff(string title, string description, int staffId, int scheduleId)
+        {
+            var staff = _connections.Where(s => s.Value.UserId == staffId).FirstOrDefault();
+            if (staff.Value != null)
+            {
+                await Clients.Client(staff.Key).SendAsync("ReceiveNotification", title, description, scheduleId);
+            }
+        }
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             _connections.Remove(Context.ConnectionId);

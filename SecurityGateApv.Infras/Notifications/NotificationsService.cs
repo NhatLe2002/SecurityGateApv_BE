@@ -19,5 +19,10 @@ namespace SecurityGateApv.Infras.Notifications
         {
             await _notificationHub.SendMessage();
         }
+
+        public async Task SendMessageAssignForStaff(string title, string description, int staffId, int scheduleId)
+        {
+            await _notificationHub.SendMessageAssignForStaff(title, description,staffId, scheduleId);
+        }
     }
 }
