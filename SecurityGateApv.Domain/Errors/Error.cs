@@ -87,9 +87,11 @@ namespace SecurityGateApv.Domain.Errors
         # region VisitSesson
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
-        public static readonly Error NotFoundVisitSesson = new("Error.NotFound", "Not found this VisitorSession");
+        public static readonly Error NotFoundVisitSesson = new("Error.NotFoundVisitSesson", "Not found this VisitorSession");
+        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "The card has not been activated");
+        public static readonly Error CardNotCheckIn = new("Error.CardNotCheckIn", "Card not checked in yet");
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
-        public static readonly Error ValidSession = new("Error.VisitSesson", "Session check in can't check in duplicate");
+        public static readonly Error ValidSession = new("Error.ValidSession", "Session check in can't check in duplicate");
         #endregion
 
 

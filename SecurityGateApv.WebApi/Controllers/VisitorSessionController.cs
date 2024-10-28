@@ -103,10 +103,10 @@ namespace SecurityGateApv.WebApi.Controllers
             var result = await _visitorSessionService.GetAllVisitorSessionByVisitId(pageNumber, pageSize, visitId);
             return Ok(result.Value);
         }
-        [HttpGet("CheckIn/QrCard/{qrCardVerified}")]
-        public async Task<IActionResult> GetVisitSessionByQRCardVerification(string qrCardVerified)
+        [HttpGet("StatusCheckIn/Card/{cardVerified}")]
+        public async Task<IActionResult> GetVisitSessionStatusCheckInByCardVerification(string cardVerified)
         {
-            var result = await _visitorSessionService.GetVisitSessionByQRCardVerification(qrCardVerified);
+            var result = await _visitorSessionService.GetVisitSessionStatusCheckInByCardVerification(cardVerified);
 
             if (result.IsFailure)
             {
@@ -114,10 +114,10 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("CheckIn/CredentialId/{credentialId}")]
-        public async Task<IActionResult> GetAllVisitorSessionByCredentialIdId(string credentialId)
+        [HttpGet("StatusCheckIn/CredentialId/{credentialId}")]
+        public async Task<IActionResult> GetAllVisitorSessionStatusCheckInByCredentialIdId(string credentialId)
         {
-            var result = await _visitorSessionService.GetAllVisitorSessionByCredentialIdId(credentialId);
+            var result = await _visitorSessionService.GetAllVisitorSessionStatusCheckInByCredentialIdId(credentialId);
 
             if (result.IsFailure)
             {
