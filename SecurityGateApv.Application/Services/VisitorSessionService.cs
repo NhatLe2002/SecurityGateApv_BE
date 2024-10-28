@@ -105,11 +105,11 @@ namespace SecurityGateApv.Application.Services
                                s => (s.CardId == qrCard.CardId || s.VisitDetailId == command.VisitDetailId)
                                && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
                                               )).FirstOrDefault();
-            if (visitCard != null && visitCard.CardId == qrCard.CardId)
+            if (visitCard != null && visitCard.CardId != qrCard.CardId)
             {
                 return Result.Failure<CheckInRes>(Error.DuplicateCard);
             }
-            if (visitCard != null && visitCard.VisitDetailId == command.VisitDetailId)
+            if (visitCard != null && visitCard.VisitDetailId != command.VisitDetailId)
             {
                 return Result.Failure<CheckInRes>(Error.DuplicateVisitDetail);
             }
