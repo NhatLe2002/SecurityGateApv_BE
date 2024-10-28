@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Domain.Models;
+﻿using SecurityGateApv.Domain.Interfaces.DomainDTOs;
+using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace SecurityGateApv.Domain.Interfaces.Jwt
     {
         public string GenerateJwtToken(User user);
         public string DecodeJwt(string header);
+        public UserAuthorDTO DecodeAuthorJwt(string header);
     }
 }

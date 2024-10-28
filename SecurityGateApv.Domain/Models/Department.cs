@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Domain.Shared;
+﻿using SecurityGateApv.Domain.Enums;
+using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,13 +28,14 @@ namespace SecurityGateApv.Domain.Models
         }
 
         internal Department(string departmentName, string description, 
-            DateTime createDate, DateTime updatedDate, int acceptLevel)
+            DateTime createDate, DateTime updatedDate, int acceptLevel, string status)
         {
             DepartmentName = departmentName;
             Description = description;
             CreateDate = createDate;
             UpdatedDate = updatedDate;
             AcceptLevel = acceptLevel;
+            Status = status;
         }
 
         [Key]
@@ -51,7 +53,7 @@ namespace SecurityGateApv.Domain.Models
              int acceptLevel)
         {
             var department = new Department(departmentName, description,
-                DateTime.Now, DateTime.Now, acceptLevel);
+                DateTime.Now, DateTime.Now, acceptLevel, DepartmentStatusEnum.Active.ToString());
             return department;
         }
         public static Result<Department> Create(int departmentId, string departmentName,DateTime createDate, DateTime updateDate, string description,
@@ -63,6 +65,11 @@ namespace SecurityGateApv.Domain.Models
         }
         public Result<Department> Update() {
             this.UpdatedDate = DateTime.Now;
+            return this;      
+        }
+        public  Result<Department> Delete() {
+            this.UpdatedDate = DateTime.Now;
+            this.Status = DepartmentStatusEnum.Inactive.ToString();
             return this;      
         }
 

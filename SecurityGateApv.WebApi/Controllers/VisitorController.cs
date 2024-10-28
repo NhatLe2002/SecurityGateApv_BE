@@ -17,6 +17,7 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             _visitorService = visitorService;
         }
+        
         [HttpGet]
         public async Task<IActionResult> GetAllVisitor(int pageNumber, int pageSize)
         {
