@@ -24,9 +24,9 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
              .NotEmpty()
              .WithMessage("Schedule name is required.");
 
-            RuleFor(s => s.DaysOfProcess)
+            RuleFor(s => s.DaysOfSchedule)
                 .NotEmpty()
-                .WithMessage("Days of process is required.");
+                .WithMessage("Days of schedule is required.");
 
             RuleFor(s => s.Duration)
                 .GreaterThan(0)
@@ -65,14 +65,14 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             if (scheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString()))
             {
 
-                return IsValidDaysOfProcess(command.DaysOfProcess, 1, 7);
+                return IsValidDaysOfProcess(command.DaysOfSchedule, 1, 7);
             }
 
             if (scheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString()))
             {
-                return IsValidDaysOfProcess(command.DaysOfProcess, 1, 31);
+                return IsValidDaysOfProcess(command.DaysOfSchedule, 1, 31);
             }
-            var days = command.DaysOfProcess.Split(',')
+            var days = command.DaysOfSchedule.Split(',')
                             .Select(d => d.Trim());
             if (days.Count() > command.Duration)
             {

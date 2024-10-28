@@ -130,7 +130,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetScheduleRes>(Error.ScheduleValid);
             }
-            schedule.Update(request.ScheduleName, request.DaysOfProcess, request.Duration, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById);
+            schedule.Update(request.ScheduleName, request.DaysOfSchedule, request.Duration, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById);
             if(!await _scheduleRepo.UpdateAsync(schedule))
             {
                 return Result.Failure<GetScheduleRes> (Error.ScheduleCreateError);
@@ -151,14 +151,14 @@ namespace SecurityGateApv.Application.Services
             if (scheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString()))
             {
 
-                return IsValidDaysOfProcess(command.DaysOfProcess, 1, 7);
+                return IsValidDaysOfProcess(command.DaysOfSchedule, 1, 7);
             }
 
             if (scheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString()))
             {
-                return IsValidDaysOfProcess(command.DaysOfProcess, 1, 31);
+                return IsValidDaysOfProcess(command.DaysOfSchedule, 1, 31);
             }
-            var days = command.DaysOfProcess.Split(',')
+            var days = command.DaysOfSchedule.Split(',')
                             .Select(d => d.Trim());
             if (days.Count() > command.Duration)
             {

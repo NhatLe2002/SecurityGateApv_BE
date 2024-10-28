@@ -10,7 +10,7 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
     public class UpdateScheduleCommand
     {
         public string ScheduleName { get; set; }
-        public string DaysOfProcess { get; set; }
+        public string DaysOfSchedule { get; set; }
         public int Duration { get; set; }
         public string Description { get; set; }
         public bool Status { get;  set; }
