@@ -328,6 +328,7 @@ namespace SecurityGateApv.Application.Services
 
             var visitSession = await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitCard.Any(s => s.Card.CardVerification == cardVerified && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())),
+                  int.MaxValue,1,
                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                 );
             if (visitSession.Count() == 0)
@@ -349,6 +350,7 @@ namespace SecurityGateApv.Application.Services
         {
             var visitSession = await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.Visitor.CredentialsCard.Equals(credentialId),
+                   int.MaxValue, 1,
                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                 );
             if (visitSession.Count() == 0)
