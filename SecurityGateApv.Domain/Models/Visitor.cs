@@ -48,8 +48,7 @@ namespace SecurityGateApv.Domain.Models
         public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImage, string status,
             int credentialCardTypeId)
         {
-            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, visitorCredentialImage, status,
-                 credentialCardTypeId);
+            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, visitorCredentialImage, status, credentialCardTypeId);
             return result;
         }
         public Result<Visitor> Update(string visitorCredentialImage)
