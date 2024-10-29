@@ -102,7 +102,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CheckInRes>(Error.NotFoundCard);
             }
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => (s.CardId == qrCard.CardId || s.VisitDetailId == command.VisitDetailId)
+                               s => (s.CardId == qrCard.CardId)
                                && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
                                               )).FirstOrDefault();
             if (visitCard != null && visitCard.CardId != qrCard.CardId)
@@ -114,11 +114,11 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CheckInRes>(Error.DuplicateVisitDetail);
             }
 
-            var visitSesson = (await _visitorSessionRepo.FindAsync(
-                   s => s.VisitDetailId == command.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+            var visitSession = (await _visitorSessionRepo.FindAsync(
+                   s => s.VisitDetail.VisitCard.Any(s => s.VisitCardId == qrCard.CardId) && s.Status == VisitorSessionStatus.CheckIn.ToString(),
                    1, 1
                )).FirstOrDefault();
-            if (visitSesson != null)
+            if (visitSession != null)
             {
                 return Result.Failure<CheckInRes>(Error.ValidSession);
             }
@@ -210,21 +210,20 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<bool>(Error.NotFoundCard);
             }
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => (s.CardId == qrCard.CardId || s.VisitDetailId == command.VisitDetailId)
+                               s => (s.CardId == qrCard.CardId)
                                && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
                                               )).FirstOrDefault();
             if (visitCard != null && visitCard.CardId != qrCard.CardId)
             {
                 return Result.Failure<bool>(Error.DuplicateCard);
             }
-            if (visitCard != null && (visitCard.VisitDetailId != command.VisitDetailId && command.VisitDetailId!=0))
+            if (visitCard != null && (visitCard.VisitDetailId != command.VisitDetailId && command.VisitDetailId != 0))
             {
                 return Result.Failure<bool>(Error.DuplicateVisitDetail);
             }
 
             var visitSesson = (await _visitorSessionRepo.FindAsync(
-                   s => s.VisitDetailId == command.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
-                   1, 1
+                    s => s.VisitDetail.VisitCard.Any(s => s.VisitCardId == qrCard.CardId) && s.Status == VisitorSessionStatus.CheckIn.ToString(), 1, 1
                )).FirstOrDefault();
             if (visitSesson != null)
             {
@@ -282,7 +281,7 @@ namespace SecurityGateApv.Application.Services
                          includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                      )).ToList();
             }
-            
+
             if (visitSession.Count() == 0)
             {
                 return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
@@ -328,14 +327,14 @@ namespace SecurityGateApv.Application.Services
 
             var visitSession = await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitCard.Any(s => s.Card.CardVerification == cardVerified && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())),
-                  int.MaxValue,1,
+                  int.MaxValue, 1,
                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                 );
             if (visitSession.Count() == 0)
             {
                 return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.CardNotIssue);
             }
-            foreach(var item in visitSession)
+            foreach (var item in visitSession)
             {
                 if (item.Status == VisitorSessionStatus.CheckIn.ToString())
                 {
