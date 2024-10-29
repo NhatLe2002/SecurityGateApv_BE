@@ -109,7 +109,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<CheckInRes>(Error.DuplicateCard);
             }
-            if (visitCard != null && visitCard.VisitDetailId != command.VisitDetailId)
+            if (visitCard != null && (visitCard.VisitDetailId != command.VisitDetailId && command.VisitDetailId != 0))
             {
                 return Result.Failure<CheckInRes>(Error.DuplicateVisitDetail);
             }
@@ -213,11 +213,11 @@ namespace SecurityGateApv.Application.Services
                                s => (s.CardId == qrCard.CardId || s.VisitDetailId == command.VisitDetailId)
                                && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
                                               )).FirstOrDefault();
-            if (visitCard != null && visitCard.CardId == qrCard.CardId)
+            if (visitCard != null && visitCard.CardId != qrCard.CardId)
             {
                 return Result.Failure<bool>(Error.DuplicateCard);
             }
-            if (visitCard != null && visitCard.VisitDetailId == command.VisitDetailId)
+            if (visitCard != null && (visitCard.VisitDetailId != command.VisitDetailId && command.VisitDetailId!=0))
             {
                 return Result.Failure<bool>(Error.DuplicateVisitDetail);
             }
