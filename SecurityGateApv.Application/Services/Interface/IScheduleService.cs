@@ -14,6 +14,7 @@ namespace SecurityGateApv.Application.Services.Interface
     {
         public Task<Result<ICollection<GetScheduleRes>>> GetAllSchedule(int pageNumber, int pageSize);
         public Task<Result<GetScheduleRes>> GetScheduleById(int scheduleId);
+        public Task<Result<int>> GetScheduleNotReadByStaffId(int staffId);
         public Task<Result<List<GetScheduleRes>>> GetScheduleByDepartmentManagerId(int departmentManagerId, int pageNumber, int pageSize);
         public Task<Result<List<GetScheduleUserRes>>> GetScheduleUserByStaffId(int staffId, int pageNumber, int pageSize);
         public Task<Result<CreateScheduleCommand>> CreateSchedule(CreateScheduleCommand request);

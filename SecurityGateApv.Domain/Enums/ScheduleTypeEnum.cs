@@ -9,9 +9,9 @@ namespace SecurityGateApv.Domain.Enums
     public enum ScheduleTypeEnum
     {
         NONE,
+        VisitDaily,
         ProcessWeek,
         ProcessMonth,
-        VisitDaily,
         Project
     }
 }
