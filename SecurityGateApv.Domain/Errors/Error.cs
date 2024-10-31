@@ -53,6 +53,7 @@ namespace SecurityGateApv.Domain.Errors
         #region VisitError
         //Visit error
         public static readonly Error NotFoundVisit = new("Error.Visit", "Not found this visit");
+        public static readonly Error UpdateTimeVisitError = new("Error.UpdateTimeVisitError", "Time Error");
         public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
         public static readonly Error DuplicateVisitorDetail = new("Error.DuplicateVisitorDetail", "Duplicate visitor");

@@ -490,7 +490,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<UpdateVisitAfterStartDateCommand>(Error.NotFoundVisit);
             }
-
+            if(visit.ExpectedStartTime > command.ExpectedEndTime)
+            {
+                return Result.Failure<UpdateVisitAfterStartDateCommand>(Error.UpdateTimeVisitError);
+            }
             var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
             await _visitDetailRepo.RemoveRange(visit.VisitDetail);
             visit.AddEndTime(schedule.Duration);
