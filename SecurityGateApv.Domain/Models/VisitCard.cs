@@ -40,6 +40,12 @@ namespace SecurityGateApv.Domain.Models
 
             return visitCard;
         }
+        //Create punction update visit card
+        public VisitCard UpdateVisitCardStatus(string visitCardStatus)
+        {
+            this.VisitCardStatus = visitCardStatus;
+            return this;
+        }
     }
 
 }

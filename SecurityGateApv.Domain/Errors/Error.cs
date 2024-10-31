@@ -74,14 +74,16 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
         //DuplicateQRCard
-        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "Cannot add more card with one visit detail");
-        public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "Cannot add more visit detail with one card");
+        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "This card is currently in use, no more visits can be added to this card.");
+        public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "This visit already has a card, cannot add more card to the same visit");
         #endregion
         #region VisitCardError
         //Can not found VisitCard
-        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Not found this VisitCard/ Card doesn't register visit");
+        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Card not registered in/out cannot use");
         // Card expried 
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
+        // This type of card cannot be used for this visit
+
         #endregion
 
         # region VisitSesson
@@ -156,7 +158,14 @@ namespace SecurityGateApv.Domain.Errors
 
         //Checkin fail
         public static readonly Error CheckInFail = new("Error.CheckInFail", "Check in fail");
+        //Not found visit by credential card
+        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Not found visit by credential card");
+        public static Error ScheduleAndCardTypeMismatch(string scheduleType, string cardType)
+        {
+            return new Error("Error.ScheduleAndCardTypeMismatch", $"Schedule type '{scheduleType}' and card type '{cardType}' do not match.");
+        }
     }
+
     public class Error<T> : Error
     {
         public Error(string code, string message, T data) : base(code, message)

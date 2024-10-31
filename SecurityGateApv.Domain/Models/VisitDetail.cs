@@ -42,6 +42,13 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<VisitorSession> VisitorSession { get; private set; }
         public ICollection<VisitCard> VisitCard { get; private set; }
+        //create function create visit detail
+        public static VisitDetail Create(TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
+            , Visit visit, int visitorId)
+        {
+            VisitDetail visitDetail = new VisitDetail(expectedStartHour, expectedEndHour, status, visit, visitorId);
 
+            return visitDetail;
+        }
     }
 }

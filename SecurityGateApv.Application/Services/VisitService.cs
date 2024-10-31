@@ -223,7 +223,7 @@ namespace SecurityGateApv.Application.Services
                 visitDetail = await _visitDetailRepo.FindAsync(
                         s => s.VisitId == visitId,
                         int.MaxValue, 1,
-                        orderBy: s => s.OrderBy(s => s.ExpectedStartHour),
+                        orderBy: s => s.OrderBy(s => s.VisitDetailId),
                         includeProperties: "Visitor"
                     );
             }
@@ -232,7 +232,7 @@ namespace SecurityGateApv.Application.Services
                 visitDetail = await _visitDetailRepo.FindAsync(
                         s => s.VisitId == visitId,
                         pageSize, pageNumber,
-                        orderBy: s => s.OrderBy(s => s.ExpectedStartHour),
+                        orderBy: s => s.OrderBy(s => s.VisitDetailId),
                         includeProperties: "Visitor"
                     );
             }

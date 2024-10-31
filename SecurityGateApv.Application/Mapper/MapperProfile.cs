@@ -39,8 +39,6 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<VisitDetailOldCommand, VisitDetail>().ReverseMap();
             CreateMap<Department, DeparmentRes>().ReverseMap();
             CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
-            CreateMap<GetCardRes, Card>().ReverseMap()
-                .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
 
             #region Visitor map
             CreateMap<CreateVisitorRes, Visitor>().ReverseMap();
@@ -64,6 +62,7 @@ namespace SecurityGateApv.Application.Mapper
             #region VisitDetail map
             CreateMap<GetVisitDetailRes, VisitDetail>().ReverseMap();
             CreateMap<GetVisitByCredentialCardRes, VisitDetail>().ReverseMap();
+            CreateMap<ValidCheckinRes, VisitDetail>().ReverseMap();
             CreateMap<VisitDetaiUpdateVisitAfterStartDateCommand, VisitDetail>().ReverseMap();
             CreateMap<UpdateAppendTimeForVisitCommand, Visit>().ReverseMap();
             #endregion
@@ -102,6 +101,10 @@ namespace SecurityGateApv.Application.Mapper
             #region Card
             CreateMap<Card, GetCardRes>().ReverseMap();
             CreateMap<VisitCard, VisitCardRes>().ReverseMap();
+            CreateMap<GetCardRes, Card>().ReverseMap()
+                .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
+            CreateMap<CardRes, Card>().ReverseMap()
+                .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
             #endregion
         }
     }
