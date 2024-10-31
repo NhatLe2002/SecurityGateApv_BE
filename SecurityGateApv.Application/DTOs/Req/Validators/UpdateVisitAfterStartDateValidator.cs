@@ -22,6 +22,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 }
                 return false;
             }).WithMessage("Quantity not match visit detail");
+            RuleFor(s => s.ExpectedEndTime).NotNull().NotEmpty();
             RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
                 if (x.ExpectedEndHour <= x.ExpectedStartHour)

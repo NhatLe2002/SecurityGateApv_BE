@@ -10,6 +10,7 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
     public class UpdateVisitAfterStartDateCommand
     {
         public int VisitQuantity { get; set; }
+        public DateTime ExpectedEndTime { get; set; }
         public int UpdateById { get; set; }
         public ICollection<VisitDetaiUpdateVisitAfterStartDateCommand> VisitDetail { get; set; }
     }

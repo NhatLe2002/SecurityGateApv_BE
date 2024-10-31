@@ -39,6 +39,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("Staff/AssignNotRead/{staffId}")]
+        public async Task<IActionResult> GetScheduleNotReadOfStaffId(int staffId)
+        {
+            var result = await _scheduleService.GetScheduleNotReadByStaffId(staffId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("DepartmenManager/{departmenManagerId}")]
         public async Task<IActionResult> GetScheduleByDepartmenManagerId(int departmenManagerId, int pageNumber, int pageSize)
         {

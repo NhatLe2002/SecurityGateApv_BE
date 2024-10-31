@@ -6,6 +6,7 @@ using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
@@ -23,16 +24,20 @@ namespace SecurityGateApv.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScheduleTypeRepo _scheduleTypeRepo;
         private readonly IScheduleUserRepo _scheduleUserRepo;
+        private readonly INotifications _notifications;
+        private readonly INotificationRepo _notificationRepo;
         private readonly IMapper _mapper;
 
         public ScheduleService(IScheduleRepo scheduleRepo, IUnitOfWork unitOfWork, IMapper mapper, 
-            IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo)
+            IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo, INotifications notifications, INotificationRepo notificationRepo)
         {
             _scheduleRepo = scheduleRepo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _scheduleTypeRepo = scheduleTypeRepo;
             _scheduleUserRepo = scheduleUserRepo;
+            _notifications = notifications;
+            _notificationRepo = notificationRepo;
         }
 
         public async Task<Result<CreateScheduleCommand>> CreateSchedule(CreateScheduleCommand request)
@@ -182,6 +187,11 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<CreateScheduleUserCommand>> CreateScheduleUser(CreateScheduleUserCommand command)
         {
+            var schedule = ((await _scheduleRepo.FindAsync(s => s.ScheduleId == command.ScheduleId))).FirstOrDefault();
+            if (schedule.ScheduleTypeId == (int)ScheduleTypeEnum.VisitDaily)
+            {
+                return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleCannotAssign);
+            }
             var scheduleUser = ScheduleUser.Create(
                 command.Title,
                 command.Description,
@@ -198,11 +208,15 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleSaveError);
             }
             await _scheduleUserRepo.AddAsync(scheduleUser.Value);
+            var noti = Notification.Create(command.Title, command.Description, DateTime.Now, null);
+            noti.Value.AddUserNoti(command.AssignFromId, command.AssignToId);
+            await _notificationRepo.AddAsync(noti.Value);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {
                 return Result.Failure<CreateScheduleUserCommand>(Error.CommitError);
             }
+            await _notifications.SendMessageAssignForStaff(command.Title, command.Description, command.AssignToId, command.ScheduleId);
             return command;
         }
 
@@ -230,6 +244,12 @@ namespace SecurityGateApv.Application.Services
             }
             var result = _mapper.Map<List<GetScheduleUserRes>>(schedule);
             return result;
+        }
+
+        public async Task<Result<int>> GetScheduleNotReadByStaffId(int staffId)
+        {
+            var schedule = (await _scheduleUserRepo.FindAsync(s => s.AssignToId == staffId && s.Status == ScheduleUserStatusEnum.Pending.ToString(),int.MaxValue));
+            return schedule.Count();
         }
     }
 }
