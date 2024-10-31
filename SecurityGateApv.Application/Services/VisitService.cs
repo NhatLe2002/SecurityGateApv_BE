@@ -508,6 +508,10 @@ namespace SecurityGateApv.Application.Services
                     item.ExpectedEndHour,
                     true,
                     item.VisitorId);
+                if(item.Status == false)
+                {
+                    continue;
+                }
                 if (addVisitDetailResult.IsFailure)
                 {
                     return Result.Failure<UpdateVisitAfterStartDateCommand>(addVisitDetailResult.Error);

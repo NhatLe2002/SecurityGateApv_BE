@@ -25,10 +25,11 @@ namespace SecurityGateApv.Application.Services
         private readonly IScheduleTypeRepo _scheduleTypeRepo;
         private readonly IScheduleUserRepo _scheduleUserRepo;
         private readonly INotifications _notifications;
+        private readonly INotificationRepo _notificationRepo;
         private readonly IMapper _mapper;
 
         public ScheduleService(IScheduleRepo scheduleRepo, IUnitOfWork unitOfWork, IMapper mapper, 
-            IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo, INotifications notifications)
+            IScheduleTypeRepo scheduleTypeRepo, IScheduleUserRepo scheduleUserRepo, INotifications notifications, INotificationRepo notificationRepo)
         {
             _scheduleRepo = scheduleRepo;
             _unitOfWork = unitOfWork;
@@ -36,6 +37,7 @@ namespace SecurityGateApv.Application.Services
             _scheduleTypeRepo = scheduleTypeRepo;
             _scheduleUserRepo = scheduleUserRepo;
             _notifications = notifications;
+            _notificationRepo = notificationRepo;
         }
 
         public async Task<Result<CreateScheduleCommand>> CreateSchedule(CreateScheduleCommand request)
@@ -206,6 +208,9 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleSaveError);
             }
             await _scheduleUserRepo.AddAsync(scheduleUser.Value);
+            var noti = Notification.Create(command.Title, command.Description, DateTime.Now, null);
+            noti.Value.AddUserNoti(command.AssignFromId, command.AssignToId);
+            await _notificationRepo.AddAsync(noti.Value);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {
@@ -239,6 +244,12 @@ namespace SecurityGateApv.Application.Services
             }
             var result = _mapper.Map<List<GetScheduleUserRes>>(schedule);
             return result;
+        }
+
+        public async Task<Result<int>> GetScheduleNotReadByStaffId(int staffId)
+        {
+            var schedule = (await _scheduleUserRepo.FindAsync(s => s.AssignToId == staffId && s.Status == ScheduleUserStatusEnum.Pending.ToString(),int.MaxValue));
+            return schedule.Count();
         }
     }
 }

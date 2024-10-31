@@ -250,17 +250,6 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPut("AppendTime/{visitId}")]
-        public async Task<ActionResult> AppendTime(int visitId, UpdateAppendTimeForVisitCommand command)
-        {
-            var result = await _visitService.AppendTime(visitId, command);
-
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error);
-            }
-            return Ok(result.Value);
-        }
         [HttpDelete("{visitId}")]
         public async Task<ActionResult> DeleteVisit(int visitId)
         {

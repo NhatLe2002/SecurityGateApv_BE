@@ -58,6 +58,8 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IPrivateKeyRepo, PrivateKeyRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<ICredentialCardTypeRepo, CredentialCardTypeRepo>();
+            services.AddScoped<INotificationRepo, NotificationRepo>();
+            services.AddScoped<INotificationUserRepo, NotificationUserRepo>();
             services.AddScoped<IScheduleUserRepo, ScheduleUserRepo>();
             services.AddScoped<IVisitCardRepo, VisitCardRepo>();
             services.AddScoped<INotifications, NotificationsService>();
