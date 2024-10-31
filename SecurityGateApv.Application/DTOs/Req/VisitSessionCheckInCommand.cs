@@ -12,7 +12,7 @@ namespace SecurityGateApv.Application.DTOs.Req
     public class VisitSessionCheckInCommand
     {
         //public int QRCardId { get; set; }
-        public int VisitDetailId { get; set; }
+        public string? CredentialCard { get; set; }
         public int SecurityInId { get; set; }
         public int GateInId { get; set; }
         public string QRCardVerification {  get; set; }

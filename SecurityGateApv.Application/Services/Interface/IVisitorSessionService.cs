@@ -12,8 +12,10 @@ namespace SecurityGateApv.Application.Services.Interface
     public interface IVisitorSessionService
     {
         public Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi);
-        public Task<Result<CheckInRes>> CheckIn(VisitSessionCheckInCommand command);
-        public Task<Result<bool>> ValidCheckIn(ValidCheckInCommand command);
+        public Task<Result<CheckInRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command);
+        public Task<Result<CheckInRes>> CheckInWithoutCredentialCard(VisitSessionCheckInCommand command);
+        public Task<Result<ValidCheckinRes>> ValidCheckWithCredentialCardIn(ValidCheckInCommand command);
+        public Task<Result<ValidCheckinRes>> ValidCheckWithoutCredentialCardIn(ValidCheckInCommand command);
         public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize, string token);
         public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitorId(int pageNumber, int pageSize, int VisitorId);
         public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId);

@@ -16,7 +16,7 @@ namespace SecurityGateApv.WebApi.Controllers
             _visitorSessionService = visitorSessionService;
         }
         [HttpPut("CheckOut")]
-        public async Task<ActionResult> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi )
+        public async Task<ActionResult> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
             var result = await _visitorSessionService.CheckOut(command, qrCardVerifi);
 
@@ -26,29 +26,53 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        
-        
-        [HttpPost("CheckIn")]
-        public async Task<ActionResult> CheckIn([FromForm] VisitSessionCheckInCommand visitSessionCheckInCommand)
-        {
-            var result = await _visitorSessionService.CheckIn(visitSessionCheckInCommand);
 
-            if (result.IsFailure)
+
+        [HttpPost("CheckIn")]
+        public async Task<ActionResult> CheckIn([FromForm] VisitSessionCheckInCommand command)
+        {
+            if (!string.IsNullOrEmpty(command.CredentialCard))
             {
+                var result = await _visitorSessionService.CheckInWithCredentialCard(command);
+
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
+                return Ok(result.Value);
+            }
+            else
+            {
+                var result = await _visitorSessionService.CheckInWithoutCredentialCard(command);
+                if (result.IsSuccess)
+                {
+                    return Ok(result.Value);
+                }
                 return BadRequest(result.Error);
             }
-            return Ok(result.Value);
         }
         [HttpPost("ValidCheckIn")]
-        public async Task<ActionResult> ValidCheckIn([FromForm] ValidCheckInCommand validCheckInCommand)
+        public async Task<ActionResult> ValidCheckIn([FromForm] ValidCheckInCommand command)
         {
-            var result = await _visitorSessionService.ValidCheckIn(validCheckInCommand);
-
-            if (result.IsFailure)
+            if (!string.IsNullOrEmpty(command.CredentialCard))
             {
+                var result = await _visitorSessionService.ValidCheckWithCredentialCardIn(command);
+
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
+                return Ok(result.Value);
+            }
+            else
+            {
+                var result = await _visitorSessionService.ValidCheckWithoutCredentialCardIn(command);
+                if (result.IsSuccess)
+                {
+                    return Ok(result.Value);
+                }
                 return BadRequest(result.Error);
             }
-            return Ok(result.Value);
         }
         [HttpGet()]
         public async Task<IActionResult> GetAllVisitorSession(int pageNumber, int pageSize)
@@ -70,7 +94,7 @@ namespace SecurityGateApv.WebApi.Controllers
 
             var result = await _visitorSessionService.GetAllVisitorSession(pageNumber, pageSize, token);
             return Ok(result.Value);
-        } 
+        }
         [HttpGet("Visitor/{visitorId}")]
         public async Task<IActionResult> GetAllVisitorSessionByVisitorId(int pageNumber, int pageSize, int visitorId)
         {
