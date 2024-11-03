@@ -88,7 +88,7 @@ namespace SecurityGateApv.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Result<List<GetScheduleUserRes>>> GetScheduleAssignedUserByUserId(int userId, int pageNumber, int pageSize)
+        public async Task<Result<List<GetScheduleUserRes>>> GetScheduleUserByUserIdAndStatus(int userId, string status, int pageNumber, int pageSize)
         {
             var user = (await _userRepo.FindAsync(
                     s => s.UserId == userId,
@@ -99,7 +99,7 @@ namespace SecurityGateApv.Application.Services
             {
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.AssignToId == userId
-                   && s.Status == ScheduleUserStatusEnum.Assigned.ToString(),
+                   && (status == "All" || s.Status == status),
                    pageSize, pageNumber,
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
@@ -109,7 +109,7 @@ namespace SecurityGateApv.Application.Services
             {
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.Schedule.CreateById == userId
-                   && s.Status == ScheduleUserStatusEnum.Assigned.ToString(),
+                   && (status == "All" || s.Status == status),
                    pageSize, pageNumber,
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
