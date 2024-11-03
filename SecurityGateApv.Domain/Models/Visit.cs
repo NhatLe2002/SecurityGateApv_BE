@@ -138,6 +138,11 @@ namespace SecurityGateApv.Domain.Models
             this.UpdateById = updateById;
             this.UpdateTime = DateTime.Now;
             return this;
+        }public Result<Visit> UpdateStatusBackGroundWoker(string status)
+        {
+            this.VisitStatus = status;
+            //this.UpdateTime = DateTime.Now;
+            return this;
         }
         public Result<Visit> RemoveDetail()
         {

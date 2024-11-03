@@ -5,6 +5,7 @@ using SecurityGateApv.Infras.DBContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,40 @@ namespace SecurityGateApv.Infras.Repositories
         {
             _context = context;
             _dbSet = _context.Set<Visit>();
+        }
+
+        public Task<IEnumerable<VisitorSession>> FindWithProjectionAsync(Expression<Func<VisitorSession, bool>> filter, int pageSize, int pageNumber, Func<IQueryable<VisitorSession>, IOrderedQueryable<VisitorSession>> orderBy, string includeProperties)
+        {
+            //IQueryable<VisitorSession> query = _context.Set<VisitorSession>();
+
+            //if (filter != null)
+            //{
+            //    query = query.Where(filter);
+            //}
+
+            //foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            //{
+            //    query = query.Include(includeProperty);
+            //}
+
+            //if (orderBy != null)
+            //{
+            //    query = orderBy(query);
+            //}
+
+            //query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            //return await query.Select(s => new VisitorSession
+            //{
+            //    VisitorSessionId = s.VisitorSessionId,
+            //    CheckinTime = s.CheckinTime,
+            //    VisitDetailId = s.VisitDetailId,
+            //    SecurityIn = new Security
+            //    {
+            //        Name = s.SecurityIn.Name
+            //    }
+            //}).ToListAsync();
+            throw new NotImplementedException();
         }
     }
 }

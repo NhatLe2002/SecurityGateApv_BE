@@ -55,7 +55,7 @@ namespace SecurityGateApv.Application.Services
             }
             var visitCard = (await _visitCardRepo.FindAsync(
                                s => s.CardId == qRCard.CardId
-                               && s.VisitCardStatus == VisitCardEnum.Issue.ToString()
+                               && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString()
                                               )).FirstOrDefault();
             if (visitCard == null)
             {
@@ -71,7 +71,7 @@ namespace SecurityGateApv.Application.Services
             //Check if schedule type is daily then cancel
             if (qRCard.CardType.CardTypeName.Equals(CardTypeEnum.ShotTermCard.ToString()))
             {
-                visitCard.UpdateVisitCardStatus(VisitCardEnum.Expired.ToString());
+                visitCard.UpdateVisitCardStatus(VisitCardStatusEnum.Expired.ToString());
                 await _visitCardRepo.UpdateAsync(visitCard);
             }
             if (visitSesson == null)
@@ -93,7 +93,9 @@ namespace SecurityGateApv.Application.Services
             var visitDetails = await _visitDetailRepo.FindAsync(
                 s => s.Visitor.CredentialsCard.Equals(command.CredentialCard)
                 /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
-                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
+                && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
+                && s.ExpectedEndHour >= DateTime.Now.TimeOfDay,
                 int.MaxValue, 1, includeProperties: "Visit.Schedule.ScheduleType,Visitor"
             );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -116,7 +118,7 @@ namespace SecurityGateApv.Application.Services
             // Check valid CredentialCard and Card 
             var visitCard = (await _visitCardRepo.FindAsync(
                 s => (s.CardId == qrCard.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
-                && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
+                && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
             if (visitCard != null && visitCard.CardId != qrCard.CardId)
             {
@@ -229,7 +231,7 @@ namespace SecurityGateApv.Application.Services
             }
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.CardId == card.CardId
-                    && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
+                    && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
                     && s.ExpiryDate.Date >= DateTime.Now.Date
                 )).FirstOrDefault();
             if (visitCard == null)
@@ -348,7 +350,7 @@ namespace SecurityGateApv.Application.Services
             //Check valid CredentialCard and Card 
             var visitCard = (await _visitCardRepo.FindAsync(
                                s => (s.CardId == qrCard.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
-                               && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
+                               && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
                                               )).FirstOrDefault();
             if (visitCard != null && visitCard.CardId != qrCard.CardId)
             {
@@ -403,7 +405,7 @@ namespace SecurityGateApv.Application.Services
             }
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.CardId == card.CardId
-                    && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())
+                    && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
                     && s.ExpiryDate.Date >= DateTime.Now.Date
                 )).FirstOrDefault();
             if (visitCard == null)
@@ -475,7 +477,7 @@ namespace SecurityGateApv.Application.Services
             }
             var visitCard = (await _visitCardRepo.FindAsync(
                                s => (s.CardId == qrCard.CardId)
-                               && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString()),
+                               && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString()),
                                includeProperties: "VisitDetail.Visit.Schedule.ScheduleType,VisitDetail.Visitor"
                                               )).FirstOrDefault();
             if (visitCard != null && visitCard.CardId == qrCard.CardId)
@@ -564,7 +566,46 @@ namespace SecurityGateApv.Application.Services
             }
             return false;
         }
+        async Task<Result<ICollection<GetVisitorSessionGraphQLRes>>> IVisitorSessionService.GetAllVisitorSessionGraphQL(int pageNumber, int pageSize, string token)
+        {
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
+            var visitSession = new List<VisitorSession>();
+            if (userAuthor.Role == UserRoleEnum.Admin.ToString() || userAuthor.Role == UserRoleEnum.Manager.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => true,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+            if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.Schedule,VisitDetail.Visitor"
+                     )).ToList();
+            }
+            if (userAuthor.Role == UserRoleEnum.Staff.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
 
+            if (visitSession.Count() == 0)
+            {
+                return Result.Failure<ICollection<GetVisitorSessionGraphQLRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<List<GetVisitorSessionGraphQLRes>>(visitSession);
+            var check = _mapper.Map<List<GraphQlVisitorRes>>(visitSession.Select(s => s.VisitDetail.Visitor));
+            return result.ToList();
+        }
         public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize, string token)
         {
             var userAuthor = _jwt.DecodeAuthorJwt(token);
@@ -641,7 +682,7 @@ namespace SecurityGateApv.Application.Services
         {
 
             var visitSession = await _visitorSessionRepo.FindAsync(
-                  s => s.VisitDetail.VisitCard.Any(s => s.Card.CardVerification == cardVerified && s.VisitCardStatus.Equals(VisitCardEnum.Issue.ToString())),
+                  s => s.VisitDetail.VisitCard.Any(s => s.Card.CardVerification == cardVerified && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())),
                   int.MaxValue, 1,
                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
                 );

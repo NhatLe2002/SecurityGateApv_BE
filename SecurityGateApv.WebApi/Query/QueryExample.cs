@@ -23,10 +23,15 @@ namespace SecurityGateApv.WebApi.Query
         [UseOffsetPaging(MaxPageSize = int.MaxValue, IncludeTotalCount = true)]
         [UseFiltering]
         [UseSorting]
-        public async Task<IEnumerable<GetVisitorSessionRes>> GetVisitorSession([Service] IVisitorSessionService _visitorSessionService, [Service] IHttpContextAccessor httpContextAccessor)
+        public async Task<IEnumerable<GetVisitorSessionGraphQLRes>> GetVisitorSession([Service] IVisitorSessionService _visitorSessionService, [Service] IHttpContextAccessor httpContextAccessor)
         {
+            if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.Headers.ContainsKey("Authorization"))
+            {
+                throw new Exception("Authorization header is missing.");
+            }
+
             var token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var result = await _visitorSessionService.GetAllVisitorSession(1, int.MaxValue, token);
+            var result = await _visitorSessionService.GetAllVisitorSessionGraphQL(1, int.MaxValue, token);
 
             if (result.IsFailure)
             {

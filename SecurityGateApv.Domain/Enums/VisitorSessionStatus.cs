@@ -11,6 +11,6 @@ namespace SecurityGateApv.Domain.Enums
         None ,
         CheckIn,
         CheckOut,
-        Lost
+        UnCheckOut
     }
 }

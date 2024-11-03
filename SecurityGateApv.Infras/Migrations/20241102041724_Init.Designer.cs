@@ -12,8 +12,8 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    [Migration("20241024051549_Update_Type")]
-    partial class Update_Type
+    [Migration("20241102041724_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,9 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CardTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CardVerification")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -48,32 +51,23 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("IssuedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("LastCancelDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("QRCardTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("CardId");
 
-                    b.HasIndex("QRCardTypeId");
+                    b.HasIndex("CardTypeId");
 
                     b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.CardType", b =>
                 {
-                    b.Property<int>("QRCardTypeId")
+                    b.Property<int>("CardTypeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QRCardTypeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardTypeId"));
 
                     b.Property<string>("CardTypeName")
                         .IsRequired()
@@ -83,20 +77,20 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("QRCardTypeId");
+                    b.HasKey("CardTypeId");
 
-                    b.ToTable("QRCardTypes");
+                    b.ToTable("CardTypes");
 
                     b.HasData(
                         new
                         {
-                            QRCardTypeId = 1,
+                            CardTypeId = 1,
                             CardTypeName = "Vehicle",
                             TypeDescription = "Vehicle QR Card"
                         },
                         new
                         {
-                            QRCardTypeId = 2,
+                            CardTypeId = 2,
                             CardTypeName = "Visitor",
                             TypeDescription = "Visitor QR Card"
                         });
@@ -124,6 +118,22 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("CredentialCardTypeId");
 
                     b.ToTable("CredentialCardTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            CredentialCardTypeId = 1,
+                            CredentialCardTypeName = "Căn cước công dân",
+                            Description = "Căn cước công dân",
+                            Status = true
+                        },
+                        new
+                        {
+                            CredentialCardTypeId = 2,
+                            CredentialCardTypeName = "Giấy phép lái xe",
+                            Description = "Giấy phép lái xe",
+                            Status = true
+                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Department", b =>
@@ -148,6 +158,10 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -159,92 +173,52 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             DepartmentId = 1,
-                            AcceptLevel = 2,
+                            AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Kế toán",
-                            Description = "Occaecati accusamus temporibus modi voluptate quis.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DepartmentName = "AdminDepartment",
+                            Description = "Phòng ban riêng cho admin",
+                            Status = "Active",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 2,
-                            AcceptLevel = 2,
+                            AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng IT",
-                            Description = "Ea eum qui ipsam aut maiores.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DepartmentName = "ManagerDepartment",
+                            Description = "Phòng ban riêng cho quản lý",
+                            Status = "Active",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 3,
-                            AcceptLevel = 2,
+                            AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng R&D",
-                            Description = "Fuga pariatur temporibus velit possimus.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DepartmentName = "SecurityDepartment",
+                            Description = "Phòng ban riêng cho quản security",
+                            Status = "Active",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 4,
-                            AcceptLevel = 2,
+                            AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng R&D",
-                            Description = "Fuga et sunt alias eveniet nam odit ea ullam aut.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DepartmentName = "Phòng Nhân sự",
+                            Description = "Phòng nhân sự",
+                            Status = "Active",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             DepartmentId = 5,
-                            AcceptLevel = 2,
+                            AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Chăm sóc khách hàng",
-                            Description = "Accusamus similique distinctio sequi aut architecto enim itaque autem.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            DepartmentId = 6,
-                            AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Marketing",
-                            Description = "Totam corporis quidem perferendis.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            DepartmentId = 7,
-                            AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng IT",
-                            Description = "Et rem aut incidunt consequatur dolorem corporis fugit ut deleniti.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            DepartmentId = 8,
-                            AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng IT",
-                            Description = "Dicta quia nemo et repudiandae aliquam asperiores ut et aliquam.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            DepartmentId = 9,
-                            AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Hành chính",
-                            Description = "Dolorem nihil assumenda.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            DepartmentId = 10,
-                            AcceptLevel = 2,
-                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "Phòng Marketing",
-                            Description = "Eligendi veniam voluptas.",
-                            UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            DepartmentName = "Phòng Sản xuất",
+                            Description = "Phòng Sản xuất",
+                            Status = "Active",
+                            UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -405,7 +379,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             RoleId = 3,
                             Description = "Quản lý toàn bộ phòng ban",
-                            RoleName = "DepartmentManaager"
+                            RoleName = "DepartmentManager"
                         },
                         new
                         {
@@ -631,6 +605,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserId = 1,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentId = 1,
                             Email = "admin1@example.com",
                             FullName = "Admin One",
                             Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
@@ -645,6 +620,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserId = 2,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentId = 2,
                             Email = "manager1@example.com",
                             FullName = "Manager One",
                             Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
@@ -659,7 +635,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserId = 3,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentId = 1,
+                            DepartmentId = 4,
                             Email = "employee1@example.com",
                             FullName = "Department Manager One",
                             Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
@@ -674,7 +650,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserId = 4,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentId = 1,
+                            DepartmentId = 4,
                             Email = "Staff1@egmail.com",
                             FullName = "Staff One",
                             Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
@@ -689,7 +665,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserId = 5,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentId = 1,
+                            DepartmentId = 4,
                             Email = "Staff2@gmail.com",
                             FullName = "Staff Tow",
                             Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
@@ -704,6 +680,7 @@ namespace SecurityGateApv.Infras.Migrations
                         {
                             UserId = 6,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentId = 3,
                             Email = "it1@example.com",
                             FullName = "Security One",
                             Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
@@ -839,6 +816,39 @@ namespace SecurityGateApv.Infras.Migrations
                     b.ToTable("Visits");
                 });
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitCard", b =>
+                {
+                    b.Property<int>("VisitCardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitCardId"));
+
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VisitCardStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VisitDetailId")
+                        .HasColumnType("int");
+
+                    b.HasKey("VisitCardId");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("VisitDetailId");
+
+                    b.ToTable("VisitCards");
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitDetail", b =>
                 {
                     b.Property<int>("VisitDetailId")
@@ -927,9 +937,6 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitorSessionId"));
 
-                    b.Property<int>("CardId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CheckinTime")
                         .HasColumnType("datetime2");
 
@@ -956,8 +963,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("VisitorSessionId");
-
-                    b.HasIndex("CardId");
 
                     b.HasIndex("GateInId");
 
@@ -1000,13 +1005,13 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.CardType", "QRCardType")
-                        .WithMany("QRCards")
-                        .HasForeignKey("QRCardTypeId")
+                    b.HasOne("SecurityGateApv.Domain.Models.CardType", "CardType")
+                        .WithMany("Cards")
+                        .HasForeignKey("CardTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("QRCardType");
+                    b.Navigation("CardType");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationUsers", b =>
@@ -1114,9 +1119,9 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired();
 
                     b.HasOne("SecurityGateApv.Domain.Models.VisitDetail", "VisitDetail")
-                        .WithMany("VehicleSession")
+                        .WithMany()
                         .HasForeignKey("VisitDetailId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Gate");
@@ -1169,6 +1174,25 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("UpdateBy");
                 });
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitCard", b =>
+                {
+                    b.HasOne("SecurityGateApv.Domain.Models.Card", "Card")
+                        .WithMany("VisitCards")
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.VisitDetail", "VisitDetail")
+                        .WithMany("VisitCard")
+                        .HasForeignKey("VisitDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Card");
+
+                    b.Navigation("VisitDetail");
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitDetail", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.Visit", "Visit")
@@ -1201,12 +1225,6 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.Card", "Card")
-                        .WithMany("VisitorSession")
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateIn")
                         .WithMany("VisitorSessionsIn")
                         .HasForeignKey("GateInId")
@@ -1235,8 +1253,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Card");
-
                     b.Navigation("GateIn");
 
                     b.Navigation("GateOut");
@@ -1261,12 +1277,12 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
-                    b.Navigation("VisitorSession");
+                    b.Navigation("VisitCards");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.CardType", b =>
                 {
-                    b.Navigation("QRCards");
+                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.CredentialCardType", b =>
@@ -1347,7 +1363,7 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitDetail", b =>
                 {
-                    b.Navigation("VehicleSession");
+                    b.Navigation("VisitCard");
 
                     b.Navigation("VisitorSession");
                 });

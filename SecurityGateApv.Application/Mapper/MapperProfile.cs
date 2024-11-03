@@ -97,8 +97,19 @@ namespace SecurityGateApv.Application.Mapper
             #endregion
 
             #region VisitSession
-                CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap();
-                CreateMap<SessionsRes, VisitorSession>().ReverseMap();
+            CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap();
+            CreateMap<VisitorSession, GetVisitorSessionGraphQLRes>()
+                .ForMember(dest => dest.Visitor, opt => opt.MapFrom(src => src.VisitDetail.Visitor))
+                .ForMember(dest => dest.Visit, opt => opt.MapFrom(src => src.VisitDetail.Visit))
+                .ReverseMap();
+
+            //CreateMap<GetVisitorSessionGraphQLRes, VisitorSession>().ReverseMap()
+            //    //.ForMember(dest => dest.Visitor, opt => opt.MapFrom(src => src.VisitDetail.Visitor))
+            //    /*.ForMember(dest => dest.Visit, opt => opt.MapFrom(src => src.VisitDetail.Visit))*/;
+            CreateMap<SessionsRes, VisitorSession>().ReverseMap();
+            CreateMap<GraphQlGetVisitRes, Visit>().ReverseMap();
+            CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap();
+
             #endregion
             #region Card
             CreateMap<Card, GetCardRes>().ReverseMap();

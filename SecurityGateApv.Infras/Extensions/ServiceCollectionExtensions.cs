@@ -13,6 +13,7 @@ using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Infras.AWS;
+using SecurityGateApv.Infras.BackgroundWorker;
 using SecurityGateApv.Infras.DBContext;
 using SecurityGateApv.Infras.Helpers;
 using SecurityGateApv.Infras.Notifications;
@@ -64,6 +65,8 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitCardRepo, VisitCardRepo>();
             services.AddScoped<INotifications, NotificationsService>();
             services.AddSingleton<NotificationHub>();
+            services.AddHostedService<VisitStatusUpdaterService>();
+            services.AddHostedService<VisitCardStatusUpdaterService>();
             services.AddSingleton<IDictionary<string, UserConnectionDTO>>(opt => new Dictionary<string, UserConnectionDTO>());
 
 

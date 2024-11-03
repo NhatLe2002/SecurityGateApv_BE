@@ -217,7 +217,7 @@ namespace SecurityGateApv.Infras.Data
 
             modelBuilder.Entity<ScheduleType>().HasData(scheduleTypeList);
 
-            //var scheduleDaily = Schedule.Create(1,"Lịch đăng ký hằng ngày", "", 0, "Lịch đăng kí hàng ngày không được sửa hoặc thêm", new DateTime(2024, 09, 29), new DateTime(2024, 10, 24), true, 1, 1);
+            //var scheduleDaily = Schedule.Create(1, "Lịch đăng ký hằng ngày", "", 0, "Lịch đăng kí hàng ngày không được sửa hoặc thêm", new DateTime(2024, 09, 29), new DateTime(2024, 10, 24), true, 1, 1);
             //modelBuilder.Entity<Schedule>().HasData(scheduleDaily);
         }
 

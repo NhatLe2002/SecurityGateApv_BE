@@ -14,6 +14,20 @@ namespace SecurityGateApv.Infras.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CardTypes",
+                columns: table => new
+                {
+                    CardTypeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CardTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CardTypes", x => x.CardTypeId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CredentialCardTypes",
                 columns: table => new
                 {
@@ -38,7 +52,8 @@ namespace SecurityGateApv.Infras.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AcceptLevel = table.Column<int>(type: "int", nullable: false)
+                    AcceptLevel = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,20 +107,6 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QRCardTypes",
-                columns: table => new
-                {
-                    QRCardTypeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TypeDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QRCardTypes", x => x.QRCardTypeId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -135,6 +136,30 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    CardId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CardVerification = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastCancelDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CardImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CardStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CardTypeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.CardId);
+                    table.ForeignKey(
+                        name: "FK_Cards_CardTypes_CardTypeId",
+                        column: x => x.CardTypeId,
+                        principalTable: "CardTypes",
+                        principalColumn: "CardTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Visitors",
                 columns: table => new
                 {
@@ -158,32 +183,6 @@ namespace SecurityGateApv.Infras.Migrations
                         column: x => x.CredentialCardTypeId,
                         principalTable: "CredentialCardTypes",
                         principalColumn: "CredentialCardTypeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cards",
-                columns: table => new
-                {
-                    CardId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardVerification = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastCancelDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IssuedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CardImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CardStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QRCardTypeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cards", x => x.CardId);
-                    table.ForeignKey(
-                        name: "FK_Cards_QRCardTypes_QRCardTypeId",
-                        column: x => x.QRCardTypeId,
-                        principalTable: "QRCardTypes",
-                        principalColumn: "QRCardTypeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -435,7 +434,36 @@ namespace SecurityGateApv.Infras.Migrations
                         column: x => x.VisitDetailId,
                         principalTable: "VisitDetails",
                         principalColumn: "VisitDetailId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VisitCards",
+                columns: table => new
+                {
+                    VisitCardId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VisitCardStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VisitDetailId = table.Column<int>(type: "int", nullable: false),
+                    CardId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VisitCards", x => x.VisitCardId);
+                    table.ForeignKey(
+                        name: "FK_VisitCards_Cards_CardId",
+                        column: x => x.CardId,
+                        principalTable: "Cards",
+                        principalColumn: "CardId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VisitCards_VisitDetails_VisitDetailId",
+                        column: x => x.VisitDetailId,
+                        principalTable: "VisitDetails",
+                        principalColumn: "VisitDetailId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -446,7 +474,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CheckinTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckoutTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CardId = table.Column<int>(type: "int", nullable: false),
                     VisitDetailId = table.Column<int>(type: "int", nullable: false),
                     SecurityInId = table.Column<int>(type: "int", nullable: false),
                     SecurityOutId = table.Column<int>(type: "int", nullable: true),
@@ -457,12 +484,6 @@ namespace SecurityGateApv.Infras.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VisitorSessions", x => x.VisitorSessionId);
-                    table.ForeignKey(
-                        name: "FK_VisitorSessions_Cards_CardId",
-                        column: x => x.CardId,
-                        principalTable: "Cards",
-                        principalColumn: "CardId",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VisitorSessions_Gates_GateInId",
                         column: x => x.GateInId,
@@ -539,29 +560,33 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "CardTypes",
+                columns: new[] { "CardTypeId", "CardTypeName", "TypeDescription" },
+                values: new object[,]
+                {
+                    { 1, "Vehicle", "Vehicle QR Card" },
+                    { 2, "Visitor", "Visitor QR Card" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "CredentialCardTypes",
                 columns: new[] { "CredentialCardTypeId", "CredentialCardTypeName", "Description", "Status" },
                 values: new object[,]
                 {
-                    { 1, "Giấy phép lái xe", "A magni repellendus saepe voluptates qui non.", true },
-                    { 2, "Căn cước công dân", "Delectus dolor totam qui consequatur.", true }
+                    { 1, "Căn cước công dân", "Căn cước công dân", true },
+                    { 2, "Giấy phép lái xe", "Giấy phép lái xe", true }
                 });
 
             migrationBuilder.InsertData(
                 table: "Departments",
-                columns: new[] { "DepartmentId", "AcceptLevel", "CreateDate", "DepartmentName", "Description", "UpdatedDate" },
+                columns: new[] { "DepartmentId", "AcceptLevel", "CreateDate", "DepartmentName", "Description", "Status", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng R&D", "Quia qui quis iure ut labore.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Sản xuất", "Fugit atque placeat numquam aliquid ipsa asperiores omnis velit magnam.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Marketing", "Ad corrupti quidem veritatis quam.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 4, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Pháp chế", "Et est corporis velit itaque in iure.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 5, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Sản xuất", "Blanditiis vitae qui quaerat eaque debitis accusamus saepe aut.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 6, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Kế toán", "Voluptatum numquam nemo fugit sequi expedita.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 7, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Sản xuất", "Ut praesentium aut porro voluptas fugiat magni natus voluptatem.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 8, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng R&D", "Non quos aliquam tenetur delectus distinctio.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 9, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Hành chính", "Unde ea totam harum.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 10, 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng R&D", "Voluptatibus blanditiis beatae sequi ducimus ut similique minima.", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "AdminDepartment", "Phòng ban riêng cho admin", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "ManagerDepartment", "Phòng ban riêng cho quản lý", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "SecurityDepartment", "Phòng ban riêng cho quản security", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Nhân sự", "Phòng nhân sự", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Sản xuất", "Phòng Sản xuất", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -574,24 +599,26 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "QRCardTypes",
-                columns: new[] { "QRCardTypeId", "CardTypeName", "TypeDescription" },
-                values: new object[,]
-                {
-                    { 1, "Vehicle", "Vehicle QR Card" },
-                    { 2, "Visitor", "Visitor QR Card" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "Description", "RoleName" },
                 values: new object[,]
                 {
                     { 1, "Quản lý toàn bộ hệ thống", "Admin" },
                     { 2, "Quản lý toàn bộ công ty", "Manager" },
-                    { 3, "Quản lý toàn bộ phòng ban", "DepartmentManaager" },
+                    { 3, "Quản lý toàn bộ phòng ban", "DepartmentManager" },
                     { 4, "Tạo và quản lý khách ra vào của phòng ban", "Staff" },
                     { 5, "Quản lý khách ra vào tại cổng", "Security" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ScheduleTypes",
+                columns: new[] { "ScheduleTypeId", "Description", "ScheduleTypeName", "Status" },
+                values: new object[,]
+                {
+                    { 1, "Lịch trình đăng ký ra vào hàng ngày cho staff và bảo vệ", "VisitDaily", true },
+                    { 2, "Lịch trình đăng ký ra vào theo tiến trình hàng tuần cho Department Manager", "ProcessWeek", true },
+                    { 3, "Lịch trình đăng ký ra vào theo tiến trình hàng tháng cho Department Manager", "ProcessMonth", true },
+                    { 4, "Lịch trình đăng ký ra vào theo dự án cho Department Manager", "Project", true }
                 });
 
             migrationBuilder.InsertData(
@@ -599,18 +626,18 @@ namespace SecurityGateApv.Infras.Migrations
                 columns: new[] { "UserId", "CreatedDate", "DepartmentId", "Email", "FullName", "Image", "Password", "PhoneNumber", "RoleId", "Status", "UpdatedDate", "UserName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "admin1@example.com", "Admin One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0123456789", 1, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin1" },
-                    { 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "manager1@example.com", "Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0987654321", 2, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "manager1" },
-                    { 3, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "employee1@example.com", "Department Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0112223334", 3, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "DM1" },
-                    { 4, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "Staff1@egmail.com", "Staff One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0223334445", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff1" },
-                    { 5, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "Staff2@gmail.com", "Staff Tow", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0223334446", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff2" },
-                    { 6, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "it1@example.com", "Security One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0334445556", 5, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Security1" }
+                    { 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "admin1@example.com", "Admin One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0123456789", 1, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin1" },
+                    { 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "manager1@example.com", "Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0987654321", 2, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "manager1" },
+                    { 3, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "employee1@example.com", "Department Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0112223334", 3, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "DM1" },
+                    { 4, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Staff1@egmail.com", "Staff One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0223334445", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff1" },
+                    { 5, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Staff2@gmail.com", "Staff Tow", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0223334446", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff2" },
+                    { 6, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, "it1@example.com", "Security One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0334445556", 5, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Security1" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cards_QRCardTypeId",
+                name: "IX_Cards_CardTypeId",
                 table: "Cards",
-                column: "QRCardTypeId");
+                column: "CardTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationUsers_NotificationID",
@@ -683,6 +710,16 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "VisitDetailId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_VisitCards_CardId",
+                table: "VisitCards",
+                column: "CardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VisitCards_VisitDetailId",
+                table: "VisitCards",
+                column: "VisitDetailId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VisitDetails_VisitId",
                 table: "VisitDetails",
                 column: "VisitId");
@@ -696,11 +733,6 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "IX_Visitors_CredentialCardTypeId",
                 table: "Visitors",
                 column: "CredentialCardTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VisitorSessions_CardId",
-                table: "VisitorSessions",
-                column: "CardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VisitorSessions_GateInId",
@@ -769,6 +801,9 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "VehicleSessionImages");
 
             migrationBuilder.DropTable(
+                name: "VisitCards");
+
+            migrationBuilder.DropTable(
                 name: "VisitorSessionsImages");
 
             migrationBuilder.DropTable(
@@ -778,19 +813,19 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "VehicleSessions");
 
             migrationBuilder.DropTable(
+                name: "Cards");
+
+            migrationBuilder.DropTable(
                 name: "VisitorSessions");
 
             migrationBuilder.DropTable(
-                name: "Cards");
+                name: "CardTypes");
 
             migrationBuilder.DropTable(
                 name: "Gates");
 
             migrationBuilder.DropTable(
                 name: "VisitDetails");
-
-            migrationBuilder.DropTable(
-                name: "QRCardTypes");
 
             migrationBuilder.DropTable(
                 name: "Visitors");

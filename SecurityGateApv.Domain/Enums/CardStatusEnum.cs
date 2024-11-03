@@ -11,6 +11,6 @@ namespace SecurityGateApv.Domain.Enums
         None,
         Active,
         Inactive,
-        Disable
+        Lost
     }
 }
