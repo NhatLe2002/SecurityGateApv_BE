@@ -200,7 +200,6 @@ namespace SecurityGateApv.Application.Services
                 command.DeadlineTime,
                 "Assigned",
                 command.ScheduleId,
-                command.AssignFromId,
                 command.AssignToId
                 );
             if (scheduleUser.IsFailure)
@@ -209,7 +208,7 @@ namespace SecurityGateApv.Application.Services
             }
             await _scheduleUserRepo.AddAsync(scheduleUser.Value);
             var noti = Notification.Create(command.Title, command.Description, DateTime.Now, null);
-            noti.Value.AddUserNoti(command.AssignFromId, command.AssignToId);
+            noti.Value.AddUserNoti(schedule.CreateById, command.AssignToId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)

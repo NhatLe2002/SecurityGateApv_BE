@@ -170,20 +170,20 @@ namespace SecurityGateApv.Application.Services
 
             if (visitCard == null)
             {
-                if ((validVisitDetail.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString()
+                if ((validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString()
                     && qrCard.CardType.CardTypeName == CardTypeEnum.ShotTermCard.ToString()))
                 {
                     visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, qrCard.CardId);
                 }
                 else if (qrCard.CardType.CardTypeName == CardTypeEnum.LongTermCard.ToString()
-                    && validVisitDetail.Visit.Schedule.ScheduleType.ScheduleTypeName != ScheduleTypeEnum.VisitDaily.ToString()
+                    && validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName != ScheduleTypeEnum.VisitDaily.ToString()
                     )
                 {
                     visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, qrCard.CardId);
                 }
                 else
                 {
-                    var error = Error.ScheduleAndCardTypeMismatch(validVisitDetail.Visit.Schedule.ScheduleType.ScheduleTypeName, qrCard.CardType.CardTypeName);
+                    var error = Error.ScheduleAndCardTypeMismatch(validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName, qrCard.CardType.CardTypeName);
                     return Result.Failure<CheckInRes>(error);
                 }
                 await _visitCardRepo.AddAsync(visitCard);
@@ -548,18 +548,18 @@ namespace SecurityGateApv.Application.Services
         }
         private bool IsValidVisit(Visit visit, DateTime date)
         {
-            string[] daysOfSchedule = visit.Schedule.DaysOfSchedule.Split(',');
+            string[] daysOfSchedule = visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',');
             int dateOfWeekInput = ((int)date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
-            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()) && visit.ExpectedStartTime.Date == DateTime.Now.Date)
+            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()) && visit.ExpectedStartTime.Date == DateTime.Now.Date)
             {
                 return true;
             }
-            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
+            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
                 && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
             {
                 return true;
             }
-            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
+            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
                 && daysOfSchedule.Contains(date.Day.ToString()))
             {
                 return true;

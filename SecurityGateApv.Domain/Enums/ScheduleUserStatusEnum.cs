@@ -11,7 +11,7 @@ namespace SecurityGateApv.Domain.Enums
         None ,
         Assigned,
         Pending,
-        Approve,
-        Reject,
+        Approved,
+        Rejected,
     }
 }

@@ -24,15 +24,6 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 }
                 return false;
             }).WithMessage("User Id not exist");
-            RuleFor(s => s.AssignFromId).NotNull().NotEmpty().Must(s =>
-            {
-                if (userRepo.IsAny(t => t.UserId == s).GetAwaiter().GetResult())
-                {
-                    return true;
-
-                }
-                return false;
-            }).WithMessage("User Id not exist");
             RuleFor(s => s.ScheduleId).NotNull().NotEmpty().Must(s =>
             {
                 if (scheduleRepo.IsAny(t => t.ScheduleId == s).GetAwaiter().GetResult())

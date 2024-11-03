@@ -14,5 +14,6 @@ namespace SecurityGateApv.Domain.Enums
         Started,
         Ended,
         Cancel,
+        Active
     }
 }

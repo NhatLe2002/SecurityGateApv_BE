@@ -84,7 +84,6 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<Schedule> Schedules { get; private set; } 
 
         public ICollection<VehicleSession> VehicleSession { get; private set; }
-        public ICollection<ScheduleUser> ScheduleUserFrom { get; private set; }
         public ICollection<ScheduleUser> ScheduleUserTo { get; private set; }
         //public Visitor Visitor { get; private set; }
 

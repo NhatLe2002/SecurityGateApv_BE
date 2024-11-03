@@ -47,7 +47,7 @@ namespace SecurityGateApv.Infras.DBContext
         {
             var builder = new ConfigurationBuilder();
             IConfigurationRoot configurationRoot = builder.Build();
-            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv_BackUp;TrustServerCertificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,15 +65,17 @@ namespace SecurityGateApv.Infras.DBContext
                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ScheduleUser>()
-                .HasOne(n => n.AssignFrom)
-                .WithMany(u => u.ScheduleUserFrom)
-                .HasForeignKey(n => n.AssignFromId)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<ScheduleUser>()
                 .HasOne(n => n.AssignTo)
                 .WithMany(u => u.ScheduleUserTo)
                 .HasForeignKey(n => n.AssignToId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Schedule>()
+                .HasOne(v => v.CreateBy)
+                .WithMany(u => u.Schedules)
+                .HasForeignKey(v => v.CreateById)
+                .OnDelete(DeleteBehavior.Restrict); 
+
 
             
             
@@ -89,12 +91,6 @@ namespace SecurityGateApv.Infras.DBContext
                 .HasForeignKey(v => v.UpdateById)
                 .OnDelete(DeleteBehavior.Restrict);
             
-            modelBuilder.Entity<Schedule>()
-                .HasOne(v => v.CreateBy)
-                .WithMany(u => u.Schedules)
-                .HasForeignKey(v => v.CreateById)
-                .OnDelete(DeleteBehavior.Restrict); 
-
 
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.SecurityIn)

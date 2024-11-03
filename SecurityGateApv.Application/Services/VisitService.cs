@@ -289,18 +289,18 @@ namespace SecurityGateApv.Application.Services
         }
         private bool IsValidVisit(Visit visit, DateTime date)
         {
-            string[] daysOfSchedule = visit.Schedule.DaysOfSchedule.Split(',');
+            string[] daysOfSchedule = visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',');
             int dateOfWeekInput = ((int)date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
-            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()))
+            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()))
             {
                 return true;
             }
-            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
+            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
                 && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
             {
                 return true;
             }
-            if (visit.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
+            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
                 && daysOfSchedule.Contains(date.Day.ToString()))
             {
                 return true;
@@ -315,7 +315,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<UpdateVisitBeforeStartDateCommand>(Error.NotFoundVisit);
             }
 
-            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
+            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleUser.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
             await _visitDetailRepo.RemoveRange(visit.VisitDetail);
             visit.AddEndTime(schedule.Duration);
 
@@ -494,7 +494,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<UpdateVisitAfterStartDateCommand>(Error.UpdateTimeVisitError);
             }
-            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
+            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleUser.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
             await _visitDetailRepo.RemoveRange(visit.VisitDetail);
             visit.AddEndTime(schedule.Duration);
 
@@ -545,7 +545,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<UpdateAppendTimeForVisitCommand>(Error.AppendTimeInvalid);
             }
 
-            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
+            var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleUser.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
 
             visit.AddEndTime(schedule.Duration);
 

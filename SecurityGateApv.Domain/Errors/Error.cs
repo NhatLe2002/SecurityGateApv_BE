@@ -117,6 +117,16 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ScheduleCannotAssign = new("Error.ScheduleCannotAssign", "Can not Assign Schedule daily");
         #endregion
 
+        #region ScheduleUser Error
+        //ScheduleUser not found
+        public static readonly Error NotFoundScheduleUser = new("Error.ScheduleUser", "Not found this ScheduleUser");
+        //ScheduleUser reject error
+        public static readonly Error ScheduleUserRejectError = new("Error.ScheduleUserReject", "Can not reject this ScheduleUser");
+        //ScheduleUser aprove error
+        public static readonly Error ScheduleUserAproveError = new("Error.ScheduleUserAprove", "Can not aprove this ScheduleUser");
+        //ScheduleUser does not have visit 
+        public static readonly Error ScheduleUserNotHaveVisit = new("Error.ScheduleUserNotHaveVisit", "This ScheduleUser does not have visit");
+        #endregion
 
         #region ScheduleType
         //ScheduleType Error

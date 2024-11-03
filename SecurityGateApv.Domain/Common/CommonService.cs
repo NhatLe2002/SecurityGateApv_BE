@@ -44,9 +44,9 @@ namespace SecurityGateApv.Domain.Common
         public static async Task<IEnumerable<ValidateVisitDateDTO>> CaculateBusyDates(VisitDetail visit)
         {
             var returnDate = new List<ValidateVisitDateDTO>();
-            if (visit.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessMonth.ToString())
+            if (visit.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessMonth.ToString())
             {
-                var dateOfMonth = visit.Visit.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                var dateOfMonth = visit.Visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 foreach (var day in dateOfMonth) {
                     var yearDiff = visit.Visit.ExpectedEndTime.Year - visit.Visit.ExpectedStartTime.Year;
                     var newDate = new DateTime();
@@ -85,9 +85,9 @@ namespace SecurityGateApv.Domain.Common
    
                     }
                 }
-            }else if (visit.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessWeek.ToString())
+            }else if (visit.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessWeek.ToString())
             {
-                var dateOfWeek = visit.Visit.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                var dateOfWeek = visit.Visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 foreach (var day in dateOfWeek) { 
                     var weekDiff = ((int)(((visit.Visit.ExpectedEndTime - visit.Visit.ExpectedStartTime).TotalDays)/7));
                     var startDate = new DateTime();
@@ -116,7 +116,7 @@ namespace SecurityGateApv.Domain.Common
                     }
                 }
             }
-            else if (visit.Visit.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString())
+            else if (visit.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString())
             {
                 returnDate.Add(new ValidateVisitDateDTO
                 {

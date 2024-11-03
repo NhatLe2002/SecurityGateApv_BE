@@ -33,6 +33,7 @@ namespace SecurityGateApv.Application.Extensions
             services.AddScoped<IVisitCardService, VisitCardService>();
             services.AddScoped<INotificationsService, NotificationsService>();
             services.AddScoped<ICredentialCardTypeService, CredentialCardTypeService>();
+            services.AddScoped<IScheduleUserService, ScheduleUserService>();
             services.AddFluentValidation();
             services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

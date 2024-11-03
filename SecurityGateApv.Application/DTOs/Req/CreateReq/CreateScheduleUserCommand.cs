@@ -16,6 +16,5 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         public DateTime DeadlineTime { get; set; }
         public int ScheduleId { get; set; }
         public int AssignToId { get; set; }
-        public int AssignFromId { get; set; }
     }
 }

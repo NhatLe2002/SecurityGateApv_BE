@@ -501,9 +501,6 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AssignFromId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AssignTime")
                         .HasColumnType("datetime2");
 
@@ -532,8 +529,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignFromId");
 
                     b.HasIndex("AssignToId");
 
@@ -780,7 +775,7 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<int?>("ResponsiblePersonId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScheduleId")
+                    b.Property<int>("ScheduleUserId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UpdateById")
@@ -806,7 +801,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("ResponsiblePersonId");
 
-                    b.HasIndex("ScheduleId");
+                    b.HasIndex("ScheduleUserId");
 
                     b.HasIndex("UpdateById");
 
@@ -1059,12 +1054,6 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.ScheduleUser", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.User", "AssignFrom")
-                        .WithMany("ScheduleUserFrom")
-                        .HasForeignKey("AssignFromId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SecurityGateApv.Domain.Models.User", "AssignTo")
                         .WithMany("ScheduleUserTo")
                         .HasForeignKey("AssignToId")
@@ -1076,8 +1065,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AssignFrom");
 
                     b.Navigation("AssignTo");
 
@@ -1151,9 +1138,9 @@ namespace SecurityGateApv.Infras.Migrations
                         .WithMany("ResponsiblePerson")
                         .HasForeignKey("ResponsiblePersonId");
 
-                    b.HasOne("SecurityGateApv.Domain.Models.Schedule", "Schedule")
+                    b.HasOne("SecurityGateApv.Domain.Models.ScheduleUser", "ScheduleUser")
                         .WithMany("Visit")
-                        .HasForeignKey("ScheduleId")
+                        .HasForeignKey("ScheduleUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1166,7 +1153,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.Navigation("ResponsiblePerson");
 
-                    b.Navigation("Schedule");
+                    b.Navigation("ScheduleUser");
 
                     b.Navigation("UpdateBy");
                 });
@@ -1314,13 +1301,16 @@ namespace SecurityGateApv.Infras.Migrations
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Schedule", b =>
                 {
                     b.Navigation("ScheduleUser");
-
-                    b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.ScheduleType", b =>
                 {
                     b.Navigation("VisitTypes");
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.ScheduleUser", b =>
+                {
+                    b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.User", b =>
@@ -1330,8 +1320,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("ReceivedNotifications");
 
                     b.Navigation("ResponsiblePerson");
-
-                    b.Navigation("ScheduleUserFrom");
 
                     b.Navigation("ScheduleUserTo");
 

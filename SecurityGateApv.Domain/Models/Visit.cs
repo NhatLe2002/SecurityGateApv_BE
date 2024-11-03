@@ -33,7 +33,7 @@ namespace SecurityGateApv.Domain.Models
             Description = description;
             VisitStatus = visitStatus;
             CreateById = createById;
-            ScheduleId = scheduleId;
+            //ScheduleId = scheduleId;
             ResponsiblePersonId = responsiblePersonId;
         }
 
@@ -56,9 +56,9 @@ namespace SecurityGateApv.Domain.Models
         public int? UpdateById { get; private set; }
         public User? UpdateBy { get; private set; }
 
-        [ForeignKey("Schedule")]
-        public int ScheduleId { get; private set; }
-        public Schedule Schedule { get; private set; }
+        [ForeignKey("ScheduleUser")]
+        public int ScheduleUserId { get; private set; }
+        public ScheduleUser ScheduleUser { get; private set; }
 
         [ForeignKey("ResponsiblePerson")]
         public int? ResponsiblePersonId { get; private set; }
@@ -89,7 +89,7 @@ namespace SecurityGateApv.Domain.Models
                 visitBusyOfVisitor.AddRange(await CommonService.CaculateBusyDates(visit));
             }
 
-            visitDetailAdd.Visit.Schedule = schedule;
+            //visitDetailAdd.Visit.Schedule = schedule;
             var visitorFutureBusy = await CommonService.CaculateBusyDates(visitDetailAdd);
             if (visitorFutureBusy.Count() == 0)
             {
@@ -138,7 +138,14 @@ namespace SecurityGateApv.Domain.Models
             this.UpdateById = updateById;
             this.UpdateTime = DateTime.Now;
             return this;
-        }public Result<Visit> UpdateStatusBackGroundWoker(string status)
+        }
+        public Result<Visit> UpdateStatusBackGroundWoker(string status)
+        {
+            this.VisitStatus = status;
+            //this.UpdateTime = DateTime.Now;
+            return this;
+        }
+        public Result<Visit> UpdateStatus(string status)
         {
             this.VisitStatus = status;
             //this.UpdateTime = DateTime.Now;

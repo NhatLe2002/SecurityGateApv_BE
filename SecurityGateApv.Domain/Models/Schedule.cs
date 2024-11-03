@@ -70,7 +70,6 @@ namespace SecurityGateApv.Domain.Models
         public int CreateById { get; private set; }
         public User CreateBy { get; private set; }
 
-        public ICollection<Visit> Visit { get; private set; } 
         public ICollection<ScheduleUser> ScheduleUser { get; private set; } 
 
         public static Result<Schedule> Create(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)

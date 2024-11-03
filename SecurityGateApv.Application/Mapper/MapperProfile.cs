@@ -54,10 +54,10 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<UpdateVisitBeforeStartDateCommand, Visit>().ReverseMap();
             CreateMap<UpdateVisitAfterStartDateCommand, Visit>().ReverseMap();
             CreateMap<GetVisitByDateRes, Visit>().ReverseMap()
-                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.Schedule.ScheduleName))
+                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.ScheduleUser.Schedule.ScheduleName))
                 .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
             CreateMap<VisitRes, Visit>().ReverseMap()
-                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.Schedule.ScheduleName))
+                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.ScheduleUser.Schedule.ScheduleName))
                 .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
             #endregion
 
@@ -79,7 +79,8 @@ namespace SecurityGateApv.Application.Mapper
 
             #region ScheduleType
             CreateMap<GetScheduleTypeRes, ScheduleType>().ReverseMap();
-            CreateMap<GetScheduleUserRes, ScheduleUser>().ReverseMap();
+            CreateMap<GetScheduleUserRes, ScheduleUser>().ReverseMap()
+                .ForMember(dest => dest.AssignFrom, opt => opt.MapFrom(src => src.Schedule.CreateBy));
             CreateMap<ScheduleGetScheduleUserRes, Schedule>().ReverseMap();
             CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
             CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();

@@ -300,8 +300,7 @@ namespace SecurityGateApv.Infras.Migrations
                     DeadlineTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false),
-                    AssignToId = table.Column<int>(type: "int", nullable: false),
-                    AssignFromId = table.Column<int>(type: "int", nullable: false)
+                    AssignToId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -312,12 +311,6 @@ namespace SecurityGateApv.Infras.Migrations
                         principalTable: "Schedules",
                         principalColumn: "ScheduleId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ScheduleUsers_Users_AssignFromId",
-                        column: x => x.AssignFromId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ScheduleUsers_Users_AssignToId",
                         column: x => x.AssignToId,
@@ -342,17 +335,17 @@ namespace SecurityGateApv.Infras.Migrations
                     VisitStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateById = table.Column<int>(type: "int", nullable: false),
                     UpdateById = table.Column<int>(type: "int", nullable: true),
-                    ScheduleId = table.Column<int>(type: "int", nullable: false),
+                    ScheduleUserId = table.Column<int>(type: "int", nullable: false),
                     ResponsiblePersonId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Visits", x => x.VisitId);
                     table.ForeignKey(
-                        name: "FK_Visits_Schedules_ScheduleId",
-                        column: x => x.ScheduleId,
-                        principalTable: "Schedules",
-                        principalColumn: "ScheduleId",
+                        name: "FK_Visits_ScheduleUsers_ScheduleUserId",
+                        column: x => x.ScheduleUserId,
+                        principalTable: "ScheduleUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Visits_Users_CreateById",
@@ -665,11 +658,6 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "ScheduleTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScheduleUsers_AssignFromId",
-                table: "ScheduleUsers",
-                column: "AssignFromId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ScheduleUsers_AssignToId",
                 table: "ScheduleUsers",
                 column: "AssignToId");
@@ -775,9 +763,9 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "ResponsiblePersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Visits_ScheduleId",
+                name: "IX_Visits_ScheduleUserId",
                 table: "Visits",
-                column: "ScheduleId");
+                column: "ScheduleUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Visits_UpdateById",
@@ -793,9 +781,6 @@ namespace SecurityGateApv.Infras.Migrations
 
             migrationBuilder.DropTable(
                 name: "PrivateKeyServices");
-
-            migrationBuilder.DropTable(
-                name: "ScheduleUsers");
 
             migrationBuilder.DropTable(
                 name: "VehicleSessionImages");
@@ -835,6 +820,9 @@ namespace SecurityGateApv.Infras.Migrations
 
             migrationBuilder.DropTable(
                 name: "CredentialCardTypes");
+
+            migrationBuilder.DropTable(
+                name: "ScheduleUsers");
 
             migrationBuilder.DropTable(
                 name: "Schedules");

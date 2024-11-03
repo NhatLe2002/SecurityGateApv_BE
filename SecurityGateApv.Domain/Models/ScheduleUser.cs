@@ -14,7 +14,7 @@ namespace SecurityGateApv.Domain.Models
     {
         public ScheduleUser() { }
         internal ScheduleUser(string title, string description, string? note, DateTime assignTime, DateTime deadlineTime,
-            string status, int scheduleId, int assignFromId, int assignToId)
+            string status, int scheduleId,  int assignToId)
         {
             Title = title;
             Description = description;
@@ -24,7 +24,7 @@ namespace SecurityGateApv.Domain.Models
             Status = status;
             ScheduleId = scheduleId;
             AssignToId = assignToId;
-            AssignFromId = assignFromId;
+            //AssignFromId = assignFromId;
         }
 
         [Key]
@@ -41,20 +41,26 @@ namespace SecurityGateApv.Domain.Models
         [ForeignKey("AssignTo")]
         public int AssignToId { get; private set; }
         public User AssignTo { get; private set; }
-        [ForeignKey("AssignFrom")]
-        public int AssignFromId { get; private set; }
-        public User AssignFrom { get; private set; }
+
+
+        public ICollection<Visit> Visit { get; private set; }
 
         public static Result<ScheduleUser> Create(string title, string description, string? note, DateTime assignTime, DateTime deadlineTime,
-            string status, int scheduleId, int assignFromId, int assignToId)
+            string status, int scheduleId,  int assignToId)
         {
             var scheduleUser = new ScheduleUser(title, description, note, assignTime, deadlineTime,
-            status, scheduleId, assignFromId, assignToId);
+            status, scheduleId,  assignToId);
             return scheduleUser;
         }
+
         public Result<ScheduleUser> UpdateVisitList()
         {
             this.Status = ScheduleUserStatusEnum.Pending.ToString();
+            return this;
+        }
+        public Result<ScheduleUser> UpdateStatus(string status)
+        {
+            this.Status = status;
             return this;
         }
     }
