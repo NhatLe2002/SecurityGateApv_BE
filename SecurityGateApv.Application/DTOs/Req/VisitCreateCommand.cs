@@ -18,7 +18,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public DateTime ExpectedEndTime { get;  set; }
         public int CreateById { get; set; }
         public string? Description { get; set; }
-        public int ScheduleId { get;  set; }
+        public int ScheduleUserId { get;  set; }
         public int ResponsiblePersonId { get; set; }
         public ICollection<VisitDetailOldCommand> VisitDetail { get; set; }
     }

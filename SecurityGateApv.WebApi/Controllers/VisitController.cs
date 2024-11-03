@@ -195,10 +195,47 @@ namespace SecurityGateApv.WebApi.Controllers
 
             return Ok(result.Value);
         }
+        [HttpPut("Status/{visitId}")]
+        public async Task<ActionResult> ReportVisit(int visitId, string action)
+        {
+            if(action == "Violation")
+            {
+                var result = await _visitService.ReportVisit(visitId);
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
+                return Ok(result.Value);
+            }
+            if (action == "Cancelled")
+            {
+                var result = await _visitService.CancelVisit(visitId);
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
+                return Ok(result.Value);
+            }            
+            if (action == "Active")
+            {
+                var result = await _visitService.ActiveVisit(visitId);
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
+                return Ok(result.Value);
+            }
+            return BadRequest(new Domain.Errors.Error("Visit.ReportVisit", "Action must be \"Violation | Cancelled | Active\""));    
+        }
         [HttpPost]
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {
-            var result = await _visitService.CreateVisit(command);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            var result = await _visitService.CreateVisit(command, token);
 
             if (result.IsFailure)
             {

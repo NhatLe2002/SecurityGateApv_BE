@@ -56,7 +56,7 @@ namespace SecurityGateApv.Infras.BackgroundWorker
                     //Console.Write(visitsToUpdate.FirstOrDefault().VisitName);
                     foreach (var visit in visitsToUpdate)
                     {
-                        visit.UpdateStatusBackGroundWoker(VisitStatusEnum.Cancel.ToString());
+                        visit.UpdateStatusBackGroundWoker(VisitStatusEnum.Cancelled.ToString());
                         await visitRepo.UpdateAsync(visit);
                     }
 

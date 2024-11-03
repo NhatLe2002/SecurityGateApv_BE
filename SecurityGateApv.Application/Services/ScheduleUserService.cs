@@ -168,7 +168,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<bool>(Error.ScheduleUserNotHaveVisit);
             }
 
-            visit.UpdateStatus(VisitStatusEnum.Cancel.ToString());
+            visit.UpdateStatus(VisitStatusEnum.Cancelled.ToString());
             await _visitRepo.UpdateAsync(visit);
 
             scheduleUser.UpdateStatus(ScheduleUserStatusEnum.Rejected.ToString());

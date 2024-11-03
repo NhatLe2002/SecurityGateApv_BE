@@ -44,6 +44,16 @@ namespace SecurityGateApv.Domain.Common
         public static async Task<IEnumerable<ValidateVisitDateDTO>> CaculateBusyDates(VisitDetail visit)
         {
             var returnDate = new List<ValidateVisitDateDTO>();
+            if (visit.Visit.ScheduleUser == null)
+            {
+                returnDate.Add(new ValidateVisitDateDTO
+                {
+                    VisitDate = visit.Visit.ExpectedStartTime,
+                    TimeIn = visit.ExpectedStartHour,
+                    TimeOut = visit.ExpectedEndHour,
+                    VisitId = visit.VisitId,
+                });
+            }else
             if (visit.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.ProcessMonth.ToString())
             {
                 var dateOfMonth = visit.Visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -65,14 +75,14 @@ namespace SecurityGateApv.Domain.Common
                         try
                         {
                             var currentYear = visit.Visit.ExpectedStartTime.AddMonths(i).Year;
-                            newDate = new DateTime(currentYear, visit.Visit.ExpectedStartTime.AddMonths(i).Month, int.Parse(day));
-                            if(newDate > visit.Visit.ExpectedEndTime || newDate < visit.Visit.ExpectedStartTime)
+                            var addDate = new DateTime(currentYear, visit.Visit.ExpectedStartTime.AddMonths(i).Month, int.Parse(day));
+                            if(addDate > visit.Visit.ExpectedEndTime || addDate < visit.Visit.ExpectedStartTime)
                             {
                                 continue;
                             }
                             returnDate.Add(new ValidateVisitDateDTO
                             {
-                                VisitDate = newDate,
+                                VisitDate = addDate,
                                 TimeIn = visit.ExpectedStartHour,
                                 TimeOut = visit.ExpectedEndHour,
                                 VisitId = visit.VisitId,
@@ -101,30 +111,20 @@ namespace SecurityGateApv.Domain.Common
                     }
                     for (int i = 0; i <= weekDiff; i++)
                     {
-                        startDate = startDate.AddDays(i*7);
-                        if (startDate > visit.Visit.ExpectedEndTime || startDate < visit.Visit.ExpectedStartTime)
+                        var addDate = startDate.AddDays(i*7);
+                        if (addDate > visit.Visit.ExpectedEndTime || addDate < visit.Visit.ExpectedStartTime)
                         {
                             continue;
                         }
                         returnDate.Add(new ValidateVisitDateDTO
                         {
-                            VisitDate = startDate,
+                            VisitDate = addDate,
                             TimeIn = visit.ExpectedStartHour,
                             TimeOut = visit.ExpectedEndHour,
                             VisitId = visit.VisitId,
                         });
                     }
                 }
-            }
-            else if (visit.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString())
-            {
-                returnDate.Add(new ValidateVisitDateDTO
-                {
-                    VisitDate = visit.Visit.ExpectedStartTime,
-                    TimeIn = visit.ExpectedStartHour,
-                    TimeOut = visit.ExpectedEndHour,
-                    VisitId = visit.VisitId,
-                });
             }
             return returnDate;
         }

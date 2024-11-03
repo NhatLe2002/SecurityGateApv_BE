@@ -37,7 +37,7 @@ namespace SecurityGateApv.Domain.Models
         public string Status { get; private set; }
         [ForeignKey("Schedule")]
         public int ScheduleId { get; private set; }
-        public Schedule Schedule { get; private set; }
+        public Schedule Schedule { get; internal set; }
         [ForeignKey("AssignTo")]
         public int AssignToId { get; private set; }
         public User AssignTo { get; private set; }

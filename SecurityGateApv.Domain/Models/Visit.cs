@@ -22,7 +22,7 @@ namespace SecurityGateApv.Domain.Models
         }
 
         public Visit(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
-     , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId, int responsiblePersonId)
+     , DateTime updateTime, string? description, string visitStatus, int createById, int responsiblePersonId, int? scheduleUserId)
         {
             VisitName = visitName;
             VisitQuantity = visitQuantity;
@@ -33,7 +33,7 @@ namespace SecurityGateApv.Domain.Models
             Description = description;
             VisitStatus = visitStatus;
             CreateById = createById;
-            //ScheduleId = scheduleId;
+            ScheduleUserId = scheduleUserId;
             ResponsiblePersonId = responsiblePersonId;
         }
 
@@ -57,8 +57,8 @@ namespace SecurityGateApv.Domain.Models
         public User? UpdateBy { get; private set; }
 
         [ForeignKey("ScheduleUser")]
-        public int ScheduleUserId { get; private set; }
-        public ScheduleUser ScheduleUser { get; private set; }
+        public int? ScheduleUserId { get; private set; }
+        public ScheduleUser? ScheduleUser { get; private set; }
 
         [ForeignKey("ResponsiblePerson")]
         public int? ResponsiblePersonId { get; private set; }
@@ -67,14 +67,14 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
 
         public static Result<Visit> Create(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
-            , DateTime updateTime, string? description, string visitStatus, int createById, int scheduleId, int responsiblePersonId)
+            , DateTime updateTime, string? description, string visitStatus, int createById, int responsiblePersonId, int? scheduleUserId)
         {
             var result = new Visit(visitName, visitQuantity, expectedStartTime, expectedEndTime, createTime
-            , updateTime, description, visitStatus, createById, scheduleId, responsiblePersonId);
+            , updateTime, description, visitStatus, createById, responsiblePersonId, scheduleUserId);
             return result;
         }
 
-        public async Task<Result<Visit>> AddVisitDetailOfOldVisitor(IEnumerable<VisitDetail> visitSchedule, Schedule schedule, TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
+        public async Task<Result<Visit>> AddVisitDetailOfOldVisitor(IEnumerable<VisitDetail> visitSchedule,ScheduleUser? scheduleUser, Schedule schedule, TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
             , int visitorId)
         {
             if (VisitDetail.Any(s => s.VisitorId == visitorId))
@@ -88,8 +88,12 @@ namespace SecurityGateApv.Domain.Models
             {
                 visitBusyOfVisitor.AddRange(await CommonService.CaculateBusyDates(visit));
             }
+            if (scheduleUser != null)
+            {
 
-            //visitDetailAdd.Visit.Schedule = schedule;
+                visitDetailAdd.Visit.ScheduleUser = scheduleUser;
+                visitDetailAdd.Visit.ScheduleUser.Schedule = schedule;
+            }
             var visitorFutureBusy = await CommonService.CaculateBusyDates(visitDetailAdd);
             if (visitorFutureBusy.Count() == 0)
             {
@@ -103,24 +107,36 @@ namespace SecurityGateApv.Domain.Models
 
                 if (check != null)
                 {
-                    /*                    if(check.Any(s => s.TimeIn >= dateOfBusy.TimeIn) && check.Any(s => s.TimeIn < dateOfBusy.TimeOut))
-                                        {
-                                            error.Add(check.)
-                                        }
-                                        if (check.Any(s => s.TimeOut > dateOfBusy.TimeIn) && check.Any(s => s.TimeOut <= dateOfBusy.TimeOut))
-                                        {
-
-                                        } */
                     foreach (var day in check)
                     {
                         if (day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut)
                         {
-                            error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            error.TryGetValue((int)day.VisitId, out string date);
+                            if (date != null)
+                            {
+                                date += $", {day.VisitDate.ToShortDateString()}";
+                                error.Remove((int)day.VisitId);
+                                error.Add((int)day.VisitId, date);
+                            }
+                            else
+                            {
+                                error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            }
                             continue;
                         }
                         if (day.TimeOut > dateOfBusy.TimeIn && day.TimeOut <= dateOfBusy.TimeOut)
                         {
-                            error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            error.TryGetValue((int)day.VisitId, out string date);
+                            if (date != null)
+                            {
+                                date += $", {day.VisitDate.ToShortDateString()}";
+                                error.Remove((int)day.VisitId);
+                                error.Add((int)day.VisitId, date);
+                            }
+                            else
+                            {
+                                error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            }
                             continue;
                         }
                     }
@@ -156,14 +172,29 @@ namespace SecurityGateApv.Domain.Models
             this.VisitDetail.Clear();
             return this;
         }
-        public Result<Visit> AddEndTime(int days)
+        public Result<Visit> AddEndTime(DateTime date)
         {
-            this.ExpectedEndTime = this.ExpectedStartTime.AddDays(days);
+            this.ExpectedEndTime = date;
             return this;
         }
         public Result<Visit> AppendTimne(DateTime date)
         {
             this.ExpectedEndTime = date;
+            return this;
+        }
+        public Result<Visit> ReportVisit()
+        {
+            this.VisitStatus = VisitStatusEnum.Violation.ToString();
+            return this;
+        }        
+        public Result<Visit> CancelVisit()
+        {
+            this.VisitStatus = VisitStatusEnum.Cancelled.ToString();
+            return this;
+        }
+        public Result<Visit> ActiveVisit()
+        {
+            this.VisitStatus = VisitStatusEnum.Active.ToString();
             return this;
         }
     }

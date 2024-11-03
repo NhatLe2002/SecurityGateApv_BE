@@ -11,7 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class VisitCreateCommandValidator : AbstractValidator<VisitCreateCommand>
     {
-        public VisitCreateCommandValidator(IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo)
+        public VisitCreateCommandValidator(IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleUserRepo scheduleRepo)
         {
             RuleFor(s => s.VisitName).NotNull().NotEmpty();
             RuleFor(s => s.ExpectedEndTime).NotNull().NotEmpty();
@@ -34,10 +34,10 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             {
                 return userRepo.IsAny(t=> t.UserId == s).GetAwaiter().GetResult();
             }).WithMessage("ResponsiblePerson Id is not exist");
-            RuleFor(s => s.ScheduleId).NotNull().NotEmpty().Must(s =>
+            RuleFor(s => s.ScheduleUserId).NotNull().NotEmpty().Must(s =>
             {
-                return scheduleRepo.IsAny(t => t.ScheduleId == s).GetAwaiter().GetResult();
-            }).WithMessage("Schedule Id is not exist");
+                return scheduleRepo.IsAny(t => t.Id == s).GetAwaiter().GetResult();
+            }).WithMessage("ScheduleUser Id is not exist");
             RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
                 if (x.ExpectedEndHour < x.ExpectedStartHour)

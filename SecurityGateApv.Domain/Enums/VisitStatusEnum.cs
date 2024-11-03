@@ -10,10 +10,10 @@ namespace SecurityGateApv.Domain.Enums
     {
         NONE,
         Pending,
-        Ready,
-        Started,
-        Ended,
-        Cancel,
-        Active
+        Active,
+        Inactive,
+        Active_temporary,
+        Violation,
+        Cancelled
     }
 }
