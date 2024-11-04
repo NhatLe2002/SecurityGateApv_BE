@@ -66,7 +66,7 @@ namespace SecurityGateApv.Application.Services
                 command.ScheduleId,
                 command.AssignToId
                 );
-            if (scheduleUser.IsFailure)
+            if (!scheduleUser.IsFailure)
             {
                 return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleSaveError);
             }

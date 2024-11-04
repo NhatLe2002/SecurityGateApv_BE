@@ -44,6 +44,10 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _userService.GetUserByRolePaging(pageNumber, pageSize, role);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
         }
         [HttpGet("{userId}")]
@@ -69,9 +73,14 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _userService.GetAllStaffPagingByDepartmentManagerId(pageNumber, pageSize, departmentManagerId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
-        } 
-        
+
+        }
+
         [HttpGet("Department/{departmentId}")]
         public async Task<ActionResult> GetAllUserByDepartmentId(int pageNumber, int pageSize, int departmentId)
         {
@@ -80,6 +89,10 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(Result.Failure<List<GetUserRes>>(Error.NullInput));
             }
             var result = await _userService.GetAllUserPagingByDepartmentId(pageNumber, pageSize, departmentId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
         }
 

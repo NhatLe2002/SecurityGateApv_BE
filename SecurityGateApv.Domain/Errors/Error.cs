@@ -39,6 +39,8 @@ namespace SecurityGateApv.Domain.Errors
         #region UserError
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
+        //Not found department manager
+        public static readonly Error NotFoundDepartmentManager = new("Error.NotfoundDepartmentManager", "Not found this department manager");
         public static readonly Error CanNotUpdateUserName = new("Error.CanNotUpdateUserName", "Username can not change");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
