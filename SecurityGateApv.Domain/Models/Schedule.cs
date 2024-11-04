@@ -16,11 +16,10 @@ namespace SecurityGateApv.Domain.Models
 
         }
 
-        private Schedule( string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId,  int createById)
+        private Schedule( string scheduleName, string daysOfSchedule,  string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId,  int createById)
         {
             ScheduleName = scheduleName;
             DaysOfSchedule = daysOfSchedule;
-            Duration = duration;
             Description = description;
             CreateTime = createTime;
             UpdateTime = updateTime;
@@ -38,12 +37,11 @@ namespace SecurityGateApv.Domain.Models
             //CreateBy = createBy;
         }
 
-        private Schedule(int scheduleId, string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
+        private Schedule(int scheduleId, string scheduleName, string daysOfSchedule, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
             ScheduleId = scheduleId;
             ScheduleName = scheduleName;
             DaysOfSchedule = daysOfSchedule;
-            Duration = duration;
             Description = description;
             CreateTime = createTime;
             UpdateTime = updateTime;
@@ -56,7 +54,6 @@ namespace SecurityGateApv.Domain.Models
         public int ScheduleId { get; private set; }
         public string ScheduleName { get; private set; }
         public string DaysOfSchedule { get; private set; }
-        public int Duration { get; private set; }
         public string Description { get; private set; }
         public DateTime CreateTime { get; private set; } = DateTime.Now;
         public DateTime UpdateTime { get; private set; } = DateTime.Now;
@@ -72,22 +69,21 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<ScheduleUser> ScheduleUser { get; private set; } 
 
-        public static Result<Schedule> Create(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
+        public static Result<Schedule> Create(string scheduleName, string daysOfSchedule,  string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
-            Schedule schedule = new Schedule( scheduleName, daysOfSchedule,  duration,  description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
+            Schedule schedule = new Schedule( scheduleName, daysOfSchedule,    description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
             return schedule;
         }
-        public static Result<Schedule> Create(int scheduleId, string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
+        public static Result<Schedule> Create(int scheduleId, string scheduleName, string daysOfSchedule,  string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
-            var schedule = new Schedule(scheduleId, scheduleName, daysOfSchedule,  duration,  description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
+            var schedule = new Schedule(scheduleId, scheduleName, daysOfSchedule,   description,  createTime,  updateTime,  status,  scheduleTypeId,  createById);
             return schedule;
         }
         
-        public Result<Schedule> Update(string scheduleName, string daysOfSchedule, int duration, string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
+        public Result<Schedule> Update(string scheduleName, string daysOfSchedule,  string description, DateTime createTime, DateTime updateTime, bool status, int scheduleTypeId, int createById)
         {
             ScheduleName = scheduleName;
             DaysOfSchedule = daysOfSchedule;
-            Duration = duration;
             Description = description;
             UpdateTime = DateTime.Now;
             Status = status;

@@ -114,7 +114,7 @@ namespace SecurityGateApv.Application.Services
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
             }
-            if (scheduleUser == null)
+            if (scheduleUser.Count()== 0)
             {
                 return Result.Failure<List<GetScheduleUserRes>>(Error.NotFoundSchedule);
             }

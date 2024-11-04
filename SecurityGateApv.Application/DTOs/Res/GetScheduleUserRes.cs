@@ -26,7 +26,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int ScheduleId { get; private set; }
         public string ScheduleName { get; private set; }
         public string DaysOfSchedule { get; private set; }
-        public int Duration { get; private set; }
         public ScheduleTypeGetScheduleUserRes ScheduleType { get; private set; }
     }
     public class ScheduleTypeGetScheduleUserRes

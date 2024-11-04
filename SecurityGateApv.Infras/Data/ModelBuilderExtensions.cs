@@ -370,8 +370,8 @@ namespace SecurityGateApv.Infras.Data
 
             // Seed QRCardType
             modelBuilder.Entity<CardType>().HasData(
-                new CardType { CardTypeId = 1, CardTypeName = "Vehicle", TypeDescription = "Vehicle QR Card" },
-                new CardType { CardTypeId = 2, CardTypeName = "Visitor", TypeDescription = "Visitor QR Card" }
+                new CardType { CardTypeId = 1, CardTypeName = CardTypeEnum.ShotTermCard.ToString(), TypeDescription = "Thẻ cho ra vào hằng ngày" },
+                new CardType { CardTypeId = 2, CardTypeName = CardTypeEnum.LongTermCard.ToString(), TypeDescription = "Thẻ cho ra vào theo lịch trình" }
             );
 
             /*var cardFaker = new Faker<QRCard>()

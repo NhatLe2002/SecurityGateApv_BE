@@ -410,7 +410,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int createById, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule")).ToList();
             if (visit == null)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
@@ -421,7 +421,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule")).ToList();
             if (visit.Count == 0)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);

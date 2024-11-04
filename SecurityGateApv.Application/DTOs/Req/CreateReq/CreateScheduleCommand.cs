@@ -13,7 +13,6 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
     {
         public string ScheduleName { get; set; }
         public string DaysOfSchedule { get; set; }
-        public int Duration { get; set; }
         public string Description { get; set; }
         public int ScheduleTypeId { get; set; }
         public int CreateById { get; set; }

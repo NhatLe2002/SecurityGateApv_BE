@@ -13,13 +13,13 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int ScheduleId { get;  set; }
         public string ScheduleName { get;  set; }
         public string DaysOfSchedule { get;  set; }
-        public int Duration { get;  set; }
         public string Description { get;  set; }
         public DateTime CreateTime { get;  set; }
         public DateTime UpdateTime { get;  set; } 
         public bool Status { get;  set; }
         public GetScheduleTypeRes ScheduleType { get;  set; }
         public GetUserRes CreateBy { get;  set; }
+        public List<ScheduleUserRes> ScheduleUser { get;  set; }
 
     }
 }

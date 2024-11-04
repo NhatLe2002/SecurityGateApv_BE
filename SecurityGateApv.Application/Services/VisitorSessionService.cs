@@ -96,7 +96,7 @@ namespace SecurityGateApv.Application.Services
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
                 && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
                 && s.ExpectedEndHour >= DateTime.Now.TimeOfDay,
-                int.MaxValue, 1, includeProperties: "Visit.Schedule.ScheduleType,Visitor"
+                int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
             );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
@@ -170,20 +170,20 @@ namespace SecurityGateApv.Application.Services
 
             if (visitCard == null)
             {
-                if ((validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName == ScheduleTypeEnum.VisitDaily.ToString()
+                if ((validVisitDetail.Visit.ScheduleUser == null
                     && qrCard.CardType.CardTypeName == CardTypeEnum.ShotTermCard.ToString()))
                 {
                     visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, qrCard.CardId);
                 }
                 else if (qrCard.CardType.CardTypeName == CardTypeEnum.LongTermCard.ToString()
-                    && validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName != ScheduleTypeEnum.VisitDaily.ToString()
+                    && validVisitDetail.Visit.ScheduleUser != null
                     )
                 {
                     visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, qrCard.CardId);
                 }
                 else
                 {
-                    var error = Error.ScheduleAndCardTypeMismatch(validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName, qrCard.CardType.CardTypeName);
+                    var error = Error.ScheduleAndCardTypeMismatch(validVisitDetail.Visit.ScheduleUser == null ? "Visit Daily" : validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName, qrCard.CardType.CardTypeName);
                     return Result.Failure<CheckInRes>(error);
                 }
                 await _visitCardRepo.AddAsync(visitCard);
@@ -331,7 +331,7 @@ namespace SecurityGateApv.Application.Services
                s => s.Visitor.CredentialsCard.Equals(command.CredentialCard)
                /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
-               int.MaxValue, 1, includeProperties: "Visit.Schedule.ScheduleType,Visitor"
+               int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
@@ -417,7 +417,7 @@ namespace SecurityGateApv.Application.Services
                    s => s.VisitDetailId == visitCard.VisitDetailId
                    /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
                    /*&& s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date*/,
-                   int.MaxValue, 1, includeProperties: "Visit.Schedule.ScheduleType,Visitor"
+                   int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
@@ -478,7 +478,7 @@ namespace SecurityGateApv.Application.Services
             var visitCard = (await _visitCardRepo.FindAsync(
                                s => (s.CardId == qrCard.CardId)
                                && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString()),
-                               includeProperties: "VisitDetail.Visit.Schedule.ScheduleType,VisitDetail.Visitor"
+                               includeProperties: "VisitDetail.Visit.ScheduleUser.Schedule.ScheduleType,VisitDetail.Visitor"
                                               )).FirstOrDefault();
             if (visitCard != null && visitCard.CardId == qrCard.CardId)
             {
@@ -530,7 +530,7 @@ namespace SecurityGateApv.Application.Services
                s => /*s.VisitDetailId == command.VisitDetailId
                 &&*/ s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
-               int.MaxValue, 1, s => s.OrderByDescending(s => s.ExpectedStartHour), "Visit.Schedule.ScheduleType,Visitor"
+               int.MaxValue, 1, s => s.OrderByDescending(s => s.ExpectedStartHour), "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                )).FirstOrDefault();
             }
             var result = _mapper.Map<GetVisitByCredentialCardRes>(visitResult);
@@ -548,23 +548,26 @@ namespace SecurityGateApv.Application.Services
         }
         private bool IsValidVisit(Visit visit, DateTime date)
         {
-            string[] daysOfSchedule = visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',');
-            int dateOfWeekInput = ((int)date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
-            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()) && visit.ExpectedStartTime.Date == DateTime.Now.Date)
+            if (visit.ScheduleUser == null && visit.ExpectedStartTime.Date == DateTime.Now.Date)
             {
                 return true;
             }
-            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
-                && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
+            else
             {
-                return true;
+                string[] daysOfSchedule = visit.ScheduleUser.Schedule.DaysOfSchedule.Split(',');
+                int dateOfWeekInput = ((int)date.DayOfWeek == 0) ? 7 : (int)date.DayOfWeek;
+                if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessWeek.ToString())
+                    && daysOfSchedule.Contains(dateOfWeekInput.ToString()))
+                {
+                    return true;
+                }
+                if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
+                    && daysOfSchedule.Contains(date.Day.ToString()))
+                {
+                    return true;
+                }
+                return false;
             }
-            if (visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.ProcessMonth.ToString())
-                && daysOfSchedule.Contains(date.Day.ToString()))
-            {
-                return true;
-            }
-            return false;
         }
         async Task<Result<ICollection<GetVisitorSessionGraphQLRes>>> IVisitorSessionService.GetAllVisitorSessionGraphQL(int pageNumber, int pageSize, string token)
         {
@@ -576,7 +579,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
@@ -585,7 +588,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Staff.ToString())
@@ -594,7 +597,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
 
@@ -603,7 +606,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ICollection<GetVisitorSessionGraphQLRes>>(Error.NotFoundVisitSesson);
             }
             var result = _mapper.Map<List<GetVisitorSessionGraphQLRes>>(visitSession);
-            var check = _mapper.Map<List<GraphQlVisitorRes>>(visitSession.Select(s => s.VisitDetail.Visitor));
+            //var check = _mapper.Map<List<GraphQlVisitorRes>>(visitSession.Select(s => s.VisitDetail.Visitor));
             return result.ToList();
         }
         public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize, string token)

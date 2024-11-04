@@ -48,7 +48,8 @@ namespace SecurityGateApv.Application.Mapper
 
 
             #region Visit map
-            CreateMap<Visit, GetVisitRes>().ReverseMap();
+            CreateMap<Visit, GetVisitRes>().ReverseMap()
+                .ForPath(dest => dest.ScheduleUser.Schedule, opt => opt.MapFrom(src => src.Schedule));
             CreateMap<Visit, GetVisitNoDetailRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
             CreateMap<UpdateVisitBeforeStartDateCommand, Visit>().ReverseMap();
