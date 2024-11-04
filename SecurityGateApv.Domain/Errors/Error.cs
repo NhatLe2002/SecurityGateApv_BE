@@ -54,7 +54,7 @@ namespace SecurityGateApv.Domain.Errors
 
         #region VisitError
         //Visit error
-        public static readonly Error NotFoundVisit = new("Error.Visit", "Not found this visit");
+        public static readonly Error NotFoundVisit = new("Error.Visit", "Không tìm thấy lịch hẹn");
         public static readonly Error UpdateTimeVisitError = new("Error.UpdateTimeVisitError", "Time Error");
         public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
@@ -113,7 +113,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ScheduleCreateError = new("Error.Schedule", "Can not create schedule");
         public static readonly Error ScheduleUpdateError = new("Error.Schedule", "Can not update schedule");
         public static readonly Error ScheduleSaveError = new("Error.Schedule", "Can not save schedule");
-        public static readonly Error NotFoundSchedule = new("Error.Schedule", "Can not found Schedule");
+        public static readonly Error NotFoundSchedule = new("Error.Schedule", "Không tìm thấy lịch trình");
         public static readonly Error ScheduleValid = new("Error.Schedule", "DaysOfProcess is not valid for the selected Visit Type.");
         public static readonly Error ScheduleCannotUpdate = new("Error.Schedule", "Can not update Schedule daily");
         public static readonly Error ScheduleCannotAssign = new("Error.ScheduleCannotAssign", "Can not Assign Schedule daily");

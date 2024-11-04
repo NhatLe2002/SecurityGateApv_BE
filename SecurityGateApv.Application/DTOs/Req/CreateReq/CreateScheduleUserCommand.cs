@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SecurityGateApv.Application.DTOs.Req.CreateReq
@@ -13,6 +14,7 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         public string Title { get; set; }
         public string Description { get; set; }
         public string? Note { get; set; }
+        [JsonPropertyName("deadlineTime")]
         public DateTime DeadlineTime { get; set; }
         public int ScheduleId { get; set; }
         public int AssignToId { get; set; }

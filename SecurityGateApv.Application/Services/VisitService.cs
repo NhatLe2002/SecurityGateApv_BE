@@ -164,6 +164,19 @@ namespace SecurityGateApv.Application.Services
             var res = _mapper.Map<List<GetVisitNoDetailRes>>(visit);
             return res;
         }
+        public async Task<Result<GetVisitRes>> GetVisitByScheduleUserId(int scheduleUserId)
+        {
+            var visit = (await _visitRepo.FindAsync(
+                s => s.ScheduleUserId == scheduleUserId, 1, 1, includeProperties: "VisitDetail.Visitor,CreateBy"
+                )).FirstOrDefault();
+
+            if ( visit == null)
+            {
+                return Result.Failure<GetVisitRes>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<GetVisitRes>(visit);
+            return Result.Success(visitRes);
+        }
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
@@ -663,5 +676,7 @@ namespace SecurityGateApv.Application.Services
             }
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
+
+        
     }
 }

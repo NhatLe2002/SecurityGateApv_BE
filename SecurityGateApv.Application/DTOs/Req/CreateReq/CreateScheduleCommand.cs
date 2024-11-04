@@ -11,6 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
 {
     public class CreateScheduleCommand
     {
+
         public string ScheduleName { get; set; }
         public string DaysOfSchedule { get; set; }
         public string Description { get; set; }

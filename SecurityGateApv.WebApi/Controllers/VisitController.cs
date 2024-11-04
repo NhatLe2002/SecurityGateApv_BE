@@ -50,6 +50,17 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
+        } 
+        [HttpGet("ScheduleUserId/{scheduleUserId}")]
+        public async Task<ActionResult> GetVisitByScheduleUserId(int scheduleUserId)
+        {
+            var result = await _visitService.GetVisitByScheduleUserId(scheduleUserId);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
         }
         [HttpGet("Status")]
         public async Task<ActionResult> GetVisitDetailByStatus([FromQuery] string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)

@@ -59,20 +59,20 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPut("Reject/ScheduleId/{scheduleId}")]
-        public async Task<IActionResult> RejectScheduleUser(int scheduleId)
+        [HttpPut("Reject/{scheduleUserId}")]
+        public async Task<IActionResult> RejectScheduleUser(int scheduleUserId)
         {
-            var result = await _scheduleUserService.RejectScheduleUser(scheduleId);
+            var result = await _scheduleUserService.RejectScheduleUser(scheduleUserId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
         }
-        [HttpPut("Aprove/ScheduleId/{scheduleId}")]
-        public async Task<IActionResult> AproveScheduleUser(int scheduleId)
+        [HttpPut("Approve/{scheduleUserId}")]
+        public async Task<IActionResult> AproveScheduleUser(int scheduleUserId)
         {
-            var result = await _scheduleUserService.AproveScheduleUser(scheduleId);
+            var result = await _scheduleUserService.AproveScheduleUser(scheduleUserId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
