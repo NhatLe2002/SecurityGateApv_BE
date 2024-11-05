@@ -124,7 +124,8 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<ScheduleUserRes>> GetScheduleUserById(int scheduleUserId)
         {
             var scheduleUser = (await _scheduleUserRepo.FindAsync(
-                     s => s.Id == scheduleUserId
+                     s => s.Id == scheduleUserId,
+                     includeProperties: "Schedule.ScheduleType"
                 )).FirstOrDefault();
             if (scheduleUser== null)
             {

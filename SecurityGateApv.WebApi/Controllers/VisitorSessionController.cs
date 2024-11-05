@@ -93,6 +93,11 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _visitorSessionService.GetAllVisitorSession(pageNumber, pageSize, token);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
             return Ok(result.Value);
         }
         [HttpGet("Visitor/{visitorId}")]
@@ -109,6 +114,23 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _visitorSessionService.GetAllVisitorSessionByVisitorId(pageNumber, pageSize, visitorId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+            return Ok(result.Value);
+        } 
+        [HttpGet("Images/{visitorSessionId}")]
+        public async Task<IActionResult> GetAllImagesByVisitorSessionId( int visitorSessionId)
+        {
+            
+            var result = await _visitorSessionService.GetAllImagesByVisitorSessionId( visitorSessionId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
             return Ok(result.Value);
         }
         [HttpGet("Visit/{visitId}")]
@@ -125,6 +147,11 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _visitorSessionService.GetAllVisitorSessionByVisitId(pageNumber, pageSize, visitId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
             return Ok(result.Value);
         }
         [HttpGet("StatusCheckIn/Card/{cardVerified}")]
@@ -139,9 +166,9 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpGet("StatusCheckIn/CredentialId/{credentialId}")]
-        public async Task<IActionResult> GetAllVisitorSessionStatusCheckInByCredentialIdId(string credentialId)
+        public async Task<IActionResult> GetVisitorSessionStatusCheckInByCredentialIdId(string credentialId)
         {
-            var result = await _visitorSessionService.GetAllVisitorSessionStatusCheckInByCredentialIdId(credentialId);
+            var result = await _visitorSessionService.GetVisitorSessionStatusCheckInByCredentialIdId(credentialId);
 
             if (result.IsFailure)
             {

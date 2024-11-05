@@ -63,6 +63,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<INotificationUserRepo, NotificationUserRepo>();
             services.AddScoped<IScheduleUserRepo, ScheduleUserRepo>();
             services.AddScoped<IVisitCardRepo, VisitCardRepo>();
+            services.AddScoped<IVisitorSessionImagesRepo, VisitorSessionImagesRepo>();
             services.AddScoped<INotifications, NotificationsService>();
             services.AddSingleton<NotificationHub>();
             services.AddHostedService<VisitStatusUpdaterService>();

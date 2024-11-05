@@ -20,7 +20,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public GateRes GateIn { get;  set; }
         public GateRes? GateOut { get;  set; }
         public string Status { get;  set; }
-        public ICollection<SessionsImageRes> Images { get; private set; }
+       // public ICollection<SessionsImageRes> Images { get; private set; }
 
     }
     public class SecurityRes

@@ -90,6 +90,11 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
             CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
             CreateMap<UserGetScheduleUserRes, User>().ReverseMap();
+            CreateMap<ScheduleType, ScheduleTypeRes>().ReverseMap();
+            #endregion
+
+            #region Schedule
+            CreateMap<Schedule, ScheduleRes>().ReverseMap();
             #endregion
 
             #region SessionsImageRes
@@ -117,6 +122,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap();
 
             #endregion
+
             #region Card
             CreateMap<Card, GetCardRes>().ReverseMap();
             CreateMap<VisitCard, VisitCardRes>().ReverseMap();
@@ -124,6 +130,11 @@ namespace SecurityGateApv.Application.Mapper
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
             CreateMap<CardRes, Card>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
+            #endregion
+
+            #region Images
+            CreateMap<VisitorSessionsImage, VisitorSessionImageRes>().ReverseMap();
+
             #endregion
         }
     }

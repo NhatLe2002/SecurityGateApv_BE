@@ -20,21 +20,21 @@ namespace SecurityGateApv.Domain.Errors
 
         public string Code { get; }
         public string Message { get; }
-        #region Valid input
-        public static readonly Error NullInput = new("Error.Input", "Input param can't null");
-        #endregion
-
-        //Author error
-        public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
-        public static readonly Error PasswordNotMatch = new("Error.PasswordNotMatch", "Password doesn't match");
-        public static readonly Error CheckPasswordError = new("Error.CheckPasswordError", "Password double check doesn't match");
-        public static readonly Error Unauthorized = new("Error.Unauthorized", "Unauthorized Access.");
-
-
         public static implicit operator string(Error error) { return error.Code; }
         //Domain Errors
         public static readonly Error NotFound = new("Error.Notfound", "Not found item");
         public static readonly Error SaveToDBError = new("Error.CommitDataBase", "Save to DB error");
+        #region Valid input
+        public static readonly Error NullInput = new("Error.Input", "Input param can't null");
+        #endregion
+
+        #region Author error
+        public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
+        public static readonly Error PasswordNotMatch = new("Error.PasswordNotMatch", "Password doesn't match");
+        public static readonly Error CheckPasswordError = new("Error.CheckPasswordError", "Password double check doesn't match");
+        public static readonly Error Unauthorized = new("Error.Unauthorized", "Unauthorized Access.");
+        #endregion
+
 
         #region UserError
         //User validation
@@ -70,6 +70,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundVisitDetail = new("Error.VisitDetail", "Not found this VisitDetail");
         
         #endregion
+
         #region CardError
         //Card error
         public static readonly Error NotFoundCardById = new("Error.Notfound", "Not found this Card");
@@ -80,6 +81,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error DuplicateCard = new("Error.DuplicateCard", "This card is currently in use, no more visits can be added to this card.");
         public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "This visit already has a card, cannot add more card to the same visit");
         #endregion
+
         #region VisitCardError
         //Can not found VisitCard
         public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Card not registered in/out cannot use");
@@ -99,12 +101,12 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ValidSession = new("Error.ValidSession", "Session check in can't check in duplicate");
         #endregion
 
-
+        #region Visitor
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Not found this visitor");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
         public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Update error");
-
+        #endregion
 
 
         #region Schedule
@@ -140,6 +142,7 @@ namespace SecurityGateApv.Domain.Errors
         //error when schedule input is not valid
         public static readonly Error ScheduleTypeInputValid = new("Error.ScheduleType", "Wrong when input Schedule Type");
         #endregion
+
         #region CredentialCardType
         //CredentialCardType Error
         public static readonly Error CredentialCardTypeCreateError = new("Error.CredentialCardType", "Can not create Credential Card Type");
@@ -179,6 +182,10 @@ namespace SecurityGateApv.Domain.Errors
         {
             return new Error("Error.ScheduleAndCardTypeMismatch", $"Schedule type '{scheduleType}' and card type '{cardType}' do not match.");
         }
+
+        #region Image
+        public static readonly Error NotFoundImage = new("Error.NotFoundImage", "Not found image");
+        #endregion
     }
 
     public class Error<T> : Error
