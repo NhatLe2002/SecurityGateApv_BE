@@ -125,7 +125,7 @@ namespace SecurityGateApv.Application.Services
         {
             var scheduleUser = (await _scheduleUserRepo.FindAsync(
                      s => s.Id == scheduleUserId,
-                     includeProperties: "Schedule.ScheduleType"
+                     includeProperties: "Schedule.ScheduleType,Schedule.CreateBy,Visit"
                 )).FirstOrDefault();
             if (scheduleUser== null)
             {

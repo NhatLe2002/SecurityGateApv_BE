@@ -19,7 +19,9 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string Status { get; private set; }
         public int ScheduleId { get; private set; }
         public int AssignToId { get; private set; }
+        public UserScheduleUserRes AssignFrom { get; private set; }
         public ScheduleRes Schedule { get; private set; }
+        public List<VisitRes> Visit { get; private set; }
     }
     public class ScheduleRes
     {
@@ -31,5 +33,10 @@ namespace SecurityGateApv.Application.DTOs.Res
     {
         public string ScheduleTypeName { get; set; }
 
+    }
+    public class UserScheduleUserRes
+    {
+        public int UserId { get; set; }
+        public string UserName { get; private set; }
     }
 }

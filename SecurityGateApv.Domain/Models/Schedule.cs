@@ -63,7 +63,7 @@ namespace SecurityGateApv.Domain.Models
         public int ScheduleTypeId { get; private set; }
         public ScheduleType ScheduleType { get; private set; }
 
-         [ForeignKey("CreateBy")]
+        [ForeignKey("CreateBy")]
         public int CreateById { get; private set; }
         public User CreateBy { get; private set; }
 
