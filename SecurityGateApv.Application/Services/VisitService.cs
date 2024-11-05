@@ -180,7 +180,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule"
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule.ScheduleType"
                 );
 
             if (visit.Count() == 0 || visit == null)
@@ -423,7 +423,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int createById, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule")).ToList();
+            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType")).ToList();
             if (visit == null)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);

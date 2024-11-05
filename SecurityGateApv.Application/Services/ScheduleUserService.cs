@@ -121,7 +121,19 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<List<GetScheduleUserRes>>(scheduleUser);
             return result;
         }
+        public async Task<Result<GetScheduleRes>> GetScheduleUserById(int scheduleUserId)
+        {
+            var scheduleUser = (await _scheduleUserRepo.FindAsync(
+                     s => s.Id == scheduleUserId
+                )).FirstOrDefault();
+            if (scheduleUser== null)
+            {
+                return Result.Failure<GetScheduleRes>(Error.NotFoundSchedule);
+            }
+            var result = _mapper.Map<GetScheduleRes>(scheduleUser);
+            return result;
 
+        }
         public async Task<Result<List<GetScheduleUserRes>>> GetScheduleUserByUserId(int userId, int pageNumber, int pageSize)
         {
             var user = (await _userRepo.FindAsync(
@@ -206,5 +218,7 @@ namespace SecurityGateApv.Application.Services
             }
             return true;
         }
+
+        
     }
 }

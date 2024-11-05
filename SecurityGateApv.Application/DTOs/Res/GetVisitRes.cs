@@ -88,6 +88,6 @@ namespace SecurityGateApv.Application.DTOs.Res
     {
         public int ScheduleId { get; private set; }
         public string ScheduleName { get; private set; }
-        public int ScheduleTypeId { get; private set; }
+        public GetScheduleTypeRes ScheduleType { get;  set; }
     }
 }
