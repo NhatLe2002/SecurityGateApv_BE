@@ -131,7 +131,7 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.Visit.VisitStatus != VisitStatusEnum.Cancelled.ToString()
-                    && s.Visit.ExpectedEndTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
+                    && s.Visit.ExpectedEndTime.Date >= command.ExpectedStartTime.Date, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
                 var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
                     null,
