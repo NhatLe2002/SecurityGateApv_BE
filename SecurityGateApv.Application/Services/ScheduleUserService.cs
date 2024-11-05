@@ -121,16 +121,16 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<List<GetScheduleUserRes>>(scheduleUser);
             return result;
         }
-        public async Task<Result<GetScheduleRes>> GetScheduleUserById(int scheduleUserId)
+        public async Task<Result<ScheduleUserRes>> GetScheduleUserById(int scheduleUserId)
         {
             var scheduleUser = (await _scheduleUserRepo.FindAsync(
                      s => s.Id == scheduleUserId
                 )).FirstOrDefault();
             if (scheduleUser== null)
             {
-                return Result.Failure<GetScheduleRes>(Error.NotFoundSchedule);
+                return Result.Failure<ScheduleUserRes>(Error.NotFoundSchedule);
             }
-            var result = _mapper.Map<GetScheduleRes>(scheduleUser);
+            var result = _mapper.Map<ScheduleUserRes>(scheduleUser);
             return result;
 
         }
