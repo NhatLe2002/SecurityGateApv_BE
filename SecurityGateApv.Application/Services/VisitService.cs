@@ -68,7 +68,7 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 DateTime.Now,
                 command.Description,
-                role == UserRoleEnum.Security.ToString() ? VisitStatusEnum.Active_temporary.ToString() : VisitStatusEnum.Pending.ToString(),
+                 VisitStatusEnum.Pending.ToString(),
                 command.CreateById,
                 command.ResponsiblePersonId,
                 command.ScheduleUserId
@@ -106,9 +106,9 @@ namespace SecurityGateApv.Application.Services
             }
             return command;
         }
-        public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command)
+        public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token)
         {
-
+            var role = _jwt.DecodeJwt(token);
             var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()), includeProperties: "ScheduleType")).FirstOrDefault();
             var createVisit = Visit.Create(
                 command.VisitName,
@@ -118,7 +118,7 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 DateTime.Now,
                 command.Description,
-                VisitProcessEnum.Active.ToString(),
+                role== UserRoleEnum.Security.ToString() ? VisitStatusEnum.ActiveTemporary.ToString(): VisitStatusEnum.Active.ToString(),
                 command.CreateById,
                 command.ResponsiblePersonId,
                 null
@@ -622,7 +622,7 @@ namespace SecurityGateApv.Application.Services
             if (visit == null) {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
             }
-            if(visit.VisitStatus != VisitStatusEnum.Active_temporary.ToString())
+            if(visit.VisitStatus != VisitStatusEnum.ActiveTemporary.ToString())
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
             }
@@ -663,7 +663,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
             }
-            if (visit.VisitStatus != VisitStatusEnum.Active_temporary.ToString())
+            if (visit.VisitStatus != VisitStatusEnum.ActiveTemporary.ToString())
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
             }

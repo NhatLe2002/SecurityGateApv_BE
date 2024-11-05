@@ -257,7 +257,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost("Daily")]
         public async Task<ActionResult> CreateVisitDaily(VisitCreateCommandDaily command)
         {
-            var result = await _visitService.CreateVisitDaily(command);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateVisitDaily", "Invalid Token"));
+            }
+            var result = await _visitService.CreateVisitDaily(command, token);
 
             if (result.IsFailure)
             {
