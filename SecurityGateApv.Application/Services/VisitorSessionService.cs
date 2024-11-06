@@ -22,7 +22,7 @@ namespace SecurityGateApv.Application.Services
     public class VisitorSessionService : IVisitorSessionService
     {
         private readonly IVisitorSessionRepo _visitorSessionRepo;
-        private readonly ICardRepo _qRCardRepo;
+        private readonly ICardRepo _cardRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVisitDetailRepo _visitDetailRepo;
@@ -37,7 +37,7 @@ namespace SecurityGateApv.Application.Services
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _qRCardRepo = qRCardRepo;
+            _cardRepo = qRCardRepo;
             _visitDetailRepo = visitDetailRepo;
             _visitCardRepo = visitCardRepo;
             _qrCodeService = cardService;
@@ -47,7 +47,7 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<bool>> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
-            var qRCard = (await _qRCardRepo.FindAsync(
+            var qRCard = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(qrCardVerifi),
                 includeProperties: "CardType"
                 )).FirstOrDefault();
@@ -107,7 +107,7 @@ namespace SecurityGateApv.Application.Services
             }
 
             // Check exist Card and does not have visit
-            var qrCard = (await _qRCardRepo.FindAsync(
+            var qrCard = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(command.QRCardVerification),
                 includeProperties: "CardType"
                 ))
@@ -224,7 +224,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<CheckInRes>> CheckInWithoutCredentialCard(VisitSessionCheckInCommand command)
         {
-            var card = (await _qRCardRepo.FindAsync(
+            var card = (await _cardRepo.FindAsync(
                     s => s.CardVerification == command.QRCardVerification && s.CardStatus.Equals(CardStatusEnum.Active.ToString())
                 )).FirstOrDefault();
             if (card == null)
@@ -245,7 +245,7 @@ namespace SecurityGateApv.Application.Services
                    s => s.VisitDetailId == visitCard.VisitDetailId
                    /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
                    /*&& s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date*/,
-                   int.MaxValue, 1, includeProperties: "Visit.Schedule.ScheduleType,Visitor"
+                   int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
@@ -342,7 +342,7 @@ namespace SecurityGateApv.Application.Services
             }
 
             //Check exsit Card and dos not have visit
-            var qrCard = (await _qRCardRepo.FindAsync(
+            var qrCard = (await _cardRepo.FindAsync(
                s => s.CardVerification.Equals(command.QRCardVerification)))
                .FirstOrDefault();
             if (qrCard == null)
@@ -398,7 +398,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<ValidCheckinRes>> ValidCheckWithoutCredentialCardIn(ValidCheckInCommand command)
         {
-            var card = (await _qRCardRepo.FindAsync(
+            var card = (await _cardRepo.FindAsync(
                     s => s.CardVerification == command.QRCardVerification && s.CardStatus.Equals(CardStatusEnum.Active.ToString())
                 )).FirstOrDefault();
             if (card == null)
@@ -470,7 +470,7 @@ namespace SecurityGateApv.Application.Services
                 }
 
             }*/
-            var qrCard = (await _qRCardRepo.FindAsync(
+            var qrCard = (await _cardRepo.FindAsync(
                s => s.CardVerification.Equals(command.QRCardVerification)))
                .FirstOrDefault();
             if (qrCard == null)
@@ -685,6 +685,23 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorSessionRes>> GetVisitSessionStatusCheckInByCardVerification(string cardVerified)
         {
+            var card = (await _cardRepo.FindAsync(
+                    s => s.CardVerification == cardVerified && s.CardStatus == CardStatusEnum.Active.ToString()
+                )).FirstOrDefault();
+            if (card == null)
+            {
+                return Result.Failure<GetVisitorSessionRes>(Error.NotFoundCard);
+            }
+
+            var visitCard = (await _visitCardRepo.FindAsync(
+                s => s.CardId == card.CardId && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString()
+                )).FirstOrDefault();
+
+            if (visitCard == null)
+            {
+                return Result.Failure<GetVisitorSessionRes>(Error.CardNotIssue);
+            }
+
 
             var visitSession = await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitCard.Any(s => s.Card.CardVerification == cardVerified && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())),
