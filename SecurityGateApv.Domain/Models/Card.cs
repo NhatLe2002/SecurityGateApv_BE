@@ -30,9 +30,9 @@ namespace SecurityGateApv.Domain.Models
             this.CardGuidId = cardGuidId;
             return this;
         }*/
-        public Result<Card> UpdateQRCardStatus(int status)
+        public Result<Card> UpdateQRCardStatus(string status)
         {
-            //this.QRCardStatusId = status;
+            this.CardStatus = status;
             return this;
         }
         public static Card Create(int qrCardTypeId,  string cardVerified, string cardImage)

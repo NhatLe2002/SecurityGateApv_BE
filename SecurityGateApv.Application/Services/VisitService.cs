@@ -190,6 +190,10 @@ namespace SecurityGateApv.Application.Services
             var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
             return Result.Success(visitRes);
         }
+        public Task<Result<GetVisitRes>> GetVisitByVisiDetailtId(int visitDetailId)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit()
         {

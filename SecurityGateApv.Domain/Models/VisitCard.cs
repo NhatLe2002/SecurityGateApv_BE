@@ -46,6 +46,12 @@ namespace SecurityGateApv.Domain.Models
             this.VisitCardStatus = visitCardStatus;
             return this;
         }
+        public VisitCard CancelCardLost()
+        {
+            this.VisitCardStatus = VisitCardStatusEnum.Expired.ToString();
+            this.Card.UpdateQRCardStatus(CardStatusEnum.Lost.ToString());
+            return this;
+        }
         public VisitCard UpdateVisitCardStatusBackgroundWoker(string visitCardStatus)
         {
             this.VisitCardStatus = visitCardStatus;

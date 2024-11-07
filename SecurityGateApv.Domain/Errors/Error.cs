@@ -73,8 +73,8 @@ namespace SecurityGateApv.Domain.Errors
 
         #region CardError
         //Card error
-        public static readonly Error NotFoundCardById = new("Error.Notfound", "Not found this Card");
         public static readonly Error NotFoundCard = new("Error.NotfoundCard", "Not found this Card");
+        public static readonly Error NotFoundCardByCardVerification = new("Error.NotfoundCard", "Không tìm được thẻ theo QR đã nhận.");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
         //DuplicateQRCard
@@ -84,10 +84,11 @@ namespace SecurityGateApv.Domain.Errors
 
         #region VisitCardError
         //Can not found VisitCard
-        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Card not registered in/out cannot use");
+        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Thẻ chưa được đăng ký ra vào không thể checkin/checkout.");
         // Card expried 
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         // This type of card cannot be used for this visit
+        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kịch hoạt");
 
         #endregion
 
@@ -95,15 +96,15 @@ namespace SecurityGateApv.Domain.Errors
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
         public static readonly Error NotFoundVisitSesson = new("Error.NotFoundVisitSesson", "Not found this VisitorSession");
-        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "The card has not been activated");
         public static readonly Error CardNotCheckIn = new("Error.CardNotCheckIn", "Card does not checked t");
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
         public static readonly Error ValidSession = new("Error.ValidSession", "Session check in can't check in duplicate");
+        public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
         #endregion
 
         #region Visitor
         //Visitor eror
-        public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Not found this visitor");
+        public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Không tìm thấy khách này.");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
         public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Update error");
         #endregion

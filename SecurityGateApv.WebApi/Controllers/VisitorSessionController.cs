@@ -15,10 +15,21 @@ namespace SecurityGateApv.WebApi.Controllers
         {
             _visitorSessionService = visitorSessionService;
         }
-        [HttpPut("CheckOut")]
-        public async Task<ActionResult> CheckOut(VisitorSessionCheckOutCommand command, string qrCardVerifi)
+        [HttpPut("CheckOutWithCard")]
+        public async Task<ActionResult> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
-            var result = await _visitorSessionService.CheckOut(command, qrCardVerifi);
+            var result = await _visitorSessionService.CheckOutWithCard(command, qrCardVerifi);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("CheckOutWithCredentialCard")]
+        public async Task<ActionResult> CheckOutWithCredentialCard(VisitorSessionCheckOutCommand command, string credentialCard)
+        {
+            var result = await _visitorSessionService.CheckOutWithCredentialCard(command, credentialCard);
 
             if (result.IsFailure)
             {
