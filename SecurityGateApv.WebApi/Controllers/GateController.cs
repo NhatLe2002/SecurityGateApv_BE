@@ -33,6 +33,13 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
+        } 
+        
+        [HttpGet("TestTime")]
+        public async Task<ActionResult> TestTime()
+        {
+           
+            return Ok(DateTime.Now);
         }
     }
 }

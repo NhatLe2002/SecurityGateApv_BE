@@ -74,6 +74,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CheckInRes>(Error.NotFoundCard);
             }
 
+
             // Check valid CredentialCard and Card 
             var visitCard = (await _visitCardRepo.FindAsync(
                 s => (s.CardId == qrCard.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
