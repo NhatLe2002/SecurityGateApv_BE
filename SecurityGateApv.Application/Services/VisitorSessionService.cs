@@ -96,7 +96,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
             }
-
+             
             // Check session don't have check-in
             var visitSession = (await _visitorSessionRepo.FindAsync(
                 s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
