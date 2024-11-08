@@ -68,7 +68,7 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 DateTime.Now,
                 command.Description,
-                role == UserRoleEnum.Security.ToString() ? VisitStatusEnum.Active_temporary.ToString() : VisitStatusEnum.Pending.ToString(),
+                 VisitStatusEnum.Pending.ToString(),
                 command.CreateById,
                 command.ResponsiblePersonId,
                 command.ScheduleUserId
@@ -106,9 +106,9 @@ namespace SecurityGateApv.Application.Services
             }
             return command;
         }
-        public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command)
+        public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token)
         {
-
+            var role = _jwt.DecodeJwt(token);
             var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleType.ScheduleTypeName.Equals(ScheduleTypeEnum.VisitDaily.ToString()), includeProperties: "ScheduleType")).FirstOrDefault();
             var createVisit = Visit.Create(
                 command.VisitName,
@@ -118,7 +118,7 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 DateTime.Now,
                 command.Description,
-                VisitProcessEnum.Active.ToString(),
+                role== UserRoleEnum.Security.ToString() ? VisitStatusEnum.ActiveTemporary.ToString(): VisitStatusEnum.Active.ToString(),
                 command.CreateById,
                 command.ResponsiblePersonId,
                 null
@@ -131,7 +131,7 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.Visit.VisitStatus != VisitStatusEnum.Cancelled.ToString()
-                    && s.Visit.ExpectedEndTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
+                    && s.Visit.ExpectedEndTime.Date >= command.ExpectedStartTime.Date, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
                 var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
                     null,
@@ -164,10 +164,23 @@ namespace SecurityGateApv.Application.Services
             var res = _mapper.Map<List<GetVisitNoDetailRes>>(visit);
             return res;
         }
+        public async Task<Result<GetVisitRes>> GetVisitByScheduleUserId(int scheduleUserId)
+        {
+            var visit = (await _visitRepo.FindAsync(
+                s => s.ScheduleUserId == scheduleUserId, 1, 1, includeProperties: "VisitDetail.Visitor,CreateBy"
+                )).FirstOrDefault();
+
+            if ( visit == null)
+            {
+                return Result.Failure<GetVisitRes>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<GetVisitRes>(visit);
+            return Result.Success(visitRes);
+        }
         public async Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId)
         {
             var visit = await _visitRepo.FindAsync(
-                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule"
+                s => s.VisitId == visitId, 1, 1, includeProperties: "VisitDetail,VisitDetail.Visitor,CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule.ScheduleType"
                 );
 
             if (visit.Count() == 0 || visit == null)
@@ -176,6 +189,10 @@ namespace SecurityGateApv.Application.Services
             }
             var visitRes = _mapper.Map<GetVisitRes>(visit.FirstOrDefault());
             return Result.Success(visitRes);
+        }
+        public Task<Result<GetVisitRes>> GetVisitByVisiDetailtId(int visitDetailId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit()
@@ -410,7 +427,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int createById, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            var visit = (await _visitRepo.FindAsync(s => s.CreateById == createById, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType")).ToList();
             if (visit == null)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
@@ -421,7 +438,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,Schedule")).ToList();
+            var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule")).ToList();
             if (visit.Count == 0)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
@@ -609,7 +626,7 @@ namespace SecurityGateApv.Application.Services
             if (visit == null) {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
             }
-            if(visit.VisitStatus != VisitStatusEnum.Active_temporary.ToString())
+            if(visit.VisitStatus != VisitStatusEnum.ActiveTemporary.ToString())
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
             }
@@ -650,7 +667,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
             }
-            if (visit.VisitStatus != VisitStatusEnum.Active_temporary.ToString())
+            if (visit.VisitStatus != VisitStatusEnum.ActiveTemporary.ToString())
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
             }
@@ -663,5 +680,7 @@ namespace SecurityGateApv.Application.Services
             }
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
+
+        
     }
 }

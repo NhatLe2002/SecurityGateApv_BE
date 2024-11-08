@@ -12,7 +12,7 @@ namespace SecurityGateApv.Domain.Enums
         Pending,
         Active,
         Inactive,
-        Active_temporary,
+        ActiveTemporary,
         Violation,
         Cancelled
     }

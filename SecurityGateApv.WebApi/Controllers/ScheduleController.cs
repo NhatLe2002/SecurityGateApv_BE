@@ -64,21 +64,6 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("ScheduleUser/Staff/{staffId}")]
-        public async Task<IActionResult> GetScheduleUserByStaffId(int staffId, int pageNumber, int pageSize)
-        {
-            if (pageNumber == -1 || pageSize == -1)
-            {
-                var resultAll = await _scheduleService.GetScheduleUserByStaffId(staffId, 1, int.MaxValue);
-                return Ok(resultAll.Value);
-            }
-            var result = await _scheduleService.GetScheduleUserByStaffId(staffId, pageNumber, pageSize);
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error);
-            }
-            return Ok(result.Value);
-        }
 
         [HttpPost()]
         public async Task<IActionResult> CreateSchedule([FromBody] CreateScheduleCommand request)
@@ -91,16 +76,6 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
 
-        [HttpPost("AssignSchedule")]
-        public async Task<IActionResult> CreateScheduleUser([FromBody] CreateScheduleUserCommand request)
-        {
-            var result = await _scheduleService.CreateScheduleUser(request);
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error);
-            }
-            return Ok(result.Value);
-        }
         [HttpPut("{scheduleId}")]
         public async Task<IActionResult> UpdateSchedule([FromBody] UpdateScheduleCommand request,  int scheduleId)
         {

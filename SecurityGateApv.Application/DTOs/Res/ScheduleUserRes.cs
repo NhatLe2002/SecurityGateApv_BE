@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Application.DTOs.Res
 {
-    public class GetScheduleUserRes
+    public class ScheduleUserRes
     {
         public int Id { get; private set; }
         public string Title { get; private set; }
@@ -17,23 +17,24 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime AssignTime { get; private set; }
         public DateTime DeadlineTime { get; private set; }
         public string Status { get; private set; }
-        public ScheduleGetScheduleUserRes Schedule { get; private set; }
-        public UserGetScheduleUserRes AssignTo { get; private set; }
-        public UserGetScheduleUserRes AssignFrom { get; private set; }
-    }
-    public class ScheduleGetScheduleUserRes
-    {
         public int ScheduleId { get; private set; }
-        public string ScheduleName { get; private set; }
-        public string DaysOfSchedule { get; private set; }
-        public ScheduleTypeGetScheduleUserRes ScheduleType { get; private set; }
+        public int AssignToId { get; private set; }
+        public UserScheduleUserRes AssignFrom { get; private set; }
+        public ScheduleRes Schedule { get; private set; }
+        public List<VisitRes> Visit { get; private set; }
     }
-    public class ScheduleTypeGetScheduleUserRes
+    public class ScheduleRes
     {
-        public int ScheduleTypeId { get; set; }
+        public string DaysOfSchedule { get; set; }
+        public ScheduleTypeRes ScheduleType { get; set; }
+
+    } 
+    public class ScheduleTypeRes
+    {
         public string ScheduleTypeName { get; set; }
+
     }
-    public class UserGetScheduleUserRes
+    public class UserScheduleUserRes
     {
         public int UserId { get; set; }
         public string UserName { get; private set; }

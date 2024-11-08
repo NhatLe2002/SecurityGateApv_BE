@@ -50,6 +50,29 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
+        }  
+        
+        //[HttpGet("VisitDetailId/{visitDetailId}")]
+        //public async Task<ActionResult> GetVisitByVisiDetailtId(int visitDetailId)
+        //{
+        //    var result = await _visitService.GetVisitByVisiDetailtId(visitDetailId);
+
+        //    if (result.IsFailure)
+        //    {
+        //        return BadRequest(result.Error);
+        //    }
+        //    return Ok(result.Value);
+        //} 
+        [HttpGet("ScheduleUserId/{scheduleUserId}")]
+        public async Task<ActionResult> GetVisitByScheduleUserId(int scheduleUserId)
+        {
+            var result = await _visitService.GetVisitByScheduleUserId(scheduleUserId);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
         }
         [HttpGet("Status")]
         public async Task<ActionResult> GetVisitDetailByStatus([FromQuery] string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
@@ -246,7 +269,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost("Daily")]
         public async Task<ActionResult> CreateVisitDaily(VisitCreateCommandDaily command)
         {
-            var result = await _visitService.CreateVisitDaily(command);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateVisitDaily", "Invalid Token"));
+            }
+            var result = await _visitService.CreateVisitDaily(command, token);
 
             if (result.IsFailure)
             {

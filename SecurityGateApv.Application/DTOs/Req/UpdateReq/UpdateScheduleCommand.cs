@@ -11,7 +11,6 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
     {
         public string ScheduleName { get; set; }
         public string DaysOfSchedule { get; set; }
-        public int Duration { get; set; }
         public string Description { get; set; }
         public bool Status { get;  set; }
         [JsonIgnore]

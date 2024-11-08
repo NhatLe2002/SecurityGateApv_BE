@@ -20,6 +20,8 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<User, CreateByRes>().ReverseMap();
             CreateMap<User, GetUserRes>().ReverseMap();
             CreateMap<SecurityRes, User>().ReverseMap();
+            CreateMap<UserGetScheduleUserRes, User>().ReverseMap();
+            CreateMap<UserScheduleUserRes, User>().ReverseMap();
             #endregion
 
             #region Role
@@ -28,7 +30,6 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Gate, GetGateRes>().ReverseMap();
             CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
             CreateMap<GetDepartmentRes, Department>().ReverseMap();
-            CreateMap<GetScheduleRes, Schedule>().ReverseMap();
             CreateMap<ScheduleResForVisit, Schedule>().ReverseMap();
             CreateMap<CreateUserComman, User>().ReverseMap();
             CreateMap<DepartmentCreateCommand, Department>().ReverseMap();
@@ -41,6 +42,15 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GetNotificationRes, NotificationUsers>().ReverseMap();
             CreateMap<GetNotification, Notification>().ReverseMap();
             CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
+            #region ScheduleUser
+            //CreateMap<GetScheduleRes, Schedule>().ReverseMap();
+            CreateMap<Schedule, GetScheduleRes>().ReverseMap()
+            .ForMember(dest => dest.ScheduleUser, opt => opt.MapFrom(src => src.ScheduleUser));
+            CreateMap<GetScheduleUserRes, ScheduleUser>().ReverseMap()
+                .ForMember(dest => dest.AssignFrom, opt => opt.MapFrom(src => src.Schedule.CreateBy));
+            CreateMap<ScheduleUserRes, ScheduleUser>().ReverseMap()
+                .ForMember(dest => dest.AssignFrom, opt => opt.MapFrom(src => src.Schedule.CreateBy));
+            #endregion
 
             #region Visitor map
             CreateMap<CreateVisitorRes, Visitor>().ReverseMap();
@@ -48,9 +58,11 @@ namespace SecurityGateApv.Application.Mapper
 
 
             #region Visit map
-            CreateMap<Visit, GetVisitRes>().ReverseMap();
+            CreateMap<GetVisitRes, Visit>().ReverseMap()
+                .ForMember(dest => dest.Schedule, opt => opt.MapFrom(src => src.ScheduleUser.Schedule));
             CreateMap<Visit, GetVisitNoDetailRes>().ReverseMap();
             CreateMap<VisitDetail, VisitDetailRes>().ReverseMap();
+            CreateMap<VisitDetail, VisitDetailSessionRes>().ReverseMap();
             CreateMap<UpdateVisitBeforeStartDateCommand, Visit>().ReverseMap();
             CreateMap<UpdateVisitAfterStartDateCommand, Visit>().ReverseMap();
             CreateMap<GetVisitByDateRes, Visit>().ReverseMap()
@@ -79,12 +91,14 @@ namespace SecurityGateApv.Application.Mapper
 
             #region ScheduleType
             CreateMap<GetScheduleTypeRes, ScheduleType>().ReverseMap();
-            CreateMap<GetScheduleUserRes, ScheduleUser>().ReverseMap()
-                .ForMember(dest => dest.AssignFrom, opt => opt.MapFrom(src => src.Schedule.CreateBy));
             CreateMap<ScheduleGetScheduleUserRes, Schedule>().ReverseMap();
             CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
             CreateMap<ScheduleTypeGetScheduleUserRes, ScheduleType>().ReverseMap();
-            CreateMap<UserGetScheduleUserRes, User>().ReverseMap();
+            CreateMap<ScheduleType, ScheduleTypeRes>().ReverseMap();
+            #endregion
+
+            #region Schedule
+            CreateMap<Schedule, ScheduleRes>().ReverseMap();
             #endregion
 
             #region SessionsImageRes
@@ -99,6 +113,7 @@ namespace SecurityGateApv.Application.Mapper
 
             #region VisitSession
             CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap();
+            CreateMap<SessionCheckOutRes, VisitorSession>().ReverseMap();
             CreateMap<VisitorSession, GetVisitorSessionGraphQLRes>()
                 .ForMember(dest => dest.Visitor, opt => opt.MapFrom(src => src.VisitDetail.Visitor))
                 .ForMember(dest => dest.Visit, opt => opt.MapFrom(src => src.VisitDetail.Visit))
@@ -112,6 +127,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap();
 
             #endregion
+
             #region Card
             CreateMap<Card, GetCardRes>().ReverseMap();
             CreateMap<VisitCard, VisitCardRes>().ReverseMap();
@@ -119,6 +135,11 @@ namespace SecurityGateApv.Application.Mapper
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
             CreateMap<CardRes, Card>().ReverseMap()
                 .ForMember(dest => dest.QrCardTypename, opt => opt.MapFrom(src => src.CardType.CardTypeName));
+            #endregion
+
+            #region Images
+            CreateMap<VisitorSessionsImage, VisitorSessionImageRes>().ReverseMap();
+
             #endregion
         }
     }

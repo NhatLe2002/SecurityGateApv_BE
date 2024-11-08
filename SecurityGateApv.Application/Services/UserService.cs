@@ -33,7 +33,8 @@ namespace SecurityGateApv.Application.Services
         private readonly INotifications _notifications;
 
         public UserService(IUserRepo userRepo, IMapper mapper, IJwt jwt, IDepartmentRepo departmentRepo,
-            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender, INotifications notifications) {
+            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender, INotifications notifications)
+        {
             _userRepo = userRepo;
             _mapper = mapper;
             _jwt = jwt;
@@ -58,7 +59,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CreateUserComman>(Error.NotPermission);
             }
             var department = _departmentRepo.FindAsync(s => s.DepartmentId == command.DepartmentId).Result.FirstOrDefault();
-            if ((command.RoleID.Equals(UserRoleEnum.Admin)&& !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.AdminDepartment.ToString()))
+            if ((command.RoleID.Equals(UserRoleEnum.Admin) && !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.AdminDepartment.ToString()))
                 || (command.RoleID.Equals(UserRoleEnum.Manager) && !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.ManagerDepartment.ToString()))
                 || (command.RoleID.Equals(UserRoleEnum.Security) && !department.DepartmentName.Equals(DepartmentSpecialCaseEnum.SecurityDepartment.ToString()))
                 )
@@ -101,11 +102,15 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetUserRes>>> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int departmentManagerId)
         {
-            var department = (await _departmentRepo.FindAsync(
-                     s => s.User.Any(u => u.UserId == departmentManagerId)
-                 )).FirstOrDefault();
+            var departmentManager = (await _userRepo.FindAsync(
+                s => s.UserId == departmentManagerId && s.Role.RoleName.Equals(UserRoleEnum.DepartmentManager.ToString())
+                )).FirstOrDefault();
+            if (departmentManager == null)
+            {
+                return Result.Failure<List<GetUserRes>>(Error.NotFoundDepartmentManager);
+            }
             var user = await _userRepo.FindAsync(
-                    s => s.DepartmentId == department.DepartmentId && s.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()),
+                    s => s.DepartmentId == departmentManager.DepartmentId && s.Role.RoleName.Equals(UserRoleEnum.Staff.ToString()),
                     pageSize, pageNumber, includeProperties: "Role,Department"
                 );
             if (user.Count() == 0)
@@ -216,10 +221,10 @@ namespace SecurityGateApv.Application.Services
             var department = _departmentRepo.FindAsync(s => s.DepartmentId == command.DepartmentId).Result.FirstOrDefault();
             // If the user's role is not Admin, Manager, or Security, check the department
             if (user.RoleId == (int)UserRoleEnum.Staff ||
-                user.RoleId == (int)UserRoleEnum.DepartmentManager )
+                user.RoleId == (int)UserRoleEnum.DepartmentManager)
             {
                 // Check if the specified DepartmentId in the command exists in the repository
-                if (department == null 
+                if (department == null
                     || department.DepartmentName.Equals(DepartmentSpecialCaseEnum.AdminDepartment.ToString())
                     || department.DepartmentName.Equals(DepartmentSpecialCaseEnum.ManagerDepartment.ToString())
                     || department.DepartmentName.Equals(DepartmentSpecialCaseEnum.SecurityDepartment.ToString()))
@@ -227,11 +232,11 @@ namespace SecurityGateApv.Application.Services
                     return Result.Failure<UpdateUserCommand>(Error.NotFoundDepartment);
                 }
             }
-            if (user.RoleId == (int)UserRoleEnum.Admin 
+            if (user.RoleId == (int)UserRoleEnum.Admin
                 || user.RoleId == (int)UserRoleEnum.Manager
                 || user.RoleId == (int)UserRoleEnum.Security)
             {
-                if(command.DepartmentId != null )
+                if (command.DepartmentId != null)
                 {
                     return Result.Failure<UpdateUserCommand>(Error.CanNotUpdateDepartment);
                 }
@@ -245,7 +250,7 @@ namespace SecurityGateApv.Application.Services
             user.Update();
 
             // Update the user in the repository and commit the changes to the database
-            if(!await _userRepo.UpdateAsync(result))
+            if (!await _userRepo.UpdateAsync(result))
             {
                 return Result.Failure<UpdateUserCommand>(Error.UpdateDepartment);
             }
@@ -268,7 +273,7 @@ namespace SecurityGateApv.Application.Services
         private async Task<bool> PermissionCheck(string userRole, int checkRole)
         {
             //check if userRole is Admin, Manager, DepartmentManager, Staff, or Security and checkRole is Admin, Manager, DepartmentManager, Staff, or Security respectively true
-            if (((UserRoleEnum)checkRole).ToString()==userRole)
+            if (((UserRoleEnum)checkRole).ToString() == userRole)
             {
                 return true;
             }

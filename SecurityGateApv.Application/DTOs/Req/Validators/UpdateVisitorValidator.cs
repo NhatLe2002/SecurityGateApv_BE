@@ -13,8 +13,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
     {
         public UpdateVisitorValidator(ICredentialCardTypeRepo credentialCardTypeRepo, IVisitorRepo visitorRepo) 
         {
-            RuleFor(s => s.VisitorName).NotNull().NotEmpty()
-                .Matches(@"^[a-zA-Z\s]+$").WithMessage("FullName can only contain letters and spaces");
+            RuleFor(s => s.VisitorName).NotNull().NotEmpty();
             RuleFor(s => s.CompanyName).NotNull().NotEmpty();
             RuleFor(s => s.VisitorCredentialImageFromRequest).NotNull().NotEmpty();
             RuleFor(s => s.PhoneNumber).NotNull().NotEmpty()

@@ -45,7 +45,6 @@ namespace SecurityGateApv.Application.Services
             var scheduleCreate = Schedule.Create(
                 request.ScheduleName,
                 request.DaysOfSchedule,
-                request.Duration,
                 request.Description,
                 DateTime.Now,
                 DateTime.Now,
@@ -135,7 +134,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetScheduleRes>(Error.ScheduleValid);
             }
-            schedule.Update(request.ScheduleName, request.DaysOfSchedule, request.Duration, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById);
+            schedule.Update(request.ScheduleName, request.DaysOfSchedule, request.Description, schedule.CreateTime, DateTime.Now, request.Status, request.ScheduleTypeId, request.CreateById);
             if(!await _scheduleRepo.UpdateAsync(schedule))
             {
                 return Result.Failure<GetScheduleRes> (Error.ScheduleCreateError);
@@ -165,10 +164,6 @@ namespace SecurityGateApv.Application.Services
             }
             var days = command.DaysOfSchedule.Split(',')
                             .Select(d => d.Trim());
-            if (days.Count() > command.Duration)
-            {
-                return false;
-            }
             if (days.Any())
             {
                 return days.All(day =>
@@ -222,7 +217,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetScheduleRes>>> GetScheduleByDepartmentManagerId(int departmentManagerId, int pageNumber, int pageSize)
         {
             var schedule = (await _scheduleRepo.FindAsync(
-                s => s.CreateById == departmentManagerId,pageSize,pageNumber, includeProperties: "ScheduleType,CreateBy"
+                s => s.CreateById == departmentManagerId,pageSize,pageNumber, includeProperties: "ScheduleType,CreateBy,ScheduleUser"
                 ));
             if (schedule == null)
             {

@@ -25,10 +25,12 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitByUserId(int departmentManagerId, int pageNumber, int pageSize);
         public Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId);
+        public Task<Result<GetVisitRes>> GetVisitByVisiDetailtId(int visitDetailId);
+        public Task<Result<GetVisitRes>> GetVisitByScheduleUserId(int scheduleUserId);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatus(string status, int pageNumber, int pageSize);
         public Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date);
         public Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token);
-        public Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command);
+        public Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token);
         //public Task<Result<VisitCreateCommand>> UpdateVisit(int visitId, VisitCreateCommand command);
         public Task<Result<UpdateVisitBeforeStartDateCommand>> UpdateVisitBeforeStartDate(int visitId, UpdateVisitBeforeStartDateCommand command);
         public Task<Result<UpdateVisitAfterStartDateCommand>> UpdateVisitAfterStartDate(int visitId, UpdateVisitAfterStartDateCommand command);

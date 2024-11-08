@@ -38,10 +38,21 @@ namespace SecurityGateApv.WebApi.Controllers
 
             return Ok(result.Value);
         } 
-        [HttpGet("Assigned/UserId/{userId}")]
-        public async Task<IActionResult> GetScheduleAssignedUserByUserId(int userId, int pageNumber, int pageSize)
+        [HttpGet("{scheduleUserId}")]
+        public async Task<IActionResult> GetScheduleUserById(int scheduleUserId)
         {
-            var result = await _scheduleUserService.GetScheduleAssignedUserByUserId(userId, pageNumber, pageSize);
+            var result = await _scheduleUserService.GetScheduleUserById(scheduleUserId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        } 
+        [HttpGet("Status/{status}/UserId/{userId}")]
+        public async Task<IActionResult> GetScheduleUserByUserIdAndStatus(int userId,string status, int pageNumber, int pageSize)
+        {
+            var result = await _scheduleUserService.GetScheduleUserByUserIdAndStatus(userId, status, pageNumber, pageSize);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -59,20 +70,20 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPut("Reject/ScheduleId/{scheduleId}")]
-        public async Task<IActionResult> RejectScheduleUser(int scheduleId)
+        [HttpPut("Reject/{scheduleUserId}")]
+        public async Task<IActionResult> RejectScheduleUser(int scheduleUserId)
         {
-            var result = await _scheduleUserService.RejectScheduleUser(scheduleId);
+            var result = await _scheduleUserService.RejectScheduleUser(scheduleUserId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
         }
-        [HttpPut("Aprove/ScheduleId/{scheduleId}")]
-        public async Task<IActionResult> AproveScheduleUser(int scheduleId)
+        [HttpPut("Approve/{scheduleUserId}")]
+        public async Task<IActionResult> AproveScheduleUser(int scheduleUserId)
         {
-            var result = await _scheduleUserService.AproveScheduleUser(scheduleId);
+            var result = await _scheduleUserService.AproveScheduleUser(scheduleUserId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

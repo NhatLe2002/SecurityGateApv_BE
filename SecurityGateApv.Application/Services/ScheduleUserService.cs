@@ -88,7 +88,7 @@ namespace SecurityGateApv.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Result<List<GetScheduleUserRes>>> GetScheduleAssignedUserByUserId(int userId, int pageNumber, int pageSize)
+        public async Task<Result<List<GetScheduleUserRes>>> GetScheduleUserByUserIdAndStatus(int userId, string status, int pageNumber, int pageSize)
         {
             var user = (await _userRepo.FindAsync(
                     s => s.UserId == userId,
@@ -99,7 +99,7 @@ namespace SecurityGateApv.Application.Services
             {
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.AssignToId == userId
-                   && s.Status == ScheduleUserStatusEnum.Assigned.ToString(),
+                   && (status == "All" || s.Status == status),
                    pageSize, pageNumber,
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
@@ -109,19 +109,32 @@ namespace SecurityGateApv.Application.Services
             {
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.Schedule.CreateById == userId
-                   && s.Status == ScheduleUserStatusEnum.Assigned.ToString(),
+                   && (status == "All" || s.Status == status),
                    pageSize, pageNumber,
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
             }
-            if (scheduleUser == null)
+            if (scheduleUser.Count()== 0)
             {
                 return Result.Failure<List<GetScheduleUserRes>>(Error.NotFoundSchedule);
             }
             var result = _mapper.Map<List<GetScheduleUserRes>>(scheduleUser);
             return result;
         }
+        public async Task<Result<ScheduleUserRes>> GetScheduleUserById(int scheduleUserId)
+        {
+            var scheduleUser = (await _scheduleUserRepo.FindAsync(
+                     s => s.Id == scheduleUserId,
+                     includeProperties: "Schedule.ScheduleType,Schedule.CreateBy,Visit"
+                )).FirstOrDefault();
+            if (scheduleUser== null)
+            {
+                return Result.Failure<ScheduleUserRes>(Error.NotFoundSchedule);
+            }
+            var result = _mapper.Map<ScheduleUserRes>(scheduleUser);
+            return result;
 
+        }
         public async Task<Result<List<GetScheduleUserRes>>> GetScheduleUserByUserId(int userId, int pageNumber, int pageSize)
         {
             var user = (await _userRepo.FindAsync(
@@ -206,5 +219,7 @@ namespace SecurityGateApv.Application.Services
             }
             return true;
         }
+
+        
     }
 }

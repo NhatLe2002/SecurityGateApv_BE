@@ -30,9 +30,6 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 .NotEmpty()
                 .WithMessage("Days of process is required.");
 
-            RuleFor(s => s.Duration)
-                .GreaterThan(0)
-                .WithMessage("Duration must be greater than zero.");
 
             RuleFor(s => s.Description)
                 .NotEmpty()
@@ -74,10 +71,6 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             }
             var days = command.DaysOfSchedule.Split(',')
                             .Select(d => d.Trim());
-            if (days.Count() > command.Duration )
-            {
-                return false;
-            }
             if (days.Any())
             {
                 return days.All(day =>

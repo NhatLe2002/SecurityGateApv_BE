@@ -1,6 +1,8 @@
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using SecurityGateApv.Application.Common;
 using SecurityGateApv.Application.DTOs.Req.Validators;
@@ -10,6 +12,9 @@ using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Infras.Extentions;
 using SecurityGateApv.WebApi.Query;
 using System.Reflection;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
+
 
 namespace SecurityGateApv.WebApi
 {
@@ -26,10 +31,13 @@ namespace SecurityGateApv.WebApi
                 .AddFiltering()
                 .AddSorting()
                 .AddQueryType<QueryExample>();
-                //.AddTypeExtension<VisitorSessionQuery>();
-                
+            //.AddTypeExtension<VisitorSessionQuery>();
 
-            builder.Services.AddControllers();
+
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(
@@ -63,6 +71,12 @@ namespace SecurityGateApv.WebApi
                 });
                 }
                 );
+
+            builder.Services.Configure<MvcOptions>(options =>
+            {
+                options.ModelMetadataDetailsProviders.Add(
+                    new SystemTextJsonValidationMetadataProvider());
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -70,6 +84,7 @@ namespace SecurityGateApv.WebApi
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();

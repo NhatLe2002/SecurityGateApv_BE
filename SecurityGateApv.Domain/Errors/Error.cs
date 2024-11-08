@@ -20,25 +20,27 @@ namespace SecurityGateApv.Domain.Errors
 
         public string Code { get; }
         public string Message { get; }
-        #region Valid input
-        public static readonly Error NullInput = new("Error.Input", "Input param can't null");
-        #endregion
-
-        //Author error
-        public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
-        public static readonly Error PasswordNotMatch = new("Error.PasswordNotMatch", "Password doesn't match");
-        public static readonly Error CheckPasswordError = new("Error.CheckPasswordError", "Password double check doesn't match");
-        public static readonly Error Unauthorized = new("Error.Unauthorized", "Unauthorized Access.");
-
-
         public static implicit operator string(Error error) { return error.Code; }
         //Domain Errors
         public static readonly Error NotFound = new("Error.Notfound", "Not found item");
         public static readonly Error SaveToDBError = new("Error.CommitDataBase", "Save to DB error");
+        #region Valid input
+        public static readonly Error NullInput = new("Error.Input", "Input param can't null");
+        #endregion
+
+        #region Author error
+        public static readonly Error CreateStaffError = new("Error.CreateStaff", "This role can not create staff");
+        public static readonly Error PasswordNotMatch = new("Error.PasswordNotMatch", "Password doesn't match");
+        public static readonly Error CheckPasswordError = new("Error.CheckPasswordError", "Password double check doesn't match");
+        public static readonly Error Unauthorized = new("Error.Unauthorized", "Unauthorized Access.");
+        #endregion
+
 
         #region UserError
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
+        //Not found department manager
+        public static readonly Error NotFoundDepartmentManager = new("Error.NotfoundDepartmentManager", "Not found this department manager");
         public static readonly Error CanNotUpdateUserName = new("Error.CanNotUpdateUserName", "Username can not change");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
@@ -52,7 +54,7 @@ namespace SecurityGateApv.Domain.Errors
 
         #region VisitError
         //Visit error
-        public static readonly Error NotFoundVisit = new("Error.Visit", "Not found this visit");
+        public static readonly Error NotFoundVisit = new("Error.Visit", "Không tìm thấy lịch hẹn");
         public static readonly Error UpdateTimeVisitError = new("Error.UpdateTimeVisitError", "Time Error");
         public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
@@ -68,22 +70,25 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundVisitDetail = new("Error.VisitDetail", "Not found this VisitDetail");
         
         #endregion
+
         #region CardError
         //Card error
-        public static readonly Error NotFoundCardById = new("Error.Notfound", "Not found this Card");
         public static readonly Error NotFoundCard = new("Error.NotfoundCard", "Not found this Card");
+        public static readonly Error NotFoundCardByCardVerification = new("Error.NotfoundCard", "Không tìm được thẻ theo QR đã nhận.");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
         //DuplicateQRCard
         public static readonly Error DuplicateCard = new("Error.DuplicateCard", "This card is currently in use, no more visits can be added to this card.");
         public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "This visit already has a card, cannot add more card to the same visit");
         #endregion
+
         #region VisitCardError
         //Can not found VisitCard
-        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Card not registered in/out cannot use");
+        public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Thẻ chưa được đăng ký ra vào không thể checkin/checkout.");
         // Card expried 
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         // This type of card cannot be used for this visit
+        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kịch hoạt");
 
         #endregion
 
@@ -91,18 +96,18 @@ namespace SecurityGateApv.Domain.Errors
         //VisitSesson error 
         public static readonly Error NotFoundVisitSessonByQRId = new("Error.NotFound", "Not found this VisitorSession by QRId");
         public static readonly Error NotFoundVisitSesson = new("Error.NotFoundVisitSesson", "Not found this VisitorSession");
-        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "The card has not been activated");
         public static readonly Error CardNotCheckIn = new("Error.CardNotCheckIn", "Card does not checked t");
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
         public static readonly Error ValidSession = new("Error.ValidSession", "Session check in can't check in duplicate");
+        public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
         #endregion
 
-
+        #region Visitor
         //Visitor eror
-        public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Not found this visitor");
+        public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Không tìm thấy khách này.");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
         public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Update error");
-
+        #endregion
 
 
         #region Schedule
@@ -111,7 +116,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ScheduleCreateError = new("Error.Schedule", "Can not create schedule");
         public static readonly Error ScheduleUpdateError = new("Error.Schedule", "Can not update schedule");
         public static readonly Error ScheduleSaveError = new("Error.Schedule", "Can not save schedule");
-        public static readonly Error NotFoundSchedule = new("Error.Schedule", "Can not found Schedule");
+        public static readonly Error NotFoundSchedule = new("Error.Schedule", "Không tìm thấy lịch trình");
         public static readonly Error ScheduleValid = new("Error.Schedule", "DaysOfProcess is not valid for the selected Visit Type.");
         public static readonly Error ScheduleCannotUpdate = new("Error.Schedule", "Can not update Schedule daily");
         public static readonly Error ScheduleCannotAssign = new("Error.ScheduleCannotAssign", "Can not Assign Schedule daily");
@@ -138,6 +143,7 @@ namespace SecurityGateApv.Domain.Errors
         //error when schedule input is not valid
         public static readonly Error ScheduleTypeInputValid = new("Error.ScheduleType", "Wrong when input Schedule Type");
         #endregion
+
         #region CredentialCardType
         //CredentialCardType Error
         public static readonly Error CredentialCardTypeCreateError = new("Error.CredentialCardType", "Can not create Credential Card Type");
@@ -177,6 +183,10 @@ namespace SecurityGateApv.Domain.Errors
         {
             return new Error("Error.ScheduleAndCardTypeMismatch", $"Schedule type '{scheduleType}' and card type '{cardType}' do not match.");
         }
+
+        #region Image
+        public static readonly Error NotFoundImage = new("Error.NotFoundImage", "Not found image");
+        #endregion
     }
 
     public class Error<T> : Error
