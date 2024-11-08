@@ -66,10 +66,10 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<UpdateVisitBeforeStartDateCommand, Visit>().ReverseMap();
             CreateMap<UpdateVisitAfterStartDateCommand, Visit>().ReverseMap();
             CreateMap<GetVisitByDateRes, Visit>().ReverseMap()
-                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.ScheduleUser.Schedule.ScheduleName))
+                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName))
                 .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
             CreateMap<VisitRes, Visit>().ReverseMap()
-                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.ScheduleUser.Schedule.ScheduleName))
+                .ForMember(dest => dest.ScheduleTypeName, opt => opt.MapFrom(src => src.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName))
                 .ForMember(dest => dest.CreateByname, opt => opt.MapFrom(src => src.CreateBy.FullName));
             #endregion
 

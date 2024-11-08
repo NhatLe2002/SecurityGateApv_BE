@@ -17,6 +17,7 @@ namespace SecurityGateApv.Application.Services.Interface
     {
         public Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date);
         public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber);      
+        public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisitGraphQl(int pageSize, int pageNumber, string token);      
         public Task<Result<GetVisitNoDetailRes>> ReportVisit(int visitId);      
         public Task<Result<GetVisitNoDetailRes>> CancelVisit(int visitId);      
         public Task<Result<GetVisitNoDetailRes>> ActiveVisit(int visitId);      
@@ -27,7 +28,8 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId);
         public Task<Result<GetVisitRes>> GetVisitByVisiDetailtId(int visitDetailId);
         public Task<Result<GetVisitRes>> GetVisitByScheduleUserId(int scheduleUserId);
-        public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatus(string status, int pageNumber, int pageSize);
+        public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatus(string token, string status, int pageNumber, int pageSize);
+        //public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatusOfStaff(string status, int pageNumber, int pageSize);
         public Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date);
         public Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token);
         public Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token);
