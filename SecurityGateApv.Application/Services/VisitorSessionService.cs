@@ -81,6 +81,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CardLost);
             }
+             
 
 
             // Check valid CredentialCard and Card 
