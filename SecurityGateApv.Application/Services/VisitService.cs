@@ -471,7 +471,16 @@ namespace SecurityGateApv.Application.Services
             var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
             return visitRes.ToList();
         }
-
+        public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByResponePersonId(int responPersonId, int pageNumber, int pageSize)
+        {
+            var visit = (await _visitRepo.FindAsync(s => s.ResponsiblePersonId == responPersonId, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType")).ToList();
+            if (visit == null)
+            {
+                return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
+            }
+            var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            return visitRes.ToList();
+        }
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
         {
             var visit = (await _visitRepo.FindAsync(s => s.CreateBy.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.ExpectedStartTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule")).ToList();
@@ -542,7 +551,7 @@ namespace SecurityGateApv.Application.Services
             var visit = new List<Visit>();
             if (userAuthen.Role == UserRoleEnum.Staff.ToString())
             {
-                visit = (await _visitRepo.FindAsync(s => s.VisitStatus.Equals(status)
+                visit = (await _visitRepo.FindAsync(s => (status != null ? s.VisitStatus.Equals(status) : true)
                 && s.ResponsiblePersonId == userAuthen.UserId,
                 pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime),
                 includeProperties: "CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule")).ToList();
@@ -553,14 +562,14 @@ namespace SecurityGateApv.Application.Services
                 var userDepartment = (await _userRepo.FindAsync(
                         s => s.DepartmentId == userAuthen.DepartmentId
                     ));
-                visit = (await _visitRepo.FindAsync(s => s.VisitStatus.Equals(status)
+                visit = (await _visitRepo.FindAsync(s => (status != null ? s.VisitStatus.Equals(status) : true)
               && userDepartment.Any(ud => ud.UserId == s.ResponsiblePersonId),
               pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime),
               includeProperties: "CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule")).ToList();
             }
             else if (userAuthen.Role == UserRoleEnum.Manager.ToString() || userAuthen.Role == UserRoleEnum.Admin.ToString())
             {
-                visit = (await _visitRepo.FindAsync(s => s.VisitStatus.Equals(status),
+                visit = (await _visitRepo.FindAsync(s => (status != null ? s.VisitStatus.Equals(status) : true),
              pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime),
              includeProperties: "CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule")).ToList();
             }
@@ -747,5 +756,7 @@ namespace SecurityGateApv.Application.Services
             }
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
+
+       
     }
 }

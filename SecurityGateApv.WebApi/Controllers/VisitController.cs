@@ -75,10 +75,10 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpGet("Status")]
-        public async Task<ActionResult> GetVisitDetailByStatus([FromQuery] string status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        public async Task<ActionResult> GetVisitDetailByStatus([FromQuery] string? status, [FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             var token = Request.Headers["Authorization"];
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token) )
             {
                 return BadRequest(new Error("GetVisitByStatus", "Invalid Token"));
             }
@@ -121,6 +121,30 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest("Page number and page size must be greater than zero.");
             }
             var result = await _visitService.GetVisitDetailByCreateById(createById, pageNumber, pageSize);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        } 
+        [HttpGet("ResponePerson/{responePersonId}")]
+        public async Task<ActionResult> GetVisitDetailByResponePersonId(int responePersonId, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitDetailByResponePersonId(responePersonId, 1, int.MaxValue);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitDetailByCreateById(responePersonId, pageNumber, pageSize);
 
             if (result.IsFailure)
             {

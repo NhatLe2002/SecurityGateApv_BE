@@ -23,6 +23,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<GetVisitNoDetailRes>> ActiveVisit(int visitId);      
         public Task<Result<List<GetVisitDetailRes>>> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int visitId, int pageNumber, int pageSize);
+        public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByResponePersonId(int responPersonId, int pageNumber, int pageSize);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitByUserId(int departmentManagerId, int pageNumber, int pageSize);
         public Task<Result<GetVisitRes>> GetVisitDetailByVisitId(int visitId);
