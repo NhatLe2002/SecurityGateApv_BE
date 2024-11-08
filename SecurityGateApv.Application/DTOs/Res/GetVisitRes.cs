@@ -44,7 +44,7 @@ namespace SecurityGateApv.Application.DTOs.Res
 
         public CreateByRes? UpdateBy { get; private set; }
 
-        public ScheduleResForVisit Schedule { get; private set; }
+        public ScheduleResForVisit? Schedule { get; private set; }
     }
     public class VisitDetailRes
     {
