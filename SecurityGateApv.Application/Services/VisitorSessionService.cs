@@ -47,11 +47,11 @@ namespace SecurityGateApv.Application.Services
             _visitorSessionImagesRepo = visitorSessionImagesRepo;
         }
 
-        public async Task<Result<CheckInRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command)
+        public async Task<Result<ValidCheckinRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
                 s => s.Visitor.CredentialsCard.Equals(command.CredentialCard)
-                /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
+                && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
                 && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
                 && s.ExpectedEndHour >= DateTime.Now.TimeOfDay,
@@ -60,33 +60,41 @@ namespace SecurityGateApv.Application.Services
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
             {
-                return Result.Failure<CheckInRes>(Error.NotFoundVisitByCredentialCard);
+                return Result.Failure<ValidCheckinRes>(Error.NotFoundVisitByCredentialCard);
             }
 
             // Check exist Card and does not have visit
-            var qrCard = (await _cardRepo.FindAsync(
+            var card = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(command.QRCardVerification),
                 includeProperties: "CardType"
                 ))
                 .FirstOrDefault();
-            if (qrCard == null)
+            if (card == null)
             {
-                return Result.Failure<CheckInRes>(Error.NotFoundCard);
+                return Result.Failure<ValidCheckinRes>(Error.NotFoundCard);
+            }
+            if (card.CardStatus == CardStatusEnum.Inactive.ToString())
+            {
+                return Result.Failure<ValidCheckinRes>(Error.CardInActive);
+            }
+            if (card.CardStatus == CardStatusEnum.Lost.ToString())
+            {
+                return Result.Failure<ValidCheckinRes>(Error.CardLost);
             }
 
 
             // Check valid CredentialCard and Card 
             var visitCard = (await _visitCardRepo.FindAsync(
-                s => (s.CardId == qrCard.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
+                s => (s.CardId == card.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
                 && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
-            if (visitCard != null && visitCard.CardId != qrCard.CardId)
+            if (visitCard != null && visitCard.CardId != card.CardId)
             {
-                return Result.Failure<CheckInRes>(Error.DuplicateCard);
+                return Result.Failure<ValidCheckinRes>(Error.DuplicateCard);
             }
             if (visitCard != null && visitCard.VisitDetailId != validVisitDetail.VisitDetailId)
             {
-                return Result.Failure<CheckInRes>(Error.DuplicateVisitDetail);
+                return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
             }
 
             // Check session don't have check-in
@@ -96,7 +104,7 @@ namespace SecurityGateApv.Application.Services
             )).FirstOrDefault();
             if (visitSession != null)
             {
-                return Result.Failure<CheckInRes>(Error.ValidSession);
+                return Result.Failure<ValidCheckinRes>(Error.ValidSession);
             }
 
             // Add Detect shoe
@@ -106,22 +114,22 @@ namespace SecurityGateApv.Application.Services
                 var shoeImage = command.Images.FirstOrDefault(s => s.ImageType == "Shoe");
                 if (shoeImage == null)
                 {
-                    return Result.Failure<CheckInRes>(Error.NotShoe);
+                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
 
                 detectShoeResult = await _qrCodeService.DetectShoe(shoeImage.Image);
                 if (!detectShoeResult.Value.Label.Equals("Shoe"))
                 {
-                    return Result.Failure<CheckInRes>(Error.NotShoe);
+                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
                 if (detectShoeResult.IsFailure)
                 {
-                    return Result.Failure<CheckInRes>(detectShoeResult.Error);
+                    return Result.Failure<ValidCheckinRes>(detectShoeResult.Error);
                 }
             }
             catch
             {
-                return Result.Failure<CheckInRes>(Error.DetectionExeption);
+                return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
 
             //var result = _mapper.Map<CheckInRes>(validVisitDetail);
@@ -131,20 +139,20 @@ namespace SecurityGateApv.Application.Services
             if (visitCard == null)
             {
                 if ((validVisitDetail.Visit.ScheduleUser == null
-                    && qrCard.CardType.CardTypeName == CardTypeEnum.ShotTermCard.ToString()))
+                    && card.CardType.CardTypeName == CardTypeEnum.ShotTermCard.ToString()))
                 {
-                    visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, qrCard.CardId);
+                    visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, card.CardId);
                 }
-                else if (qrCard.CardType.CardTypeName == CardTypeEnum.LongTermCard.ToString()
+                else if (card.CardType.CardTypeName == CardTypeEnum.LongTermCard.ToString()
                     && validVisitDetail.Visit.ScheduleUser != null
                     )
                 {
-                    visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, qrCard.CardId);
+                    visitCard = VisitCard.Create(DateTime.Now, validVisitDetail.Visit.ExpectedEndTime, "Issue", validVisitDetail.VisitDetailId, card.CardId);
                 }
                 else
                 {
-                    var error = Error.ScheduleAndCardTypeMismatch(validVisitDetail.Visit.ScheduleUser == null ? "Visit Daily" : validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName, qrCard.CardType.CardTypeName);
-                    return Result.Failure<CheckInRes>(error);
+                    var error = Error.ScheduleAndCardTypeMismatch(validVisitDetail.Visit.ScheduleUser == null ? "Visit Daily" : validVisitDetail.Visit.ScheduleUser.Schedule.ScheduleType.ScheduleTypeName, card.CardType.CardTypeName);
+                    return Result.Failure<ValidCheckinRes>(error);
                 }
                 await _visitCardRepo.AddAsync(visitCard);
             }
@@ -153,7 +161,7 @@ namespace SecurityGateApv.Application.Services
             var checkinSession = VisitorSession.Checkin(validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
             if (checkinSession.IsFailure)
             {
-                return Result.Failure<CheckInRes>(checkinSession.Error);
+                return Result.Failure<ValidCheckinRes>(checkinSession.Error);
             }
             var session = checkinSession.Value;
 
@@ -161,33 +169,37 @@ namespace SecurityGateApv.Application.Services
             {
                 session.AddVisitorImage(item.ImageType, item.ImageURL);
             }
-            var result = new CheckInRes()
-            {
-                VisitDetailId = validVisitDetail.VisitDetailId,
-                SecurityInId = command.SecurityInId,
-                GateInId = command.GateInId,
-                Card = _mapper.Map<GetCardRes>(qrCard),
-                SessionsImageRes = _mapper.Map<SessionsRes>(checkinSession.Value),
-                DetectShoeRes = detectShoeResult.Value,
-            };
+            var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
+            result.CardRes = _mapper.Map<CardRes>(card);
+            result.DetectShoeRes = detectShoeResult.Value;
+            result.Sessions = _mapper.Map<SessionsRes>(checkinSession.Value);
+            //var result = new CheckInRes()
+            //{
+            //    VisitDetailId = validVisitDetail.VisitDetailId,
+            //    SecurityInId = command.SecurityInId,
+            //    GateInId = command.GateInId,
+            //    Card = _mapper.Map<GetCardRes>(qrCard),
+            //    SessionsImageRes = _mapper.Map<SessionsRes>(checkinSession.Value),
+            //    DetectShoeRes = detectShoeResult.Value,
+            //};
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             if (!await _unitOfWork.CommitAsync())
             {
-                return Result.Failure<CheckInRes>(Error.CheckInFail);
+                return Result.Failure<ValidCheckinRes>(Error.CheckInFail);
             };
 
 
             return result;
         }
 
-        public async Task<Result<CheckInRes>> CheckInWithoutCredentialCard(VisitSessionCheckInCommand command)
+        public async Task<Result<ValidCheckinRes>> CheckInWithoutCredentialCard(VisitSessionCheckInCommand command)
         {
             var card = (await _cardRepo.FindAsync(
                     s => s.CardVerification == command.QRCardVerification && s.CardStatus.Equals(CardStatusEnum.Active.ToString())
                 )).FirstOrDefault();
             if (card == null)
             {
-                return Result.Failure<CheckInRes>(Error.NotFoundCard);
+                return Result.Failure<ValidCheckinRes>(Error.NotFoundCard);
             }
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.CardId == card.CardId
@@ -196,19 +208,19 @@ namespace SecurityGateApv.Application.Services
                 )).FirstOrDefault();
             if (visitCard == null)
             {
-                return Result.Failure<CheckInRes>(Error.NotFoundVisitCard);
+                return Result.Failure<ValidCheckinRes>(Error.NotFoundVisitCard);
             }
 
             var visitDetails = await _visitDetailRepo.FindAsync(
                    s => s.VisitDetailId == visitCard.VisitDetailId
-                   /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
-                   /*&& s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date*/,
+                   && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
+                   && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
                    int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
             {
-                return Result.Failure<CheckInRes>(Error.NotFoundVisitByCredentialCard);
+                return Result.Failure<ValidCheckinRes>(Error.NotFoundVisitByCredentialCard);
             }
 
             //Check session don't have checkin
@@ -218,7 +230,7 @@ namespace SecurityGateApv.Application.Services
               )).FirstOrDefault();
             if (visitSesson != null)
             {
-                return Result.Failure<CheckInRes>(Error.ValidSession);
+                return Result.Failure<ValidCheckinRes>(Error.ValidSession);
             }
 
             // Add Detect shoe
@@ -228,22 +240,22 @@ namespace SecurityGateApv.Application.Services
                 var shoeImage = command.Images.FirstOrDefault(s => s.ImageType == "Shoe");
                 if (shoeImage == null)
                 {
-                    return Result.Failure<CheckInRes>(Error.NotShoe);
+                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
 
                 detectShoeResult = await _qrCodeService.DetectShoe(shoeImage.Image);
                 if (!detectShoeResult.Value.Label.Equals("Shoe"))
                 {
-                    return Result.Failure<CheckInRes>(Error.NotShoe);
+                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
                 if (detectShoeResult.IsFailure)
                 {
-                    return Result.Failure<CheckInRes>(detectShoeResult.Error);
+                    return Result.Failure<ValidCheckinRes>(detectShoeResult.Error);
                 }
             }
             catch
             {
-                return Result.Failure<CheckInRes>(Error.DetectionExeption);
+                return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
 
 
@@ -251,7 +263,7 @@ namespace SecurityGateApv.Application.Services
             var checkinSession = VisitorSession.Checkin(validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
             if (checkinSession.IsFailure)
             {
-                return Result.Failure<CheckInRes>(checkinSession.Error);
+                return Result.Failure<ValidCheckinRes>(checkinSession.Error);
             }
             var session = checkinSession.Value;
 
@@ -259,19 +271,24 @@ namespace SecurityGateApv.Application.Services
             {
                 session.AddVisitorImage(item.ImageType, item.ImageURL);
             }
-            var result = new CheckInRes()
-            {
-                VisitDetailId = validVisitDetail.VisitDetailId,
-                SecurityInId = command.SecurityInId,
-                GateInId = command.GateInId,
-                Card = _mapper.Map<GetCardRes>(card),
-                SessionsImageRes = _mapper.Map<SessionsRes>(checkinSession.Value),
-                DetectShoeRes = detectShoeResult.Value,
-            };
+
+            var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
+            result.CardRes = _mapper.Map<CardRes>(card);
+            result.DetectShoeRes = detectShoeResult.Value;
+            result.Sessions = _mapper.Map<SessionsRes>(checkinSession.Value);
+            //var result = new CheckInRes()
+            //{
+            //    VisitDetailId = validVisitDetail.VisitDetailId,
+            //    SecurityInId = command.SecurityInId,
+            //    GateInId = command.GateInId,
+            //    Card = _mapper.Map<GetCardRes>(card),
+            //    SessionsImageRes = _mapper.Map<SessionsRes>(checkinSession.Value),
+            //    DetectShoeRes = detectShoeResult.Value,
+            //};
             await _visitorSessionRepo.AddAsync(checkinSession.Value);
             if (!await _unitOfWork.CommitAsync())
             {
-                return Result.Failure<CheckInRes>(Error.CheckInFail);
+                return Result.Failure<ValidCheckinRes>(Error.CheckInFail);
             };
 
 

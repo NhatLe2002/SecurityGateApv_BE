@@ -17,6 +17,8 @@ namespace SecurityGateApv.Application.DTOs.Res
         public VisitRes Visit { get; set; }
         public CardRes CardRes { get; set; }
         public AWSDomainDTO DetectShoeRes { get; set; }
+        public SessionsRes Sessions { get; set; }
+
 
     }
     public class CardRes

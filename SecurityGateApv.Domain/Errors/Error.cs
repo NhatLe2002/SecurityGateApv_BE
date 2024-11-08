@@ -73,13 +73,14 @@ namespace SecurityGateApv.Domain.Errors
 
         #region CardError
         //Card error
-        public static readonly Error NotFoundCard = new("Error.NotfoundCard", "Not found this Card");
+        public static readonly Error NotFoundCard = new("Error.NotfoundCard", "Không tìm được thẻ trong hệ thống.");
         public static readonly Error NotFoundCardByCardVerification = new("Error.NotfoundCard", "Không tìm được thẻ theo QR đã nhận.");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
-        public static readonly Error CardInActive = new("Error.CardStatus", "Card is inactive cannot accept");
+        public static readonly Error CardInActive = new("Error.CardStatus", "Card không còn hoạt đọng không thể sử dụng.");
+        public static readonly Error CardLost = new("Error.CardStatus", "Card mất không thể sử dụng.");
         //DuplicateQRCard
-        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "This card is currently in use, no more visits can be added to this card.");
-        public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "This visit already has a card, cannot add more card to the same visit");
+        public static readonly Error DuplicateCard = new("Error.DuplicateCard", "Card đang được sử dụng cho 1 lịch hẹn, không sử dụng card cho 2 lịch hẹn.");
+        public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "Lịch hẹn này đã được tạo card, không thể tạo 2 thẻ cho 1 lịch hẹn.");
         #endregion
 
         #region VisitCardError
@@ -98,7 +99,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NotFoundVisitSesson = new("Error.NotFoundVisitSesson", "Not found this VisitorSession");
         public static readonly Error CardNotCheckIn = new("Error.CardNotCheckIn", "Card does not checked t");
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
-        public static readonly Error ValidSession = new("Error.ValidSession", "Session check in can't check in duplicate");
+        public static readonly Error ValidSession = new("Error.ValidSession", "Bạn đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
         #endregion
 
@@ -167,8 +168,8 @@ namespace SecurityGateApv.Domain.Errors
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
-        public static readonly Error NotShoe = new("Error.DetectionError", "The detection result is not a shoe");
-        public static readonly Error DetectionExeption = new("Error.DetectionExeption", "Valid in process detect shoe");
+        public static readonly Error NotShoe = new("Error.DetectionError", "Cần đưa đúng loại ảnh giày (type:shoe).");
+        public static readonly Error DetectionExeption = new("Error.DetectionExeption", "Lỗi trong quá trình detect giày.");
         //Not found shoe 
         public static readonly Error NotFoundShoeTypeImage = new("Error.NotFoundShoe", "Not found shoe type image");
 
@@ -176,9 +177,9 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error CardFoundError = new("Error.CardFoundError", "Card not found");
 
         //Checkin fail
-        public static readonly Error CheckInFail = new("Error.CheckInFail", "Check in fail");
+        public static readonly Error CheckInFail = new("Error.CheckInFail", "Lỗi trong quá trình lưu trữ dữ liệu checkin.");
         //Not found visit by credential card
-        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Not found visit by credential card");
+        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
         public static Error ScheduleAndCardTypeMismatch(string scheduleType, string cardType)
         {
             return new Error("Error.ScheduleAndCardTypeMismatch", $"Schedule type '{scheduleType}' and card type '{cardType}' do not match.");
