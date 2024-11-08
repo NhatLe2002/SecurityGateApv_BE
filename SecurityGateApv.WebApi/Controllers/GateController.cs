@@ -36,9 +36,8 @@ namespace SecurityGateApv.WebApi.Controllers
         } 
         
         [HttpGet("TestTime")]
-        public async Task<ActionResult> TestTime()
+        public ActionResult TestTime()
         {
-           
             return Ok(DateTime.Now);
         }
     }

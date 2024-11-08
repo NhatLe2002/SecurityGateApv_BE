@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityGateApv.Domain.Interfaces.DomainDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace SecurityGateApv.Application.DTOs.Res
         public VisitorRes Visitor { get; set; }
         public VisitRes Visit { get; set; }
         public CardRes CardRes { get; set; }
+        public AWSDomainDTO DetectShoeRes { get; set; }
+
     }
     public class CardRes
     {
