@@ -5,7 +5,6 @@ USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-RUN apt-get update && apt-get install --no-install-recommends -y tzdata
 ENV TZ="Asia/Ho_Chi_Minh"
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
