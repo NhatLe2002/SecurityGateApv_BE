@@ -91,7 +91,7 @@ namespace SecurityGateApv.Infras.Data
                     "Staff One",
                     "Staff1@egmail.com",
                     "0223334445",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE4g-3ZH_1TjfN-zOuCRru2LrfrGtPbwaCsQ&s",
                     new DateTime(2024, 09, 29),
                  new DateTime(2024, 09, 29),
                     "Active",
@@ -116,10 +116,10 @@ namespace SecurityGateApv.Infras.Data
                     6,
                     "Security1",
                     "123",
-                    "Security One",
-                    "it1@example.com",
-                    "0334445556",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
+                    "Quốc Cường",
+                    "cuong3right@gmail.com",
+                    "0355004120",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu0qRJBJeHYTEukW7kTEAW8UMznPMxnuIziw&s",
                     new DateTime(2024, 09, 29),
                  new DateTime(2024, 09, 29),
                     "Active",
@@ -174,9 +174,9 @@ namespace SecurityGateApv.Infras.Data
             //var randomDepartments = departmentFaker.Generate(10);
 
             var departmentList = new List<Department>();
-                departmentList.Add(Department.Create(1, "AdminDepartment", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho admin", 1, "Active").Value);
-                departmentList.Add(Department.Create(2, "ManagerDepartment", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản lý", 1, "Active").Value);
-                departmentList.Add(Department.Create(3, "SecurityDepartment", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản security", 1, "Active").Value);
+                departmentList.Add(Department.Create(1, "Admin", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho admin", 1, "Active").Value);
+                departmentList.Add(Department.Create(2, "Manager", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản lý", 1, "Active").Value);
+                departmentList.Add(Department.Create(3, "Security", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản security", 1, "Active").Value);
                 departmentList.Add(Department.Create(4, "Phòng Nhân sự", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng nhân sự", 1, "Active").Value);
                 departmentList.Add(Department.Create(5, "Phòng Sản xuất", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng Sản xuất", 1, "Active").Value);
             

@@ -236,7 +236,7 @@ namespace SecurityGateApv.Application.Services
                 || user.RoleId == (int)UserRoleEnum.Manager
                 || user.RoleId == (int)UserRoleEnum.Security)
             {
-                if (command.DepartmentId != null)
+                if (command.DepartmentId != null && command.DepartmentId != user.DepartmentId)
                 {
                     return Result.Failure<UpdateUserCommand>(Error.CanNotUpdateDepartment);
                 }

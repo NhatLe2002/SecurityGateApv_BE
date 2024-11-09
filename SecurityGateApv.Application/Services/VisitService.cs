@@ -13,6 +13,7 @@ using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitRepo _visitRepo;
         private readonly IVisitorRepo _visitorRepo;
         private readonly IVisitDetailRepo _visitDetailRepo;
+        private readonly IVisitorSessionRepo _visitorSessionRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScheduleTypeRepo _visitTypeRepo;
@@ -34,7 +36,7 @@ namespace SecurityGateApv.Application.Services
         private readonly IJwt _jwt;
 
         public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IScheduleTypeRepo visitTypeRepo,
-            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, IJwt jwt)
+            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, IJwt jwt, IVisitorSessionRepo visitorSessionRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -48,6 +50,7 @@ namespace SecurityGateApv.Application.Services
             _scheduleRepo = scheduleRepo;
             _scheduleUserRepo = scheduleUserRepo;
             _jwt = jwt;
+            _visitorSessionRepo = visitorSessionRepo;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token)
@@ -156,12 +159,33 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
         {
-            var visit = await _visitRepo.FindAsync(s => true, pageSize, pageNumber, s => s.OrderBy(x => x.CreateTime), includeProperties: "CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule.ScheduleType");
-            if (visit.Count() == 0)
+            var visits = await _visitRepo.FindAsync(
+                    s => true,
+                    pageSize,
+                    pageNumber,
+                    s => s.OrderBy(x => x.CreateTime),
+                    includeProperties: "CreateBy,UpdateBy,ResponsiblePerson,ScheduleUser,ScheduleUser.Schedule.ScheduleType,VisitDetail"
+                );
+
+            if (!visits.Any())
             {
                 return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
             }
-            var res = _mapper.Map<List<GetVisitNoDetailRes>>(visit);
+
+            
+
+            var res = _mapper.Map<List<GetVisitNoDetailRes>>(visits);
+            foreach (var visit in res)
+            {
+                var visitEntity = visits.FirstOrDefault(v => v.VisitId == visit.VisitId);
+                if (visitEntity != null && visitEntity.VisitDetail != null)
+                {
+                    visit.VisitorSessionCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession != null)
+                        .Sum(detail => detail.VisitorSession.Count);
+                }
+            }
+
             return res;
         }
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisitGraphQl(int pageSize, int pageNumber, string token)
@@ -171,8 +195,8 @@ namespace SecurityGateApv.Application.Services
 
             if (userAuthor.Role == UserRoleEnum.Admin.ToString() || userAuthor.Role == UserRoleEnum.Manager.ToString())
             {
-                visit = (await _visitRepo.FindAsync(s => true, 
-                    pageSize, pageNumber, s => s.OrderBy(x => x.CreateTime), 
+                visit = (await _visitRepo.FindAsync(s => true,
+                    pageSize, pageNumber, s => s.OrderBy(x => x.CreateTime),
                     includeProperties: "CreateBy,UpdateBy,ScheduleUser,ScheduleUser.Schedule.ScheduleType")).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
@@ -242,7 +266,7 @@ namespace SecurityGateApv.Application.Services
             var visit = await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
-                    && s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()),
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
                     pageSize, pageNumber, includeProperties: "ScheduleUser,ScheduleUser.Schedule,ScheduleUser.Schedule.ScheduleType,CreateBy"
                 );
 
@@ -757,6 +781,6 @@ namespace SecurityGateApv.Application.Services
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
 
-       
+
     }
 }

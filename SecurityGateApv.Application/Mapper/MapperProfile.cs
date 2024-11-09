@@ -18,6 +18,7 @@ namespace SecurityGateApv.Application.Mapper
         {
             #region User
             CreateMap<User, CreateByRes>().ReverseMap();
+            CreateMap<User, SenderRes>().ReverseMap();
             CreateMap<User, GetUserRes>().ReverseMap();
             CreateMap<SecurityRes, User>().ReverseMap();
             CreateMap<UserGetScheduleUserRes, User>().ReverseMap();
