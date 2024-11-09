@@ -160,21 +160,20 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber)
         {
             var visits = await _visitRepo.FindAsync(
-                    s => true,
-                    pageSize,
-                    pageNumber,
-                    s => s.OrderBy(x => x.CreateTime),
-                    includeProperties: "CreateBy,UpdateBy,ResponsiblePerson,ScheduleUser,ScheduleUser.Schedule.ScheduleType,VisitDetail"
-                );
+                       s => true,
+                       pageSize,
+                       pageNumber,
+                       s => s.OrderBy(x => x.CreateTime),
+                       includeProperties: "CreateBy,UpdateBy,ResponsiblePerson,ScheduleUser,ScheduleUser.Schedule.ScheduleType,VisitDetail.VisitorSession"
+                   );
 
             if (!visits.Any())
             {
                 return Result.Failure<List<GetVisitNoDetailRes>>(Error.NotFoundVisit);
             }
 
-            
-
             var res = _mapper.Map<List<GetVisitNoDetailRes>>(visits);
+
             foreach (var visit in res)
             {
                 var visitEntity = visits.FirstOrDefault(v => v.VisitId == visit.VisitId);
@@ -185,6 +184,7 @@ namespace SecurityGateApv.Application.Services
                         .Sum(detail => detail.VisitorSession.Count);
                 }
             }
+
 
             return res;
         }
