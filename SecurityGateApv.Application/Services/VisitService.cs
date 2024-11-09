@@ -184,7 +184,7 @@ namespace SecurityGateApv.Application.Services
                         .Sum(detail => detail.VisitorSession.Count);
                 }
             }
-
+             
 
             return res;
         }
