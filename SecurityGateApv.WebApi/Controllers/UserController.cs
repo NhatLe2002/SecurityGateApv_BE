@@ -59,6 +59,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("Staff/{phonenumber}")]
+        public async Task<ActionResult> GetStaffByPhone(string phonenumber)
+        {
+            var result = await _userService.GetStaffByPhone(phonenumber);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("Staff/DepartmentManager/{departmentManagerId}")]
         public async Task<ActionResult> GetAllStaffPagingByDepartmentManagerId(int pageNumber, int pageSize, int departmentManagerId)
         {

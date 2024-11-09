@@ -86,7 +86,9 @@ namespace SecurityGateApv.Application.Services
             if (pageNumber == -1 || pageSize == -1)
             {
                 schedule = await _scheduleRepo.FindAsync(
-                s => true, int.MaxValue, 1, includeProperties: "ScheduleType,CreateBy"
+                s => true, int.MaxValue, 1, 
+                s => s.OrderByDescending(x => x.CreateTime),
+                includeProperties: "ScheduleType,CreateBy"
                 );
             }
             else

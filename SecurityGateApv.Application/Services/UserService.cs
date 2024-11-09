@@ -306,6 +306,15 @@ namespace SecurityGateApv.Application.Services
             }
             return _mapper.Map<GetUserRes>(user);
         }
+        public async Task<Result<GetUserRes>> GetStaffByPhone(string phonnumber)
+        {
+            var user = (await _userRepo.FindAsync(s => s.PhoneNumber == phonnumber, includeProperties: "Role,Department")).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<GetUserRes>(Error.NotFoundUser);
+            }
+            return _mapper.Map<GetUserRes>(user);
+        }
 
         public async Task<Result<bool>> UpdateUserPassword(int userId, UpdateUserPasswordCommand command)
         {
@@ -349,5 +358,7 @@ namespace SecurityGateApv.Application.Services
             await _unitOfWork.CommitAsync();
             return command;
         }
+
+       
     }
 }
