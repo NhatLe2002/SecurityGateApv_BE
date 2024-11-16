@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241116052412_AddnotiType")]
+    partial class AddnotiType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,14 +266,12 @@ namespace SecurityGateApv.Infras.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationID"));
 
                     b.Property<string>("Action")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NotificationTypeId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ReadDate")
                         .HasColumnType("datetime2");
@@ -285,9 +286,12 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("NotificationID");
 
-                    b.HasIndex("NotificationTypeId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Notifications");
                 });
@@ -311,20 +315,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NotificationTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Action For Visit",
-                            Name = "Visit"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Action For Schedule User",
-                            Name = "ScheduleUser"
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationUsers", b =>
@@ -1048,13 +1038,13 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Notification", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.NotificationType", "NotificationType")
+                    b.HasOne("SecurityGateApv.Domain.Models.NotificationType", "Type")
                         .WithMany("notifications")
-                        .HasForeignKey("NotificationTypeId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("NotificationType");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationUsers", b =>
