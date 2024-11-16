@@ -587,6 +587,48 @@ namespace SecurityGateApv.Application.Services
             //var check = _mapper.Map<List<GraphQlVisitorRes>>(visitSession.Select(s => s.VisitDetail.Visitor));
             return result.ToList();
         }
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetVisitorSessionByDate(int pageNumber, int pageSize,DateTime date, string token)
+        {
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
+            var visitSession = new List<VisitorSession>();
+            if (userAuthor.Role == "Admin" || userAuthor.Role == "Manager")
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.CheckinTime.Date == DateTime.Now.Date,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+            if (userAuthor.Role == "Department")
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                         && s.CheckinTime.Date == DateTime.Now.Date,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+            if (userAuthor.Role == "Staff")
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId
+                         /*&& s.CheckinTime.Date == DateTime.Now.Date*/,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                     )).ToList();
+            }
+
+            if (visitSession.Count() == 0)
+            {
+                return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
+            }
+            var result = _mapper.Map<IEnumerable<GetVisitorSessionRes>>(visitSession);
+            return result.ToList();
+        }
+
         public async Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize, string token)
         {
             var userAuthor = _jwt.DecodeAuthorJwt(token);

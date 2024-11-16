@@ -76,6 +76,11 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string? Description { get; set; }
         public string CreateByname { get; set; }
         public string ScheduleTypeName { get; set; }
+        public int VisitorSessionCheckedOutCount { get; set; }
+        public int VisitorSessionCheckedInCount { get; set; }
+        public int VisitorCheckOutedCount { get; set; }
+        public TimeSpan? VisitDetailStartTime { get; set; }
+        public TimeSpan? VisitDetailEndTime { get; set; }
 
     }
 

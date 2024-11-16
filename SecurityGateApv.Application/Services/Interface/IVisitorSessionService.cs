@@ -19,6 +19,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<ValidCheckinRes>> ValidCheckWithCredentialCardIn(ValidCheckInCommand command);
         public Task<Result<ValidCheckinRes>> ValidCheckWithoutCredentialCardIn(ValidCheckInCommand command);
         public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSession(int pageNumber, int pageSize, string token);
+        public Task<Result<ICollection<GetVisitorSessionRes>>> GetVisitorSessionByDate(int pageNumber, int pageSize, DateTime date,string token);
         public Task<Result<ICollection<GetVisitorSessionGraphQLRes>>> GetAllVisitorSessionGraphQL(int pageNumber, int pageSize, string token);
         public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitorId(int pageNumber, int pageSize, int VisitorId);
         public Task<Result<ICollection<GetVisitorSessionRes>>> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId);

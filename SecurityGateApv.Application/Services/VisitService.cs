@@ -269,20 +269,20 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date)
         {
-            var visit = await _visitRepo.FindAsync(
+            var visits = await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
                     && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
-                    pageSize, pageNumber, includeProperties: "ScheduleUser,ScheduleUser.Schedule,ScheduleUser.Schedule.ScheduleType,CreateBy"
+                    pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
                 );
 
-            if (visit.Count() == 0)
+            if (visits.Count() == 0)
             {
                 return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisitCurrentDate);
             }
 
             var visitResult = new List<Visit>();
-            foreach (var item in visit)
+            foreach (var item in visits)
             {
                 if (IsValidVisit(item, date))
                 {
@@ -290,13 +290,34 @@ namespace SecurityGateApv.Application.Services
                 }
             }
 
-            if (visitResult.Count == 0)
+            if (!visitResult.Any())
             {
                 return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisit);
             }
 
             var result = _mapper.Map<List<GetVisitByDateRes>>(visitResult);
+            foreach (var visit in result)
+            {
+                var visitEntity = visitResult.FirstOrDefault(v => v.VisitId == visit.VisitId);
+                if (visitEntity != null && visitEntity.VisitDetail != null)
+                {
+                    visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0)
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckOut.ToString()));
+                    visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0)
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckIn.ToString()));
+                    visit.VisitorCheckOutedCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0)
+                        .Count();
 
+                    visit.VisitDetailStartTime = visitEntity.VisitDetail
+                        .Min(detail => (TimeSpan?)detail.ExpectedStartHour);
+
+                    visit.VisitDetailEndTime = visitEntity.VisitDetail
+                        .Max(detail => (TimeSpan?)detail.ExpectedEndHour);
+                }
+            }
             return result;
         }
 
