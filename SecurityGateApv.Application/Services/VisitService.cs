@@ -318,7 +318,7 @@ namespace SecurityGateApv.Application.Services
                         .Max(detail => (TimeSpan?)detail.ExpectedEndHour);
                 }
             }
-            return result;
+            return result; 
         }
 
 
