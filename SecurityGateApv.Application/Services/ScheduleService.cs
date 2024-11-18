@@ -219,7 +219,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetScheduleRes>>> GetScheduleByDepartmentManagerId(int departmentManagerId, int pageNumber, int pageSize)
         {
             var schedule = (await _scheduleRepo.FindAsync(
-                s => s.CreateById == departmentManagerId,pageSize,pageNumber, includeProperties: "ScheduleType,CreateBy,ScheduleUser"
+                s => s.CreateById == departmentManagerId,pageSize,pageNumber, s => s.OrderByDescending(x => x.CreateTime) ,includeProperties: "ScheduleType,CreateBy,ScheduleUser"
                 ));
             if (schedule == null)
             {
