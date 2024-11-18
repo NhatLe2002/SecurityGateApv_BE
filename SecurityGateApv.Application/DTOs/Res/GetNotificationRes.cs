@@ -25,6 +25,13 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string Content { get; set; }
         public DateTime SentDate { get; set; }
         public DateTime? ReadDate { get; set; }
+        public string? Action { get; set; }
         public bool Status { get; set; }
+        public NotificationTypeRes NotificationType { get; set; }
+    }
+    public class NotificationTypeRes
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

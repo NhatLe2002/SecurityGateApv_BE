@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241116053234_AddnotiType6")]
+    partial class AddnotiType6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,20 +314,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NotificationTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Action For Visit",
-                            Name = "Visit"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Action For Schedule User",
-                            Name = "ScheduleUser"
-                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationUsers", b =>

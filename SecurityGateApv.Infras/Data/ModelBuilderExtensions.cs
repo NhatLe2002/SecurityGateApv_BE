@@ -28,6 +28,7 @@ namespace SecurityGateApv.Infras.Data
             //SeedVisitDetails(modelBuilder);
             SeedQRCards(modelBuilder);
             SeedGate(modelBuilder);
+            SeedNotiTypes(modelBuilder);
             //SeedVisitorSession(modelBuilder);
 
         }
@@ -40,6 +41,13 @@ namespace SecurityGateApv.Infras.Data
                 new Role { RoleId = 3, RoleName = "DepartmentManager", Description = "Quản lý toàn bộ phòng ban" },
                 new Role { RoleId = 4, RoleName = "Staff", Description = "Tạo và quản lý khách ra vào của phòng ban" },
                 new Role { RoleId = 5, RoleName = "Security", Description = "Quản lý khách ra vào tại cổng" }
+            );
+        }
+        private static void SeedNotiTypes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<NotificationType>().HasData(
+                new NotificationType {Id =1, Name = "Visit", Description = "Action For Visit"},
+                new NotificationType { Id=2, Name = "ScheduleUser", Description = "Action For Schedule User" }
             );
         }
 
