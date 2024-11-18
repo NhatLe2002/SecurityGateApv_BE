@@ -24,6 +24,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<CredentialCardType> CredentialCardTypes { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Gate> Gates { get; set; }
+        public DbSet<NotificationType> NotificationTypes { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationUsers> NotificationUsers { get; set; }
         public DbSet<PrivateKeyService> PrivateKeyServices { get; set; }
@@ -42,6 +43,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
         public DbSet<ScheduleType> ScheduleTypes { get; set; }
         public DbSet<ScheduleUser> ScheduleUsers { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

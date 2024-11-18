@@ -71,11 +71,16 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleSaveError);
             }
             await _scheduleUserRepo.AddAsync(scheduleUser.Value);
-            var noti = Notification.Create(command.Title, command.Description, DateTime.Now, null);
-            noti.Value.AddUserNoti(schedule.CreateById, command.AssignToId);
-            await _notificationRepo.AddAsync(noti.Value);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
+            {
+                return Result.Failure<CreateScheduleUserCommand>(Error.CommitError);
+            }
+            var noti = Notification.Create(command.Title, command.Description, scheduleUser.Value.Id.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.ScheduleUser);
+            noti.Value.AddUserNoti(schedule.CreateById, command.AssignToId);
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
             {
                 return Result.Failure<CreateScheduleUserCommand>(Error.CommitError);
             }

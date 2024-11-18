@@ -8,6 +8,7 @@ using SecurityGateApv.Domain.Common;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Jwt;
+using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
@@ -33,10 +34,12 @@ namespace SecurityGateApv.Application.Services
         private readonly IUserRepo _userRepo;
         private readonly IScheduleRepo _scheduleRepo;
         private readonly IScheduleUserRepo _scheduleUserRepo;
+        private readonly INotifications _notifications;
         private readonly IJwt _jwt;
 
         public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IScheduleTypeRepo visitTypeRepo,
-            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, IJwt jwt, IVisitorSessionRepo visitorSessionRepo)
+            IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo,
+            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -50,7 +53,7 @@ namespace SecurityGateApv.Application.Services
             _scheduleRepo = scheduleRepo;
             _scheduleUserRepo = scheduleUserRepo;
             _jwt = jwt;
-            _visitorSessionRepo = visitorSessionRepo;
+            _notifications = notifications;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token)
@@ -130,7 +133,11 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<VisitCreateCommandDaily>(createVisit.Error);
             }
-            var visit = createVisit.Value;
+            if(role == UserRoleEnum.Security.ToString())
+            {
+                await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.ResponsiblePersonId, 1);
+            }
+                var visit = createVisit.Value;
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.Visit.VisitStatus != VisitStatusEnum.Cancelled.ToString()

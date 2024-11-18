@@ -204,7 +204,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<CreateScheduleUserCommand>(Error.ScheduleSaveError);
             }
             await _scheduleUserRepo.AddAsync(scheduleUser.Value);
-            var noti = Notification.Create(command.Title, command.Description, DateTime.Now, null);
+            var noti = Notification.Create(command.Title, command.Description, scheduleUser.Value.Id.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.ScheduleUser);
             noti.Value.AddUserNoti(schedule.CreateById, command.AssignToId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit = await _unitOfWork.CommitAsync();
