@@ -133,11 +133,11 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<VisitCreateCommandDaily>(createVisit.Error);
             }
-            if(role == UserRoleEnum.Security.ToString())
+            if (role == UserRoleEnum.Security.ToString())
             {
                 await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.ResponsiblePersonId, 1);
             }
-                var visit = createVisit.Value;
+            var visit = createVisit.Value;
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.Visit.VisitStatus != VisitStatusEnum.Cancelled.ToString()
@@ -191,7 +191,7 @@ namespace SecurityGateApv.Application.Services
                         .Sum(detail => detail.VisitorSession.Count);
                 }
             }
-             
+
 
             return res;
         }
@@ -309,13 +309,13 @@ namespace SecurityGateApv.Application.Services
                 if (visitEntity != null && visitEntity.VisitDetail != null)
                 {
                     visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0)
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckOut.ToString()));
                     visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0)
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckIn.ToString()));
                     visit.VisitorCheckOutedCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0)
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Count();
 
                     visit.VisitDetailStartTime = visitEntity.VisitDetail
@@ -323,9 +323,21 @@ namespace SecurityGateApv.Application.Services
 
                     visit.VisitDetailEndTime = visitEntity.VisitDetail
                         .Max(detail => (TimeSpan?)detail.ExpectedEndHour);
+
+                    visit.VisitorNoSessionCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count == 0)
+                        .Count();
+                    visit.VisitorCheckkInCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckIn.ToString()));
+                    visit.VisitorCheckkOutCount += visitEntity.VisitDetail
+                        .SelectMany(detail => detail.VisitorSession)
+                        .Where(session => session.Status == VisitorSessionStatus.CheckOut.ToString())
+                        .OrderByDescending(session => session.CheckoutTime)
+                        .FirstOrDefault() != null ? 1 : 0;
                 }
             }
-            return result; 
+            return result;
         }
 
 
@@ -343,7 +355,7 @@ namespace SecurityGateApv.Application.Services
                         s => s.VisitId == visitId,
                         int.MaxValue, 1,
                         orderBy: s => s.OrderBy(s => s.VisitDetailId),
-                        includeProperties: "Visitor"
+                        includeProperties: "Visitor,VisitorSession"
                     );
             }
             else
@@ -352,7 +364,7 @@ namespace SecurityGateApv.Application.Services
                         s => s.VisitId == visitId,
                         pageSize, pageNumber,
                         orderBy: s => s.OrderBy(s => s.VisitDetailId),
-                        includeProperties: "Visitor"
+                        includeProperties: "Visitor,VisitorSession"
                     );
             }
 
@@ -373,6 +385,32 @@ namespace SecurityGateApv.Application.Services
             }
 
             var visitRes = _mapper.Map<List<GetVisitDetailRes>>(visitDetail);
+            foreach (var item in visitDetail)
+            {
+                var correspondingVisitRes = visitRes.FirstOrDefault(v => v.VisitDetailId == item.VisitDetailId);
+
+                if (item.VisitorSession.Count() == 0)
+                {
+                    if (correspondingVisitRes != null)
+                    {
+                        correspondingVisitRes.SessionStatus = "NoSession";
+                    }
+                }
+                else if(item.VisitorSession.Count() != 0 && item.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                {
+                    if (correspondingVisitRes != null)
+                    {
+                        correspondingVisitRes.SessionStatus = VisitorSessionStatus.CheckIn.ToString();
+                    }
+                }
+                else
+                {
+                    if (correspondingVisitRes != null)
+                    {
+                        correspondingVisitRes.SessionStatus = VisitorSessionStatus.CheckOut.ToString();
+                    }
+                }
+            }
             return visitRes;
         }
 

@@ -639,7 +639,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == "Department")
@@ -648,7 +648,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == "Staff")
@@ -657,7 +657,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visitor"
                      )).ToList();
             }
 

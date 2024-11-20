@@ -14,7 +14,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime CheckinTime { get;  set; }
         public DateTime? CheckoutTime { get;  set; }
         public int QRCardId { get;  set; }
-        public int VisitDetailId { get;  set; }
+        public GetVisitDetailRes VisitDetail { get;  set; }
         public SecurityRes SecurityIn { get;  set; }
         public SecurityRes? SecurityOut { get;  set; }
         public GateRes GateIn { get;  set; }
