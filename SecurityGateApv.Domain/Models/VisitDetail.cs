@@ -27,9 +27,9 @@ namespace SecurityGateApv.Domain.Models
 
         [Key]
         public int VisitDetailId { get; private set; }
-        public TimeSpan ExpectedStartHour { get; private set; }
-        public TimeSpan ExpectedEndHour { get; private set; }
-        public bool Status { get; private set; }
+        public TimeSpan ExpectedStartHour { get; internal set; }
+        public TimeSpan ExpectedEndHour { get; internal set; }
+        public bool Status { get; internal set; }
 
         [ForeignKey("Visit")]
         public int VisitId { get; private set; }

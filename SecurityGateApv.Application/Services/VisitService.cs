@@ -534,24 +534,21 @@ namespace SecurityGateApv.Application.Services
             if (visit.ScheduleUser != null)
             {
                 schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleUser.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
-                visit.AddEndTime(command.ExpectedEndTime);
             }
-            await _visitDetailRepo.RemoveRange(visit.VisitDetail);
-            visit.AddEndTime(command.ExpectedEndTime);
 
-            visit.RemoveDetail();
+            visit.UpdateVisitAfterStartDate(command.VisitQuantity, command.ExpectedEndTime);
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.VisitId != visitId &&
                     s.Visit.ExpectedEndTime >= visit.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
 
-                var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
+                var addVisitDetailResult = await visit.CheckUpdateVisit(
                     visitorSchedule,
                     visit.ScheduleUser,
                     schedule,
                     item.ExpectedStartHour,
                     item.ExpectedEndHour,
-                    true,
+                    item.Status,
                     item.VisitorId);
                 if(item.Status == false)
                 {
@@ -561,9 +558,10 @@ namespace SecurityGateApv.Application.Services
                 {
                     return Result.Failure<UpdateVisitAfterStartDateCommand>(addVisitDetailResult.Error);
                 }
+                visit.UpdateAfterStartDate(addVisitDetailResult.Value.VisitDetail.ToList());             
             }
 
-            visit = _mapper.Map(command, visit);
+
             visit.Update(command.UpdateById);
             await _visitRepo.UpdateAsync(visit);
             var commit = await _unitOfWork.CommitAsync();
