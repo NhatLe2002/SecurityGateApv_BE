@@ -86,7 +86,9 @@ namespace SecurityGateApv.Application.Services
             if (pageNumber == -1 || pageSize == -1)
             {
                 schedule = await _scheduleRepo.FindAsync(
-                s => true, int.MaxValue, 1, includeProperties: "ScheduleType,CreateBy"
+                s => true, int.MaxValue, 1, 
+                s => s.OrderByDescending(x => x.CreateTime),
+                includeProperties: "ScheduleType,CreateBy"
                 );
             }
             else
@@ -217,7 +219,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetScheduleRes>>> GetScheduleByDepartmentManagerId(int departmentManagerId, int pageNumber, int pageSize)
         {
             var schedule = (await _scheduleRepo.FindAsync(
-                s => s.CreateById == departmentManagerId,pageSize,pageNumber, includeProperties: "ScheduleType,CreateBy,ScheduleUser"
+                s => s.CreateById == departmentManagerId,pageSize,pageNumber, s => s.OrderByDescending(x => x.CreateTime) ,includeProperties: "ScheduleType,CreateBy,ScheduleUser"
                 ));
             if (schedule == null)
             {

@@ -109,6 +109,30 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
+        }
+        [HttpGet("Date")]
+        public async Task<IActionResult> GetVisitorSessionByDate(int pageNumber, int pageSize, DateTime date)
+        {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitorSessionService.GetVisitorSessionByDate(1, int.MaxValue, date, token);
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+
+            var result = await _visitorSessionService.GetVisitorSessionByDate(pageNumber, pageSize, date, token);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
         }
         [HttpGet("Visitor/{visitorId}")]

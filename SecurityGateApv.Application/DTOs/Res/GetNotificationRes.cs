@@ -15,8 +15,16 @@ namespace SecurityGateApv.Application.DTOs.Res
         public bool ReadStatus { get; set; }
         public int NotificationID { get; set; }
         public GetNotification Notification { get; set; }
-        public int SenderID { get; set; }       
+        //public int SenderID { get; set; }
+        public SenderRes Sender { get; set; }
+
         public int ReceiverID { get; set; }
+    }
+    public class SenderRes
+    {
+        public int UserId { get; set; }
+        public string FullName { get; private set; }
+        public string? Image { get; private set; }
     }
     public class GetNotification
     {

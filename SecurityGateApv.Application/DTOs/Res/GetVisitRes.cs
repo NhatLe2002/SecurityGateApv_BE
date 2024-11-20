@@ -23,10 +23,10 @@ namespace SecurityGateApv.Application.DTOs.Res
         public CreateByRes CreateBy { get; private set; }
 
         public CreateByRes? UpdateBy { get; private set; }
-
         public ScheduleResForVisit Schedule { get; private set; }
         public ICollection<VisitDetailRes> VisitDetail { get; set; }
         //public ICollection<VisitProcessRes> VisitProcess { get;  set; }
+        public int VisitorSessionCount { get; set; }
 
     }
     public class GetVisitNoDetailRes
@@ -40,11 +40,16 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime UpdateTime { get; private set; }
         public string? Description { get; private set; }
         public string VisitStatus { get; private set; }
+        public ScheduleUserRes? ScheduleUser { get; set; }
+
         public CreateByRes CreateBy { get; private set; }
 
         public CreateByRes? UpdateBy { get; private set; }
+        public CreateByRes ResponsiblePerson { get; private set; }
+        public int VisitorSessionCount { get; set; }
 
-        public ScheduleResForVisit Schedule { get; private set; }
+
+        //public ScheduleResForVisit? Schedule { get; private set; }
     }
     public class VisitDetailRes
     {
@@ -64,22 +69,27 @@ namespace SecurityGateApv.Application.DTOs.Res
     }
     public class GetVisitByDateRes
     {
-        
-        public int VisitId { get;  set; }
+
+        public int VisitId { get; set; }
         public string VisitName { get; set; }
-        public int VisitQuantity { get;  set; }
-        public string? Description { get;  set; }
-        public string CreateByname { get;  set; }
-        public string ScheduleTypeName { get;  set; }
+        public int VisitQuantity { get; set; }
+        public string? Description { get; set; }
+        public string CreateByname { get; set; }
+        public string ScheduleTypeName { get; set; }
+        public int VisitorSessionCheckedOutCount { get; set; }
+        public int VisitorSessionCheckedInCount { get; set; }
+        public int VisitorCheckOutedCount { get; set; }
+        public TimeSpan? VisitDetailStartTime { get; set; }
+        public TimeSpan? VisitDetailEndTime { get; set; }
 
     }
-    
-    
+
+
     public class CreateByRes
     {
         public string FullName { get; set; }
     }
-    
+
     public class VisitProcessRes
     {
         public string DaysOfProcess { get; set; }
@@ -88,6 +98,6 @@ namespace SecurityGateApv.Application.DTOs.Res
     {
         public int ScheduleId { get; private set; }
         public string ScheduleName { get; private set; }
-        public GetScheduleTypeRes ScheduleType { get;  set; }
+        public GetScheduleTypeRes ScheduleType { get; set; }
     }
 }

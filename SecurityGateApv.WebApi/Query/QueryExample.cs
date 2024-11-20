@@ -10,9 +10,15 @@ namespace SecurityGateApv.WebApi.Query
         [UseOffsetPaging(MaxPageSize = int.MaxValue, IncludeTotalCount = true)]
         [UseFiltering]
         [UseSorting]
-        public async Task<IEnumerable<GetVisitNoDetailRes>> GetVisit([Service] IVisitService _visitService)
-        {            
-            return (await _visitService.GetAllVisit(int.MaxValue,1)).Value;
+        public async Task<IEnumerable<GetVisitNoDetailRes>> GetVisit([Service] IVisitService _visitService, [Service] IHttpContextAccessor httpContextAccessor)
+        {
+            if (httpContextAccessor.HttpContext == null || !httpContextAccessor.HttpContext.Request.Headers.ContainsKey("Authorization"))
+            {
+                throw new Exception("Authorization header is missing.");
+            }
+            var token = httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            return (await _visitService.GetAllVisitGraphQl(int.MaxValue,1, token)).Value;
         }
         public async Task<GetVisitRes> GetVisitById([Service] IVisitService _visitService, int visitId)
         {

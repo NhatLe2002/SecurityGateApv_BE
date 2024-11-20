@@ -22,7 +22,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime CheckinTime { get; private set; }
         public int SecurityInId { get; private set; }
         public int GateInId { get; private set; }
-        public ICollection<VisitorSessionsImageCheckinCommand> Images { get; set; }
+        //public ICollection<VisitorSessionsImageCheckinCommand> Images { get; set; }
 
     }
 

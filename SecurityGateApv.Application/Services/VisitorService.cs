@@ -88,7 +88,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitorRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
-            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderBy(z => z.CreateDate), includeProperties: "CredentialCardType");
+            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType");
             if(list.Count() == 0)
             {
                 return Result.Failure<List<GetVisitorRes>>(Error.NotFound);

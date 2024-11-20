@@ -43,7 +43,7 @@ namespace SecurityGateApv.Application.Services
             _visitRepo = visitRepo;
         }
 
-       
+
 
         public async Task<Result<CreateScheduleUserCommand>> CreateScheduleUser(CreateScheduleUserCommand command)
         {
@@ -110,7 +110,7 @@ namespace SecurityGateApv.Application.Services
                    )).ToList();
 
             }
-            else if(user.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())
+            else if (user.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())
             {
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.Schedule.CreateById == userId
@@ -119,7 +119,7 @@ namespace SecurityGateApv.Application.Services
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
             }
-            if (scheduleUser.Count()== 0)
+            if (scheduleUser.Count() == 0)
             {
                 return Result.Failure<List<GetScheduleUserRes>>(Error.NotFoundSchedule);
             }
@@ -132,7 +132,7 @@ namespace SecurityGateApv.Application.Services
                      s => s.Id == scheduleUserId,
                      includeProperties: "Schedule.ScheduleType,Schedule.CreateBy,Visit"
                 )).FirstOrDefault();
-            if (scheduleUser== null)
+            if (scheduleUser == null)
             {
                 return Result.Failure<ScheduleUserRes>(Error.NotFoundSchedule);
             }
@@ -152,6 +152,7 @@ namespace SecurityGateApv.Application.Services
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.AssignToId == userId,
                    pageSize, pageNumber,
+                   s => s.OrderByDescending(x => x.AssignTime),
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
 
@@ -161,6 +162,7 @@ namespace SecurityGateApv.Application.Services
                 scheduleUser = (await _scheduleUserRepo.FindAsync(
                    s => s.Schedule.CreateById == userId,
                    pageSize, pageNumber,
+                   s => s.OrderByDescending(x => x.AssignTime),
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
             }
@@ -180,8 +182,8 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<bool>(Error.NotFoundScheduleUser);
             }
             var visit = (await _visitRepo.FindAsync(
-                s => s.ScheduleUserId== scheduleUser.Id)).FirstOrDefault();
-            if(visit == null)
+                s => s.ScheduleUserId == scheduleUser.Id)).FirstOrDefault();
+            if (visit == null)
             {
                 return Result.Failure<bool>(Error.ScheduleUserNotHaveVisit);
             }
@@ -225,6 +227,6 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
-        
+
     }
 }
