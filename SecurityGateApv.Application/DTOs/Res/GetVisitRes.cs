@@ -23,7 +23,9 @@ namespace SecurityGateApv.Application.DTOs.Res
         public CreateByRes CreateBy { get; private set; }
 
         public CreateByRes? UpdateBy { get; private set; }
-        public ScheduleResForVisit Schedule { get; private set; }
+        public ScheduleUserRes? ScheduleUser { get; set; }
+
+        //public ScheduleResForVisit Schedule { get; private set; }
         public ICollection<VisitDetailRes> VisitDetail { get; set; }
         //public ICollection<VisitProcessRes> VisitProcess { get;  set; }
         public int VisitorSessionCount { get; set; }

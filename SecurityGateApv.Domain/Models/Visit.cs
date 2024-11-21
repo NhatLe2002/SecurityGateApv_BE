@@ -39,32 +39,32 @@ namespace SecurityGateApv.Domain.Models
 
         [Key]
         public int VisitId { get; set; }
-        public string VisitName { get; private set; }
-        public int VisitQuantity { get; private set; }
-        public DateTime ExpectedStartTime { get; private set; }
-        public DateTime ExpectedEndTime { get; private set; }
-        public DateTime CreateTime { get; private set; }
-        public DateTime UpdateTime { get; private set; }
-        public string? Description { get; private set; }
-        public string VisitStatus { get; private set; }
+        public string VisitName { get; set; }
+        public int VisitQuantity { get; set; }
+        public DateTime ExpectedStartTime { get; set; }
+        public DateTime ExpectedEndTime { get; set; }
+        public DateTime CreateTime { get; set; }
+        public DateTime UpdateTime { get; set; }
+        public string? Description { get; set; }
+        public string VisitStatus { get; set; }
 
         [ForeignKey("CreateBy")]
-        public int CreateById { get; private set; }
-        public User CreateBy { get; private set; }
+        public int CreateById { get; set; }
+        public User CreateBy { get; set; }
 
         [ForeignKey("UpdateBy")]
-        public int? UpdateById { get; private set; }
-        public User? UpdateBy { get; private set; }
+        public int? UpdateById { get; set; }
+        public User? UpdateBy { get;  set; }
 
         [ForeignKey("ScheduleUser")]
-        public int? ScheduleUserId { get; private set; }
-        public ScheduleUser? ScheduleUser { get; private set; }
+        public int? ScheduleUserId { get;  set; }
+        public ScheduleUser? ScheduleUser { get;  set; }
 
         [ForeignKey("ResponsiblePerson")]
-        public int? ResponsiblePersonId { get; private set; }
-        public User ResponsiblePerson { get; private set; }
+        public int? ResponsiblePersonId { get; set; }
+        public User ResponsiblePerson { get; set; }
 
-        public ICollection<VisitDetail> VisitDetail { get; private set; } = new List<VisitDetail>();
+        public ICollection<VisitDetail> VisitDetail { get; set; } = new List<VisitDetail>();
 
         public static Result<Visit> Create(string visitName, int visitQuantity, DateTime expectedStartTime, DateTime expectedEndTime, DateTime createTime
             , DateTime updateTime, string? description, string visitStatus, int createById, int responsiblePersonId, int? scheduleUserId)
