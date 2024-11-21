@@ -149,7 +149,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<LoginRes>> Login(LoginModel loginModel)
         {
-            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Username, includeProperties: "Role,Department")).FirstOrDefault();
+            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Username && s.Status == UserStatusEnum.Active.ToString(), includeProperties: "Role,Department")).FirstOrDefault();
             if (login == null)
             {
                 return Result.Failure<LoginRes>(Error.NotFoundUser);
