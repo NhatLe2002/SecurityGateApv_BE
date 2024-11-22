@@ -106,6 +106,7 @@ namespace SecurityGateApv.Application.Services
                    s => s.AssignToId == userId
                    && (status == "All" || s.Status == status),
                    pageSize, pageNumber,
+                   s => s.OrderByDescending(x => x.AssignTime),
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
 
@@ -116,8 +117,18 @@ namespace SecurityGateApv.Application.Services
                    s => s.Schedule.CreateById == userId
                    && (status == "All" || s.Status == status),
                    pageSize, pageNumber,
+                   s => s.OrderByDescending(x => x.AssignTime),
                    includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
                    )).ToList();
+            }
+            else
+            {
+                scheduleUser = (await _scheduleUserRepo.FindAsync(
+                  s => (status == "All" || s.Status == status),
+                  pageSize, pageNumber,
+                  s => s.OrderByDescending(x => x.AssignTime),
+                  includeProperties: "AssignTo,Schedule.ScheduleType,Schedule.CreateBy"
+                  )).ToList();
             }
             if (scheduleUser.Count() == 0)
             {

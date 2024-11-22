@@ -36,6 +36,6 @@ namespace SecurityGateApv.Application.DTOs.Res
     public class UserGetScheduleUserRes
     {
         public int UserId { get; set; }
-        public string UserName { get; private set; }
+        public string FullName { get; private set; }
     }
 }
