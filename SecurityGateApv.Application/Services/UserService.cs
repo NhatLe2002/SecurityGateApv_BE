@@ -359,6 +359,93 @@ namespace SecurityGateApv.Application.Services
             return command;
         }
 
-       
+        public async Task<Result<bool>> SendOTPResetPassword(string email)
+        {
+            var hasUser = await _userRepo.IsAny(s => s.Email == email);
+            if (!hasUser)
+            {
+                return Result.Failure<bool>(Error.EmailResetPasswordNotValid);
+            }
+            var OTP = "";
+            for(var i = 0; i < 6; i++)
+            {
+                Random rnd = new Random();
+                OTP += rnd.Next(0, 9);
+            }
+            var user = (await _userRepo.FindAsync(s => s.Email == email)).FirstOrDefault();
+            if (user == null)
+            {
+                return Result.Failure<bool>(Error.EmailResetPasswordNotValid);
+            }
+            user.SetOTP(OTP);
+            await _userRepo.UpdateAsync(user);
+            await _emailSender.SendEmailAsync(email, "OTP Reset Password", OTP);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            return true;
+        }
+
+        public async Task<Result<bool>> ConfirmOTPResetPassword(string email, string OTP)
+        {
+            var hasUser = await _userRepo.IsAny(s => s.Email == email);
+            if (!hasUser)
+            {
+                return Result.Failure<bool>(Error.EmailResetPasswordNotValid);
+            }
+            var user = (await _userRepo.FindAsync(s => s.Email == email)).FirstOrDefault();
+            if (user == null || user.OTP == null)
+            {
+                return Result.Failure<bool>(Error.EmailResetPasswordNotValid);
+            }
+            if(user.OTP != OTP)
+            {
+                return Result.Failure<bool>(Error.OTPNotEqual);
+            }
+            if((DateTime.Now - user.OTPIssueTime) > TimeSpan.FromMinutes(1))
+            {
+                return Result.Failure<bool>(Error.OTPExpired);
+            }
+            user.SetOTP(OTP);
+            await _userRepo.UpdateAsync(user);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            return true;
+        }
+
+        public async Task<Result<bool>> SetNewPassword(string email, string OTP, string newPassword)
+        {
+            var hasUser = await _userRepo.IsAny(s => s.Email == email);
+            if (!hasUser)
+            {
+                return Result.Failure<bool>(Error.EmailResetPasswordNotValid);
+            }
+            var user = (await _userRepo.FindAsync(s => s.Email == email)).FirstOrDefault();
+            if (user == null || user.OTP == null)
+            {
+                return Result.Failure<bool>(Error.EmailResetPasswordNotValid);
+            }
+            if (user.OTP != OTP)
+            {
+                return Result.Failure<bool>(Error.OTPNotEqual);
+            }
+            if ((DateTime.Now - user.OTPIssueTime) > TimeSpan.FromMinutes(2))
+            {
+                return Result.Failure<bool>(Error.OTPExpired);
+            }
+            user.SetNewPassword(newPassword);
+            await _userRepo.UpdateAsync(user);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            return true;
+        }
     }
 }

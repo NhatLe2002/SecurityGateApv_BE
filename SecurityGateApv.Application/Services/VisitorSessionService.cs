@@ -8,6 +8,7 @@ using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.DomainDTOs;
 using SecurityGateApv.Domain.Interfaces.Jwt;
+using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
@@ -32,8 +33,12 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitorRepo _visitorRepo;
         private readonly IVisitorSessionImagesRepo _visitorSessionImagesRepo;
         private readonly IJwt _jwt;
+        private readonly INotifications _notifications;
+        private readonly INotificationRepo _notificationRepo;
 
-        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, ICardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo, IVisitCardRepo visitCardRepo, ICardService cardService, IJwt jwt, IVisitorRepo visitorRepo, IVisitorSessionImagesRepo visitorSessionImagesRepo)
+        public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, ICardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo,
+            IVisitCardRepo visitCardRepo, ICardService cardService, IJwt jwt, IVisitorRepo visitorRepo, IVisitorSessionImagesRepo visitorSessionImagesRepo,
+            INotifications notifications, INotificationRepo notificationRepo)
         {
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
@@ -45,6 +50,8 @@ namespace SecurityGateApv.Application.Services
             _jwt = jwt;
             _visitorRepo = visitorRepo;
             _visitorSessionImagesRepo = visitorSessionImagesRepo;
+            _notifications = notifications;
+            _notificationRepo = notificationRepo;
         }
 
         public async Task<Result<ValidCheckinRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command)
@@ -190,6 +197,18 @@ namespace SecurityGateApv.Application.Services
             };
 
 
+            //send Notification to Staff
+            var user = validVisitDetail.Visitor;
+            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            noti.Value.AddUserNoti(command.SecurityInId, (int)validVisitDetail.Visit.ResponsiblePersonId);
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
+            {
+                return Result.Failure<ValidCheckinRes>(Error.CommitError);
+            }
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.SecurityInId, 1);
+
             return result;
         }
 
@@ -291,7 +310,16 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CheckInFail);
             };
-
+            var user = validVisitDetail.Visitor;
+            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            noti.Value.AddUserNoti(command.SecurityInId, (int)validVisitDetail.Visit.ResponsiblePersonId);
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
+            {
+                return Result.Failure<ValidCheckinRes>(Error.CommitError);
+            }
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.SecurityInId, 1);
 
             return result;
         }
@@ -805,8 +833,8 @@ namespace SecurityGateApv.Application.Services
 
             var visitSesson = (await _visitorSessionRepo.FindAsync(
                     s => s.VisitDetailId == visitCard.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
-                    1, 1
-                //includeProperties: "VisitDetail.Visit.Schedule"
+                    1, 1,
+                includeProperties: "VisitDetail.Visitor, VisitDetail.Visit"
                 )).FirstOrDefault();
             if (visitSesson == null)
             {
@@ -826,6 +854,19 @@ namespace SecurityGateApv.Application.Services
             var updateVisitorSesson = _mapper.Map(command, visitSesson);
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
+            //Noti
+            var user = visitSesson.VisitDetail.Visitor;
+            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSesson.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            noti.Value.AddUserNoti(command.SecurityOutId, (int)visitSesson.VisitDetail.Visit.ResponsiblePersonId);
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSesson.VisitDetail.Visit.ResponsiblePersonId, 1);
+
+
             return true;
         }
         public async Task<Result<bool>> CheckOutWithCredentialCard(VisitorSessionCheckOutCommand command, string credentialCard)
@@ -844,7 +885,7 @@ namespace SecurityGateApv.Application.Services
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
                   && s.Status == VisitorSessionStatus.CheckIn.ToString(),
-                    includeProperties: "SecurityIn,GateIn"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor,VisitDetail.Visit"
                 )).FirstOrDefault();
 
             if (visitSession == null)
@@ -873,6 +914,19 @@ namespace SecurityGateApv.Application.Services
             var updateVisitorSesson = _mapper.Map(command, visitSession);
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
+            
+            //noti
+            var user = visitor;
+            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            noti.Value.AddUserNoti(command.SecurityOutId, (int)visitSession.VisitDetail.Visit.ResponsiblePersonId);
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
+
             return true;
         }
         public async Task<Result<List<VisitorSessionImageRes>>> GetAllImagesByVisitorSessionId(int visitorSessionId)

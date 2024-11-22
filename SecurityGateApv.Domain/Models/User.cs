@@ -54,6 +54,8 @@ namespace SecurityGateApv.Domain.Models
         public string? Image { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime UpdatedDate { get; private set; }
+        public string? OTP {  get; private set; }
+        public DateTime? OTPIssueTime { get; private set; }
         public string Status { get; private set; }
 
         [ForeignKey("Role")]
@@ -118,6 +120,17 @@ namespace SecurityGateApv.Domain.Models
             {
                 this.Status = "Active";
             }
+            return this;
+        }
+        public Result<User> SetOTP(string OTP)
+        {
+            this.OTP = OTP;
+            this.OTPIssueTime = DateTime.Now;
+            return this;
+        }
+        public Result<User> SetNewPassword(string password)
+        {
+            this.Password = password;
             return this;
         }
     }
