@@ -170,7 +170,7 @@ namespace SecurityGateApv.Application.Services
                        s => true,
                        pageSize,
                        pageNumber,
-                       s => s.OrderBy(x => x.CreateTime),
+                       s => s.OrderByDescending(x => x.CreateTime),
                        includeProperties: "CreateBy,UpdateBy,ResponsiblePerson,ScheduleUser,ScheduleUser.Schedule.ScheduleType,VisitDetail.VisitorSession"
                    );
 
@@ -589,7 +589,7 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.ResponsiblePerson.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.ExpectedStartTime), 
+            var visit = (await _visitRepo.FindAsync(s => s.ResponsiblePerson.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), 
                 includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType")).ToList();
             if (visit.Count == 0)
             {

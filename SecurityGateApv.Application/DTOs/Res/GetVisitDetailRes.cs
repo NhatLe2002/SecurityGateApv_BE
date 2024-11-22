@@ -42,5 +42,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitQuantity { get; set; }
         public string CreateByname { get; set; }
         public string ScheduleTypeName { get; set; }
+        public string VisitStatus { get; set; }
+
     }
 }
