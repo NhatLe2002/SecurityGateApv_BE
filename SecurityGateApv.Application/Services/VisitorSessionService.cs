@@ -231,7 +231,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.SecurityInId, 1);
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
 
             return result;
         }
@@ -366,7 +366,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.SecurityInId, 1);
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
 
             return result;
         }
