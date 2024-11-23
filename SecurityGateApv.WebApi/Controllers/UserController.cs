@@ -29,6 +29,43 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpPost("User/OTP")]
+        public async Task<IActionResult> SendOTP(string email)
+        {
+            var result = await _userService.SendOTPResetPassword(email);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost("User/ConfirmOTP")]
+        public async Task<IActionResult> ConfirmOTP(string email, string OTP)
+        {
+            var result = await _userService.ConfirmOTPResetPassword(email, OTP);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost("User/SetNewPassword")]
+        public async Task<IActionResult> SetNewPassword(string email, string OTP, string password)
+        {
+            if(password.Length < 6)
+            {
+                return BadRequest(new Error("SetNewPassword", "Mật khẩu phải lớn hơn 6 kí tự"));
+            }
+            var result = await _userService.SetNewPassword(email, OTP, password);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetAllUserPaging(int pageNumber, int pageSize, string role)

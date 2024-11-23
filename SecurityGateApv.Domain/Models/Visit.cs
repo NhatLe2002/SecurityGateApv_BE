@@ -149,10 +149,106 @@ namespace SecurityGateApv.Domain.Models
             VisitDetail.Add(visitDetailAdd);
             return this;
         }
+        public async Task<Result<Visit>> CheckUpdateVisit(IEnumerable<VisitDetail> visitSchedule, ScheduleUser? scheduleUser, Schedule schedule, TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
+            , int visitorId)
+        {
+            var visitDetailAdd = new VisitDetail(expectedStartHour, expectedEndHour, status
+            , this, visitorId);
+            var visitBusyOfVisitor = new List<ValidateVisitDateDTO>();
+            foreach (VisitDetail visit in visitSchedule)
+            {
+                visitBusyOfVisitor.AddRange(await CommonService.CaculateBusyDates(visit));
+            }
+            if (scheduleUser != null)
+            {
+
+                visitDetailAdd.Visit.ScheduleUser = scheduleUser;
+                visitDetailAdd.Visit.ScheduleUser.Schedule = schedule;
+            }
+            var visitorFutureBusy = await CommonService.CaculateBusyDates(visitDetailAdd);
+            if (visitorFutureBusy.Count() == 0)
+            {
+                return Result.Failure<Visit>(Error.NoValidDateForVisit);
+            }
+            var error = new Dictionary<int, string>();
+            foreach (var dateOfBusy in visitorFutureBusy)
+            {
+
+                var check = visitBusyOfVisitor.Where(s => dateOfBusy.VisitDate.Year == s.VisitDate.Year && dateOfBusy.VisitDate.Month == s.VisitDate.Month && dateOfBusy.VisitDate.Day == s.VisitDate.Day);
+
+                if (check != null)
+                {
+                    foreach (var day in check)
+                    {
+                        if (day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut)
+                        {
+                            error.TryGetValue((int)day.VisitId, out string date);
+                            if (date != null)
+                            {
+                                date += $", {day.VisitDate.ToShortDateString()}";
+                                error.Remove((int)day.VisitId);
+                                error.Add((int)day.VisitId, date);
+                            }
+                            else
+                            {
+                                error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            }
+                            continue;
+                        }
+                        if (day.TimeOut > dateOfBusy.TimeIn && day.TimeOut <= dateOfBusy.TimeOut)
+                        {
+                            error.TryGetValue((int)day.VisitId, out string date);
+                            if (date != null)
+                            {
+                                date += $", {day.VisitDate.ToShortDateString()}";
+                                error.Remove((int)day.VisitId);
+                                error.Add((int)day.VisitId, date);
+                            }
+                            else
+                            {
+                                error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            }
+                            continue;
+                        }
+                    }
+                }
+            }
+            if (error.Distinct().Count() > 0 && status == true)
+            {
+                return Result.Failure<Visit>(new Error("CreateVisit", "VisitorId " + visitorId + " busy at visit Id: " + string.Join(", ", error)));
+            }
+            if (VisitDetail.Any(s => s.VisitorId != visitorId))
+            {
+                VisitDetail.Add(visitDetailAdd);
+            }
+            else
+            {
+                var detail = this.VisitDetail.Where(s => s.VisitorId == visitorId).FirstOrDefault();
+                if(detail == null)
+                {
+                    return Result.Failure<Visit>(new Error("Update", "Update Error"));
+                }
+                detail.ExpectedStartHour = expectedStartHour;
+                detail.ExpectedEndHour = expectedEndHour;
+                detail.Status = status;
+            }
+            return this;
+        }
         public Result<Visit> Update(int updateById)
         {
             this.UpdateById = updateById;
             this.UpdateTime = DateTime.Now;
+            return this;
+        }
+        public Result<Visit> UpdateAfterStartDate(List<VisitDetail> visitDetails)
+        {
+            this.VisitDetail = visitDetails;
+            return this;
+        }
+        public Result<Visit> UpdateVisitAfterStartDate(int visitQuantity, DateTime expectedEndTime )
+        {
+            this.VisitQuantity = visitQuantity;
+            this.ExpectedEndTime = expectedEndTime;
             return this;
         }
         public Result<Visit> UpdateStatusBackGroundWoker(string status)

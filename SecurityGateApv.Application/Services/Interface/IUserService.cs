@@ -24,5 +24,8 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<bool>> UpdateUserPassword(int userId, UpdateUserPasswordCommand command);
         public Task<Result<bool>> UnactiveUser(int userId, string token);
         public Task<Result<bool>> SendEmailTest(string email);
+        public Task<Result<bool>> SendOTPResetPassword(string email);
+        public Task<Result<bool>> ConfirmOTPResetPassword(string email, string OTP);
+        public Task<Result<bool>> SetNewPassword(string email, string OTP, string newPassword);
     }
 }

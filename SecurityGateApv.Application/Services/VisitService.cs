@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.VisualBasic;
 using SecurityGateApv.Application.DTOs.Req;
+using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
@@ -35,11 +36,12 @@ namespace SecurityGateApv.Application.Services
         private readonly IScheduleRepo _scheduleRepo;
         private readonly IScheduleUserRepo _scheduleUserRepo;
         private readonly INotifications _notifications;
+        private readonly INotificationRepo _notificationRepo;
         private readonly IJwt _jwt;
 
         public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IScheduleTypeRepo visitTypeRepo,
             IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo,
-            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications)
+            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications, INotificationRepo notificationRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -54,6 +56,7 @@ namespace SecurityGateApv.Application.Services
             _scheduleUserRepo = scheduleUserRepo;
             _jwt = jwt;
             _notifications = notifications;
+            _notificationRepo = notificationRepo;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token)
@@ -110,6 +113,17 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<VisitCreateCommand>(Error.CommitError);
             }
+            var createStaff = (await _userRepo.FindAsync(s => s.UserId == command.CreateById)).FirstOrDefault();
+            var departmentManager = (await _userRepo.FindAsync(s => s.DepartmentId == createStaff.DepartmentId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
+            var noti = Notification.Create($"Chuyến thăm cần duyệt từ Nhân Viên: {createStaff.UserName}", "Cần duyệt chuyến thăm cho khách", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            noti.Value.AddUserNoti(command.CreateById, departmentManager.UserId);
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
+            {
+                return Result.Failure<VisitCreateCommand>(Error.CommitError);
+            }
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", departmentManager.UserId, 1);
             return command;
         }
         public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token)
@@ -132,10 +146,6 @@ namespace SecurityGateApv.Application.Services
             if (createVisit.IsFailure)
             {
                 return Result.Failure<VisitCreateCommandDaily>(createVisit.Error);
-            }
-            if (role == UserRoleEnum.Security.ToString())
-            {
-                await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.ResponsiblePersonId, 1);
             }
             var visit = createVisit.Value;
             foreach (var item in command.VisitDetail)
@@ -160,6 +170,19 @@ namespace SecurityGateApv.Application.Services
             if (!commit)
             {
                 return Result.Failure<VisitCreateCommandDaily>(Error.CommitError);
+            }
+            if (role == UserRoleEnum.Security.ToString())
+            {
+                var user = (await _userRepo.FindAsync(s => s.UserId == command.CreateById)).FirstOrDefault();
+                var noti = Notification.Create($"Chuyến thăm xác nhận từ bảo vệ: {user.FullName}", "Cần xác nhận chuyến thăm cho khách", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+                noti.Value.AddUserNoti(command.CreateById, command.ResponsiblePersonId);
+                await _notificationRepo.AddAsync(noti.Value)    ;
+                var commit2 = await _unitOfWork.CommitAsync();
+                if (!commit2)
+                {
+                    return Result.Failure<VisitCreateCommandDaily>(Error.CommitError);
+                }
+                await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.ResponsiblePersonId, 1);
             }
             return command;
         }
@@ -707,24 +730,21 @@ namespace SecurityGateApv.Application.Services
             if (visit.ScheduleUser != null)
             {
                 schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleUser.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
-                visit.AddEndTime(command.ExpectedEndTime);
             }
-            await _visitDetailRepo.RemoveRange(visit.VisitDetail);
-            visit.AddEndTime(command.ExpectedEndTime);
 
-            visit.RemoveDetail();
+            visit.UpdateVisitAfterStartDate(command.VisitQuantity, command.ExpectedEndTime);
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.VisitId != visitId &&
                     s.Visit.ExpectedEndTime >= visit.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
 
-                var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
+                var addVisitDetailResult = await visit.CheckUpdateVisit(
                     visitorSchedule,
                     visit.ScheduleUser,
                     schedule,
                     item.ExpectedStartHour,
                     item.ExpectedEndHour,
-                    true,
+                    item.Status,
                     item.VisitorId);
                 if (item.Status == false)
                 {
@@ -734,9 +754,10 @@ namespace SecurityGateApv.Application.Services
                 {
                     return Result.Failure<UpdateVisitAfterStartDateCommand>(addVisitDetailResult.Error);
                 }
+                visit.UpdateAfterStartDate(addVisitDetailResult.Value.VisitDetail.ToList());             
             }
 
-            visit = _mapper.Map(command, visit);
+
             visit.Update(command.UpdateById);
             await _visitRepo.UpdateAsync(visit);
             var commit = await _unitOfWork.CommitAsync();
