@@ -12,6 +12,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public TimeSpan ExpectedStartHour { get; private set; }
         public TimeSpan ExpectedEndHour { get; private set; }
         public bool Status { get; private set; }
+        public string SessionStatus { get;  set; }
         public VisitorRes Visitor { get; set; }
     }
 
@@ -41,5 +42,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitQuantity { get; set; }
         public string CreateByname { get; set; }
         public string ScheduleTypeName { get; set; }
+        public string VisitStatus { get; set; }
+
     }
 }
