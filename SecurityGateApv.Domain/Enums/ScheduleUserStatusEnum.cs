@@ -13,5 +13,6 @@ namespace SecurityGateApv.Domain.Enums
         Pending,
         Approved,
         Rejected,
+        Expired,
     }
 }

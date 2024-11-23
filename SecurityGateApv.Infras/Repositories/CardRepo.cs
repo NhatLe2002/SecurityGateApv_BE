@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using QRCoder;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Infras.DBContext;
@@ -24,7 +26,7 @@ namespace SecurityGateApv.Infras.Repositories
             _dbSet = _context.Set<Visit>();
         }
 
-        public async Task<Card> GenerateQRCard(string cardIdGuid)
+        public async Task<Card> GenerateQRCard(string cardIdGuid, IFormFile file, string cardTypeName)
         {
             // Generate QR code
             QRCodeGenerator qRCode = new QRCodeGenerator();
@@ -67,13 +69,17 @@ namespace SecurityGateApv.Infras.Repositories
                         }
 
                         // Add logo
-                        using (var logo = Image.FromFile("C:\\Users\\levan\\Downloads\\Secure-Web-Gateway-01-1024x844.png"))
+                        using (var memoryStream = new MemoryStream())
                         {
-                            int logoWidth = 100;
-                            int logoHeight = 100;
-                            int logoX = (cardWidth - logoWidth) / 2;
-                            int logoY = 20;
-                            graphics.DrawImage(logo, logoX, logoY, logoWidth, logoHeight);
+                            await file.CopyToAsync(memoryStream);
+                            using (var logo = Image.FromStream(memoryStream))
+                            {
+                                int logoWidth = 100;
+                                int logoHeight = 100;
+                                int logoX = (cardWidth - logoWidth) / 2;
+                                int logoY = 20;
+                                graphics.DrawImage(logo, logoX, logoY, logoWidth, logoHeight);
+                            }
                         }
 
                         // Add title text
@@ -89,7 +95,16 @@ namespace SecurityGateApv.Infras.Repositories
 
                         // Add footer text
                         Font textFont = new Font("Arial", 12, FontStyle.Bold);
-                        graphics.DrawString("Thẻ ra vào", textFont, Brushes.Black, new PointF(cardWidth / 2, cardHeight - 30), format);
+                        if(cardTypeName == CardTypeEnum.ShotTermCard.ToString())
+                        {
+
+                        graphics.DrawString("Thẻ ra vào hàng ngày", textFont, Brushes.Blue, new PointF(cardWidth / 2, cardHeight - 30), format);
+                        }
+                        else if (cardTypeName == CardTypeEnum.LongTermCard.ToString())
+                        {
+                        graphics.DrawString("Thẻ ra vào theo lịch trình", textFont, Brushes.Green, new PointF(cardWidth / 2, cardHeight - 30), format);
+
+                        }
                     }
 
                     // Convert the card image to a base64 string

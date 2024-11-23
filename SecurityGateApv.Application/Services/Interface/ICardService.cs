@@ -15,7 +15,7 @@ namespace SecurityGateApv.Application.Services.Interface
     {
         public string DecodeQRCodeFromImage(IFormFile imageStream);
         public Task<Result<AWSDomainDTO>> DetectShoe(IFormFile image);
-        public Task<Result<GetCardRes>> GenerateCard(string data);
+        public Task<Result<GetCardRes>> GenerateCard(CreateCardCommand command);
         public Task<Result<bool>> CreateCard( CreateCardCommand command);
         public Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize);
         public Task<Result<GetCardRes>> GetQrCardByCardVerification(string cardVerified);

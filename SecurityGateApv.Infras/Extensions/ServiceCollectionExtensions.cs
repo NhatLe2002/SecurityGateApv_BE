@@ -48,6 +48,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<IVisitorSessionRepo, VisitorSessionRepo>();
             services.AddScoped<IGateRepo, GateRepo>();
             services.AddScoped<ICardRepo, CardRepo>();
+            services.AddScoped<ICardTypeRepo, CardTypeRepo>();
             services.AddScoped<IVisitorRepo, VisitorRepo>();
             services.AddScoped<IScheduleTypeRepo, ScheduleTypeRepo>();
             services.AddScoped<IScheduleRepo, ScheduleRepo>();
@@ -67,6 +68,7 @@ namespace SecurityGateApv.Infras.Extentions
             services.AddScoped<INotifications, NotificationsService>();
             services.AddSingleton<NotificationHub>();
             services.AddHostedService<VisitStatusUpdaterService>();
+            services.AddHostedService<ScheduleUserStatusUpdateService>();
             services.AddHostedService<VisitCardStatusUpdaterService>();
             services.AddSingleton<IDictionary<string, UserConnectionDTO>>(opt => new Dictionary<string, UserConnectionDTO>());
 

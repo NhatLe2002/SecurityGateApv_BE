@@ -60,20 +60,28 @@ namespace SecurityGateApv.WebApi.Controllers
             }
         }
 
-        [HttpPost("GenerateCard/{cardVerified}")]
-        public async Task<IActionResult> GenerateCard(string cardVerified)
+        [HttpPost("GenerateCard")]
+        public async Task<IActionResult> GenerateCard(CreateCardCommand command)
         {
-            var result = _qrCodeService.GenerateCard(cardVerified);
-            return Ok(result.Result.Value);
+            var result = await _qrCodeService.GenerateCard(command);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
         }
 
-        [HttpPost("CreateCard")]
+        [HttpPost()]
         public async Task<IActionResult> CreateCard( CreateCardCommand command)
         {
-            var result = _qrCodeService.CreateCard(command);
-            return Ok(result.Result.Value);
+            var result = await _qrCodeService.CreateCard(command);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
         }
-        [HttpGet("GetAllQrCardPaging")]
+        [HttpGet()]
         public async Task<ActionResult> GetAllQrCardPaging(int pageNumber,  int pageSize)
         {
             if (pageNumber <= 0 || pageSize <= 0)
@@ -82,6 +90,10 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _qrCodeService.GetAllByPaging(pageNumber, pageSize);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
         }
         [HttpGet("{cardVerification}")]
@@ -93,6 +105,10 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             var result = await _qrCodeService.GetQrCardByCardVerification(cardVerification);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
             return Ok(result.Value);
         }
     }
