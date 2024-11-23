@@ -34,6 +34,7 @@ namespace SecurityGateApv.WebApi
             //.AddTypeExtension<VisitorSessionQuery>();
 
 
+
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
