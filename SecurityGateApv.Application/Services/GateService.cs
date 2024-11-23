@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
@@ -24,6 +25,12 @@ namespace SecurityGateApv.Application.Services
             _unitOfWork = unitOfWork;
             _gateRepo = gateRepo;
         }
+
+        public Task<Result<bool>> CreateCard(CreateGateCommand command)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result<List<GetGateRes>>> GetAllGate()
         {
             var gate = await _gateRepo.GetAllAsync();

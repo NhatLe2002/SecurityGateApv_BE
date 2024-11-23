@@ -111,6 +111,12 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
         #endregion
 
+        #region VehicleSession
+        public static readonly Error ValidVehicleSession = new("Error.ValidVehicleSession", "Xe này đã checkin rồi, không thể checkin 2 lần liên liếp.");
+        public static readonly Error ValidVehicleSessionCheckOut = new("Error.ValidVehicleSessionCheckOut", "Xe này đã chưa checkin, không thể checkout.");
+
+        #endregion
+
         #region Visitor
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Không tìm thấy khách này.");

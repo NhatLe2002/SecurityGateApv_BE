@@ -333,10 +333,10 @@ namespace SecurityGateApv.Application.Services
                 {
                     visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckOut.ToString()));
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckOut.ToString()));
                     visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckIn.ToString()));
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
                     visit.VisitorCheckOutedCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Count();
@@ -352,10 +352,10 @@ namespace SecurityGateApv.Application.Services
                         .Count();
                     visit.VisitorCheckkInCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == VisitorSessionStatus.CheckIn.ToString()));
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
                     visit.VisitorCheckkOutCount += visitEntity.VisitDetail
                         .SelectMany(detail => detail.VisitorSession)
-                        .Where(session => session.Status == VisitorSessionStatus.CheckOut.ToString())
+                        .Where(session => session.Status == SessionStatus.CheckOut.ToString())
                         .OrderByDescending(session => session.CheckoutTime)
                         .FirstOrDefault() != null ? 1 : 0;
                 }
@@ -423,14 +423,14 @@ namespace SecurityGateApv.Application.Services
                 {
                     if (correspondingVisitRes != null)
                     {
-                        correspondingVisitRes.SessionStatus = VisitorSessionStatus.CheckIn.ToString();
+                        correspondingVisitRes.SessionStatus = SessionStatus.CheckIn.ToString();
                     }
                 }
                 else
                 {
                     if (correspondingVisitRes != null)
                     {
-                        correspondingVisitRes.SessionStatus = VisitorSessionStatus.CheckOut.ToString();
+                        correspondingVisitRes.SessionStatus = SessionStatus.CheckOut.ToString();
                     }
                 }
             }

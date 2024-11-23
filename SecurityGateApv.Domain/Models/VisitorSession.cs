@@ -21,7 +21,6 @@ namespace SecurityGateApv.Domain.Models
         {
             CheckinTime = checkin;
             CheckoutTime = checkout;
-            //CardId = qrCardId;
             VisitDetailId = visitDetailId;
             SecurityInId = securityInId;
             SecurityOutId = securityOutId;
@@ -33,6 +32,7 @@ namespace SecurityGateApv.Domain.Models
         public int VisitorSessionId { get;  set; }
         public DateTime CheckinTime { get; private set; }
         public DateTime? CheckoutTime { get; private set; }
+        public string Status { get; private set; }
 
 
         [ForeignKey("VisitDetail")]
@@ -58,13 +58,12 @@ namespace SecurityGateApv.Domain.Models
         public int? GateOutId { get; private set; }
         public Gate? GateOut { get; private set; }
 
-        public string Status { get; private set; }
         public ICollection<VisitorSessionsImage> Images { get; private set; } = new List<VisitorSessionsImage>();
 
 
         public static Result<VisitorSession> Checkin( int visitdetailId, int securityInId, int gateInId)
         {
-            var visitorSession = new VisitorSession(DateTime.Now, null, visitdetailId, securityInId, null, gateInId, null, VisitorSessionStatus.CheckIn.ToString());
+            var visitorSession = new VisitorSession(DateTime.Now, null, visitdetailId, securityInId, null, gateInId, null, SessionStatus.CheckIn.ToString());
 
             return Result.Success(visitorSession);
         }

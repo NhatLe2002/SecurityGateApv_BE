@@ -82,7 +82,10 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<VisitorSession> SecurityInSessions { get; private set; } 
         public ICollection<VisitorSession> SecurityOutSessions { get; private set; }
-        
+
+        public ICollection<VehicleSession> VehicleSessionsSecurityIn { get; private set; }
+        public ICollection<VehicleSession> VehicleSessionsSecurityOut { get; private set; }
+
         public ICollection<Schedule> Schedules { get; private set; } 
 
         public ICollection<VehicleSession> VehicleSession { get; private set; }

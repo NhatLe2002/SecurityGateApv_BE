@@ -105,6 +105,18 @@ namespace SecurityGateApv.Infras.DBContext
                 .WithMany(g => g.SecurityOutSessions) 
                 .HasForeignKey(vs => vs.SecurityOutId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<VehicleSession>()
+                .HasOne(vs => vs.SecurityIn)
+                .WithMany(g => g.VehicleSessionsSecurityIn) 
+                .HasForeignKey(vs => vs.SecurityInId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<VehicleSession>()
+                .HasOne(vs => vs.SecurityOut)
+                .WithMany(g => g.VehicleSessionsSecurityOut) 
+                .HasForeignKey(vs => vs.SecurityOutId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.GateIn)
@@ -115,6 +127,18 @@ namespace SecurityGateApv.Infras.DBContext
             modelBuilder.Entity<VisitorSession>()
                 .HasOne(vs => vs.GateOut)
                 .WithMany(g => g.VisitorSessionsOut) 
+                .HasForeignKey(vs => vs.GateOutId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<VehicleSession>()
+               .HasOne(vs => vs.GateIn)
+               .WithMany(g => g.VehicleSessionsIn)
+               .HasForeignKey(vs => vs.GateInId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<VehicleSession>()
+                .HasOne(vs => vs.GateOut)
+                .WithMany(g => g.VehicleSessionsOut)
                 .HasForeignKey(vs => vs.GateOutId)
                 .OnDelete(DeleteBehavior.Restrict);
 

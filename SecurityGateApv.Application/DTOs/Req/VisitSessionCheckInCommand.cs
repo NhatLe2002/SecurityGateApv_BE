@@ -16,7 +16,9 @@ namespace SecurityGateApv.Application.DTOs.Req
         public int SecurityInId { get; set; }
         public int GateInId { get; set; }
         public string QRCardVerification {  get; set; }
+
         public List<VisitorSessionsImageCheckinCommand> Images { get; set; }
+        public VehicleSessionComand? VehicleSession { get; set; }
     }
     public class VisitorSessionsImageCheckinCommand
     {
@@ -24,6 +26,17 @@ namespace SecurityGateApv.Application.DTOs.Req
         public string ImageURL { get; set; }
         //[JsonIgnore]
         public IFormFile Image { get; set; }
+    }
+    public class VehicleSessionComand
+    {
+        public string LicensePlate { get; set; }
+        public List<vehicleSessionsImageCheckinCommand> VehicleImages { get; set; }
+
+    }
+    public class vehicleSessionsImageCheckinCommand
+    {
+        public string ImageType { get; set; }
+        public string ImageURL { get; set; }
     }
 
 }
