@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using Microsoft.AspNetCore.Http.Metadata;
 
 namespace SecurityGateApv.Application.Services
 {
@@ -24,13 +25,14 @@ namespace SecurityGateApv.Application.Services
     {
         private readonly IExtractQRCode _extractQRCode;
         private readonly ICardRepo _qrRCardRepo;
+        private readonly ICardTypeRepo _cardTypeRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAWSService _awsService;
         private readonly IPrivateKeyRepo _privateKeyRepo;
 
         public CardService(IExtractQRCode extractQRCode, IMapper mapper, IUnitOfWork unitOfWork,
-            IAWSService awsService, ICardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo)
+            IAWSService awsService, ICardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo, ICardTypeRepo cardTypeRepo)
         {
             _extractQRCode = extractQRCode;
             _mapper = mapper;
@@ -39,6 +41,7 @@ namespace SecurityGateApv.Application.Services
             _awsService = awsService;
             _privateKeyRepo = privateKeyRepo;
             _qrRCardRepo = qrRCardRepo;
+            _cardTypeRepo = cardTypeRepo;
         }
 
 
@@ -49,12 +52,26 @@ namespace SecurityGateApv.Application.Services
             return result;
         }
 
-        public async Task<Result<GetCardRes>> GenerateCard( string cardGuid)
+        public async Task<Result<GetCardRes>> GenerateCard(CreateCardCommand command)
         {
+            var card = (await _qrRCardRepo.FindAsync(
+                s => s.CardVerification.Equals(command.CardVerified)
+                )).FirstOrDefault();
+            if (card != null)
+            {
+                return Result.Failure<GetCardRes>(Error.DuplicateCard);
+            }
 
+            var cardType = (await _cardTypeRepo.FindAsync(
+                s => s.CardTypeId.Equals(command.CardTypeId)
+                )).FirstOrDefault();
+            if(cardType == null)
+            {
+                return Result.Failure<GetCardRes>(Error.NotFoundCardType);
+            }
             //var qrCard = QRCard.Create(1, 2, cardGuid, );
-            var card = await _qrRCardRepo.GenerateQRCard(cardGuid);
-            var qrCoder = _mapper.Map<GetCardRes>(card);
+            var cardGenerate = await _qrRCardRepo.GenerateQRCard(command.CardVerified,command.ImageLoGo, cardType.CardTypeName);
+            var qrCoder = _mapper.Map<GetCardRes>(cardGenerate);
             return qrCoder;
         }
 
@@ -113,13 +130,22 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<bool>> CreateCard(CreateCardCommand command)
         {
             var card = (await _qrRCardRepo.FindAsync(
-                s => s.CardVerification.Equals(command.CardVerified)
+                s => s.CardVerification.Equals(command.CardVerified),
+                includeProperties: "CardType"
                 )).FirstOrDefault();
             if (card != null)
             {
                 return Result.Failure<bool>(Error.DuplicateCard);
             }
-            var qrCoder = _qrRCardRepo.GenerateQRCard(command.CardVerified).Result;
+
+            var cardType = (await _cardTypeRepo.FindAsync(
+               s => s.CardTypeId.Equals(command.CardTypeId)
+               )).FirstOrDefault();
+            if (cardType == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundCardType);
+            }
+            var qrCoder = _qrRCardRepo.GenerateQRCard(command.CardVerified, command.ImageLoGo, cardType.CardTypeName).Result;
 
             var qrCard = Card.Create(command.CardTypeId, command.CardVerified, qrCoder.CardImage);
             await _qrRCardRepo.AddAsync(qrCard);

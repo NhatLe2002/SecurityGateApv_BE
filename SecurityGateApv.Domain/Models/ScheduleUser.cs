@@ -63,5 +63,11 @@ namespace SecurityGateApv.Domain.Models
             this.Status = status;
             return this;
         }
+        public Result<ScheduleUser> UpdateStatusBackGroundWoker(string status)
+        {
+            this.Status = status;
+            //this.UpdateTime = DateTime.Now;
+            return this;
+        }
     }
 }

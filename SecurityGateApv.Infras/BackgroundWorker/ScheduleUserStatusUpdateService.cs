@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace SecurityGateApv.Infras.BackgroundWorker
 {
-    public class VisitStatusUpdaterService : BackgroundService
+    public class ScheduleUserStatusUpdateService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<VisitStatusUpdaterService> _logger;
+        private readonly ILogger<ScheduleUserStatusUpdateService> _logger;
         private Timer _timer;
 
-        public VisitStatusUpdaterService(IServiceProvider serviceProvider, ILogger<VisitStatusUpdaterService> logger)
+        public ScheduleUserStatusUpdateService(IServiceProvider serviceProvider, ILogger<ScheduleUserStatusUpdateService> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -26,48 +26,44 @@ namespace SecurityGateApv.Infras.BackgroundWorker
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var now = DateTime.Now;
-            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 21, 00, 0); 
-
+            //var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 22, 00, 0);
+            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 17, 37, 0);
             if (now > scheduledTime)
             {
-                scheduledTime = scheduledTime.AddDays(1); 
+                scheduledTime = scheduledTime.AddDays(1);
             }
-
             var initialDelay = scheduledTime - now;
-            _timer = new Timer(async _ => await UpdateVisitStatusesAsync(), null, initialDelay, TimeSpan.FromDays(1));
-
+            _timer = new Timer(async _ => await UpdateScheduleUserStatusAsync(), null, initialDelay, TimeSpan.FromDays(1));
             return Task.CompletedTask;
-        }
 
-        private async Task UpdateVisitStatusesAsync()
+        }
+        private async Task UpdateScheduleUserStatusAsync()
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 try
                 {
-                    var visitRepo = scope.ServiceProvider.GetRequiredService<IVisitRepo>();
+                    var scheduleUserRepo = scope.ServiceProvider.GetRequiredService<IScheduleUserRepo>();
                     var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-                    var visitsToUpdate = await visitRepo.FindAsync(v => v.ExpectedEndTime <= DateTime.Now && v.VisitStatus == VisitStatusEnum.Active.ToString(),
+                    var scheduleUserToUpdate = await scheduleUserRepo.FindAsync(v => v.AssignTime <= DateTime.Now && v.Status == ScheduleUserStatusEnum.Pending.ToString(),
                         int.MaxValue, 1
                     );
 
-                    foreach (var visit in visitsToUpdate)
+                    foreach (var scheduleUser in scheduleUserToUpdate)
                     {
-                        visit.UpdateStatusBackGroundWoker(VisitStatusEnum.Inactive.ToString());
-                        await visitRepo.UpdateAsync(visit);
+                        scheduleUser.UpdateStatusBackGroundWoker(ScheduleUserStatusEnum.Expired.ToString());
+                        await scheduleUserRepo.UpdateAsync(scheduleUser);
                     }
-
                     await unitOfWork.CommitAsync();
+
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "An error occurred while updating visit statuses in the database.");
-                    throw; // Re-throw the exception to be caught by the outer try-catch block
+                    _logger.LogError(ex, "An error occurred while updating visit statuses");
                 }
             }
         }
-
         public override void Dispose()
         {
             _timer?.Dispose();

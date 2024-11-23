@@ -86,6 +86,11 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "Lịch hẹn này đã được tạo card, không thể tạo 2 thẻ cho 1 lịch hẹn.");
         #endregion
 
+        #region CardType
+        //CardType not found
+        public static readonly Error NotFoundCardType = new("Error.NotFoundCardType", "không có loại thẻ này trong hệ thống");
+        #endregion
+
         #region VisitCardError
         //Can not found VisitCard
         public static readonly Error NotFoundVisitCard = new("Error.NotFound", "Thẻ chưa được đăng ký ra vào không thể checkin/checkout.");

@@ -15,29 +15,25 @@ namespace SecurityGateApv.Infras.BackgroundWorker
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<VisitCardStatusUpdaterService> _logger;
+        private Timer _timer;
 
         public VisitCardStatusUpdaterService(IServiceProvider serviceProvider, ILogger<VisitCardStatusUpdaterService> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                try
-                {
-                    await UpdateVisitCardStatusesAsync();
-                    Console.WriteLine("Visit card status updated successfully");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error occurred while updating visit card statuses.");
-                }
-                Console.WriteLine("Visit card status updated");
+            var now = DateTime.Now;
+            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 22, 00, 0);
 
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            if (now > scheduledTime)
+            {
+                scheduledTime = scheduledTime.AddDays(1);
             }
+            var initialDelay = scheduledTime - now;
+            _timer = new Timer(async _ => await UpdateVisitCardStatusesAsync(), null, initialDelay, TimeSpan.FromDays(1));
+            return Task.CompletedTask;
         }
         private async Task UpdateVisitCardStatusesAsync()
         {
@@ -67,6 +63,11 @@ namespace SecurityGateApv.Infras.BackgroundWorker
                     throw; // Re-throw the exception to be caught by the outer try-catch block
                 }
             }
+        }
+        public override void Dispose()
+        {
+            _timer?.Dispose();
+            base.Dispose();
         }
     }
 }
