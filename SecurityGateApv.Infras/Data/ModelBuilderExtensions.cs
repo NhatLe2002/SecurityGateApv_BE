@@ -46,8 +46,8 @@ namespace SecurityGateApv.Infras.Data
         private static void SeedNotiTypes(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<NotificationType>().HasData(
-                new NotificationType {Id =1, Name = "Visit", Description = "Action For Visit"},
-                new NotificationType { Id=2, Name = "ScheduleUser", Description = "Action For Schedule User" }
+                new NotificationType { Id = 1, Name = "Visit", Description = "Action For Visit" },
+                new NotificationType { Id = 2, Name = "ScheduleUser", Description = "Action For Schedule User" }
             );
         }
 
@@ -182,12 +182,12 @@ namespace SecurityGateApv.Infras.Data
             //var randomDepartments = departmentFaker.Generate(10);
 
             var departmentList = new List<Department>();
-                departmentList.Add(Department.Create(1, "Admin", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho admin", 1, "Active").Value);
-                departmentList.Add(Department.Create(2, "Manager", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản lý", 1, "Active").Value);
-                departmentList.Add(Department.Create(3, "Security", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản security", 1, "Active").Value);
-                departmentList.Add(Department.Create(4, "Phòng Nhân sự", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng nhân sự", 1, "Active").Value);
-                departmentList.Add(Department.Create(5, "Phòng Sản xuất", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng Sản xuất", 1, "Active").Value);
-            
+            departmentList.Add(Department.Create(1, "Admin", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho admin", 1, "Active").Value);
+            departmentList.Add(Department.Create(2, "Manager", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản lý", 1, "Active").Value);
+            departmentList.Add(Department.Create(3, "Security", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng ban riêng cho quản security", 1, "Active").Value);
+            departmentList.Add(Department.Create(4, "Phòng Nhân sự", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng nhân sự", 1, "Active").Value);
+            departmentList.Add(Department.Create(5, "Phòng Sản xuất", new DateTime(2024, 09, 29), new DateTime(2024, 09, 29), "Phòng Sản xuất", 1, "Active").Value);
+
 
             modelBuilder.Entity<Department>().HasData(departmentList);
         }
@@ -398,10 +398,29 @@ namespace SecurityGateApv.Infras.Data
         }
         private static void SeedGate(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Gate>().HasData(
-                new Gate { GateId = 1, GateName = "Cổng 1", GateCoordinate = "Ra vào trong ngày" },
-                new Gate { GateId = 2, GateName = "Cổng 2", GateCoordinate = "Ra vào trong ngày" }
-                );
+            var cameraTypeList = new List<CameraType>
+                {
+                    CameraType.Create(1, CameraTypeEnum.Visitor_Body.ToString(), "Camera chụp toàn thân.").Value,
+                    CameraType.Create(2, CameraTypeEnum.Visitor_Shoe.ToString(), "Camera chụp giày.").Value
+                };
+
+            var gateList = new List<Gate>
+                {
+                    Gate.Create(1, "Cổng A", new DateTime(2024, 09, 29), "Cổng A", true).Value,
+                    Gate.Create(2, "Cổng B", new DateTime(2024, 09, 29), "Cổng B", true).Value
+                };
+
+            var cameraList = new List<Camera>
+                {
+                    Camera.Create(1, "https://security-gateway-camera-1.tools.kozow.com/capture-image",
+                        "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8",
+                        "Camera setup cho chụp toàn thân.",
+                        true, 1, 1).Value
+                };
+
+            modelBuilder.Entity<CameraType>().HasData(cameraTypeList);
+            modelBuilder.Entity<Gate>().HasData(gateList);
+            modelBuilder.Entity<Camera>().HasData(cameraList);
         }
         private static void SeedVisitorSession(ModelBuilder modelBuilder)
         {

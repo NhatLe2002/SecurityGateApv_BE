@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241124024125_Gate_1")]
+    partial class Gate_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,8 +47,9 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<int>("GateId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StreamURL")
                         .IsRequired()
@@ -57,7 +61,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("GateId");
 
-                    b.ToTable("Cameras");
+                    b.ToTable("Camera");
 
                     b.HasData(
                         new
@@ -67,7 +71,7 @@ namespace SecurityGateApv.Infras.Migrations
                             CaptureURL = "https://security-gateway-camera-1.tools.kozow.com/capture-image",
                             Description = "Camera setup cho chụp toàn thân.",
                             GateId = 1,
-                            Status = true,
+                            Status = "Active",
                             StreamURL = "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8"
                         });
                 });
@@ -90,7 +94,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("CameraTypeId");
 
-                    b.ToTable("CameraTypes");
+                    b.ToTable("CameraType");
 
                     b.HasData(
                         new

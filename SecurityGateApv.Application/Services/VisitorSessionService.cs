@@ -98,14 +98,14 @@ namespace SecurityGateApv.Application.Services
                 s => (s.CardId == card.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
                 && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
-            if (visitCard != null && visitCard.CardId != card.CardId)
+            if (visitCard != null)
             {
                 return Result.Failure<ValidCheckinRes>(Error.DuplicateCard);
             }
-            if (visitCard != null && visitCard.VisitDetailId != validVisitDetail.VisitDetailId)
-            {
-                return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
-            }
+            //if (visitCard != null && visitCard.VisitDetailId != validVisitDetail.VisitDetailId)
+            //{
+            //    return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
+            //}
 
             // Check session don't have check-in
             var visitSession = (await _visitorSessionRepo.FindAsync(
@@ -920,6 +920,9 @@ namespace SecurityGateApv.Application.Services
             var updateVisitorSesson = _mapper.Map(command, visitSession);
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
+
+
+
             //Noti
             var user = visitSession.VisitDetail.Visitor;
             var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);

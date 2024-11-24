@@ -28,7 +28,14 @@ namespace SecurityGateApv.Application.Mapper
             #region Role
             CreateMap<Role, RoleRes>().ReverseMap();
             #endregion
+
+            #region Gate
             CreateMap<Gate, GetGateRes>().ReverseMap();
+            CreateMap<Gate, CreateGateCommand>().ReverseMap();
+            CreateMap<Camera, CameraCommand>().ReverseMap();
+            CreateMap<Camera, CameraRes>().ReverseMap();
+            CreateMap<CameraType, CameraTypeRes>().ReverseMap();
+            #endregion
             CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
             CreateMap<GetDepartmentRes, Department>().ReverseMap();
             CreateMap<ScheduleResForVisit, Schedule>().ReverseMap();
