@@ -55,7 +55,7 @@ namespace SecurityGateApv.Domain.Errors
         #endregion
 
 
-        #region VisitError
+        #region Visit
         //Visit error
         public static readonly Error NotFoundVisit = new("Error.Visit", "Không tìm thấy lịch hẹn");
         public static readonly Error UpdateTimeVisitError = new("Error.UpdateTimeVisitError", "Time Error");
@@ -66,6 +66,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NoValidDateForVisit = new("Error.NoValidDateForVisit", "No Date Valid for this schedule");
         public static readonly Error NoScheduleAssignForThisStaff = new("Error.NoScheduleAssignForThisStaff", "No Assigned Schedule for staff");
         public static readonly Error AppendTimeInvalid = new("Error.AppendTimeInvalid", "Expect End Time must grater than Start Time");
+        public static readonly Error VisitCancel = new("Error.VisitCancel", "Chuyến thăm đã bị hủy");
         #endregion
 
         #region VisitDetailError
@@ -109,6 +110,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
         public static readonly Error ValidSession = new("Error.ValidSession", "Bạn đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
+        public static readonly Error CheckoutNotvalidWithVisitActiveTemporary = new("Error.CheckoutNotvalidWithVisitActiveTemporary", "Khách thăm này chưa được nhân viên duyệnt, cần duyệt chuyến thăm của khách này trước khi thực hiện CheckOut.");
         #endregion
 
         #region VehicleSession

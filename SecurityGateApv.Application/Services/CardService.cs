@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using Microsoft.AspNetCore.Http.Metadata;
+using SecurityGateApv.Domain.Enums;
 
 namespace SecurityGateApv.Application.Services
 {
@@ -30,9 +31,11 @@ namespace SecurityGateApv.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAWSService _awsService;
         private readonly IPrivateKeyRepo _privateKeyRepo;
+        private readonly IVisitCardRepo _visitCardRepo;
+
 
         public CardService(IExtractQRCode extractQRCode, IMapper mapper, IUnitOfWork unitOfWork,
-            IAWSService awsService, ICardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo, ICardTypeRepo cardTypeRepo)
+            IAWSService awsService, ICardRepo qrRCardRepo, IPrivateKeyRepo privateKeyRepo, ICardTypeRepo cardTypeRepo, IVisitCardRepo visitCardRepo)
         {
             _extractQRCode = extractQRCode;
             _mapper = mapper;
@@ -42,6 +45,7 @@ namespace SecurityGateApv.Application.Services
             _privateKeyRepo = privateKeyRepo;
             _qrRCardRepo = qrRCardRepo;
             _cardTypeRepo = cardTypeRepo;
+            _visitCardRepo = visitCardRepo;
         }
 
 
@@ -65,12 +69,12 @@ namespace SecurityGateApv.Application.Services
             var cardType = (await _cardTypeRepo.FindAsync(
                 s => s.CardTypeId.Equals(command.CardTypeId)
                 )).FirstOrDefault();
-            if(cardType == null)
+            if (cardType == null)
             {
                 return Result.Failure<GetCardRes>(Error.NotFoundCardType);
             }
             //var qrCard = QRCard.Create(1, 2, cardGuid, );
-            var cardGenerate = await _qrRCardRepo.GenerateQRCard(command.CardVerified,command.ImageLoGo, cardType.CardTypeName);
+            var cardGenerate = await _qrRCardRepo.GenerateQRCard(command.CardVerified, command.ImageLoGo, cardType.CardTypeName);
             var qrCoder = _mapper.Map<GetCardRes>(cardGenerate);
             return qrCoder;
         }
@@ -78,9 +82,9 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
             var card = await _qrRCardRepo.FindAsync(
-                s => true, pageSize, pageNumber,includeProperties: "CardType"
+                s => true, pageSize, pageNumber, includeProperties: "CardType"
                 );
-            if(card == null)
+            if (card == null)
             {
                 return Result.Failure<List<GetCardRes>>(Error.NotFoundCard);
             }
@@ -88,7 +92,7 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<List<GetCardRes>>(card);
             return result;
 
-        
+
 
         }
 
@@ -97,15 +101,15 @@ namespace SecurityGateApv.Application.Services
             var result = new AWSDomainDTO();
             var key = (await _privateKeyRepo.GetAllAsync()).FirstOrDefault();
             var label = await _awsService.DetectLabelService(image, key);
-            label = label.Where(s => s.Label.Equals("Sandal",StringComparison.OrdinalIgnoreCase) || s.Label.Equals("Shoe", StringComparison.OrdinalIgnoreCase)).ToArray();
+            label = label.Where(s => s.Label.Equals("Sandal", StringComparison.OrdinalIgnoreCase) || s.Label.Equals("Shoe", StringComparison.OrdinalIgnoreCase)).ToArray();
             if (label.Count == 0)
             {
                 return Result.Failure<AWSDomainDTO>(Error.DetectionError);
             }
             result = label.ToArray()[0];
-            foreach(var item in label)
+            foreach (var item in label)
             {
-                if(result.Confidence < item.Confidence)
+                if (result.Confidence < item.Confidence)
                 {
                     result = item;
                 }
@@ -150,6 +154,28 @@ namespace SecurityGateApv.Application.Services
             var qrCard = Card.Create(command.CardTypeId, command.CardVerified, qrCoder.CardImage);
             await _qrRCardRepo.AddAsync(qrCard);
             await _unitOfWork.CommitAsync();
+            return true;
+        }
+
+        public async Task<Result<bool>> UpdateCardStatusLost(int visitDetailId)
+        {
+            var visitCard = (await _visitCardRepo.FindAsync(
+                               s => s.VisitDetailId == visitDetailId
+                               && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                               includeProperties: "Card"
+                                              )).FirstOrDefault();
+            if (visitCard == null)
+            {
+                return Result.Failure<bool>(Error.CardNotIssue);
+            }
+            visitCard.CancelCardLost();
+            await _visitCardRepo.UpdateAsync(visitCard);
+            if (!await _unitOfWork.CommitAsync())
+            {
+                return Result.Failure<bool>(Error.CommitError);
+
+            }
+
             return true;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.Services;
@@ -10,11 +11,11 @@ namespace SecurityGateApv.WebApi.Controllers
     [ApiController]
     public class CardController : Controller
     {
-        private readonly ICardService _qrCodeService;
+        private readonly ICardService _cardService;
 
-        public CardController(ICardService qrCodeService)
+        public CardController(ICardService cardService)
         {
-            _qrCodeService = qrCodeService;
+            _cardService = cardService;
         }
 
         //[HttpPost("decode")]
@@ -36,6 +37,36 @@ namespace SecurityGateApv.WebApi.Controllers
         //        return StatusCode(500, $"Lỗi: {ex.Message}");
         //    }
         //}
+        [HttpGet()]
+        public async Task<ActionResult> GetAllQrCardPaging(int pageNumber,  int pageSize)
+        {
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+
+            var result = await _cardService.GetAllByPaging(pageNumber, pageSize);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("{cardVerification}")]
+        public async Task<ActionResult> GetQrCardByCardVerification(string cardVerification)
+        {
+            if (cardVerification == null)
+            {
+                return BadRequest("CardVerification can not null");
+            }
+
+            var result = await _cardService.GetQrCardByCardVerification(cardVerification);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpPost("ShoeDetect")]
         public async Task<IActionResult> ShoeDetect(DetectImageCommand request)
         {
@@ -47,7 +78,7 @@ namespace SecurityGateApv.WebApi.Controllers
 
             try
             {
-                var result = await _qrCodeService.DetectShoe(request.Image);
+                var result = await _cardService.DetectShoe(request.Image);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);
@@ -63,7 +94,7 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost("GenerateCard")]
         public async Task<IActionResult> GenerateCard(CreateCardCommand command)
         {
-            var result = await _qrCodeService.GenerateCard(command);
+            var result = await _cardService.GenerateCard(command);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -74,37 +105,18 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost()]
         public async Task<IActionResult> CreateCard( CreateCardCommand command)
         {
-            var result = await _qrCodeService.CreateCard(command);
+            var result = await _cardService.CreateCard(command);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
         }
-        [HttpGet()]
-        public async Task<ActionResult> GetAllQrCardPaging(int pageNumber,  int pageSize)
+        [HttpPost("LostCard/{visitDetailId}")]
+        public async Task<ActionResult> UpdateCardStatusLost(int visitDetailId)
         {
-            if (pageNumber <= 0 || pageSize <= 0)
-            {
-                return BadRequest("Page number and page size must be greater than zero.");
-            }
+            var result = await _cardService.UpdateCardStatusLost(visitDetailId);
 
-            var result = await _qrCodeService.GetAllByPaging(pageNumber, pageSize);
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error);
-            }
-            return Ok(result.Value);
-        }
-        [HttpGet("{cardVerification}")]
-        public async Task<ActionResult> GetQrCardByCardVerification(string cardVerification)
-        {
-            if (cardVerification == null)
-            {
-                return BadRequest("CardVerification can not null");
-            }
-
-            var result = await _qrCodeService.GetQrCardByCardVerification(cardVerification);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

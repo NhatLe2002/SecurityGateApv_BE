@@ -62,8 +62,9 @@ namespace SecurityGateApv.Application.Services
                 s => s.Visitor.CredentialsCard.Equals(command.CredentialCard)
                 && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
-                && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
-                && s.ExpectedEndHour >= DateTime.Now.TimeOfDay,
+                //&& s.ExpectedStartHour <= DateTime.Now.TimeOfDay
+                //&& s.ExpectedEndHour >= DateTime.Now.TimeOfDay
+                && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                 int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
             );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -71,7 +72,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.NotFoundVisitByCredentialCard);
             }
-
+            //if(validVisitDetail.Visit.VisitStatus == VisitStatusEnum.Cancelled.ToString())
+            //{
+            //    return Result.Failure<ValidCheckinRes>(Error.);
+            //}
             // Check exist Card and does not have visit
             var card = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(command.QRCardVerification),
@@ -112,6 +116,7 @@ namespace SecurityGateApv.Application.Services
                 s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                 1, 1
             )).FirstOrDefault();
+
             if (visitSession != null)
             {
                 return Result.Failure<ValidCheckinRes>(Error.ValidSession);
@@ -258,7 +263,8 @@ namespace SecurityGateApv.Application.Services
             var visitDetails = await _visitDetailRepo.FindAsync(
                    s => s.VisitDetailId == visitCard.VisitDetailId
                    && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
-                   && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+                   && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
+                   && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                    int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -854,7 +860,6 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
             return result;
-
         }
         public async Task<Result<SessionCheckOutRes>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
@@ -887,7 +892,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
-
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
+            }
 
             //Check if schedule type is daily then cancel
             if (card.CardType.CardTypeName.Equals(CardTypeEnum.ShotTermCard.ToString()))
