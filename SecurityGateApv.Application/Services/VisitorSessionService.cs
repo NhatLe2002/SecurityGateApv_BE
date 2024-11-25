@@ -896,7 +896,7 @@ namespace SecurityGateApv.Application.Services
             }
             if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
             {
-                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
 
             //Check if schedule type is daily then cancel
@@ -973,6 +973,10 @@ namespace SecurityGateApv.Application.Services
             if (visitSession == null)
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
+            }
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
 
             // Đoạn này thực hiện chức năng khác rồi, cần xóa sau này
