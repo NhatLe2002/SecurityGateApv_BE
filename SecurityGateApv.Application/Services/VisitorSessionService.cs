@@ -63,7 +63,8 @@ namespace SecurityGateApv.Application.Services
                 && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
                 && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
                 && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
-                && s.ExpectedEndHour >= DateTime.Now.TimeOfDay,
+                && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
+                && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                 int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
             );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -71,7 +72,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.NotFoundVisitByCredentialCard);
             }
-
+            //if(validVisitDetail.Visit.VisitStatus == VisitStatusEnum.Cancelled.ToString())
+            //{
+            //    return Result.Failure<ValidCheckinRes>(Error.);
+            //}
             // Check exist Card and does not have visit
             var card = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(command.QRCardVerification),
@@ -95,23 +99,24 @@ namespace SecurityGateApv.Application.Services
 
             // Check valid CredentialCard and Card 
             var visitCard = (await _visitCardRepo.FindAsync(
-                s => (s.CardId == card.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
+                s => (s.CardId == card.CardId )
                 && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
-            if (visitCard != null && visitCard.CardId != card.CardId)
+            if (visitCard != null)
             {
                 return Result.Failure<ValidCheckinRes>(Error.DuplicateCard);
             }
-            if (visitCard != null && visitCard.VisitDetailId != validVisitDetail.VisitDetailId)
-            {
-                return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
-            }
+            //if (visitCard != null && visitCard.VisitDetailId != validVisitDetail.VisitDetailId)
+            //{
+            //    return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
+            //}
 
             // Check session don't have check-in
             var visitSession = (await _visitorSessionRepo.FindAsync(
                 s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                 1, 1
             )).FirstOrDefault();
+
             if (visitSession != null)
             {
                 return Result.Failure<ValidCheckinRes>(Error.ValidSession);
@@ -258,7 +263,10 @@ namespace SecurityGateApv.Application.Services
             var visitDetails = await _visitDetailRepo.FindAsync(
                    s => s.VisitDetailId == visitCard.VisitDetailId
                    && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
-                   && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+                   && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
+                   && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
+                   && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
+                   && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                    int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -854,7 +862,6 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
             return result;
-
         }
         public async Task<Result<SessionCheckOutRes>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
@@ -887,7 +894,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
-
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
+            }
 
             //Check if schedule type is daily then cancel
             if (card.CardType.CardTypeName.Equals(CardTypeEnum.ShotTermCard.ToString()))
@@ -897,7 +907,7 @@ namespace SecurityGateApv.Application.Services
             }
 
             //Vehicle checkout
-            if(command.VehicleSession != null)
+            if (command.VehicleSession != null)
             {
                 var vehicleSession = (await _vehicleSessionRepo.FindAsync(
                        s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
@@ -913,6 +923,20 @@ namespace SecurityGateApv.Application.Services
                 }
                 await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
             }
+            else
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+                }
+                //else if (visitSession.VisitDetail.ExpectedEndHour <= TimeSpan.  &&vehicleSession != null)
+                //{
+
+                //}
+            }
 
 
             command.Status = "CheckOut";
@@ -920,6 +944,9 @@ namespace SecurityGateApv.Application.Services
             var updateVisitorSesson = _mapper.Map(command, visitSession);
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
+
+
+
             //Noti
             var user = visitSession.VisitDetail.Visitor;
             var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
@@ -931,7 +958,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
             await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
-            
+
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
@@ -961,8 +988,42 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
+            }
 
 
+
+            //Vehicle checkout
+            if (command.VehicleSession != null)
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (vehicleSession == null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+                }
+                var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+                if (vehicleSessionCheckout.IsFailure)
+                {
+                    return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                }
+                await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+            }
+            else
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+                }
+            }
+
+            // Đoạn này thực hiện chức năng khác rồi, cần xóa sau này
             var visitCard = (await _visitCardRepo.FindAsync(
                                s => s.VisitDetailId == visitSession.VisitDetailId
                                && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
@@ -972,9 +1033,6 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CardNotIssue);
             }
-
-
-
             visitCard.CancelCardLost();
             await _visitCardRepo.UpdateAsync(visitCard);
 
@@ -996,7 +1054,10 @@ namespace SecurityGateApv.Application.Services
             }
             await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
 
-            return null;
+            var result = _mapper.Map<SessionCheckOutRes>(visitSession);
+            result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
+
+            return result;
         }
         public async Task<Result<List<VisitorSessionImageRes>>> GetAllImagesByVisitorSessionId(int visitorSessionId)
         {

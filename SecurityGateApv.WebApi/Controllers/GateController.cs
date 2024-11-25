@@ -25,16 +25,36 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        //[HttpPost()]
-        //public async Task<IActionResult> CreateCard(CreateCardCommand command)
-        //{
-        //    var result = await _gateService.Create(command);
-        //    if (result.IsFailure)
-        //    {
-        //        return BadRequest(result.Error);
-        //    }
-        //    return Ok(result.Value);
-        //}
+        [HttpGet("CameraType")]
+        public async Task<ActionResult> GetAllCameraType()
+        {
+            var result = await _gateService.GetAllCameraType();
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("Camera/{gateId}")]
+        public async Task<ActionResult> GetCamera(int gateId)
+        {
+            var result = await _gateService.GetCameraByGate(gateId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPost()]
+        public async Task<IActionResult> CreateGate(CreateGateCommand command)
+        {
+            var result = await _gateService.CreateGate(command);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("GetAllGatePaging")]
         public async Task<ActionResult> GetAllGatePaging(int pageSize, int pageNumber)
         {

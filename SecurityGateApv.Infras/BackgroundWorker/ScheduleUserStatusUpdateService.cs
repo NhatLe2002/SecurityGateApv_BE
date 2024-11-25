@@ -26,8 +26,8 @@ namespace SecurityGateApv.Infras.BackgroundWorker
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var now = DateTime.Now;
-            //var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 22, 00, 0);
-            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 17, 37, 0);
+            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 22, 00, 0);
+            //var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 17, 37, 0);
             if (now > scheduledTime)
             {
                 scheduledTime = scheduledTime.AddDays(1);
@@ -46,7 +46,7 @@ namespace SecurityGateApv.Infras.BackgroundWorker
                     var scheduleUserRepo = scope.ServiceProvider.GetRequiredService<IScheduleUserRepo>();
                     var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-                    var scheduleUserToUpdate = await scheduleUserRepo.FindAsync(v => v.AssignTime <= DateTime.Now && v.Status == ScheduleUserStatusEnum.Pending.ToString(),
+                    var scheduleUserToUpdate = await scheduleUserRepo.FindAsync(v => v.AssignTime <= DateTime.Now && v.Status == ScheduleUserStatusEnum.Assigned.ToString(),
                         int.MaxValue, 1
                     );
 
