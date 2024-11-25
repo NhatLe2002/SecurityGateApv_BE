@@ -99,7 +99,7 @@ namespace SecurityGateApv.Application.Services
 
             // Check valid CredentialCard and Card 
             var visitCard = (await _visitCardRepo.FindAsync(
-                s => (s.CardId == card.CardId && s.VisitDetailId == validVisitDetail.VisitDetailId)
+                s => (s.CardId == card.CardId )
                 && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
             if (visitCard != null)
