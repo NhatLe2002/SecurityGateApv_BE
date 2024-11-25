@@ -144,7 +144,7 @@ namespace SecurityGateApv.Domain.Models
             }
             if (error.Distinct().Count() > 0)
             {
-                return Result.Failure<Visit>(new Error("CreateVisit", "VisitorId " + visitorId + " busy at visit Id: " + string.Join(", ", error)));
+                return Result.Failure<Visit>(new Error("CreateVisit", "Khách " + visitorId + " bận ở cuộc Hẹn/Ngày: " + string.Join(", ", error)));
             }
             VisitDetail.Add(visitDetailAdd);
             return this;
