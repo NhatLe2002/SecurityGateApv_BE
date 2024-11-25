@@ -24,6 +24,7 @@ namespace SecurityGateApv.Application.Services
     public class VisitorSessionService : IVisitorSessionService
     {
         private readonly IVisitorSessionRepo _visitorSessionRepo;
+        private readonly IVehicleSessionRepo _vehicleSessionRepo;
         private readonly ICardRepo _cardRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -38,7 +39,7 @@ namespace SecurityGateApv.Application.Services
 
         public VisitorSessionService(IVisitorSessionRepo visitorSessionRepo, IMapper mapper, IUnitOfWork unitOfWork, ICardRepo qRCardRepo, IVisitDetailRepo visitDetailRepo,
             IVisitCardRepo visitCardRepo, ICardService cardService, IJwt jwt, IVisitorRepo visitorRepo, IVisitorSessionImagesRepo visitorSessionImagesRepo,
-            INotifications notifications, INotificationRepo notificationRepo)
+            INotifications notifications, INotificationRepo notificationRepo, IVehicleSessionRepo vehicleSessionRepo)
         {
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
@@ -52,6 +53,7 @@ namespace SecurityGateApv.Application.Services
             _visitorSessionImagesRepo = visitorSessionImagesRepo;
             _notifications = notifications;
             _notificationRepo = notificationRepo;
+            _vehicleSessionRepo = vehicleSessionRepo;
         }
 
         public async Task<Result<ValidCheckinRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command)
@@ -88,7 +90,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CardLost);
             }
-             
+
 
 
             // Check valid CredentialCard and Card 
@@ -104,10 +106,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
             }
-               
+
             // Check session don't have check-in
             var visitSession = (await _visitorSessionRepo.FindAsync(
-                s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                 1, 1
             )).FirstOrDefault();
             if (visitSession != null)
@@ -140,10 +142,31 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
 
-            //var result = _mapper.Map<CheckInRes>(validVisitDetail);
-            //result.CardRes = _mapper.Map<CardRes>(qrCard);
+            //Vehicle Session
+            if (command.VehicleSession != null)
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                        s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                    )).FirstOrDefault();
+                if (vehicleSession != null)
+                {
+                    return Result.Failure<ValidCheckinRes>(Error.ValidVehicleSession);
+                }
+                var vehicleSessionCheckin = VehicleSession.Checkin(command.VehicleSession.LicensePlate, validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
+                if (vehicleSessionCheckin.IsFailure)
+                {
+                    return Result.Failure<ValidCheckinRes>(vehicleSessionCheckin.Error);
+                }
+                var vehicleSessionEntity = vehicleSessionCheckin.Value;
 
+                foreach (var item in command.Images)
+                {
+                    vehicleSessionEntity.AddVehicleSessionImage(item.ImageType, item.ImageURL);
+                }
+                await _vehicleSessionRepo.AddAsync(vehicleSessionEntity);
+            }
 
+            // Add VisitCard
             if (visitCard == null)
             {
                 if ((validVisitDetail.Visit.ScheduleUser == null
@@ -163,6 +186,7 @@ namespace SecurityGateApv.Application.Services
                     return Result.Failure<ValidCheckinRes>(error);
                 }
                 await _visitCardRepo.AddAsync(visitCard);
+
             }
 
 
@@ -245,7 +269,7 @@ namespace SecurityGateApv.Application.Services
 
             //Check session don't have checkin
             var visitSesson = (await _visitorSessionRepo.FindAsync(
-                  s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                  s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                   1, 1
               )).FirstOrDefault();
             if (visitSesson != null)
@@ -278,6 +302,29 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
 
+            //Vehicle Session
+            if (command.VehicleSession != null)
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                        s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                    )).FirstOrDefault();
+                if (vehicleSession != null)
+                {
+                    return Result.Failure<ValidCheckinRes>(Error.ValidVehicleSession);
+                }
+                var vehicleSessionCheckin = VehicleSession.Checkin(command.VehicleSession.LicensePlate, validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
+                if (vehicleSessionCheckin.IsFailure)
+                {
+                    return Result.Failure<ValidCheckinRes>(vehicleSessionCheckin.Error);
+                }
+                var vehicleSessionEntity = vehicleSessionCheckin.Value;
+
+                foreach (var item in command.Images)
+                {
+                    vehicleSessionEntity.AddVehicleSessionImage(item.ImageType, item.ImageURL);
+                }
+                await _vehicleSessionRepo.AddAsync(vehicleSessionEntity);
+            }
 
 
             var checkinSession = VisitorSession.Checkin(validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
@@ -368,7 +415,7 @@ namespace SecurityGateApv.Application.Services
             }
             //Check session don't have checkin
             var visitSesson = (await _visitorSessionRepo.FindAsync(
-                  s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                  s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                   1, 1
               )).FirstOrDefault();
             if (visitSesson != null)
@@ -433,7 +480,7 @@ namespace SecurityGateApv.Application.Services
 
             //Check session don't have checkin
             var visitSesson = (await _visitorSessionRepo.FindAsync(
-                  s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                  s => s.VisitDetailId == validVisitDetail.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                   1, 1
               )).FirstOrDefault();
             if (visitSesson != null)
@@ -496,7 +543,7 @@ namespace SecurityGateApv.Application.Services
             //}
 
             var visitSesson = (await _visitorSessionRepo.FindAsync(
-                   s => /*s.VisitDetailId == command.VisitDetailId &&*/ s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                   s => /*s.VisitDetailId == command.VisitDetailId &&*/ s.Status == SessionStatus.CheckIn.ToString(),
                    1, 1
                )).FirstOrDefault();
             if (visitSesson != null)
@@ -615,7 +662,7 @@ namespace SecurityGateApv.Application.Services
             //var check = _mapper.Map<List<GraphQlVisitorRes>>(visitSession.Select(s => s.VisitDetail.Visitor));
             return result.ToList();
         }
-        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetVisitorSessionByDate(int pageNumber, int pageSize,DateTime date, string token)
+        public async Task<Result<ICollection<GetVisitorSessionRes>>> GetVisitorSessionByDate(int pageNumber, int pageSize, DateTime date, string token)
         {
             var userAuthor = _jwt.DecodeAuthorJwt(token);
             var visitSession = new List<VisitorSession>();
@@ -751,7 +798,7 @@ namespace SecurityGateApv.Application.Services
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetailId == visitCard.VisitDetailId
-                  && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                  && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
                     includeProperties: "SecurityIn,GateIn,VisitDetail"
                 )).FirstOrDefault();
@@ -783,7 +830,7 @@ namespace SecurityGateApv.Application.Services
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
-                  && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                  && s.Status == SessionStatus.CheckIn.ToString(),
                     includeProperties: "SecurityIn,GateIn,VisitDetail"
                 )).FirstOrDefault();
 
@@ -809,67 +856,89 @@ namespace SecurityGateApv.Application.Services
             return result;
 
         }
-        public async Task<Result<bool>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
+        public async Task<Result<SessionCheckOutRes>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
         {
-            var qRCard = (await _cardRepo.FindAsync(
+            var card = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(qrCardVerifi)
                 && s.CardStatus == CardStatusEnum.Active.ToString(),
                 includeProperties: "CardType"
                 )).FirstOrDefault();
-            if (qRCard == null)
+            if (card == null)
             {
-                return Result.Failure<bool>(Error.NotFoundCardByCardVerification);
+                return Result.Failure<SessionCheckOutRes>(Error.NotFoundCardByCardVerification);
             }
 
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => s.CardId == qRCard.CardId
+                               s => s.CardId == card.CardId
                                && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString()
                                               )).FirstOrDefault();
             if (visitCard == null)
             {
-                return Result.Failure<bool>(Error.NotFoundVisitCard);
+                return Result.Failure<SessionCheckOutRes>(Error.NotFoundVisitCard);
             }
 
 
-            var visitSesson = (await _visitorSessionRepo.FindAsync(
-                    s => s.VisitDetailId == visitCard.VisitDetailId && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+            var visitSession = (await _visitorSessionRepo.FindAsync(
+                    s => s.VisitDetailId == visitCard.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                     1, 1,
                 includeProperties: "VisitDetail.Visitor, VisitDetail.Visit"
                 )).FirstOrDefault();
-            if (visitSesson == null)
+            if (visitSession == null)
             {
-                return Result.Failure<bool>(Error.CheckoutNotValid);
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
 
 
             //Check if schedule type is daily then cancel
-            if (qRCard.CardType.CardTypeName.Equals(CardTypeEnum.ShotTermCard.ToString()))
+            if (card.CardType.CardTypeName.Equals(CardTypeEnum.ShotTermCard.ToString()))
             {
                 visitCard.UpdateVisitCardStatus(VisitCardStatusEnum.Expired.ToString());
                 await _visitCardRepo.UpdateAsync(visitCard);
             }
 
+            //Vehicle checkout
+            if(command.VehicleSession != null)
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (vehicleSession == null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+                }
+                var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+                if (vehicleSessionCheckout.IsFailure)
+                {
+                    return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                }
+                await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+            }
+
+
             command.Status = "CheckOut";
             command.CheckoutTime = DateTime.Now;
-            var updateVisitorSesson = _mapper.Map(command, visitSesson);
+            var updateVisitorSesson = _mapper.Map(command, visitSession);
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
             //Noti
-            var user = visitSesson.VisitDetail.Visitor;
-            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSesson.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
-            noti.Value.AddUserNoti(command.SecurityOutId, (int)visitSesson.VisitDetail.Visit.ResponsiblePersonId);
+            var user = visitSession.VisitDetail.Visitor;
+            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            noti.Value.AddUserNoti(command.SecurityOutId, (int)visitSession.VisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
             if (!commit2)
             {
-                return Result.Failure<bool>(Error.CommitError);
+                return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSesson.VisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
+            
 
+            var result = _mapper.Map<SessionCheckOutRes>(visitSession);
+            result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
 
-            return true;
+            return result;
         }
-        public async Task<Result<bool>> CheckOutWithCredentialCard(VisitorSessionCheckOutCommand command, string credentialCard)
+        public async Task<Result<SessionCheckOutRes>> CheckOutWithCredentialCard(VisitorSessionCheckOutCommand command, string credentialCard)
         {
             var visitor = (await _visitorRepo.FindAsync(
                     s => s.CredentialsCard == credentialCard && s.Status == VisitorStatusEnum.Active.ToString()
@@ -877,20 +946,20 @@ namespace SecurityGateApv.Application.Services
 
             if (visitor == null)
             {
-                return Result.Failure<bool>(Error.NotFoundVisitor);
+                return Result.Failure<SessionCheckOutRes>(Error.NotFoundVisitor);
 
             }
 
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
-                  && s.Status == VisitorSessionStatus.CheckIn.ToString(),
+                  && s.Status == SessionStatus.CheckIn.ToString(),
                     includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor,VisitDetail.Visit"
                 )).FirstOrDefault();
 
             if (visitSession == null)
             {
-                return Result.Failure<bool>(Error.CheckoutNotValid);
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
 
 
@@ -901,7 +970,7 @@ namespace SecurityGateApv.Application.Services
                                               )).FirstOrDefault();
             if (visitCard == null)
             {
-                return Result.Failure<bool>(Error.CardNotIssue);
+                return Result.Failure<SessionCheckOutRes>(Error.CardNotIssue);
             }
 
 
@@ -914,7 +983,7 @@ namespace SecurityGateApv.Application.Services
             var updateVisitorSesson = _mapper.Map(command, visitSession);
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
-            
+
             //noti
             var user = visitor;
             var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
@@ -923,11 +992,11 @@ namespace SecurityGateApv.Application.Services
             var commit2 = await _unitOfWork.CommitAsync();
             if (!commit2)
             {
-                return Result.Failure<bool>(Error.CommitError);
+                return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
             await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
 
-            return true;
+            return null;
         }
         public async Task<Result<List<VisitorSessionImageRes>>> GetAllImagesByVisitorSessionId(int visitorSessionId)
         {
@@ -939,6 +1008,8 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<List<VisitorSessionImageRes>>(images);
             return result;
         }
+
+
 
 
     }

@@ -18,7 +18,7 @@ namespace SecurityGateApv.Application.DTOs.Req
         public int GateOutId { get; set; }
         [JsonIgnore]
         public string Status { get; set; } = string.Empty;
-
         //public ICollection<VehicleSessionImage> Images { get; set; }
+        public VehicleSessionComand? VehicleSession { get; set; }
     }
 }

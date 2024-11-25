@@ -10,9 +10,15 @@ namespace SecurityGateApv.Domain.Models
 {
     public class VehicleSessionImage
     {
+        public VehicleSessionImage() { }
+        public VehicleSessionImage(string imageType, string imageURL, VehicleSession vehicleSession)
+        {
+            ImageType = imageType;
+            ImageURL = imageURL;
+            VehicleSession = vehicleSession;
+        }
         [Key]
         public int VehicleSessionImageId { get; set; }
-        public string VehicleSessionImageName { get; set; }
         public string ImageType { get; set; }
         public string ImageURL { get; set; }
 
