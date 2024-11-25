@@ -187,7 +187,6 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
-            return Ok(result.Value);
         }
         //[HttpGet("StatusCheckIn/Card/{cardVerified}")]
         //public async Task<IActionResult> GetVisitSessionStatusCheckInByCardVerification(string cardVerified)

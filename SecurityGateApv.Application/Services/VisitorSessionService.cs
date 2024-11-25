@@ -926,7 +926,7 @@ namespace SecurityGateApv.Application.Services
             else
             {
                 var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                       s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
                    )).FirstOrDefault();
                 if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
                 {
