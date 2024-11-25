@@ -68,5 +68,15 @@ namespace SecurityGateApv.Domain.Models
             return Result.Success(camera);
 
         }
+        public  Result<Camera> Update( string captureURL, string streamURL, string description, bool status, int gateId, int cameraTypeId)
+        {
+            CaptureURL = captureURL;
+            StreamURL = streamURL;
+            Description = description;
+            Status = status;
+            GateId = gateId;
+            CameraTypeId = cameraTypeId;
+            return Result.Success(this);
+        }
     }
 }

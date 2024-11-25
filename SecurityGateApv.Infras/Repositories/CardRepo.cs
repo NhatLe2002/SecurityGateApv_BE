@@ -118,7 +118,7 @@ namespace SecurityGateApv.Infras.Repositories
                         // Add footer text
                         var textPaint = new SKPaint
                         {
-                            Color = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? SKColors.White : SKColors.Green,
+                            Color = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? SKColors.White : SKColors.Yellow,
                             TextSize = 12,
                             IsAntialias = true,
                             TextAlign = SKTextAlign.Center,

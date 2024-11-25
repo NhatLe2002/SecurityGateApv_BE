@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
@@ -30,29 +31,6 @@ namespace SecurityGateApv.Application.Services
             _cameraTypeRepo = cameraTypeRepo;
         }
 
-        public async Task<Result<bool>> CreateGate(CreateGateCommand command)
-        {
-            
-            var gate =  Gate.Create(command.GateName,DateTime.Now,command.Description,true).Value;
-            foreach(var item in command.Cameras)
-            {
-                var cameraType = await _cameraTypeRepo.GetByIdAsync(item.CameraTypeId);
-                if (cameraType == null)
-                {
-                    return Result.Failure<bool>(Error.NotFound);
-                }
-                gate.AddCamera(item.CaptureURL, item.StreamURL, item.Description, true, item.CameraTypeId);
-            }
-
-
-            await _gateRepo.AddAsync(gate);
-            if(!await _unitOfWork.CommitAsync())
-            {
-                return Result.Failure<bool>(Error.CommitError);
-            }
-
-            return Result.Success(true);
-        }
 
         public async Task<Result<List<CameraTypeRes>>> GetAllCameraType()
         {
@@ -79,6 +57,7 @@ namespace SecurityGateApv.Application.Services
                 s => true,
                 pageSize,
                 pageNumber,
+                s => s.OrderByDescending(x => x.CreateDate),
                 includeProperties : "Cameras.CameraType"
                );
             if (gate == null)
@@ -98,6 +77,80 @@ namespace SecurityGateApv.Application.Services
                 );
             var res = _mapper.Map<List<CameraRes>>(camera);
             return res;
+        }
+        public async Task<Result<bool>> CreateGate(CreateGateCommand command)
+        {
+            
+            var gate =  Gate.Create(command.GateName,DateTime.Now,command.Description,true).Value;
+            foreach(var item in command.Cameras)
+            {
+                var cameraType = await _cameraTypeRepo.GetByIdAsync(item.CameraTypeId);
+                if (cameraType == null)
+                {
+                    return Result.Failure<bool>(Error.NotFound);
+                }
+                gate.AddCamera(item.CaptureURL, item.StreamURL, item.Description, true, item.CameraTypeId);
+            }
+
+
+            await _gateRepo.AddAsync(gate);
+            if(!await _unitOfWork.CommitAsync())
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+
+            return Result.Success(true);
+        }
+
+        public async Task<Result<bool>> UpdateGate(GateUpdateCommand command)
+        {
+            var gate = (await _gateRepo.FindAsync(
+                     s => s.GateId == command.GateId,
+                     1, 1,
+                     includeProperties: "Cameras"
+                 )).FirstOrDefault();
+
+            if (gate == null)
+            {
+                return Result.Failure<bool>(Error.NotFound);
+            }
+
+            var updateResult = gate.Update(command.GateName,  command.Description, true);
+            if (!updateResult.IsSuccess)
+            {
+                return Result.Failure<bool>(updateResult.Error);
+            }
+
+            foreach (var item in command.Cameras)
+            {
+                var cameraType = await _cameraTypeRepo.GetByIdAsync(item.CameraTypeId);
+                if (cameraType == null)
+                {
+                    return Result.Failure<bool>(Error.NotFound);
+                }
+
+                var existingCamera = gate.Cameras.FirstOrDefault(c => c.Id == item.CameraId);
+                if (existingCamera != null)
+                {
+                    var cameraUpdateResult = existingCamera.Update(item.CaptureURL, item.StreamURL, item.Description, true, command.GateId, item.CameraTypeId);
+                    if (!cameraUpdateResult.IsSuccess)
+                    {
+                        return Result.Failure<bool>(cameraUpdateResult.Error);
+                    }
+                }
+                else
+                {
+                    gate.AddCamera(item.CaptureURL, item.StreamURL, item.Description, true, item.CameraTypeId);
+                }
+            }
+
+            await _gateRepo.UpdateAsync(gate);
+            if (!await _unitOfWork.CommitAsync())
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+
+            return Result.Success(true);
         }
     }
 }

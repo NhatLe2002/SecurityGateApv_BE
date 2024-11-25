@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.Services;
 using SecurityGateApv.Application.Services.Interface;
 
@@ -49,6 +50,16 @@ namespace SecurityGateApv.WebApi.Controllers
         public async Task<IActionResult> CreateGate(CreateGateCommand command)
         {
             var result = await _gateService.CreateGate(command);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut()]
+        public async Task<IActionResult> UpdateGate( GateUpdateCommand command)
+        {
+            var result = await _gateService.UpdateGate( command);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

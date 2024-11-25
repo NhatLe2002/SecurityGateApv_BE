@@ -61,6 +61,13 @@ namespace SecurityGateApv.Domain.Models
             var gate = new Gate(gateName, createDate, description, status);
             return Result.Success(gate);
         }
+        public Result<Gate> Update(string gateName,  string description, bool status)
+        {
+            GateName = gateName;
+            Description = description;
+            Status = status;
+            return Result.Success(this);
+        }
         public static Result<Gate> Create(int gateId, string gateName, DateTime createDate, string description, bool status)
         {
             var gate = new Gate(gateId, gateName, createDate, description, status);
