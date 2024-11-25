@@ -923,6 +923,20 @@ namespace SecurityGateApv.Application.Services
                 }
                 await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
             }
+            else
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+                }
+                //else if (visitSession.VisitDetail.ExpectedEndHour <= TimeSpan.  &&vehicleSession != null)
+                //{
+
+                //}
+            }
 
 
             command.Status = "CheckOut";
@@ -989,11 +1003,38 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CardNotIssue);
             }
-
-
-
             visitCard.CancelCardLost();
             await _visitCardRepo.UpdateAsync(visitCard);
+
+
+            //Vehicle checkout
+            if (command.VehicleSession != null)
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (vehicleSession == null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+                }
+                var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+                if (vehicleSessionCheckout.IsFailure)
+                {
+                    return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                }
+                await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+            }
+            else
+            {
+                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+                   )).FirstOrDefault();
+                if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+                }
+            }
+
 
             command.Status = "CheckOut";
             command.CheckoutTime = DateTime.Now;

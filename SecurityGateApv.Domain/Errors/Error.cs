@@ -110,12 +110,13 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
         public static readonly Error ValidSession = new("Error.ValidSession", "Bạn đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
-        public static readonly Error CheckoutNotvalidWithVisitActiveTemporary = new("Error.CheckoutNotvalidWithVisitActiveTemporary", "Khách thăm này chưa được nhân viên duyệnt, cần duyệt chuyến thăm của khách này trước khi thực hiện CheckOut.");
+        public static readonly Error CheckoutNotvalidWithVisitActiveTemporary = new("Error.CheckoutNotvalidWithVisitActiveTemporary", "Khách thăm này chưa được nhân viên duyệt, cần duyệt chuyến thăm của khách này trước khi thực hiện CheckOut.");
         #endregion
 
         #region VehicleSession
         public static readonly Error ValidVehicleSession = new("Error.ValidVehicleSession", "Xe này đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error ValidVehicleSessionCheckOut = new("Error.ValidVehicleSessionCheckOut", "Xe này đã chưa checkin, không thể checkout.");
+        public static readonly Error VehicleCheckoutDailyError = new("Error.VehicleCheckoutDailyError", "Lịch ra vào hằng ngày này có xe ra vào, cần phải thực hiện checkout cả xe ra vào.");
 
         #endregion
 
