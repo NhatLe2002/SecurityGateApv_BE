@@ -63,7 +63,12 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetGateRes>>> GetAllGate()
         {
-            var gate = await _gateRepo.GetAllAsync();
+            var gate = await _gateRepo.FindAsync(
+                s => true,
+                int.MaxValue,
+                1,
+                includeProperties: "Cameras.CameraType"
+               );
             var res = _mapper.Map<List<GetGateRes>>(gate);
             return res;
         }
@@ -74,7 +79,7 @@ namespace SecurityGateApv.Application.Services
                 s => true,
                 pageSize,
                 pageNumber,
-                includeProperties : "Cameras"
+                includeProperties : "Cameras.CameraType"
                );
             if (gate == null)
             {
