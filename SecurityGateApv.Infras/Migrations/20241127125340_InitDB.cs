@@ -8,11 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SecurityGateApv.Infras.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "CameraTypes",
+                columns: table => new
+                {
+                    CameraTypeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CameraTypeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CameraTypes", x => x.CameraTypeId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "CardTypes",
                 columns: table => new
@@ -67,7 +81,9 @@ namespace SecurityGateApv.Infras.Migrations
                     GateId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GateCoordinate = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,20 +91,17 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notifications",
+                name: "NotificationTypes",
                 columns: table => new
                 {
-                    NotificationID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReadDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifications", x => x.NotificationID);
+                    table.PrimaryKey("PK_NotificationTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,6 +200,61 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cameras",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CaptureURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StreamURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    GateId = table.Column<int>(type: "int", nullable: false),
+                    CameraTypeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cameras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cameras_CameraTypes_CameraTypeId",
+                        column: x => x.CameraTypeId,
+                        principalTable: "CameraTypes",
+                        principalColumn: "CameraTypeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cameras_Gates_GateId",
+                        column: x => x.GateId,
+                        principalTable: "Gates",
+                        principalColumn: "GateId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    NotificationID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReadDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    NotificationTypeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.NotificationID);
+                    table.ForeignKey(
+                        name: "FK_Notifications_NotificationTypes_NotificationTypeId",
+                        column: x => x.NotificationTypeId,
+                        principalTable: "NotificationTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -200,6 +268,8 @@ namespace SecurityGateApv.Infras.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OTP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OTPIssueTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: true)
@@ -262,7 +332,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ScheduleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DaysOfSchedule = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -335,7 +404,7 @@ namespace SecurityGateApv.Infras.Migrations
                     VisitStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateById = table.Column<int>(type: "int", nullable: false),
                     UpdateById = table.Column<int>(type: "int", nullable: true),
-                    ScheduleUserId = table.Column<int>(type: "int", nullable: false),
+                    ScheduleUserId = table.Column<int>(type: "int", nullable: true),
                     ResponsiblePersonId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -345,8 +414,7 @@ namespace SecurityGateApv.Infras.Migrations
                         name: "FK_Visits_ScheduleUsers_ScheduleUserId",
                         column: x => x.ScheduleUserId,
                         principalTable: "ScheduleUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Visits_Users_CreateById",
                         column: x => x.CreateById,
@@ -401,27 +469,49 @@ namespace SecurityGateApv.Infras.Migrations
                 {
                     VehicleSessionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    LicensePlate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CheckinTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckoutTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckoutTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VisitDetailId = table.Column<int>(type: "int", nullable: false),
-                    SecurityID = table.Column<int>(type: "int", nullable: false),
-                    GateId = table.Column<int>(type: "int", nullable: false)
+                    SecurityInId = table.Column<int>(type: "int", nullable: false),
+                    SecurityOutId = table.Column<int>(type: "int", nullable: true),
+                    GateInId = table.Column<int>(type: "int", nullable: false),
+                    GateOutId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VehicleSessions", x => x.VehicleSessionId);
                     table.ForeignKey(
-                        name: "FK_VehicleSessions_Gates_GateId",
-                        column: x => x.GateId,
+                        name: "FK_VehicleSessions_Gates_GateInId",
+                        column: x => x.GateInId,
                         principalTable: "Gates",
                         principalColumn: "GateId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_VehicleSessions_Users_SecurityID",
-                        column: x => x.SecurityID,
+                        name: "FK_VehicleSessions_Gates_GateOutId",
+                        column: x => x.GateOutId,
+                        principalTable: "Gates",
+                        principalColumn: "GateId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VehicleSessions_Users_SecurityInId",
+                        column: x => x.SecurityInId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VehicleSessions_Users_SecurityOutId",
+                        column: x => x.SecurityOutId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_VehicleSessions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_VehicleSessions_VisitDetails_VisitDetailId",
                         column: x => x.VisitDetailId,
@@ -467,12 +557,12 @@ namespace SecurityGateApv.Infras.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CheckinTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckoutTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VisitDetailId = table.Column<int>(type: "int", nullable: false),
                     SecurityInId = table.Column<int>(type: "int", nullable: false),
                     SecurityOutId = table.Column<int>(type: "int", nullable: true),
                     GateInId = table.Column<int>(type: "int", nullable: false),
-                    GateOutId = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    GateOutId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -515,7 +605,6 @@ namespace SecurityGateApv.Infras.Migrations
                 {
                     VehicleSessionImageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VehicleSessionImageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VehicleSessionId = table.Column<int>(type: "int", nullable: false)
@@ -553,12 +642,21 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "CameraTypes",
+                columns: new[] { "CameraTypeId", "CameraTypeName", "Description" },
+                values: new object[,]
+                {
+                    { 1, "Visitor_Body", "Camera chụp toàn thân." },
+                    { 2, "Visitor_Shoe", "Camera chụp giày." }
+                });
+
+            migrationBuilder.InsertData(
                 table: "CardTypes",
                 columns: new[] { "CardTypeId", "CardTypeName", "TypeDescription" },
                 values: new object[,]
                 {
-                    { 1, "Vehicle", "Vehicle QR Card" },
-                    { 2, "Visitor", "Visitor QR Card" }
+                    { 1, "ShotTermCard", "Thẻ cho ra vào hằng ngày" },
+                    { 2, "LongTermCard", "Thẻ cho ra vào theo lịch trình" }
                 });
 
             migrationBuilder.InsertData(
@@ -575,20 +673,25 @@ namespace SecurityGateApv.Infras.Migrations
                 columns: new[] { "DepartmentId", "AcceptLevel", "CreateDate", "DepartmentName", "Description", "Status", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "AdminDepartment", "Phòng ban riêng cho admin", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "ManagerDepartment", "Phòng ban riêng cho quản lý", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "SecurityDepartment", "Phòng ban riêng cho quản security", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 1, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", "Phòng ban riêng cho admin", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Manager", "Phòng ban riêng cho quản lý", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Security", "Phòng ban riêng cho quản security", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
                     { 4, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Nhân sự", "Phòng nhân sự", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
                     { 5, 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phòng Sản xuất", "Phòng Sản xuất", "Active", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Gates",
-                columns: new[] { "GateId", "GateCoordinate", "GateName" },
+                columns: new[] { "GateId", "CreateDate", "Description", "GateName", "Status" },
+                values: new object[] { 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cổng A", "Cổng A", true });
+
+            migrationBuilder.InsertData(
+                table: "NotificationTypes",
+                columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Ra vào trong ngày", "Cổng 1" },
-                    { 2, "Ra vào trong ngày", "Cổng 2" }
+                    { 1, "Action For Visit", "Visit" },
+                    { 2, "Action For Schedule User", "ScheduleUser" }
                 });
 
             migrationBuilder.InsertData(
@@ -615,22 +718,42 @@ namespace SecurityGateApv.Infras.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Cameras",
+                columns: new[] { "Id", "CameraTypeId", "CaptureURL", "Description", "GateId", "Status", "StreamURL" },
+                values: new object[] { 1, 1, "https://security-gateway-camera-1.tools.kozow.com/capture-image", "Camera setup cho chụp toàn thân.", 1, true, "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8" });
+
+            migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "CreatedDate", "DepartmentId", "Email", "FullName", "Image", "Password", "PhoneNumber", "RoleId", "Status", "UpdatedDate", "UserName" },
+                columns: new[] { "UserId", "CreatedDate", "DepartmentId", "Email", "FullName", "Image", "OTP", "OTPIssueTime", "Password", "PhoneNumber", "RoleId", "Status", "UpdatedDate", "UserName" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "admin1@example.com", "Admin One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0123456789", 1, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin1" },
-                    { 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "manager1@example.com", "Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0987654321", 2, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "manager1" },
-                    { 3, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "employee1@example.com", "Department Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0112223334", 3, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "DM1" },
-                    { 4, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Staff1@egmail.com", "Staff One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0223334445", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff1" },
-                    { 5, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Staff2@gmail.com", "Staff Tow", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0223334446", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff2" },
-                    { 6, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, "it1@example.com", "Security One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", "123", "0334445556", 5, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Security1" }
+                    { 1, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "admin1@example.com", "Admin One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", null, null, "123", "0123456789", 1, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin1" },
+                    { 2, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "manager1@example.com", "Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", null, null, "123", "0987654321", 2, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "manager1" },
+                    { 3, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "employee1@example.com", "Department Manager One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", null, null, "123", "0112223334", 3, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "DM1" },
+                    { 4, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Staff1@egmail.com", "Staff One", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE4g-3ZH_1TjfN-zOuCRru2LrfrGtPbwaCsQ&s", null, null, "123", "0223334445", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff1" },
+                    { 5, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Staff2@gmail.com", "Staff Tow", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s", null, null, "123", "0223334446", 4, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Staff2" },
+                    { 6, new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, "cuong3right@gmail.com", "Quốc Cường", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu0qRJBJeHYTEukW7kTEAW8UMznPMxnuIziw&s", null, null, "123", "0355004120", 5, "Active", new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), "Security1" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cameras_CameraTypeId",
+                table: "Cameras",
+                column: "CameraTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cameras_GateId",
+                table: "Cameras",
+                column: "GateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cards_CardTypeId",
                 table: "Cards",
                 column: "CardTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_NotificationTypeId",
+                table: "Notifications",
+                column: "NotificationTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationUsers_NotificationID",
@@ -683,14 +806,29 @@ namespace SecurityGateApv.Infras.Migrations
                 column: "VehicleSessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VehicleSessions_GateId",
+                name: "IX_VehicleSessions_GateInId",
                 table: "VehicleSessions",
-                column: "GateId");
+                column: "GateInId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VehicleSessions_SecurityID",
+                name: "IX_VehicleSessions_GateOutId",
                 table: "VehicleSessions",
-                column: "SecurityID");
+                column: "GateOutId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleSessions_SecurityInId",
+                table: "VehicleSessions",
+                column: "SecurityInId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleSessions_SecurityOutId",
+                table: "VehicleSessions",
+                column: "SecurityOutId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleSessions_UserId",
+                table: "VehicleSessions",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VehicleSessions_VisitDetailId",
@@ -777,6 +915,9 @@ namespace SecurityGateApv.Infras.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Cameras");
+
+            migrationBuilder.DropTable(
                 name: "NotificationUsers");
 
             migrationBuilder.DropTable(
@@ -792,6 +933,9 @@ namespace SecurityGateApv.Infras.Migrations
                 name: "VisitorSessionsImages");
 
             migrationBuilder.DropTable(
+                name: "CameraTypes");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -802,6 +946,9 @@ namespace SecurityGateApv.Infras.Migrations
 
             migrationBuilder.DropTable(
                 name: "VisitorSessions");
+
+            migrationBuilder.DropTable(
+                name: "NotificationTypes");
 
             migrationBuilder.DropTable(
                 name: "CardTypes");

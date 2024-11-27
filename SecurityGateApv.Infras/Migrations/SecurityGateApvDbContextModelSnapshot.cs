@@ -338,14 +338,6 @@ namespace SecurityGateApv.Infras.Migrations
                             Description = "Cổng A",
                             GateName = "Cổng A",
                             Status = true
-                        },
-                        new
-                        {
-                            GateId = 2,
-                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Cổng B",
-                            GateName = "Cổng B",
-                            Status = true
                         });
                 });
 

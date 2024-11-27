@@ -12,8 +12,8 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    [Migration("20241116053234_AddnotiType6")]
-    partial class AddnotiType6
+    [Migration("20241127125340_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,91 @@ namespace SecurityGateApv.Infras.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Camera", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CameraTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CaptureURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GateId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StreamURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CameraTypeId");
+
+                    b.HasIndex("GateId");
+
+                    b.ToTable("Cameras");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CameraTypeId = 1,
+                            CaptureURL = "https://security-gateway-camera-1.tools.kozow.com/capture-image",
+                            Description = "Camera setup cho chụp toàn thân.",
+                            GateId = 1,
+                            Status = true,
+                            StreamURL = "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8"
+                        });
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.CameraType", b =>
+                {
+                    b.Property<int>("CameraTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CameraTypeId"));
+
+                    b.Property<string>("CameraTypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CameraTypeId");
+
+                    b.ToTable("CameraTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            CameraTypeId = 1,
+                            CameraTypeName = "Visitor_Body",
+                            Description = "Camera chụp toàn thân."
+                        },
+                        new
+                        {
+                            CameraTypeId = 2,
+                            CameraTypeName = "Visitor_Shoe",
+                            Description = "Camera chụp giày."
+                        });
+                });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
@@ -175,7 +260,7 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 1,
                             AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "AdminDepartment",
+                            DepartmentName = "Admin",
                             Description = "Phòng ban riêng cho admin",
                             Status = "Active",
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -185,7 +270,7 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 2,
                             AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "ManagerDepartment",
+                            DepartmentName = "Manager",
                             Description = "Phòng ban riêng cho quản lý",
                             Status = "Active",
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -195,7 +280,7 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 3,
                             AcceptLevel = 1,
                             CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DepartmentName = "SecurityDepartment",
+                            DepartmentName = "Security",
                             Description = "Phòng ban riêng cho quản security",
                             Status = "Active",
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -230,13 +315,19 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GateId"));
 
-                    b.Property<string>("GateCoordinate")
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GateName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.HasKey("GateId");
 
@@ -246,14 +337,10 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             GateId = 1,
-                            GateCoordinate = "Ra vào trong ngày",
-                            GateName = "Cổng 1"
-                        },
-                        new
-                        {
-                            GateId = 2,
-                            GateCoordinate = "Ra vào trong ngày",
-                            GateName = "Cổng 2"
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Cổng A",
+                            GateName = "Cổng A",
+                            Status = true
                         });
                 });
 
@@ -314,6 +401,20 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NotificationTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Action For Visit",
+                            Name = "Visit"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Action For Schedule User",
+                            Name = "ScheduleUser"
+                        });
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationUsers", b =>
@@ -591,6 +692,12 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OTPIssueTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -674,7 +781,7 @@ namespace SecurityGateApv.Infras.Migrations
                             DepartmentId = 4,
                             Email = "Staff1@egmail.com",
                             FullName = "Staff One",
-                            Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
+                            Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRE4g-3ZH_1TjfN-zOuCRru2LrfrGtPbwaCsQ&s",
                             Password = "123",
                             PhoneNumber = "0223334445",
                             RoleId = 4,
@@ -702,11 +809,11 @@ namespace SecurityGateApv.Infras.Migrations
                             UserId = 6,
                             CreatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 3,
-                            Email = "it1@example.com",
-                            FullName = "Security One",
-                            Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdCMjLlNPwkWsEFRDeMI8rLlWCVs4mbaa-Xg&s",
+                            Email = "cuong3right@gmail.com",
+                            FullName = "Quốc Cường",
+                            Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQu0qRJBJeHYTEukW7kTEAW8UMznPMxnuIziw&s",
                             Password = "123",
-                            PhoneNumber = "0334445556",
+                            PhoneNumber = "0355004120",
                             RoleId = 5,
                             Status = "Active",
                             UpdatedDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -725,13 +832,30 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("CheckinTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CheckoutTime")
+                    b.Property<DateTime?>("CheckoutTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GateId")
+                    b.Property<int>("GateInId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SecurityID")
+                    b.Property<int?>("GateOutId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LicensePlate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SecurityInId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SecurityOutId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("VisitDetailId")
@@ -739,9 +863,15 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("VehicleSessionId");
 
-                    b.HasIndex("GateId");
+                    b.HasIndex("GateInId");
 
-                    b.HasIndex("SecurityID");
+                    b.HasIndex("GateOutId");
+
+                    b.HasIndex("SecurityInId");
+
+                    b.HasIndex("SecurityOutId");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("VisitDetailId");
 
@@ -766,10 +896,6 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.Property<int>("VehicleSessionId")
                         .HasColumnType("int");
-
-                    b.Property<string>("VehicleSessionImageName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VehicleSessionImageId");
 
@@ -1024,6 +1150,25 @@ namespace SecurityGateApv.Infras.Migrations
                     b.ToTable("VisitorSessionsImages");
                 });
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Camera", b =>
+                {
+                    b.HasOne("SecurityGateApv.Domain.Models.CameraType", "CameraType")
+                        .WithMany("Cameras")
+                        .HasForeignKey("CameraTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "Gate")
+                        .WithMany("Cameras")
+                        .HasForeignKey("GateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CameraType");
+
+                    b.Navigation("Gate");
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.CardType", "CardType")
@@ -1130,17 +1275,31 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "Gate")
-                        .WithMany("VehicleSession")
-                        .HasForeignKey("GateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateIn")
+                        .WithMany("VehicleSessionsIn")
+                        .HasForeignKey("GateInId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SecurityGateApv.Domain.Models.User", "Security")
-                        .WithMany("VehicleSession")
-                        .HasForeignKey("SecurityID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateOut")
+                        .WithMany("VehicleSessionsOut")
+                        .HasForeignKey("GateOutId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "SecurityIn")
+                        .WithMany("VehicleSessionsSecurityIn")
+                        .HasForeignKey("SecurityInId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "SecurityOut")
+                        .WithMany("VehicleSessionsSecurityOut")
+                        .HasForeignKey("SecurityOutId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", null)
+                        .WithMany("VehicleSession")
+                        .HasForeignKey("UserId");
 
                     b.HasOne("SecurityGateApv.Domain.Models.VisitDetail", "VisitDetail")
                         .WithMany()
@@ -1148,9 +1307,13 @@ namespace SecurityGateApv.Infras.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Gate");
+                    b.Navigation("GateIn");
 
-                    b.Navigation("Security");
+                    b.Navigation("GateOut");
+
+                    b.Navigation("SecurityIn");
+
+                    b.Navigation("SecurityOut");
 
                     b.Navigation("VisitDetail");
                 });
@@ -1297,6 +1460,11 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("VisitorSession");
                 });
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.CameraType", b =>
+                {
+                    b.Navigation("Cameras");
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
                     b.Navigation("VisitCards");
@@ -1319,7 +1487,11 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Gate", b =>
                 {
-                    b.Navigation("VehicleSession");
+                    b.Navigation("Cameras");
+
+                    b.Navigation("VehicleSessionsIn");
+
+                    b.Navigation("VehicleSessionsOut");
 
                     b.Navigation("VisitorSessionsIn");
 
@@ -1377,6 +1549,10 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("UpdatedVisits");
 
                     b.Navigation("VehicleSession");
+
+                    b.Navigation("VehicleSessionsSecurityIn");
+
+                    b.Navigation("VehicleSessionsSecurityOut");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>

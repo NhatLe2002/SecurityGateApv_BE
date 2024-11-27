@@ -406,8 +406,7 @@ namespace SecurityGateApv.Infras.Data
 
             var gateList = new List<Gate>
                 {
-                    Gate.Create(1, "Cổng A", new DateTime(2024, 09, 29), "Cổng A", true).Value,
-                    Gate.Create(2, "Cổng B", new DateTime(2024, 09, 29), "Cổng B", true).Value
+                    Gate.Create(1, "Cổng A", new DateTime(2024, 09, 29), "Cổng A", true).Value
                 };
 
             var cameraList = new List<Camera>
