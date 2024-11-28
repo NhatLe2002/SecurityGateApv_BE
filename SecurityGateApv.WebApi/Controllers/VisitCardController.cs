@@ -26,5 +26,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        //[HttpPost("LostCard")]
+        //public async Task<ActionResult> CreateVisitCard(int visitDetailId, string cardVerification)
+        //{
+        //    var result = await _visitCardService.CreateVisitCard(visitDetailId, cardVerification);
+
+        //    if (result.IsFailure)
+        //    {
+        //        return BadRequest(result.Error);
+        //    }
+        //    return Ok(result.Value);
+        //}
     }
 }

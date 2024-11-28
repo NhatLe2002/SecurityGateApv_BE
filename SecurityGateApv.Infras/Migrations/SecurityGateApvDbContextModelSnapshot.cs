@@ -22,6 +22,91 @@ namespace SecurityGateApv.Infras.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Camera", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CameraTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CaptureURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GateId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StreamURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CameraTypeId");
+
+                    b.HasIndex("GateId");
+
+                    b.ToTable("Cameras");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CameraTypeId = 1,
+                            CaptureURL = "https://security-gateway-camera-1.tools.kozow.com/capture-image",
+                            Description = "Camera setup cho chụp toàn thân.",
+                            GateId = 1,
+                            Status = true,
+                            StreamURL = "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8"
+                        });
+                });
+
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.CameraType", b =>
+                {
+                    b.Property<int>("CameraTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CameraTypeId"));
+
+                    b.Property<string>("CameraTypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CameraTypeId");
+
+                    b.ToTable("CameraTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            CameraTypeId = 1,
+                            CameraTypeName = "Visitor_Body",
+                            Description = "Camera chụp toàn thân."
+                        },
+                        new
+                        {
+                            CameraTypeId = 2,
+                            CameraTypeName = "Visitor_Shoe",
+                            Description = "Camera chụp giày."
+                        });
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
                     b.Property<int>("CardId")
@@ -227,13 +312,19 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GateId"));
 
-                    b.Property<string>("GateCoordinate")
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GateName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.HasKey("GateId");
 
@@ -243,14 +334,10 @@ namespace SecurityGateApv.Infras.Migrations
                         new
                         {
                             GateId = 1,
-                            GateCoordinate = "Ra vào trong ngày",
-                            GateName = "Cổng 1"
-                        },
-                        new
-                        {
-                            GateId = 2,
-                            GateCoordinate = "Ra vào trong ngày",
-                            GateName = "Cổng 2"
+                            CreateDate = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Cổng A",
+                            GateName = "Cổng A",
+                            Status = true
                         });
                 });
 
@@ -1060,6 +1147,25 @@ namespace SecurityGateApv.Infras.Migrations
                     b.ToTable("VisitorSessionsImages");
                 });
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.Camera", b =>
+                {
+                    b.HasOne("SecurityGateApv.Domain.Models.CameraType", "CameraType")
+                        .WithMany("Cameras")
+                        .HasForeignKey("CameraTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "Gate")
+                        .WithMany("Cameras")
+                        .HasForeignKey("GateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CameraType");
+
+                    b.Navigation("Gate");
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.CardType", "CardType")
@@ -1351,6 +1457,11 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("VisitorSession");
                 });
 
+            modelBuilder.Entity("SecurityGateApv.Domain.Models.CameraType", b =>
+                {
+                    b.Navigation("Cameras");
+                });
+
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Card", b =>
                 {
                     b.Navigation("VisitCards");
@@ -1373,6 +1484,8 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Gate", b =>
                 {
+                    b.Navigation("Cameras");
+
                     b.Navigation("VehicleSessionsIn");
 
                     b.Navigation("VehicleSessionsOut");

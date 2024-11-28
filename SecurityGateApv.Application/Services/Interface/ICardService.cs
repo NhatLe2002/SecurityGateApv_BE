@@ -17,6 +17,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<AWSDomainDTO>> DetectShoe(IFormFile image);
         public Task<Result<GetCardRes>> GenerateCard(CreateCardCommand command);
         public Task<Result<bool>> CreateCard( CreateCardCommand command);
+        public Task<Result<bool>> UpdateCardStatusLost( int visitDetailId);
         public Task<Result<List<GetCardRes>>> GetAllByPaging(int pageNumber, int pageSize);
         public Task<Result<GetCardRes>> GetQrCardByCardVerification(string cardVerified);
 

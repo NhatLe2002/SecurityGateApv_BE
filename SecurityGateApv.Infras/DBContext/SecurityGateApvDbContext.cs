@@ -24,6 +24,8 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<CredentialCardType> CredentialCardTypes { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Gate> Gates { get; set; }
+        public DbSet<Camera> Cameras { get; set; }
+        public DbSet<CameraType> CameraTypes { get; set; }
         public DbSet<NotificationType> NotificationTypes { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationUsers> NotificationUsers { get; set; }
@@ -49,7 +51,7 @@ namespace SecurityGateApv.Infras.DBContext
         {
             var builder = new ConfigurationBuilder();
             IConfigurationRoot configurationRoot = builder.Build();
-            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password@789;Database=SecurityGateApv;TrustServerCertificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
