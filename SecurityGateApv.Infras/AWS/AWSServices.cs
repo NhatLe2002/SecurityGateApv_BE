@@ -24,6 +24,14 @@ namespace SecurityGateApv.Infras.AWS
             }
             MemoryStream streamResize = new MemoryStream();
             resizeImage.Save(streamResize,new PngEncoder());
+            var feature = new List<string>() {
+                "GENERAL_LABELS",
+                "IMAGE_PROPERTIES"
+            };
+                var cate = new List<string>()
+                        {
+                            "Instances"
+                        };
             AmazonRekognitionClient rekognitionClient = new AmazonRekognitionClient(key.KeyName, key.Key, Amazon.RegionEndpoint.APSoutheast1);
 
             DetectLabelsRequest detectlabelsRequest = new DetectLabelsRequest()
@@ -33,11 +41,18 @@ namespace SecurityGateApv.Infras.AWS
                     Bytes = streamResize
                 },
                 MaxLabels = 10,
-                MinConfidence = 75F
-                
+                Features = feature,
+                Settings = new DetectLabelsSettings()
+                {
+                    GeneralLabels = new GeneralLabelsSettings()
+                    {
+                        LabelInclusionFilters = new List<string>() { 
+                        "Shoe"
+                        }
+                    }
+                }
             };
 
-   
                 DetectLabelsResponse detectLabelsResponse = await rekognitionClient.DetectLabelsAsync(detectlabelsRequest);
                 Console.WriteLine("Detected labels for ");
                 foreach (Label label in detectLabelsResponse.Labels)
@@ -46,7 +61,8 @@ namespace SecurityGateApv.Infras.AWS
                     list.Add(new AWSDomainDTO
                     {
                         Label = label.Name,
-                        Confidence = label.Confidence
+                        Confidence = label.Confidence,
+                        Colors = label.Instances?.FirstOrDefault()?.DominantColors.Select(s => s.HexCode).Take(2).ToList() ?? detectLabelsResponse.ImageProperties.Foreground.DominantColors.Select(s => s.HexCode).Take(2).ToList()
                     });
                 }
             }
