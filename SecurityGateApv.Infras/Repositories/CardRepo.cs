@@ -45,6 +45,10 @@ namespace SecurityGateApv.Infras.Repositories
             {
                 int cardWidth = 250;
                 int cardHeight = 400;
+                int qrCodeSize = 150; // Fixed size for the QR code
+
+                // Resize the QR code to the fixed size
+                qrCodeImage.Mutate(x => x.Resize(qrCodeSize, qrCodeSize));
 
                 using (var cardImage = new Image<Rgba32>(cardWidth, cardHeight))
                 {
@@ -73,20 +77,19 @@ namespace SecurityGateApv.Infras.Repositories
                         }
 
                         // Add title text
-                        var titleFont = SixLabors.Fonts.SystemFonts.CreateFont("Times New Roman", 24, SixLabors.Fonts.FontStyle.Bold);
+                        var titleFont = SixLabors.Fonts.SystemFonts.CreateFont("DejaVu Sans", 24, SixLabors.Fonts.FontStyle.Bold);
                         var titleText = "Security Gate APV";
                         var titleSize = TextMeasurer.MeasureSize(titleText, new TextOptions(titleFont));
                         var titleX = (cardWidth - titleSize.Width) / 2;
-                        ctx.DrawText(titleText, titleFont, Color.White, new PointF(titleX, 120));
+                        ctx.DrawText(titleText, titleFont, Color.White, new PointF(titleX, 110));
 
                         // Draw the QR code on the card
-                        int qrCodeSize = 150;
                         int qrCodeX = (cardWidth - qrCodeSize) / 2;
                         int qrCodeY = 160;
                         ctx.DrawImage(qrCodeImage, new Point(qrCodeX, qrCodeY), 1);
 
                         // Add footer text
-                        var footerFont = SixLabors.Fonts.SystemFonts.CreateFont("Times New Roman", 12, SixLabors.Fonts.FontStyle.Bold);
+                        var footerFont = SixLabors.Fonts.SystemFonts.CreateFont("DejaVu Sans", 12, SixLabors.Fonts.FontStyle.Bold);
                         var footerColor = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? Color.White : Color.Yellow;
                         string footerText = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? "Thẻ ra vào hàng ngày" : "Thẻ ra vào theo lịch trình";
                         var footerSize = TextMeasurer.MeasureSize(footerText, new TextOptions(footerFont));
