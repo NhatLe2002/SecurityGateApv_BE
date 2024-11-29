@@ -436,10 +436,10 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
-                {
-                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
-                }
+                //if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
+                //{
+                //    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
+                //}
                 if (detectShoeResult.IsFailure)
                 {
                     return Result.Failure<ValidCheckinRes>(detectShoeResult.Error);
@@ -501,10 +501,10 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
-                {
-                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
-                }
+                //if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
+                //{
+                //    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
+                //}
                 if (detectShoeResult.IsFailure)
                 {
                     return Result.Failure<ValidCheckinRes>(detectShoeResult.Error);
