@@ -28,8 +28,8 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(s => s.CredentialCardTypeId).NotNull().NotEmpty().Must(s => {
                 return credentialCardTypeRepo.IsAny(t => t.CredentialCardTypeId == s).GetAwaiter().GetResult();
             }).WithMessage("Credential card type not found");
-            RuleFor(s => s.VisitorCredentialImageFromRequest).NotNull().NotEmpty();
-
+            RuleFor(s => s.VisitorCredentialFrontImageFromRequest).NotNull().NotEmpty();
+            RuleFor(s => s.VisitorCredentialBackImageFromRequest).NotNull().NotEmpty();
         }
     }
 }

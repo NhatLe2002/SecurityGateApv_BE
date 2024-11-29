@@ -399,7 +399,12 @@ namespace SecurityGateApv.Application.Services
             {
                 try
                 {
-                    item.Visitor.DecrypCredentialCard(await CommonService.Decrypt(item.Visitor.VisitorCredentialImage));
+                    var images = new List<VisitorImage>();
+                    foreach (var image in item.Visitor.VisitorImage)
+                    {
+                        images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+                    }
+                    item.Visitor.DecrypCredentialCard(images);
                 }
                 catch (Exception ex)
                 {

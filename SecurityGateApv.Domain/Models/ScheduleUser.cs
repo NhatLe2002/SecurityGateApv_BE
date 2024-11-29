@@ -13,7 +13,7 @@ namespace SecurityGateApv.Domain.Models
     public class ScheduleUser
     {
         public ScheduleUser() { }
-        internal ScheduleUser(string title, string description, string? note, DateTime assignTime, DateTime deadlineTime,
+        internal ScheduleUser(string title, string description, string? note, DateTime assignTime, DateTime deadlineTime, int? maxPersonQuantity, DateTime? startDate, DateTime? endDate,
             string status, int scheduleId,  int assignToId)
         {
             Title = title;
@@ -25,6 +25,9 @@ namespace SecurityGateApv.Domain.Models
             ScheduleId = scheduleId;
             AssignToId = assignToId;
             //AssignFromId = assignFromId;
+            MaxPersonQuantity = maxPersonQuantity;
+            StartDate = startDate;
+            EndDate = endDate;
         }
 
         [Key]
@@ -34,6 +37,9 @@ namespace SecurityGateApv.Domain.Models
         public string? Note {  get; private set; }
         public DateTime AssignTime { get; private set; }
         public DateTime DeadlineTime { get; private set; }
+        public int? MaxPersonQuantity { get; private set; }  
+        public DateTime? StartDate { get; private set; }
+        public DateTime? EndDate { get; private set; }
         public string Status { get; private set; }
         [ForeignKey("Schedule")]
         public int ScheduleId { get; private set; }
@@ -45,10 +51,10 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<Visit> Visit { get; private set; }
 
-        public static Result<ScheduleUser> Create(string title, string description, string? note, DateTime assignTime, DateTime deadlineTime,
-            string status, int scheduleId,  int assignToId)
+        public static Result<ScheduleUser> Create(string title, string description, string? note, DateTime assignTime, DateTime deadlineTime, 
+            string status, int scheduleId,  int assignToId, int? maxPersonQuantity, DateTime? startDate, DateTime? endDate)
         {
-            var scheduleUser = new ScheduleUser(title, description, note, assignTime, deadlineTime,
+            var scheduleUser = new ScheduleUser(title, description, note, assignTime, deadlineTime, maxPersonQuantity, startDate, endDate,
             status, scheduleId,  assignToId);
             return scheduleUser;
         }

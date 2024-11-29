@@ -40,6 +40,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<Visit> Visits { get; set; }
         public DbSet<VisitDetail> VisitDetails { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<VisitorImage> VisitorImage { get; set; }
         public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }
@@ -51,7 +52,7 @@ namespace SecurityGateApv.Infras.DBContext
         {
             var builder = new ConfigurationBuilder();
             IConfigurationRoot configurationRoot = builder.Build();
-            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password@789;Database=SecurityGateApv;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv;TrustServerCertificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -15,9 +15,15 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string CompanyName { get;  set; }
         public string PhoneNumber { get;  set; }
         public string CredentialsCard { get;  set; }
-        public string VisitorCredentialImage { get;  set; }
         public DateTime CreateDate { get;  set; }
         public string Status { get; set; }
         public int CredentialCardTypeId { get; set; }
+        public List<VisitorImageRes1> VisitorImage { get; set; }
+    }
+    public class VisitorImageRes1
+    {
+        public int VisitorImageId { get; set; }
+        public string ImageType { get; private set; }
+        public string ImageURL { get; private set; }
     }
 }

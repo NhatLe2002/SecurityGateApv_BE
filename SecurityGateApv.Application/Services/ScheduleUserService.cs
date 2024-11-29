@@ -64,7 +64,10 @@ namespace SecurityGateApv.Application.Services
                 command.DeadlineTime,
                 ScheduleUserStatusEnum.Assigned.ToString(),
                 command.ScheduleId,
-                command.AssignToId
+                command.AssignToId,
+                command.MaxPersonQuantity,
+                command.StartDate,
+                command.EndDate
                 );
             if (scheduleUser.IsFailure)
             {

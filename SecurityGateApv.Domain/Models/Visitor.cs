@@ -1,4 +1,5 @@
-﻿using SecurityGateApv.Domain.Shared;
+﻿using SecurityGateApv.Domain.Enums;
+using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +16,7 @@ namespace SecurityGateApv.Domain.Models
         {
             
         }
-        internal Visitor(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard,string visitorCredentialImage, string status,
+        internal Visitor(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string status,
             int credentialCardTypeId)
         {
             VisitorName = visitorName;
@@ -24,7 +25,6 @@ namespace SecurityGateApv.Domain.Models
             CreateDate = createdDate;
             UpdateDate = updatedDate;
             CredentialsCard = credentialsCard;
-            VisitorCredentialImage = visitorCredentialImage;
             Status = status;
             CredentialCardTypeId = credentialCardTypeId;
         }
@@ -35,7 +35,6 @@ namespace SecurityGateApv.Domain.Models
         public string CompanyName { get; private set; }
         public string PhoneNumber { get; private set; }
         public string CredentialsCard { get; private set; }
-        public string VisitorCredentialImage { get; private set; }
         public DateTime CreateDate { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public string Status { get; private set; }
@@ -45,16 +44,37 @@ namespace SecurityGateApv.Domain.Models
         public CredentialCardType CredentialCardType { get; private set; }
 
         public ICollection<VisitDetail> VisitDetails { get; private set; }
-        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImage, string status,
+        public ICollection<VisitorImage> VisitorImage { get; private set; } = new List<VisitorImage>();
+        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImageFront, string visitorCredentialImageBack, string status,
             int credentialCardTypeId)
         {
-            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, visitorCredentialImage, status, credentialCardTypeId);
+            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId);
+            if(credentialCardTypeId == (int)CredentialCardTypeEnum.CitizenIdentificationCard)
+            {
+                result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_FRONT", visitorCredentialImageFront, result));
+                result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BACK", visitorCredentialImageBack, result));
+            }
+            else if(credentialCardTypeId == (int)CredentialCardTypeEnum.DrivingLicence)
+            {
+                result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_FRONT", visitorCredentialImageFront, result));
+                result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_BACK", visitorCredentialImageBack, result));
+            }
             return result;
         }
-        public Result<Visitor> Update(string visitorCredentialImage)
+        public Result<Visitor> Update(string visitorCredentialImageFront, string visitorCredentialImageBack, int credentialCardTypeId)
         {
-            this.VisitorCredentialImage = visitorCredentialImage;
             this.UpdateDate = DateTime.Now;
+            this.VisitorImage = new List<VisitorImage>();
+            if (credentialCardTypeId == (int)CredentialCardTypeEnum.CitizenIdentificationCard)
+            {
+                this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_FRONT", visitorCredentialImageFront, this));
+                this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BACK", visitorCredentialImageBack, this));
+            }
+            else if (credentialCardTypeId == (int)CredentialCardTypeEnum.DrivingLicence)
+            {
+                this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_FRONT", visitorCredentialImageFront, this));
+                this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_BACK", visitorCredentialImageBack, this));
+            }
             return this;
         }
         public Result<Visitor> Delete()
@@ -71,9 +91,9 @@ namespace SecurityGateApv.Domain.Models
             this.UpdateDate = DateTime.Now;
             return this;
         }
-        public Result<Visitor> DecrypCredentialCard(string visitorCredentialImage)
+        public Result<Visitor> DecrypCredentialCard(ICollection<VisitorImage> images)
         {
-            this.VisitorCredentialImage = visitorCredentialImage;
+           this.VisitorImage = images;
             return this;
         }
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241128101230_addAttribute_to_scheduleuser")]
+    partial class addAttribute_to_scheduleuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1067,6 +1070,10 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("VisitorCredentialImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("VisitorName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1076,32 +1083,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("CredentialCardTypeId");
 
                     b.ToTable("Visitors");
-                });
-
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorImage", b =>
-                {
-                    b.Property<int>("VisitorImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VisitorImageId"));
-
-                    b.Property<string>("ImageType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VisitorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("VisitorImageId");
-
-                    b.HasIndex("VisitorId");
-
-                    b.ToTable("VisitorImage");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
@@ -1436,17 +1417,6 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("CredentialCardType");
                 });
 
-            modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorImage", b =>
-                {
-                    b.HasOne("SecurityGateApv.Domain.Models.Visitor", "Visitor")
-                        .WithMany("VisitorImage")
-                        .HasForeignKey("VisitorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Visitor");
-                });
-
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateIn")
@@ -1614,8 +1584,6 @@ namespace SecurityGateApv.Infras.Migrations
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
                 {
                     b.Navigation("VisitDetails");
-
-                    b.Navigation("VisitorImage");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>

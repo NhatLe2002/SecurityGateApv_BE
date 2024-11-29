@@ -51,6 +51,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GetNotification, Notification>().ReverseMap();
             CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
             CreateMap<NotificationTypeRes, NotificationType>().ReverseMap();
+
             #region ScheduleUser
             //CreateMap<GetScheduleRes, Schedule>().ReverseMap();
             CreateMap<Schedule, GetScheduleRes>().ReverseMap()
@@ -109,6 +110,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<VisitorDetailRes, Visitor>().ReverseMap();
             CreateMap<GetVisitorCreateRes, Visitor>().ReverseMap();
             CreateMap<UpdateVisitorCommand, Visitor>().ReverseMap();
+            CreateMap<VisitorImageRes1, VisitorImage>().ReverseMap();
             #endregion
 
             #region ScheduleType

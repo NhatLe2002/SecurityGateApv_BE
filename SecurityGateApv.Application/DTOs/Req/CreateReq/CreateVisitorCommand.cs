@@ -16,6 +16,8 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         public string CredentialsCard { get; set; }
         public int CredentialCardTypeId { get; set; }
         [JsonIgnore]
-        public IFormFile? VisitorCredentialImageFromRequest { get; set; }
+        public IFormFile? VisitorCredentialFrontImageFromRequest { get; set; }
+        [JsonIgnore]
+        public IFormFile? VisitorCredentialBackImageFromRequest { get; set; }
     }
 }
