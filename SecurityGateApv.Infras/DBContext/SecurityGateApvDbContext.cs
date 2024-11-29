@@ -52,7 +52,7 @@ namespace SecurityGateApv.Infras.DBContext
         {
             var builder = new ConfigurationBuilder();
             IConfigurationRoot configurationRoot = builder.Build();
-            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv_BackUp;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv;TrustServerCertificate=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

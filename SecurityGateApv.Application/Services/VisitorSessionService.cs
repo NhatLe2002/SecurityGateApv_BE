@@ -56,6 +56,13 @@ namespace SecurityGateApv.Application.Services
             _vehicleSessionRepo = vehicleSessionRepo;
         }
 
+        #region valid checkin
+        //1. Valid Card
+        //2. Valid Visit
+        //3. Valid Session
+        //4. Valid Image
+        #endregion
+
         public async Task<Result<ValidCheckinRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command)
         {
             var visitDetails = await _visitDetailRepo.FindAsync(
@@ -72,10 +79,14 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.NotFoundVisitByCredentialCard);
             }
-            //if(validVisitDetail.Visit.VisitStatus == VisitStatusEnum.Cancelled.ToString())
+
+
+            //if (validVisitDetail.Visit.VisitStatus == VisitStatusEnum.Cancelled.ToString())
             //{
-            //    return Result.Failure<ValidCheckinRes>(Error.);
+            //    return Result.Failure<ValidCheckinRes>(Error.VisitCancel);
             //}
+
+
             // Check exist Card and does not have visit
             var card = (await _cardRepo.FindAsync(
                 s => s.CardVerification.Equals(command.QRCardVerification),
@@ -97,9 +108,9 @@ namespace SecurityGateApv.Application.Services
 
 
 
-            // Check valid CredentialCard and Card 
+            // Check valid Card 
             var visitCard = (await _visitCardRepo.FindAsync(
-                s => (s.CardId == card.CardId )
+                s => (s.CardId == card.CardId)
                 && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
             if (visitCard != null)
@@ -390,8 +401,11 @@ namespace SecurityGateApv.Application.Services
 
             var visitDetails = await _visitDetailRepo.FindAsync(
                s => s.Visitor.CredentialsCard.Equals(command.CredentialCard)
-               /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
-               && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+                && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
+                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
+                && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
+                && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
+                && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -476,8 +490,11 @@ namespace SecurityGateApv.Application.Services
 
             var visitDetails = await _visitDetailRepo.FindAsync(
                    s => s.VisitDetailId == visitCard.VisitDetailId
-                   /*&& s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date*/
-                   /*&& s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date*/,
+                   && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
+                   && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
+                   && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
+                   && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
+                   && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                    int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
@@ -607,6 +624,7 @@ namespace SecurityGateApv.Application.Services
             //};
             return result;
         }
+        
         private bool IsValidVisit(Visit visit, DateTime date)
         {
             if (visit.ScheduleUser == null && visit.ExpectedStartTime.Date == DateTime.Now.Date)

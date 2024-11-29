@@ -3,6 +3,7 @@ using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
+using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -105,7 +106,8 @@ namespace SecurityGateApv.Application.Mapper
             #endregion
 
             #region Visitor map
-            CreateMap<Visitor, VisitorRes>().ReverseMap();
+            CreateMap<Visitor, VisitorRes>().ReverseMap()
+                /*.ForMember(dest => dest.VisitorImage.Any(s => s.ImageType == ImageTypeEnum.CheckIn_Vehicle), opt => opt.MapFrom(src => src.VisitorCredentialImage))*/;
             CreateMap<Visitor, CreateVisitorCommand>().ReverseMap();
             CreateMap<VisitorDetailRes, Visitor>().ReverseMap();
             CreateMap<GetVisitorCreateRes, Visitor>().ReverseMap();
