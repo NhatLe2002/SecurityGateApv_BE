@@ -126,14 +126,14 @@ namespace SecurityGateApv.Application.Services
             Result<AWSDomainDTO> detectShoeResult = Result.Success<AWSDomainDTO>(null);
             try
             {
-                var shoeImage = command.Images.FirstOrDefault(s => s.ImageType == "Shoe");
+                var shoeImage = command.Images.FirstOrDefault(s => s.ImageType == ImageTypeEnum.CheckIn_Shoe.ToString());
                 if (shoeImage == null)
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
 
                 detectShoeResult = await _qrCodeService.DetectShoe(shoeImage.Image);
-                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
@@ -289,14 +289,14 @@ namespace SecurityGateApv.Application.Services
             Result<AWSDomainDTO> detectShoeResult = Result.Success<AWSDomainDTO>(null);
             try
             {
-                var shoeImage = command.Images.FirstOrDefault(s => s.ImageType == "Shoe");
+                var shoeImage = command.Images.FirstOrDefault(s => s.ImageType == ImageTypeEnum.CheckIn_Shoe.ToString());
                 if (shoeImage == null)
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
 
                 detectShoeResult = await _qrCodeService.DetectShoe(shoeImage.Image);
-                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
@@ -436,7 +436,7 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
@@ -501,7 +501,7 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
@@ -563,7 +563,7 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
                 {
                     return Result.Failure<GetVisitByCredentialCardRes>(Error.NotShoe);
                 }
