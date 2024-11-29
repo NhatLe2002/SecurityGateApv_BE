@@ -13,6 +13,7 @@ namespace SecurityGateApv.Application.Services.Interface
     public interface IGateService
     {
         public Task<Result<List<GetGateRes>>> GetAllGate();
+        public Task<Result<GetGateRes>> GetGateById(int gateId);
         public Task<Result<List<CameraTypeRes>>> GetAllCameraType();
         public Task<Result<List<GetGateRes>>> GetAllGatePaging(int pageSize, int pageNumber);
         public Task<Result<bool>> CreateGate( CreateGateCommand command);

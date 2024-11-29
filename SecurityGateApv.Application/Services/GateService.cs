@@ -50,6 +50,17 @@ namespace SecurityGateApv.Application.Services
             var res = _mapper.Map<List<GetGateRes>>(gate);
             return res;
         }
+        public async Task<Result<GetGateRes>> GetGateById(int gateId)
+        {
+            var gate = (await _gateRepo.FindAsync(
+               s => s.GateId == gateId,
+               1,
+               1,
+               includeProperties: "Cameras.CameraType"
+              )).FirstOrDefault();
+            var res = _mapper.Map<GetGateRes>(gate);
+            return res;
+        }
 
         public async Task<Result<List<GetGateRes>>> GetAllGatePaging(int pageSize, int pageNumber)
         {
@@ -153,5 +164,7 @@ namespace SecurityGateApv.Application.Services
 
             return Result.Success(true);
         }
+
+      
     }
 }
