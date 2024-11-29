@@ -400,26 +400,27 @@ namespace SecurityGateApv.Infras.Data
         {
             var cameraTypeList = new List<CameraType>
                 {
-                    CameraType.Create(1, CameraTypeEnum.Visitor_Body.ToString(), "Camera chụp toàn thân.").Value,
-                    CameraType.Create(2, CameraTypeEnum.Visitor_Shoe.ToString(), "Camera chụp giày.").Value
+                    CameraType.Create(1, ImageTypeEnum.CheckIn_Shoe.ToString(), "Camera chụp giày khi checkin.").Value,
+                    CameraType.Create(2, ImageTypeEnum.CheckIn_Body.ToString(), "Camera chụp toàn thân khi checkin.").Value,
+                    CameraType.Create(3, ImageTypeEnum.CheckOut_Shoe.ToString(), "Camera chụp giày khi Checkout.").Value
                 };
 
-            var gateList = new List<Gate>
-                {
-                    Gate.Create(1, "Cổng A", new DateTime(2024, 09, 29), "Cổng A", true).Value
-                };
+            //var gateList = new List<Gate>
+            //    {
+            //        Gate.Create(1, "Cổng A", new DateTime(2024, 09, 29), "Cổng A", true).Value
+            //    };
 
-            var cameraList = new List<Camera>
-                {
-                    Camera.Create(1, "https://security-gateway-camera-1.tools.kozow.com/capture-image",
-                        "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8",
-                        "Camera setup cho chụp toàn thân.",
-                        true, 1, 1).Value
-                };
+            //var cameraList = new List<Camera>
+            //    {
+            //        Camera.Create(1, "https://security-gateway-camera-1.tools.kozow.com/capture-image",
+            //            "https://security-gateway-camera-1.tools.kozow.com/libs/index.m3u8",
+            //            "Camera setup cho chụp toàn thân.",
+            //            true, 1, 1).Value
+            //    };
 
             modelBuilder.Entity<CameraType>().HasData(cameraTypeList);
-            modelBuilder.Entity<Gate>().HasData(gateList);
-            modelBuilder.Entity<Camera>().HasData(cameraList);
+            //modelBuilder.Entity<Gate>().HasData(gateList);
+            //modelBuilder.Entity<Camera>().HasData(cameraList);
         }
         private static void SeedVisitorSession(ModelBuilder modelBuilder)
         {

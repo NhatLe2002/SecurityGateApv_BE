@@ -166,7 +166,6 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
-            return Ok(result.Value);
         }
         [HttpGet("Visit/{visitId}")]
         public async Task<IActionResult> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId)

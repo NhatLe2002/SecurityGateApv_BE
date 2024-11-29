@@ -73,6 +73,7 @@ namespace SecurityGateApv.Application.Services
         {
             var camera = await _cameraRepo.FindAsync(
                     s => s.GateId == gate,
+                    int.MaxValue,1,
                     includeProperties: "CameraType"
                 );
             var res = _mapper.Map<List<CameraRes>>(camera);

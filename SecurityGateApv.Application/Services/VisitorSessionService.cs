@@ -808,7 +808,7 @@ namespace SecurityGateApv.Application.Services
                   s => s.VisitDetailId == visitCard.VisitDetailId
                   && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
-                    includeProperties: "SecurityIn,GateIn,VisitDetail"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail,Images"
                 )).FirstOrDefault();
 
             if (visitSession == null)
