@@ -133,7 +133,7 @@ namespace SecurityGateApv.Application.Services
                 }
 
                 detectShoeResult = await _qrCodeService.DetectShoe(shoeImage.Image);
-                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
+                if (!detectShoeResult.Value.Label.Equals("Shoe"))
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
@@ -296,7 +296,7 @@ namespace SecurityGateApv.Application.Services
                 }
 
                 detectShoeResult = await _qrCodeService.DetectShoe(shoeImage.Image);
-                if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
+                if (!detectShoeResult.Value.Label.Equals("Shoe"))
                 {
                     return Result.Failure<ValidCheckinRes>(Error.NotShoe);
                 }
@@ -436,10 +436,10 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                //if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
-                //{
-                //    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
-                //}
+                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                {
+                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
+                }
                 if (detectShoeResult.IsFailure)
                 {
                     return Result.Failure<ValidCheckinRes>(detectShoeResult.Error);
@@ -501,10 +501,10 @@ namespace SecurityGateApv.Application.Services
             try
             {
                 detectShoeResult = await _qrCodeService.DetectShoe(command.ImageShoe);
-                //if (!detectShoeResult.Value.Label.Equals(ImageTypeEnum.CheckIn_Shoe.ToString()))
-                //{
-                //    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
-                //}
+                if (!detectShoeResult.Value.Label.Equals("Shoe"))
+                {
+                    return Result.Failure<ValidCheckinRes>(Error.NotShoe);
+                }
                 if (detectShoeResult.IsFailure)
                 {
                     return Result.Failure<ValidCheckinRes>(detectShoeResult.Error);
