@@ -40,6 +40,7 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<Visit> Visits { get; set; }
         public DbSet<VisitDetail> VisitDetails { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<VisitorImage> VisitorImage { get; set; }
         public DbSet<VehicleSession> VehicleSessions { get; set; }
         public DbSet<VisitorSession> VisitorSessions { get; set; }
         public DbSet<VisitorSessionsImage> VisitorSessionsImages { get; set; }

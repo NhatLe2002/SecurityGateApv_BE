@@ -35,14 +35,26 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<GetVisitorCreateRes>> CreateVisitor(CreateVisitorCommand command)
         {
-            SixLabors.ImageSharp.Image resizeImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialImageFromRequest.OpenReadStream());
-            int height = (int)((300 / (float)resizeImage.Width) * resizeImage.Height);
-            if (resizeImage.Width > 300 || resizeImage.Height > 200)
+            SixLabors.ImageSharp.Image resizeFrontImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialFrontImageFromRequest.OpenReadStream());
+            int heightFornt = (int)((300 / (float)resizeFrontImage.Width) * resizeFrontImage.Height);
+            if (resizeFrontImage.Width > 300 || resizeFrontImage.Height > 200)
             {
-                resizeImage.Mutate(x => x.Resize(300, height));
+                resizeFrontImage.Mutate(x => x.Resize(300, heightFornt));
             }
-            var imageString = await ImageToBase64(resizeImage);
-            var imageEncrypt = await CommonService.Encrypt(imageString);
+            var imageFrontString = await ImageToBase64(resizeFrontImage);
+            var imageFrontEncrypt = await CommonService.Encrypt(imageFrontString);
+            
+            
+            SixLabors.ImageSharp.Image resizeBackImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialFrontImageFromRequest.OpenReadStream());
+            int heightBack = (int)((300 / (float)resizeBackImage.Width) * resizeBackImage.Height);
+            if (resizeBackImage.Width > 300 || resizeBackImage.Height > 200)
+            {
+                resizeBackImage.Mutate(x => x.Resize(300, heightBack));
+            }
+            var imageBackString = await ImageToBase64(resizeBackImage);
+            var imageBackEncrypt = await CommonService.Encrypt(imageBackString);
+
+
             var visitorCreate = Visitor.Create(
                 command.VisitorName,
                 command.CompanyName,
@@ -50,7 +62,8 @@ namespace SecurityGateApv.Application.Services
                 DateTime.Now,
                 DateTime.Now,
                 command.CredentialsCard,
-                imageEncrypt,
+                imageFrontEncrypt,
+                imageBackEncrypt,
                 "Active",
                 command.CredentialCardTypeId
                 );
@@ -65,7 +78,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
             var res = _mapper.Map<GetVisitorCreateRes>(visitorCreate.Value);
-             res.VisitorCredentialImage = imageString;
+            
             return res;
         }
 
@@ -88,7 +101,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitorRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
-            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType");
+            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, VisitorImage");
             if(list.Count() == 0)
             {
                 return Result.Failure<List<GetVisitorRes>>(Error.NotFound);
@@ -96,7 +109,12 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in list) {
                 try
                 {
-                    item.DecrypCredentialCard(await CommonService.Decrypt(item.VisitorCredentialImage));
+                    var images = new List<VisitorImage>();
+                    foreach (var image in item.VisitorImage)
+                    {
+                        images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+                    }
+                    item.DecrypCredentialCard(images);
                 }
                 catch (Exception ex)
                 {
@@ -108,14 +126,19 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorRes>> GetByCredentialCard(string cardNumber)
         {
-            var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType")).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorRes>(Error.NotFound);
             }
             try
             {
-                visitor.DecrypCredentialCard(await CommonService.Decrypt(visitor.VisitorCredentialImage));
+                var images = new List<VisitorImage>();
+                foreach(var image in visitor.VisitorImage)
+                {
+                    images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+                }
+                visitor.DecrypCredentialCard(images);
             }
             catch (Exception ex)
             {
@@ -126,14 +149,19 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorRes>> GetById(int visitorId)
         {
-            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "CredentialCardType")).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "CredentialCardType, VisitorImage")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorRes>(Error.NotFound);
             }
             try
             {
-                visitor.DecrypCredentialCard(await CommonService.Decrypt(visitor.VisitorCredentialImage));
+                var images = new List<VisitorImage>();
+                foreach (var image in visitor.VisitorImage)
+                {
+                    images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+                }
+                visitor.DecrypCredentialCard(images);
             }
             catch (Exception ex) {
                 return Result.Failure<GetVisitorRes>(Error.DecryptError);
@@ -148,14 +176,14 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitorCreateRes>(Error.DuplicateCardNumber);
             }
-            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId)).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "VisitorImage")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorCreateRes>(Error.NotFound);
             }
-            var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
+           // var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
             visitor = _mapper.Map(command, visitor);
-            visitor.Update(imageEncrypt);
+            visitor.Update(await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), command.CredentialCardTypeId);
             await _visitorRepo.UpdateAsync(visitor);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
@@ -163,7 +191,6 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
             var res = _mapper.Map<GetVisitorCreateRes>(visitor);
-            res.VisitorCredentialImage = command.VisitorCredentialImageFromRequest;
             return res;
         }
         private async Task<string> ImageToBase64(Image image)

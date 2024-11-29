@@ -197,7 +197,10 @@ namespace SecurityGateApv.Application.Services
                 command.DeadlineTime,
                 "Assigned",
                 command.ScheduleId,
-                command.AssignToId
+                command.AssignToId,
+                command.MaxPersonQuantity,
+                command.StartDate,
+                command.EndDate
                 );
             if (scheduleUser.IsFailure)
             {

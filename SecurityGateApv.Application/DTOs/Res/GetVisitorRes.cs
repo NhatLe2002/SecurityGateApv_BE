@@ -14,11 +14,11 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string CompanyName { get; private set; }
         public string PhoneNumber { get; private set; }
         public string CredentialsCard { get; private set; }
-        public string VisitorCredentialImage { get; private set; }
         public DateTime CreateDate { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public string Status { get; private set; }
         public CredentialCardTypeRes CredentialCardType { get; private set; }
+        public List<VisitorImageRes1> VisitorImage { get; private set; }
 
     }
     public class CredentialCardTypeRes

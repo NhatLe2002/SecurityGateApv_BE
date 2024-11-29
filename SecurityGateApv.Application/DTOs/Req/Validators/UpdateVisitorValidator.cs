@@ -15,13 +15,13 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
         {
             RuleFor(s => s.VisitorName).NotNull().NotEmpty();
             RuleFor(s => s.CompanyName).NotNull().NotEmpty();
-            RuleFor(s => s.VisitorCredentialImageFromRequest).NotNull().NotEmpty();
+            RuleFor(s => s.VisitorCredentialFrontImageFromRequest).NotNull().NotEmpty();
             RuleFor(s => s.PhoneNumber).NotNull().NotEmpty()
                            .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
             RuleFor(s => s.CredentialCardTypeId).NotNull().NotEmpty().Must(s => {
                 return credentialCardTypeRepo.IsAny(t => t.CredentialCardTypeId == s).GetAwaiter().GetResult();
             }).WithMessage("Credential card type not found");
-            RuleFor(s => s.VisitorCredentialImageFromRequest).NotNull().NotEmpty();
+            RuleFor(s => s.VisitorCredentialBackImageFromRequest).NotNull().NotEmpty();
 
         }
     }
