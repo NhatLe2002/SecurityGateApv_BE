@@ -20,6 +20,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Error = SecurityGateApv.Domain.Errors.Error;
 
 namespace SecurityGateApv.Application.Services
 {
@@ -907,6 +909,66 @@ namespace SecurityGateApv.Application.Services
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
 
+        public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDateByVisitID(int pageSize, int pageNumber, int visitId)
+        {
+            var visits = await _visitRepo.FindAsync(
+                    s => s.VisitId == visitId
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
+                    pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
+                );
 
+            if (visits.Count() == 0)
+            {
+                return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisitCurrentDate);
+            }
+
+            var visitResult = new List<Visit>();
+            foreach (var item in visits)
+            {
+                    visitResult.Add(item);
+            }
+
+            if (!visitResult.Any())
+            {
+                return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisit);
+            }
+
+            var result = _mapper.Map<List<GetVisitByDateRes>>(visitResult);
+            foreach (var visit in result)
+            {
+                var visitEntity = visitResult.FirstOrDefault(v => v.VisitId == visit.VisitId);
+                if (visitEntity != null && visitEntity.VisitDetail != null)
+                {
+                    visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckOut.ToString()));
+                    visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
+                    visit.VisitorCheckOutedCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                        .Count();
+
+                    visit.VisitDetailStartTime = visitEntity.VisitDetail
+                        .Min(detail => (TimeSpan?)detail.ExpectedStartHour);
+
+                    visit.VisitDetailEndTime = visitEntity.VisitDetail
+                        .Max(detail => (TimeSpan?)detail.ExpectedEndHour);
+
+                    visit.VisitorNoSessionCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count == 0)
+                        .Count();
+                    visit.VisitorCheckkInCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
+                    visit.VisitorCheckkOutCount += visitEntity.VisitDetail
+                        .SelectMany(detail => detail.VisitorSession)
+                        .Where(session => session.Status == SessionStatus.CheckOut.ToString())
+                        .OrderByDescending(session => session.CheckoutTime)
+                        .FirstOrDefault() != null ? 1 : 0;
+                }
+            }
+            return result;
+        }
     }
 }

@@ -228,6 +228,29 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("Day/{visitId}")]
+        public async Task<ActionResult> GetAllVisitsByDate([FromQuery] int pageSize, [FromQuery] int pageNumber, int visitId)
+        {
+            if (pageNumber == -1 || pageSize == -1)
+            {
+                var resultAll = await _visitService.GetVisitByDateByVisitID(int.MaxValue, 1, visitId);
+                if (resultAll.IsFailure)
+                {
+                    return BadRequest(resultAll.Error);
+                }
+                return Ok(resultAll.Value);
+            }
+            if (pageNumber <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page number and page size must be greater than zero.");
+            }
+            var result = await _visitService.GetVisitByDateByVisitID(pageSize, pageNumber, visitId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("VisitDetail/{visitId}")]
         public async Task<ActionResult> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize)
         {
