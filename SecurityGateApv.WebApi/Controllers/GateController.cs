@@ -56,6 +56,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("GetAllGatePaging")]
+        public async Task<ActionResult> GetAllGatePaging(int pageSize, int pageNumber)
+        {
+            var result = await _gateService.GetAllGatePaging(pageSize, pageNumber);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        } 
         [HttpPost()]
         public async Task<IActionResult> CreateGate(CreateGateCommand command)
         {
@@ -76,17 +86,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpGet("GetAllGatePaging")]
-        public async Task<ActionResult> GetAllGatePaging(int pageSize, int pageNumber)
+        [HttpDelete("{gateId}")]
+        public async Task<IActionResult> DeleteGate(int gateId)
         {
-            var result = await _gateService.GetAllGatePaging(pageSize, pageNumber);
+            var result = await _gateService.DeleteGate(gateId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
-        } 
-        
+        }
         [HttpGet("TestTime")]
         public ActionResult TestTime()
         {
