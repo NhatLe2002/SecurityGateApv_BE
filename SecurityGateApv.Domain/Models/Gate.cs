@@ -68,14 +68,19 @@ namespace SecurityGateApv.Domain.Models
             Status = status;
             return Result.Success(this);
         }
+        public Result<Gate> Delete()
+        {
+            Status = false;
+            return Result.Success(this);
+        }
         public static Result<Gate> Create(int gateId, string gateName, DateTime createDate, string description, bool status)
         {
             var gate = new Gate(gateId, gateName, createDate, description, status);
             return Result.Success(gate);
         }
-        public Result<Gate> AddCamera(string captureURL, string streamURL, string description, bool status, int cameraTypeId)
+        public Result<Gate> AddCamera(string cameraURL, string description, bool status, int cameraTypeId)
         {
-            var camera = new Camera(captureURL, streamURL, description, status, cameraTypeId, this);
+            var camera = new Camera(cameraURL, description, status, cameraTypeId, this);
             Cameras.Add(camera);
             return this;
         }

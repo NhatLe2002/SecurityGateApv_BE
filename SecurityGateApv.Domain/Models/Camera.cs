@@ -13,8 +13,7 @@ namespace SecurityGateApv.Domain.Models
     {
         [Key]
         public int Id { get; set; }
-        public string CaptureURL { get; private set; }
-        public string StreamURL { get; private set; }
+        public string CameraURL { get; private set; }
         public string Description { get; private set; }
         public bool Status { get; private set; }
 
@@ -28,50 +27,46 @@ namespace SecurityGateApv.Domain.Models
         public int CameraTypeId { get; private set; }
         public CameraType CameraType { get; private set; }
 
-        private Camera(string captureURL, string streamURL, string description, bool status, int gateId, int cameraTypeId)
+        private Camera(string cameraURL, string description, bool status, int gateId, int cameraTypeId)
         {
-            CaptureURL = captureURL;
-            StreamURL = streamURL;
+            CameraURL = cameraURL;
             Description = description;
             Status = status;
             GateId = gateId;
             CameraTypeId = cameraTypeId;
         }
-        public Camera(string captureURL, string streamURL, string description, bool status, int cameraTypeId, Gate gate)
+        public Camera(string cameraURL, string description, bool status, int cameraTypeId, Gate gate)
         {
-            CaptureURL = captureURL;
-            StreamURL = streamURL;
+            CameraURL = cameraURL;
             Description = description;
             Status = status;
             Gate = gate;
             CameraTypeId = cameraTypeId;
         }
-        private Camera(int cameraId, string captureURL, string streamURL, string description, bool status, int gateId, int cameraTypeId)
+        private Camera(int cameraId, string cameraURL, string description, bool status, int gateId, int cameraTypeId)
         {
             Id = cameraId;
-            CaptureURL = captureURL;
-            StreamURL = streamURL;
+            CameraURL = cameraURL;
             Description = description;
             Status = status;
             GateId = gateId;
             CameraTypeId = cameraTypeId;
         }
-        public static Result<Camera> Create(string captureURL, string streamURL, string description, bool status, int gateId, int cameraTypeId)
+        public static Result<Camera> Create(string cameraURL, string description, bool status, int gateId, int cameraTypeId)
         {
-            var camera = new Camera(captureURL, streamURL, description, status, gateId, cameraTypeId);
-            return Result.Success(camera);
-
-        } 
-        public static Result<Camera> Create(int cameraId,string captureURL, string streamURL, string description, bool status, int gateId, int cameraTypeId)
-        {
-            var camera = new Camera(cameraId, captureURL, streamURL, description, status, gateId, cameraTypeId);
+            var camera = new Camera(cameraURL, description, status, gateId, cameraTypeId);
             return Result.Success(camera);
 
         }
-        public  Result<Camera> Update( string captureURL, string streamURL, string description, bool status, int gateId, int cameraTypeId)
+        public static Result<Camera> Create(int cameraId, string cameraURL, string description, bool status, int gateId, int cameraTypeId)
         {
-            CaptureURL = captureURL;
-            StreamURL = streamURL;
+            var camera = new Camera(cameraId, cameraURL, description, status, gateId, cameraTypeId);
+            return Result.Success(camera);
+
+        }
+        public Result<Camera> Update(string cameraURL, string description, bool status, int gateId, int cameraTypeId)
+        {
+            CameraURL = cameraURL;
             Description = description;
             Status = status;
             GateId = gateId;

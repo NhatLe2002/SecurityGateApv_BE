@@ -19,7 +19,6 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
     {
         public int CameraId { get; set; }
         public string CaptureURL { get; set; }
-        public string StreamURL { get; set; }
         public string Description { get; set; }
         [JsonIgnore]
         public bool Status { get; set; }
