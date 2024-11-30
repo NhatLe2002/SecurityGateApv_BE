@@ -115,7 +115,7 @@ namespace SecurityGateApv.Application.Services
             }
             var createStaff = (await _userRepo.FindAsync(s => s.UserId == command.CreateById)).FirstOrDefault();
             var departmentManager = (await _userRepo.FindAsync(s => s.DepartmentId == createStaff.DepartmentId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
-            var noti = Notification.Create($"Chuyến thăm cần duyệt từ Nhân Viên: {createStaff.UserName}", "Cần duyệt chuyến thăm cho khách", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Chuyến thăm cần duyệt từ Nhân Viên: {createStaff.FullName}", "Cần duyệt chuyến thăm cho khách", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
             noti.Value.AddUserNoti(command.CreateById, departmentManager.UserId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
@@ -829,7 +829,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitNoDetailRes>> ReportVisit(int visitId)
         {
-            var visit = (await _visitRepo.FindAsync(s => s.VisitId == visitId)).FirstOrDefault();
+            var visit = (await _visitRepo.FindAsync(s => s.VisitId == visitId, includeProperties: "VisitDetail")).FirstOrDefault();
             if (visit == null)
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
@@ -844,6 +844,23 @@ namespace SecurityGateApv.Application.Services
             if (!commit)
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+            }
+           
+            var security = (await _userRepo.FindAsync(s => s.Role.RoleName == UserRoleEnum.Security.ToString()));
+            var noti = Notification.Create("Thông báo cho tất cả bảo vê về chuyến thăm vi phạm",$"Chuyến thăm bị vi phạm, tên chuyến thăm: {visit.VisitName} - ngày: {visit.ExpectedStartTime}", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            foreach(var secu in security)
+            {
+                noti.Value.AddUserNoti((int)visit.ResponsiblePersonId, secu.UserId);
+            }
+            await _notificationRepo.AddAsync(noti.Value);
+            var commit2 = await _unitOfWork.CommitAsync();
+            if (!commit2)
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+            }
+            foreach (var secu in security)
+            {
+                await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", secu.UserId, 1);
             }
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
