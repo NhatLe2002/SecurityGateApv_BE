@@ -166,7 +166,6 @@ namespace SecurityGateApv.WebApi.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
-            return Ok(result.Value);
         }
         [HttpGet("Visit/{visitId}")]
         public async Task<IActionResult> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId)
@@ -188,17 +187,17 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        //[HttpGet("StatusCheckIn/Card/{cardVerified}")]
-        //public async Task<IActionResult> GetVisitSessionStatusCheckInByCardVerification(string cardVerified)
-        //{
-        //    var result = await _visitorSessionService.GetVisitSessionStatusCheckInByCardVerification(cardVerified);
+        [HttpGet("StatusCheckIn/Card/{cardVerified}")]
+        public async Task<IActionResult> GetVisitSessionStatusCheckInByCardVerification(string cardVerified)
+        {
+            var result = await _visitorSessionService.GetVisitSessionStatusCheckInByCardVerification(cardVerified);
 
-        //    if (result.IsFailure)
-        //    {
-        //        return BadRequest(result.Error);
-        //    }
-        //    return Ok(result.Value);
-        //}
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("StatusCheckIn/CredentialId/{credentialId}")]
         public async Task<IActionResult> GetVisitorSessionStatusCheckInByCredentialIdId(string credentialId)
         {

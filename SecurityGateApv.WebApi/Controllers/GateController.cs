@@ -26,6 +26,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("{gateId}")]
+        public async Task<ActionResult> GetGateById(int gateId)
+        {
+            var result = await _gateService.GetGateById(gateId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("CameraType")]
         public async Task<ActionResult> GetAllCameraType()
         {

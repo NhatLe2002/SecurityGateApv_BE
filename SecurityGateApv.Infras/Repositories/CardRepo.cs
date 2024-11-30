@@ -5,14 +5,14 @@ using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Infras.DBContext;
-using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using System.IO;
 
 namespace SecurityGateApv.Infras.Repositories
 {
@@ -41,97 +41,66 @@ namespace SecurityGateApv.Infras.Repositories
             byte[] qrCodeBytes = qrCode.GetGraphic(5, new byte[] { 0, 0, 0, 255 }, new byte[] { 0xf5, 0xf5, 0xf7, 255 });
 
             // Create a card image with the QR code embedded
-            using (var qrCodeImage = SKBitmap.Decode(qrCodeBytes))
+            using (var qrCodeImage = Image.Load<Rgba32>(qrCodeBytes))
             {
-                if (qrCodeImage == null)
-                {
-                    throw new ArgumentNullException(nameof(qrCodeImage), "QR code image could not be decoded.");
-                }
-
                 int cardWidth = 250;
                 int cardHeight = 400;
-                using (var cardImage = new SKBitmap(cardWidth, cardHeight))
+                int qrCodeSize = 150; // Fixed size for the QR code
+
+                // Resize the QR code to the fixed size
+                qrCodeImage.Mutate(x => x.Resize(qrCodeSize, qrCodeSize));
+
+                using (var cardImage = new Image<Rgba32>(cardWidth, cardHeight))
                 {
-                    using (var canvas = new SKCanvas(cardImage))
+                    cardImage.Mutate(ctx =>
                     {
-                        // Design the card background
-                        var backgroundColor = SKColor.Parse("#34495e");
-                        canvas.Clear(backgroundColor);
+                        ctx.Clear(Color.ParseHex("#34495e"));
 
                         // Draw rounded rectangle
-                        int cornerRadius = 20;
-                        var paint = new SKPaint
-                        {
-                            Color = backgroundColor,
-                            IsAntialias = true
-                        };
-                        var rect = new SKRoundRect(new SKRect(0, 0, cardWidth, cardHeight), cornerRadius, cornerRadius);
-                        canvas.DrawRoundRect(rect, paint);
-
-                        var borderColor = SKColors.White;
-                        var borderPaint = new SKPaint
-                        {
-                            Color = borderColor,
-                            StrokeWidth = 10,
-                            IsStroke = true,
-                            IsAntialias = true
-                        };
-                        canvas.DrawRoundRect(rect, borderPaint);
+                        var rect = new RectangularPolygon(0, 0, cardWidth, cardHeight);
+                        ctx.Fill(Color.ParseHex("#34495e"), rect);
+                        ctx.Draw(Color.White, 10, rect);
 
                         // Add logo
                         using (var memoryStream = new MemoryStream())
                         {
-                            await file.CopyToAsync(memoryStream);
+                            file.CopyTo(memoryStream);
                             memoryStream.Seek(0, SeekOrigin.Begin); // Reset stream position
-                            using (var logo = SKBitmap.Decode(memoryStream))
+                            using (var logo = Image.Load<Rgba32>(memoryStream.ToArray()))
                             {
-                                if (logo == null)
-                                {
-                                    throw new ArgumentNullException(nameof(logo), "Logo image could not be decoded.");
-                                }
-
                                 int logoWidth = 100;
-                                int logoHeight = 100;
                                 int logoX = (cardWidth - logoWidth) / 2;
                                 int logoY = 20;
-                                canvas.DrawBitmap(logo, new SKRect(logoX, logoY, logoX + logoWidth, logoY + logoHeight));
+                                logo.Mutate(x => x.Resize(logoWidth, logoWidth)); // Resize logo to 100x100
+                                ctx.DrawImage(logo, new Point(logoX, logoY), 1);
                             }
                         }
 
                         // Add title text
-                        var titlePaint = new SKPaint
-                        {
-                            Color = SKColors.White,
-                            TextSize = 24, // Increased text size
-                            IsAntialias = true,
-                            TextAlign = SKTextAlign.Center,
-                            Typeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
-                        };
-                        canvas.DrawText("Security Gate APV", cardWidth / 2, 130, titlePaint);
+                        var titleFont = SixLabors.Fonts.SystemFonts.CreateFont("DejaVu Sans", 24, SixLabors.Fonts.FontStyle.Bold);
+                        var titleText = "Security Gate APV";
+                        var titleSize = TextMeasurer.MeasureSize(titleText, new TextOptions(titleFont));
+                        var titleX = (cardWidth - titleSize.Width) / 2;
+                        ctx.DrawText(titleText, titleFont, Color.White, new PointF(titleX, 110));
 
                         // Draw the QR code on the card
-                        int qrCodeSize = 150;
                         int qrCodeX = (cardWidth - qrCodeSize) / 2;
                         int qrCodeY = 160;
-                        canvas.DrawBitmap(qrCodeImage, new SKRect(qrCodeX, qrCodeY, qrCodeX + qrCodeSize, qrCodeY + qrCodeSize));
+                        ctx.DrawImage(qrCodeImage, new Point(qrCodeX, qrCodeY), 1);
 
                         // Add footer text
-                        var textPaint = new SKPaint
-                        {
-                            Color = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? SKColors.White : SKColors.Yellow,
-                            TextSize = 12,
-                            IsAntialias = true,
-                            TextAlign = SKTextAlign.Center,
-                            Typeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
-                        };
+                        var footerFont = SixLabors.Fonts.SystemFonts.CreateFont("DejaVu Sans", 12, SixLabors.Fonts.FontStyle.Bold);
+                        var footerColor = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? Color.White : Color.Yellow;
                         string footerText = cardTypeName == CardTypeEnum.ShotTermCard.ToString() ? "Thẻ ra vào hàng ngày" : "Thẻ ra vào theo lịch trình";
-                        canvas.DrawText(footerText, cardWidth / 2, cardHeight - 30, textPaint);
-                    }
+                        var footerSize = TextMeasurer.MeasureSize(footerText, new TextOptions(footerFont));
+                        var footerX = (cardWidth - footerSize.Width) / 2;
+                        ctx.DrawText(footerText, footerFont, footerColor, new PointF(footerX, cardHeight - 30));
+                    });
 
                     // Convert the card image to a base64 string
                     using (var ms = new MemoryStream())
                     {
-                        cardImage.Encode(ms, SKEncodedImageFormat.Png, 100);
+                        cardImage.Save(ms, new PngEncoder());
                         var cardImageBase64 = Convert.ToBase64String(ms.ToArray());
 
                         // Create the Card object

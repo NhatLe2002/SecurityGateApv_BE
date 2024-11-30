@@ -67,6 +67,9 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error NoScheduleAssignForThisStaff = new("Error.NoScheduleAssignForThisStaff", "No Assigned Schedule for staff");
         public static readonly Error AppendTimeInvalid = new("Error.AppendTimeInvalid", "Expect End Time must grater than Start Time");
         public static readonly Error VisitCancel = new("Error.VisitCancel", "Chuyến thăm đã bị hủy");
+        //Not found visit by credential card
+        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
+        //public static readonly Error VisitCancel = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
         #endregion
 
         #region VisitDetailError
@@ -185,7 +188,7 @@ namespace SecurityGateApv.Domain.Errors
 
         //Detection Error
         public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
-        public static readonly Error NotShoe = new("Error.DetectionError", "Cần đưa đúng loại ảnh giày (type:shoe).");
+        public static readonly Error NotShoe = new("Error.DetectionError", "Cần đưa đúng loại ảnh giày (type:Shoe).");
         public static readonly Error DetectionExeption = new("Error.DetectionExeption", "Lỗi trong quá trình detect giày.");
         //Not found shoe 
         public static readonly Error NotFoundShoeTypeImage = new("Error.NotFoundShoe", "Not found shoe type image");
@@ -195,8 +198,6 @@ namespace SecurityGateApv.Domain.Errors
 
         //Checkin fail
         public static readonly Error CheckInFail = new("Error.CheckInFail", "Lỗi trong quá trình lưu trữ dữ liệu checkin.");
-        //Not found visit by credential card
-        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
         public static Error ScheduleAndCardTypeMismatch(string scheduleType, string cardType)
         {
             return new Error("Error.ScheduleAndCardTypeMismatch", $"Schedule type '{scheduleType}' and card type '{cardType}' do not match.");
