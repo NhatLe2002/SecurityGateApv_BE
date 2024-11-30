@@ -16,6 +16,9 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string? Note { get; private set; }
         public DateTime AssignTime { get; private set; }
         public DateTime DeadlineTime { get; private set; }
+        public int? MaxPersonQuantity { get; private set; }
+        public DateTime? StartDate { get; private set; }
+        public DateTime? EndDate { get; private set; }
         public string Status { get; private set; }
         public ScheduleGetScheduleUserRes Schedule { get; private set; }
         public UserGetScheduleUserRes AssignTo { get; private set; }

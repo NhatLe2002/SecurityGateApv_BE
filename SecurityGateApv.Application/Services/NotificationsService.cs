@@ -26,7 +26,7 @@ namespace SecurityGateApv.Application.Services
         }
         public async Task<Result<IEnumerable<GetNotificationRes>>> GetNotificationOfUser(int userId, int pageSize, int pageNumber)
         {
-            var notification = await _notificationUserRepo.FindAsync(s => s.ReceiverID == userId, pageSize, pageNumber , includeProperties: "Notification, Notification.NotificationType");
+            var notification = await _notificationUserRepo.FindAsync(s => s.ReceiverID == userId, pageSize, pageNumber,orderBy: s => s.OrderBy(t=>t.Notification.SentDate) , includeProperties: "Notification, Notification.NotificationType, Sender");
             if(notification.Count() == 0)
             {
                 return Result.Failure<IEnumerable<GetNotificationRes>>(Error.NotFound);

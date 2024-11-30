@@ -30,6 +30,16 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("UserId/{userId}")]
         public async Task<IActionResult> GetScheduleUserByUserId(int userId, int pageNumber, int pageSize)
         {
+            if(pageSize == -1 || pageNumber == -1)
+            {
+                var resultALL = await _scheduleUserService.GetScheduleUserByUserId(userId, 1, int.MaxValue);
+                if (resultALL.IsFailure)
+                {
+                    return BadRequest(resultALL.Error);
+                }
+
+                return Ok(resultALL.Value);
+            }
             var result = await _scheduleUserService.GetScheduleUserByUserId(userId, pageNumber, pageSize);
             if (result.IsFailure)
             {
