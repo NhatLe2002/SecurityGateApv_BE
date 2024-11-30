@@ -183,7 +183,7 @@ namespace SecurityGateApv.Application.Services
             }
            // var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
             visitor = _mapper.Map(command, visitor);
-            visitor.Update(await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), command.CredentialCardTypeId);
+            visitor.Update(await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), await CommonService.Encrypt(command.VisitorCredentialBackImageFromRequest), command.CredentialCardTypeId);
             await _visitorRepo.UpdateAsync(visitor);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
