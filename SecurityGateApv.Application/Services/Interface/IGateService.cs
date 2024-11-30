@@ -18,6 +18,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<List<GetGateRes>>> GetAllGatePaging(int pageSize, int pageNumber);
         public Task<Result<bool>> CreateGate( CreateGateCommand command);
         public Task<Result<bool>> UpdateGate(GateUpdateCommand command);
+        public Task<Result<bool>> DeleteGate(int gateId);
         public Task<Result<List<CameraRes>>> GetCameraByGate(int gate);
 
 
