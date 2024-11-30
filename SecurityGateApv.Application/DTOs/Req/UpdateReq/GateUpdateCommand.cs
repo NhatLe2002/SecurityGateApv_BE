@@ -17,9 +17,9 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
     }
     public class UpdateCameraCommand
     {
-        public int CameraId { get; set; }
+        public int CameraId { get; set; } 
         public string CaptureURL { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } 
         [JsonIgnore]
         public bool Status { get; set; }
 
