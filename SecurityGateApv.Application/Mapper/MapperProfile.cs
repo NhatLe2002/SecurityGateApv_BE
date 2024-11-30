@@ -107,15 +107,14 @@ namespace SecurityGateApv.Application.Mapper
 
             #region Visitor map
             CreateMap<Visitor, VisitorRes>().ReverseMap()
-                .AfterMap((src, dest) =>
+               /* .AfterMap((src, dest) =>
                 {
                     if (dest.VisitorImage != null)
                     {
-                        src.VisitorCredentialFrontImage = dest.VisitorImage.FirstOrDefault(s => true)?.ImageURL ?? string.Empty;
-                        //dest.VisitorCredentialBackImage = src.VisitorImage.FirstOrDefault(s => s.ImageType == (CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BACK"))?.ImageURL;
+                        var frontImage = dest.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT"));
+                        src.VisitorCredentialFrontImage = frontImage?.ImageURL ?? string.Empty;
                     }
-                });
-            //.ForMember(dest => dest.VisitorImage.Any(s => s.ImageType == (CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_FRONT") || s.ImageType == (CredentialCardTypeEnum.DrivingLicence.ToString() + "_FRONT")), opt => opt.MapFrom(src => src.VisitorCredentialFrontImage));
+                })*/; 
             CreateMap<Visitor, CreateVisitorCommand>().ReverseMap();
             CreateMap<VisitorDetailRes, Visitor>().ReverseMap();
             CreateMap<GetVisitorCreateRes, Visitor>().ReverseMap();

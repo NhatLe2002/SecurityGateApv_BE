@@ -4,6 +4,7 @@ using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Common;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.DomainDTOs;
@@ -406,7 +407,7 @@ namespace SecurityGateApv.Application.Services
                 && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
                 && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
                 && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
-               int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor.VisitorImage"
+               int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor.VisitorImage,Visit.CreateBy"
                );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
@@ -416,8 +417,9 @@ namespace SecurityGateApv.Application.Services
 
             //Check exsit Card and dos not have visit
             var qrCard = (await _cardRepo.FindAsync(
-               s => s.CardVerification.Equals(command.QRCardVerification)))
-               .FirstOrDefault();
+               s => s.CardVerification.Equals(command.QRCardVerification),
+               includeProperties: "CardType"
+               )).FirstOrDefault();
             if (qrCard == null)
             {
                 return Result.Failure<ValidCheckinRes>(Error.NotFoundCard);
@@ -465,7 +467,12 @@ namespace SecurityGateApv.Application.Services
             }
 
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
+            if(validVisitDetail.Visitor.VisitorImage != null)
+            {
+                result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
+            }
             result.CardRes = _mapper.Map<CardRes>(qrCard);
+            result.DetectShoeRes = detectShoeResult.Value;
             return result;
         }
 
@@ -495,7 +502,7 @@ namespace SecurityGateApv.Application.Services
                    && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
                    && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
                    && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
-                   int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
+                   int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor.VisitorImage,Visit.CreateBy"
                 );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)
@@ -532,7 +539,12 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
+            if (validVisitDetail.Visitor.VisitorImage != null)
+            {
+                result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
+            }
             result.CardRes = _mapper.Map<CardRes>(card);
+            result.DetectShoeRes = detectShoeResult.Value;
             return result;
         }
         public async Task<Result<GetVisitByCredentialCardRes>> ValidCheckIn(ValidCheckInCommand command)
