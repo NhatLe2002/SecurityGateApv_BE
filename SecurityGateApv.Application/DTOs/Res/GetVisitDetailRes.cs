@@ -23,7 +23,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string CompanyName { get; set; }
         public string PhoneNumber { get; set; }
         public string CredentialsCard { get; set; }
-        public string VisitorCredentialImage { get; set; }
+        public string VisitorCredentialFrontImage { get; set; }
         public string Status { get; set; }
     }
     public class GetVisitByCredentialCardRes

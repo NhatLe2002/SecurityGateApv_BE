@@ -406,7 +406,7 @@ namespace SecurityGateApv.Application.Services
                 && s.ExpectedStartHour <= DateTime.Now.TimeOfDay
                 && s.ExpectedEndHour >= DateTime.Now.TimeOfDay
                 && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
-               int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
+               int.MaxValue, 1, includeProperties: "Visit.ScheduleUser.Schedule.ScheduleType,Visitor.VisitorImage"
                );
             var validVisitDetail = visitDetails.FirstOrDefault(visitDetail => IsValidVisit(visitDetail.Visit, DateTime.Now));
             if (validVisitDetail == null)

@@ -10,8 +10,7 @@ namespace SecurityGateApv.Application.DTOs.Res
     public class CameraRes
     {
         public int Id { get; set; }
-        public string CaptureURL { get;  set; }
-        public string StreamURL { get;  set; }
+        public string CameraURL { get;  set; }
         public string Description { get;  set; }
         public bool Status { get;  set; }
         public int GateId { get;  set; }

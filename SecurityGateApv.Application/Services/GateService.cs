@@ -102,7 +102,7 @@ namespace SecurityGateApv.Application.Services
                 {
                     return Result.Failure<bool>(Error.NotFound);
                 }
-                gate.AddCamera(item.CaptureURL, item.Description, true, item.CameraTypeId);
+                gate.AddCamera(item.CameraURL, item.Description, true, item.CameraTypeId);
             }
 
 
@@ -145,7 +145,7 @@ namespace SecurityGateApv.Application.Services
                 var existingCamera = gate.Cameras.FirstOrDefault(c => c.Id == item.CameraId);
                 if (existingCamera != null)
                 {
-                    var cameraUpdateResult = existingCamera.Update(item.CaptureURL, item.Description, true, command.GateId, item.CameraTypeId);
+                    var cameraUpdateResult = existingCamera.Update(item.CameraURL, item.Description, true, command.GateId, item.CameraTypeId);
                     if (!cameraUpdateResult.IsSuccess)
                     {
                         return Result.Failure<bool>(cameraUpdateResult.Error);
@@ -153,7 +153,7 @@ namespace SecurityGateApv.Application.Services
                 }
                 else
                 {
-                    gate.AddCamera(item.CaptureURL, item.Description, true, item.CameraTypeId);
+                    gate.AddCamera(item.CameraURL, item.Description, true, item.CameraTypeId);
                 }
             }
 
