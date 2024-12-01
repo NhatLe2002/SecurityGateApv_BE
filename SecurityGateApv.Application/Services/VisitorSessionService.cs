@@ -838,7 +838,7 @@ namespace SecurityGateApv.Application.Services
                   s => s.VisitDetailId == visitCard.VisitDetailId
                   && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
-                    includeProperties: "SecurityIn,GateIn,VisitDetail,Images"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages"
                 )).FirstOrDefault();
 
             if (visitSession == null)
@@ -848,6 +848,8 @@ namespace SecurityGateApv.Application.Services
             }
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
+            result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
+
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
 
             return result;
@@ -869,7 +871,7 @@ namespace SecurityGateApv.Application.Services
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
                   && s.Status == SessionStatus.CheckIn.ToString(),
-                    includeProperties: "SecurityIn,GateIn,VisitDetail"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages"
                 )).FirstOrDefault();
 
             if (visitSession == null)
@@ -890,6 +892,7 @@ namespace SecurityGateApv.Application.Services
 
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
+            result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
             return result;
         }

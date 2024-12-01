@@ -11,6 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitorSessionId { get; set; }
         public DateTime CheckinTime { get; set; }
         //public DateTime? CheckoutTime { get; set; }
+        public List<VisitorSessionImageRes> VisitorSessionsImages { get; set; }
         public VisitDetailSessionRes VisitDetail { get; set; }
         public SecurityRes SecurityIn { get; set; }
         //public SecurityRes? SecurityOut { get; set; }
@@ -24,7 +25,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitDetailId { get; set; }
         public TimeSpan ExpectedStartHour { get; private set; }
         public TimeSpan ExpectedEndHour { get; private set; }
-        public int VisitorId { get; set; }
+        public VisitorRes Visitor { get; set; }
         public int VisitId { get; set; }
         //public bool Status { get; private set; }
     }
