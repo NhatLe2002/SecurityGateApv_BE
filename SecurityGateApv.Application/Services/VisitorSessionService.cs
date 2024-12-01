@@ -670,7 +670,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
@@ -679,7 +679,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Staff.ToString())
@@ -688,7 +688,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
 
