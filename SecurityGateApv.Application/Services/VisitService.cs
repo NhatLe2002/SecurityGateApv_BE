@@ -125,7 +125,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<VisitCreateCommand>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", departmentManager.UserId, 1);
+            await _notifications.SendMessageAssignForStaff($"Chuyến thăm cần duyệt từ Nhân Viên: {createStaff.FullName}", "Cần duyệt chuyến thăm cho khách", departmentManager.UserId, 1);
             return command;
         }
         public async Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token)
@@ -184,7 +184,7 @@ namespace SecurityGateApv.Application.Services
                 {
                     return Result.Failure<VisitCreateCommandDaily>(Error.CommitError);
                 }
-                await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", command.ResponsiblePersonId, 1);
+                await _notifications.SendMessageAssignForStaff($"Chuyến thăm xác nhận từ bảo vệ: {user.FullName}", "Cần xác nhận chuyến thăm cho khách", command.ResponsiblePersonId, 1);
             }
             return command;
         }
@@ -862,7 +862,7 @@ namespace SecurityGateApv.Application.Services
             }
             foreach (var secu in security)
             {
-                await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", secu.UserId, 1);
+                await _notifications.SendMessageAssignForStaff("Thông báo cho tất cả bảo vê về chuyến thăm vi phạm", $"Chuyến thăm bị vi phạm, tên chuyến thăm: {visit.VisitName} - ngày: {visit.ExpectedStartTime}", secu.UserId, 1);
             }
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
@@ -906,6 +906,24 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
             }
+            try
+            {
+                var noti = Notification.Create($"Chuyến thăm {visit.VisitName} đã được chấp thuận", "", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+                var departmentMananger = (await _userRepo.FindAsync(s => s.DepartmentId == visit.ResponsiblePerson.DepartmentId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
+                noti.Value.AddUserNoti(departmentMananger.UserId, (int)visit.ResponsiblePersonId);
+                await _notificationRepo.AddAsync(noti.Value);
+                var commit2 = await _unitOfWork.CommitAsync();
+                if (!commit2)
+                {
+                    return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+                }
+                await _notifications.SendMessageAssignForStaff($"Chuyến thăm {visit.VisitName} đã được chấp thuận", "", (int)visit.ResponsiblePersonId, 1);
+            }
+            catch
+            {
+
+            }
+           
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
 
