@@ -77,6 +77,12 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
+            var images = new List<VisitorImage>();
+            foreach (var image in visitorCreate.Value.VisitorImage)
+            {
+                images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+            }
+            visitorCreate.Value.DecrypCredentialCard(images);
             var res = _mapper.Map<GetVisitorCreateRes>(visitorCreate.Value);
             
             return res;
@@ -190,6 +196,12 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitorCreateRes>(Error.CommitError);
             }
+            var images = new List<VisitorImage>();
+            foreach (var image in visitor.VisitorImage)
+            {
+                images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+            }
+            visitor.DecrypCredentialCard(images);
             var res = _mapper.Map<GetVisitorCreateRes>(visitor);
             return res;
         }
