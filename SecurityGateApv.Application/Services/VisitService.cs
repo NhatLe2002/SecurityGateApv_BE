@@ -8,6 +8,7 @@ using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Common;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.EmailSender;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
@@ -40,10 +41,11 @@ namespace SecurityGateApv.Application.Services
         private readonly INotifications _notifications;
         private readonly INotificationRepo _notificationRepo;
         private readonly IJwt _jwt;
+        private readonly IEmailSender _emailSender;
 
         public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IScheduleTypeRepo visitTypeRepo,
             IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo,
-            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications, INotificationRepo notificationRepo)
+            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications, INotificationRepo notificationRepo, IEmailSender emailSender)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -59,6 +61,7 @@ namespace SecurityGateApv.Application.Services
             _jwt = jwt;
             _notifications = notifications;
             _notificationRepo = notificationRepo;
+            _emailSender = emailSender;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token)
@@ -114,6 +117,23 @@ namespace SecurityGateApv.Application.Services
             if (!commit)
             {
                 return Result.Failure<VisitCreateCommand>(Error.CommitError);
+            }
+            //send email to visitor
+            var staff = (await _userRepo.FindAsync(s => s.UserId == command.ResponsiblePersonId)).FirstOrDefault();
+            foreach (var item in command.VisitDetail)
+            {
+                try
+                {
+                    var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == item.VisitorId)).FirstOrDefault();
+                    if (visitor.Email != null)
+                    {
+                        await _emailSender.SendEmailAsync(visitor.Email, "APV security", $"Bạn có cuộc hẹn từ công ty APV từ ngày: {visit.ExpectedStartTime} - {visit.ExpectedEndTime}, chi tiết xin liên hệ nhân viên {staff.FullName}");
+                    }
+                }
+                catch
+                {
+
+                }
             }
             var createStaff = (await _userRepo.FindAsync(s => s.UserId == command.CreateById)).FirstOrDefault();
             var departmentManager = (await _userRepo.FindAsync(s => s.DepartmentId == createStaff.DepartmentId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
@@ -172,6 +192,21 @@ namespace SecurityGateApv.Application.Services
             if (!commit)
             {
                 return Result.Failure<VisitCreateCommandDaily>(Error.CommitError);
+            }
+            foreach (var item in command.VisitDetail)
+            {
+                try
+                {
+                    var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == item.VisitorId)).FirstOrDefault();
+                    if (visitor.Email != null)
+                    {
+                        await _emailSender.SendEmailAsync(visitor.Email, "APV security", $"Bạn có cuộc hẹn từ công ty APV vào ngày: {visit.ExpectedStartTime}, thời gian: {item.ExpectedStartHour} - {item.ExpectedEndHour}");
+                    }
+                }
+                catch
+                {
+
+                }
             }
             if (role == UserRoleEnum.Security.ToString())
             {

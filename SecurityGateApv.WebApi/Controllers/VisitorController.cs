@@ -56,7 +56,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVisitor([FromForm] CreateVisitorCommand command)
         {
-            var result = await _visitorService.CreateVisitor(command);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateVisitor", "Invalid Token"));
+            }
+            var result = await _visitorService.CreateVisitor(command, token);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
