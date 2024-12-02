@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace SecurityGateApv.Application.DTOs.Req
 {
@@ -18,7 +19,15 @@ namespace SecurityGateApv.Application.DTOs.Req
         public int GateOutId { get; set; }
         [JsonIgnore]
         public string Status { get; set; } = string.Empty;
+        public List<VisitorSessionsImageCheckoutCommand> Images { get; set; }
         //public ICollection<VehicleSessionImage> Images { get; set; }
         public VehicleSessionComand? VehicleSession { get; set; }
+    }
+    public class VisitorSessionsImageCheckoutCommand
+    {
+        public string ImageType { get; set; }
+        public string ImageURL { get; set; }
+        ////[JsonIgnore]
+        //public IFormFile Image { get; set; }
     }
 }

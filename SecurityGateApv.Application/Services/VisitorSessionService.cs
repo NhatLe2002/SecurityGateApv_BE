@@ -971,10 +971,20 @@ namespace SecurityGateApv.Application.Services
                 //}
             }
 
+            // Add visitor image checkout
+
+
 
             command.Status = "CheckOut";
             command.CheckoutTime = DateTime.Now;
             var updateVisitorSesson = _mapper.Map(command, visitSession);
+
+
+            // Add visitor image checkout
+            foreach (var item in command.Images)
+            {
+                updateVisitorSesson.AddVisitorImage(item.ImageType, item.ImageURL);
+            }
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
 
@@ -1072,6 +1082,12 @@ namespace SecurityGateApv.Application.Services
             command.Status = "CheckOut";
             command.CheckoutTime = DateTime.Now;
             var updateVisitorSesson = _mapper.Map(command, visitSession);
+
+            // Add visitor image checkout
+            foreach (var item in command.Images)
+            {
+                updateVisitorSesson.AddVisitorImage(item.ImageType, item.ImageURL);
+            }
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
 
