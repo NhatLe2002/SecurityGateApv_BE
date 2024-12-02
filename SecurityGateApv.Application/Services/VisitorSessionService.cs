@@ -838,13 +838,17 @@ namespace SecurityGateApv.Application.Services
                   s => s.VisitDetailId == visitCard.VisitDetailId
                   && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
-                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit"
                 )).FirstOrDefault();
 
             if (visitSession == null)
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
 
+            }
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
@@ -871,14 +875,17 @@ namespace SecurityGateApv.Application.Services
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
                   && s.Status == SessionStatus.CheckIn.ToString(),
-                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit"
                 )).FirstOrDefault();
 
             if (visitSession == null)
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
-
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
+            }
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.VisitDetailId == visitSession.VisitDetailId
                     && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
