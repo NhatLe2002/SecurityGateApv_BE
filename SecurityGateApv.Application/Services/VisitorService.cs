@@ -113,7 +113,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitorRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
-            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, VisitorImage");
+            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, VisitorImage, CreateBy");
             if(list.Count() == 0)
             {
                 return Result.Failure<List<GetVisitorRes>>(Error.NotFound);
@@ -138,7 +138,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorRes>> GetByCredentialCard(string cardNumber)
         {
-            var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage")).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage,CreateBy")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorRes>(Error.NotFound);
@@ -161,7 +161,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorRes>> GetById(int visitorId)
         {
-            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "CredentialCardType, VisitorImage")).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "CredentialCardType, VisitorImage,CreateBy")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorRes>(Error.NotFound);
