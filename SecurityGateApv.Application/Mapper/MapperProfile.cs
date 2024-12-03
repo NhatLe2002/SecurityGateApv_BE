@@ -159,6 +159,8 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<SessionsRes, VisitorSession>().ReverseMap();
             CreateMap<GraphQlGetVisitRes, Visit>().ReverseMap();
             CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap();
+            CreateMap<VehicleSessionRes, VehicleSession>().ReverseMap();
+            CreateMap<VehicleSessionImageRes, VehicleSessionImage>().ReverseMap();
 
             #endregion
 

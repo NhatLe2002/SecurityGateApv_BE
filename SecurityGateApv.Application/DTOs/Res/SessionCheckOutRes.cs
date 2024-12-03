@@ -19,6 +19,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         //public GateRes? GateOut { get; set; }
         public string Status { get; set; }
         public VisitCardRes VisitCard { get; set; }
+        public VehicleSessionRes VehicleSession { get; set; }
     }
     public class VisitDetailSessionRes
     {

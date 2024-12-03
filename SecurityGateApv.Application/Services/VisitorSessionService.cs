@@ -850,12 +850,19 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
+            var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                    s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
+                    includeProperties: "Images"
+                )).FirstOrDefault();
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
 
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
-
+            if (vehicleSession != null)
+            {
+                result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
+            }
             return result;
         }
 
@@ -886,6 +893,11 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
+            var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                    s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
+                    includeProperties: "Images"
+                )).FirstOrDefault();
+
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.VisitDetailId == visitSession.VisitDetailId
                     && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
@@ -901,6 +913,10 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
+            if (vehicleSession != null)
+            {
+                result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
+            }
             return result;
         }
         public async Task<Result<SessionCheckOutRes>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
