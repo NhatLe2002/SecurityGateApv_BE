@@ -237,7 +237,7 @@ namespace SecurityGateApv.Application.Services
 
             //send Notification to Staff
             var user = validVisitDetail.Visitor;
-            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
             noti.Value.AddUserNoti(command.SecurityInId, (int)validVisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
@@ -245,7 +245,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
 
             return result;
         }
@@ -378,7 +378,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
 
             return result;
         }
@@ -1043,7 +1043,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
 
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
@@ -1194,7 +1194,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);

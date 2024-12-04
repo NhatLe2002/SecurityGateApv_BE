@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202101751_UpdateVisitor")]
+    partial class UpdateVisitor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -815,17 +818,51 @@ namespace SecurityGateApv.Infras.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleSessionId"));
 
+                    b.Property<DateTime>("CheckinTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CheckoutTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GateInId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GateOutId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LicensePlate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VisitorSessionId")
+                    b.Property<int>("SecurityInId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SecurityOutId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VisitDetailId")
                         .HasColumnType("int");
 
                     b.HasKey("VehicleSessionId");
 
-                    b.HasIndex("VisitorSessionId")
-                        .IsUnique();
+                    b.HasIndex("GateInId");
+
+                    b.HasIndex("GateOutId");
+
+                    b.HasIndex("SecurityInId");
+
+                    b.HasIndex("SecurityOutId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VisitDetailId");
 
                     b.ToTable("VehicleSessions");
                 });
@@ -1257,13 +1294,47 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.VisitorSession", "VisitorSession")
-                        .WithOne("VehicleSession")
-                        .HasForeignKey("SecurityGateApv.Domain.Models.VehicleSession", "VisitorSessionId")
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateIn")
+                        .WithMany("VehicleSessionsIn")
+                        .HasForeignKey("GateInId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.Gate", "GateOut")
+                        .WithMany("VehicleSessionsOut")
+                        .HasForeignKey("GateOutId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "SecurityIn")
+                        .WithMany("VehicleSessionsSecurityIn")
+                        .HasForeignKey("SecurityInId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", "SecurityOut")
+                        .WithMany("VehicleSessionsSecurityOut")
+                        .HasForeignKey("SecurityOutId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SecurityGateApv.Domain.Models.User", null)
+                        .WithMany("VehicleSession")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("SecurityGateApv.Domain.Models.VisitDetail", "VisitDetail")
+                        .WithMany()
+                        .HasForeignKey("VisitDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("VisitorSession");
+                    b.Navigation("GateIn");
+
+                    b.Navigation("GateOut");
+
+                    b.Navigation("SecurityIn");
+
+                    b.Navigation("SecurityOut");
+
+                    b.Navigation("VisitDetail");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSessionImage", b =>
@@ -1417,7 +1488,7 @@ namespace SecurityGateApv.Infras.Migrations
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSessionsImage", b =>
                 {
                     b.HasOne("SecurityGateApv.Domain.Models.VisitorSession", "VisitorSession")
-                        .WithMany("VisitorSessionsImages")
+                        .WithMany("Images")
                         .HasForeignKey("VisitorSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1453,6 +1524,10 @@ namespace SecurityGateApv.Infras.Migrations
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Gate", b =>
                 {
                     b.Navigation("Cameras");
+
+                    b.Navigation("VehicleSessionsIn");
+
+                    b.Navigation("VehicleSessionsOut");
 
                     b.Navigation("VisitorSessionsIn");
 
@@ -1508,6 +1583,12 @@ namespace SecurityGateApv.Infras.Migrations
                     b.Navigation("SentNotifications");
 
                     b.Navigation("UpdatedVisits");
+
+                    b.Navigation("VehicleSession");
+
+                    b.Navigation("VehicleSessionsSecurityIn");
+
+                    b.Navigation("VehicleSessionsSecurityOut");
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSession", b =>
@@ -1536,10 +1617,7 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
                 {
-                    b.Navigation("VehicleSession")
-                        .IsRequired();
-
-                    b.Navigation("VisitorSessionsImages");
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

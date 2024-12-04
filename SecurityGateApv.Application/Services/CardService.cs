@@ -109,7 +109,12 @@ namespace SecurityGateApv.Application.Services
             result = label.ToArray()[0];
             foreach (var item in label)
             {
-                if (result.Confidence < item.Confidence)
+                if (result.Label == "Sandal")
+                {
+                    result = item;
+                    break;
+                }
+                else
                 {
                     result = item;
                 }

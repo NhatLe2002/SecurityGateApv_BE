@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SecurityGateApv.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime CreateDate { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public string Status { get; private set; }
+        public UserGetVisitorRes? CreateBy { get; private set; }
         public CredentialCardTypeRes CredentialCardType { get; private set; }
         public List<VisitorImageRes1> VisitorImage { get; private set; }
 
@@ -25,5 +27,11 @@ namespace SecurityGateApv.Application.DTOs.Res
     {
         public int CredentialCardTypeId { get; private set; }
         public string CredentialCardTypeName { get; private set; }
+    }
+    public class UserGetVisitorRes
+    {
+        public int UserId { get; set; }
+        public string UserName { get; private set; }
+        public string FullName { get; private set; }
     }
 }

@@ -51,6 +51,7 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GetNotification, Notification>().ReverseMap();
             CreateMap<CredentialCardTypeRes, CredentialCardType>().ReverseMap();
             CreateMap<NotificationTypeRes, NotificationType>().ReverseMap();
+            CreateMap<UserGetVisitorRes, User>().ReverseMap();
 
             #region ScheduleUser
             //CreateMap<GetScheduleRes, Schedule>().ReverseMap();

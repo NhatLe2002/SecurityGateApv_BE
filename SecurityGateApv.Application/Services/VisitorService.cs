@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Common;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
@@ -26,14 +28,16 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitorRepo _visitorRepo;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IJwt _jwt;
 
-        public VisitorService(IVisitorRepo visitorRepo, IMapper mapper, IUnitOfWork unitOfWork)
+        public VisitorService(IVisitorRepo visitorRepo, IMapper mapper, IUnitOfWork unitOfWork, IJwt jwt)
         {
             _visitorRepo = visitorRepo;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _jwt = jwt;
         }
-        public async Task<Result<GetVisitorCreateRes>> CreateVisitor(CreateVisitorCommand command)
+        public async Task<Result<GetVisitorCreateRes>> CreateVisitor(CreateVisitorCommand command, string token)
         {
             SixLabors.ImageSharp.Image resizeFrontImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialFrontImageFromRequest.OpenReadStream());
             int heightFornt = (int)((300 / (float)resizeFrontImage.Width) * resizeFrontImage.Height);
@@ -53,7 +57,7 @@ namespace SecurityGateApv.Application.Services
             }
             var imageBackString = await ImageToBase64(resizeBackImage);
             var imageBackEncrypt = await CommonService.Encrypt(imageBackString);
-
+            var userId = _jwt.DecodeJwtUserId(token);
 
             var visitorCreate = Visitor.Create(
                 command.VisitorName,
@@ -65,7 +69,9 @@ namespace SecurityGateApv.Application.Services
                 imageFrontEncrypt,
                 imageBackEncrypt,
                 "Active",
-                command.CredentialCardTypeId
+                command.CredentialCardTypeId,
+                command.Email,
+                userId
                 );
             if (visitorCreate.IsFailure)
             {
@@ -107,7 +113,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitorRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
-            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, VisitorImage");
+            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, VisitorImage, CreateBy");
             if(list.Count() == 0)
             {
                 return Result.Failure<List<GetVisitorRes>>(Error.NotFound);
@@ -132,7 +138,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorRes>> GetByCredentialCard(string cardNumber)
         {
-            var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage")).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage,CreateBy")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorRes>(Error.NotFound);
@@ -155,7 +161,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetVisitorRes>> GetById(int visitorId)
         {
-            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "CredentialCardType, VisitorImage")).FirstOrDefault();
+            var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "CredentialCardType, VisitorImage,CreateBy")).FirstOrDefault();
             if (visitor == null)
             {
                 return Result.Failure<GetVisitorRes>(Error.NotFound);

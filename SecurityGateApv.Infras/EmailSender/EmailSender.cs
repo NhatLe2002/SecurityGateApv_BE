@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Identity.UI.Services;
+using SecurityGateApv.Domain.Interfaces.EmailSender;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using IEmailSender = SecurityGateApv.Domain.Interfaces.EmailSender.IEmailSender;
 
 namespace SecurityGateApv.Infras.EmailSender
 {

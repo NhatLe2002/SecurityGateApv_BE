@@ -15,6 +15,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string CompanyName { get;  set; }
         public string PhoneNumber { get;  set; }
         public string CredentialsCard { get;  set; }
+        public string? Email { get; private set; }
         public DateTime CreateDate { get;  set; }
         public string Status { get; set; }
         public int CredentialCardTypeId { get; set; }
