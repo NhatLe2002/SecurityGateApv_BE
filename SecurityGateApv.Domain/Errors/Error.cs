@@ -101,7 +101,7 @@ namespace SecurityGateApv.Domain.Errors
         // Card expried 
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         // This type of card cannot be used for this visit
-        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kịch hoạt");
+        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kích hoạt");
 
         #endregion
 
@@ -119,6 +119,7 @@ namespace SecurityGateApv.Domain.Errors
         #region VehicleSession
         public static readonly Error ValidVehicleSession = new("Error.ValidVehicleSession", "Xe này đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error ValidVehicleSessionCheckOut = new("Error.ValidVehicleSessionCheckOut", "Xe này đã chưa checkin, không thể checkout.");
+        public static readonly Error ValidVehicleSessionNotCheckout = new("Error.ValidVehicleSessionNotCheckout", "Khách này đã checkin với xe, cần thực hiện thêm checkout cho xe.");
         public static readonly Error VehicleCheckoutDailyError = new("Error.VehicleCheckoutDailyError", "Lịch ra vào hằng ngày này có xe ra vào, cần phải thực hiện checkout cả xe ra vào.");
 
         #endregion
