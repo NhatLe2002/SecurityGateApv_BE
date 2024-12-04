@@ -17,7 +17,7 @@ namespace SecurityGateApv.Domain.Models
             
         }
         internal Visitor(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string status,
-            int credentialCardTypeId)
+            int credentialCardTypeId, string? email, int createById)
         {
             VisitorName = visitorName;
             CompanyName = companyName;
@@ -27,6 +27,8 @@ namespace SecurityGateApv.Domain.Models
             CredentialsCard = credentialsCard;
             Status = status;
             CredentialCardTypeId = credentialCardTypeId;
+            Email = email;
+            CreateById = createById;
         }
 
         [Key]
@@ -38,6 +40,10 @@ namespace SecurityGateApv.Domain.Models
         public DateTime CreateDate { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public string Status { get; private set; }
+        public string? Email { get; private set; }
+        [ForeignKey("CreateBy")]
+        public int? CreateById { get; private set; }
+        public User? CreateBy { get; private set; }
 
         [ForeignKey("CredentialCardType")]
         public int CredentialCardTypeId { get; private set; }
@@ -46,9 +52,9 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<VisitDetail> VisitDetails { get; private set; }
         public ICollection<VisitorImage> VisitorImage { get; private set; } = new List<VisitorImage>();
         public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImageFront, string visitorCredentialImageBack, string status,
-            int credentialCardTypeId)
+            int credentialCardTypeId, string? email, int createById)
         {
-            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId);
+            var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId, email, createById);
             if(credentialCardTypeId == (int)CredentialCardTypeEnum.CitizenIdentificationCard)
             {
                 result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_FRONT", visitorCredentialImageFront, result));

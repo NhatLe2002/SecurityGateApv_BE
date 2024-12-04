@@ -42,15 +42,6 @@ namespace SecurityGateApv.Infras.AWS
                 },
                 MaxLabels = 10,
                 Features = feature,
-                Settings = new DetectLabelsSettings()
-                {
-                    GeneralLabels = new GeneralLabelsSettings()
-                    {
-                        LabelInclusionFilters = new List<string>() { 
-                        "Shoe"
-                        }
-                    }
-                }
             };
 
                 DetectLabelsResponse detectLabelsResponse = await rekognitionClient.DetectLabelsAsync(detectlabelsRequest);

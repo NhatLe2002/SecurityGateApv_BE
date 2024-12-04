@@ -12,6 +12,7 @@ namespace SecurityGateApv.Domain.Interfaces.Jwt
     {
         public string GenerateJwtToken(User user);
         public string DecodeJwt(string header);
+        public int DecodeJwtUserId(string header);
         public UserAuthorDTO DecodeAuthorJwt(string header);
     }
 }

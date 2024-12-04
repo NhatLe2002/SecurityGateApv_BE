@@ -30,6 +30,15 @@ namespace SecurityGateApv.Infras.Helpers
             var role = tokenS.Claims.First(claim => claim.Type == "role").Value;
             return role;
         }
+        public int DecodeJwtUserId(string header)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            header = header.Replace("Bearer ", "");
+            var jsonToken = handler.ReadToken(header);
+            var tokenS = handler.ReadToken(header) as JwtSecurityToken;
+            var role = tokenS.Claims.First(claim => claim.Type == "userId").Value;
+            return int.Parse(role);
+        }
         public UserAuthorDTO DecodeAuthorJwt(string header)
         {
             var handler = new JwtSecurityTokenHandler();

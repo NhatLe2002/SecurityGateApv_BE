@@ -6,18 +6,15 @@ using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.EmailSender;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Notifications;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using IEmailSender = SecurityGateApv.Domain.Interfaces.EmailSender.IEmailSender;
 
 namespace SecurityGateApv.Application.Services
 {
@@ -169,7 +166,7 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<bool>> SendEmailTest(string email)
         {
-            await _notifications.SendMessage();
+            await _emailSender.SendEmailAsync("luutranvu17@gmail.com", "APV", "hello");
             return true;
         }
 
