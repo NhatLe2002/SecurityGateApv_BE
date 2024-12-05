@@ -969,7 +969,6 @@ namespace SecurityGateApv.Application.Services
                     && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
                     pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
                 );
-
             if (visits.Count() == 0)
             {
                 return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisitCurrentDate);
@@ -985,7 +984,6 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<List<GetVisitByDateRes>>(Error.NotFoundVisit);
             }
-
             var result = _mapper.Map<List<GetVisitByDateRes>>(visitResult);
             foreach (var visit in result)
             {
@@ -1001,7 +999,6 @@ namespace SecurityGateApv.Application.Services
                     visit.VisitorCheckOutedCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Count();
-
                     visit.VisitDetailStartTime = visitEntity.VisitDetail
                         .Min(detail => (TimeSpan?)detail.ExpectedStartHour);
 
