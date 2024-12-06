@@ -402,7 +402,8 @@ namespace SecurityGateApv.Infras.Data
                 {
                     CameraType.Create(1, ImageTypeEnum.CheckIn_Shoe.ToString(), "Camera chụp giày khi checkin.").Value,
                     CameraType.Create(2, ImageTypeEnum.CheckIn_Body.ToString(), "Camera chụp toàn thân khi checkin.").Value,
-                    CameraType.Create(3, ImageTypeEnum.CheckOut_Shoe.ToString(), "Camera chụp giày khi Checkout.").Value
+                    CameraType.Create(3, ImageTypeEnum.CheckOut_Shoe.ToString(), "Camera chụp giày khi Checkout.").Value,
+                    CameraType.Create(4, ImageTypeEnum.CheckOut_Body.ToString(), "Camera chụp toàn thân khi Checkout.").Value
                 };
 
             //var gateList = new List<Gate>
