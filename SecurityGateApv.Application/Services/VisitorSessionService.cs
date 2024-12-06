@@ -240,7 +240,7 @@ namespace SecurityGateApv.Application.Services
 
             //send Notification to Staff
             var user = validVisitDetail.Visitor;
-            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
             noti.Value.AddUserNoti(command.SecurityInId, (int)validVisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
@@ -248,7 +248,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
 
             return result;
         }
@@ -386,7 +386,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<ValidCheckinRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", (int)validVisitDetail.Visit.ResponsiblePersonId, 1);
 
             return result;
         }
@@ -670,7 +670,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
@@ -679,7 +679,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Staff.ToString())
@@ -688,7 +688,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
                      )).ToList();
             }
 
@@ -838,7 +838,7 @@ namespace SecurityGateApv.Application.Services
                   s => s.VisitDetailId == visitCard.VisitDetailId
                   && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
-                    includeProperties: "SecurityIn,GateIn,VisitDetail,Images"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit"
                 )).FirstOrDefault();
 
             if (visitSession == null)
@@ -846,10 +846,23 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
 
             }
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
+            }
+            var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                    s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
+                    includeProperties: "Images"
+                )).FirstOrDefault();
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
-            result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
+            result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
 
+            result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
+            if (vehicleSession != null)
+            {
+                result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
+            }
             return result;
         }
 
@@ -869,13 +882,21 @@ namespace SecurityGateApv.Application.Services
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
                   && s.Status == SessionStatus.CheckIn.ToString(),
-                    includeProperties: "SecurityIn,GateIn,VisitDetail"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit"
                 )).FirstOrDefault();
 
             if (visitSession == null)
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
+            if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
+            }
+            var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+                    s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
+                    includeProperties: "Images"
+                )).FirstOrDefault();
 
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.VisitDetailId == visitSession.VisitDetailId
@@ -890,7 +911,12 @@ namespace SecurityGateApv.Application.Services
 
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
+            result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
+            if (vehicleSession != null)
+            {
+                result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
+            }
             return result;
         }
         public async Task<Result<SessionCheckOutRes>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
@@ -968,10 +994,20 @@ namespace SecurityGateApv.Application.Services
                 //}
             }
 
+            // Add visitor image checkout
+
+
 
             command.Status = "CheckOut";
             command.CheckoutTime = DateTime.Now;
             var updateVisitorSesson = _mapper.Map(command, visitSession);
+
+
+            // Add visitor image checkout
+            foreach (var item in command.Images)
+            {
+                updateVisitorSesson.AddVisitorImage(item.ImageType, item.ImageURL);
+            }
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
 
@@ -987,7 +1023,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
 
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
@@ -1069,6 +1105,12 @@ namespace SecurityGateApv.Application.Services
             command.Status = "CheckOut";
             command.CheckoutTime = DateTime.Now;
             var updateVisitorSesson = _mapper.Map(command, visitSession);
+
+            // Add visitor image checkout
+            foreach (var item in command.Images)
+            {
+                updateVisitorSesson.AddVisitorImage(item.ImageType, item.ImageURL);
+            }
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
             await _unitOfWork.CommitAsync();
 
@@ -1082,7 +1124,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CommitError);
             }
-            await _notifications.SendMessageAssignForStaff("New visit", "Temporary Visit", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
+            await _notifications.SendMessageAssignForStaff($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", (int)visitSession.VisitDetail.Visit.ResponsiblePersonId, 1);
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SecurityGateApv.Domain.Interfaces.AWS;
 using SecurityGateApv.Domain.Interfaces.DomainDTOs;
+using SecurityGateApv.Domain.Interfaces.EmailSender;
 using SecurityGateApv.Domain.Interfaces.ExtractImage;
 using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Notifications;
@@ -78,7 +79,7 @@ namespace SecurityGateApv.Infras.Extentions
 
 
             //Email DI
-            services.AddScoped<IEmailSender, EmailSender.EmailSender>();
+            services.AddScoped<SecurityGateApv.Domain.Interfaces.EmailSender.IEmailSender, EmailSender.EmailSender>();
 
             //JWT
             var key = configuration["Jwt:Key"];

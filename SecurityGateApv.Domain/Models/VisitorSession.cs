@@ -58,7 +58,7 @@ namespace SecurityGateApv.Domain.Models
         public int? GateOutId { get; private set; }
         public Gate? GateOut { get; private set; }
 
-        public ICollection<VisitorSessionsImage> Images { get; private set; } = new List<VisitorSessionsImage>();
+        public ICollection<VisitorSessionsImage> VisitorSessionsImages { get; private set; } = new List<VisitorSessionsImage>();
 
 
         public static Result<VisitorSession> Checkin( int visitdetailId, int securityInId, int gateInId)
@@ -70,7 +70,7 @@ namespace SecurityGateApv.Domain.Models
         public Result<VisitorSession> AddVisitorImage(string imageType, string imageURL)
         {
             var imageVisitorSession = new VisitorSessionsImage(imageType, imageURL, this);
-            Images.Add(imageVisitorSession);
+            VisitorSessionsImages.Add(imageVisitorSession);
             return this;
         }
         /*public Result<VisitorSession> UpdateVisitorSesson()

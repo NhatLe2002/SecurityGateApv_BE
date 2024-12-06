@@ -2,6 +2,7 @@
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.DomainDTOs;
+using SecurityGateApv.Domain.Interfaces.EmailSender;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
