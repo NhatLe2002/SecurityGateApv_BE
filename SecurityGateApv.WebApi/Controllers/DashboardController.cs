@@ -43,5 +43,65 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("VisitorSessionYear")]
+        public async Task<IActionResult> GetVisitorSessionCountByYear(int year)
+        {
+            var result = await _dashboardService.GetVisitorSessionCountByYear(year);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("VisitorSessionMonth")]
+        public async Task<IActionResult> GetVisitorSessionCountByMonth(int year, int month)
+        {
+            var result = await _dashboardService.GetVisitorSessionCountByMonth(year, month);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpGet("RecentVisitorSessions")]
+        public async Task<IActionResult> GetRecentVisitorSessions([FromQuery] int count = 5)
+        {
+            var result = await _dashboardService.GetRecentVisitorSessions(count);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
+        [HttpGet("VisitorSessionStatusToday")]
+        public async Task<IActionResult> GetVisitorSessionCountByStatusForToday()
+        {
+            var result = await _dashboardService.GetVisitorSessionCountByStatusForToday();
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
+        [HttpGet("CardStatusCount")]
+        public async Task<IActionResult> GetCardCountByStatus()
+        {
+            var result = await _dashboardService.GetCardCountByStatus();
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        } 
+        [HttpGet("GetCardCountByIssue")]
+        public async Task<IActionResult> GetCardCountByIssue()
+        {
+            var result = await _dashboardService.GetCardBountByIssue();
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
     }
 }

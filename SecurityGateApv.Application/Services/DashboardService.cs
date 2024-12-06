@@ -1,8 +1,10 @@
-﻿using SecurityGateApv.Application.DTOs.Res;
+﻿using AutoMapper;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Interfaces.Repositories;
+using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
@@ -19,14 +21,24 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitorRepo _visitorRepo;
         private readonly IScheduleRepo _scheduleRepo;
         private readonly IScheduleUserRepo _scheduleUserRepo;
+        private readonly IVisitorSessionRepo _visitorSessionRepo;
+        private readonly ICardRepo _cardRepo;
+        private readonly IMapper _mapper;
 
-        public DashboardService(IVisitRepo visitRepo, IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo)
+        public DashboardService(IVisitRepo visitRepo, IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, IVisitorSessionRepo visitorSessionRepo, IMapper mapper, ICardRepo cardRepo)
         {
             _visitRepo = visitRepo;
             _userRepo = userRepo;
             _visitorRepo = visitorRepo;
             _scheduleRepo = scheduleRepo;
             _scheduleUserRepo = scheduleUserRepo;
+            _visitorSessionRepo = visitorSessionRepo;
+            _mapper = mapper;
+            _cardRepo = cardRepo;
+        }
+
+        public DashboardService()
+        {
         }
 
         public async Task<Result<DashboardMission>> GetMission(int? staffId)
@@ -52,7 +64,7 @@ namespace SecurityGateApv.Application.Services
                 res.Total = schedules.Count();
                 res.WaitForFinishTask = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString());
             }
-            
+
 
             return res;
         }
@@ -125,6 +137,108 @@ namespace SecurityGateApv.Application.Services
             res.Active = visitor.Count(s => s.Status == VisitorStatusEnum.Active.ToString());
             res.Inavtive = visitor.Count(s => s.Status == VisitorStatusEnum.InActive.ToString());
             return res;
+        }
+
+        public async Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month)
+        {
+            var res = new VisitorSessionCountMonthRes();
+            var visitorSessions = await _visitorSessionRepo.GetAllAsync();
+
+            res.DailyCounts = visitorSessions
+                .Where(vs => vs.CheckinTime.Year == year && vs.CheckinTime.Month == month)
+                .GroupBy(vs => vs.CheckinTime.Day)
+                .Select(g => new DailyCount
+                {
+                    Day = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(dc => dc.Day)
+                .ToList();
+
+            return Result.Success(res);
+        }
+
+        public async Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year)
+        {
+            var res = new VisitorSessionCountRes();
+            var visitorSessions = await _visitorSessionRepo.GetAllAsync();
+
+            res.MonthlyCounts = visitorSessions
+                .Where(vs => vs.CheckinTime.Year == year)
+                .GroupBy(vs => vs.CheckinTime.Month)
+                .Select(g => new MonthlyCount
+                {
+                    Month = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(mc => mc.Month)
+                .ToList();
+
+            return Result.Success(res);
+        }
+
+        public async Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(int count = 5)
+        {
+            var visitSession = (await _visitorSessionRepo.FindAsync(
+                 s => true /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                && s.CheckinTime.Date == DateTime.Now.Date*/,
+                 count, 1,
+                 orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                 includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+             )).ToList();
+            var result = _mapper.Map<List<GetVisitorSessionRes>>(visitSession);
+            return Result.Success(result);
+        }
+        public async Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday()
+        {
+            var today = DateTime.Today;
+            var visitorSessions = await _visitorSessionRepo.FindAsync(
+                vs => vs.CheckinTime.Date == today,
+                int.MaxValue, 1,
+                orderBy: vs => vs.OrderBy(v => v.Status),
+                includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+            );
+
+            var statusCounts = visitorSessions
+                .GroupBy(vs => vs.Status)
+                .Select(g => new VisitorSessionStatusCountRes
+                {
+                    Status = g.Key,
+                    Count = g.Count()
+                })
+                .OrderBy(sc => sc.Status)
+                .ToList();
+
+            return Result.Success(statusCounts);
+        }
+        public async Task<Result<List<CardStatusCountRes>>> GetCardCountByStatus()
+        {
+            var cards = await _cardRepo.GetAllAsync();
+
+            var statusCounts = cards
+                .GroupBy(c => c.CardStatus)
+                .Select(g => new CardStatusCountRes
+                {
+                    Status = g.Key.ToString(), // Convert enum to string
+                    Count = g.Count()
+                })
+                .OrderBy(sc => sc.Status)
+                .ToList();
+
+            return Result.Success(statusCounts);
+        }
+
+        public async Task<Result<GetCardCountIssueRes>> GetCardBountByIssue()
+        {
+            var cardAll = await _cardRepo.GetAllAsync();
+            var cards = await _cardRepo.FindAsync(c => c.VisitCards.Any(s => s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString()), int.MaxValue, 1);
+            var res = new GetCardCountIssueRes()
+            {
+
+                TotalCard = cardAll.Count(),
+                TotalCardIssue = cards.Count()
+            };
+            return Result.Success(res);
         }
     }
 }

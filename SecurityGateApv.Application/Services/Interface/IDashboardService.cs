@@ -1,4 +1,5 @@
 ﻿using SecurityGateApv.Application.DTOs.Res;
+using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,12 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<DashboardVisitorRes>> GetVisitor();
         public Task<Result<DashboardSchedule>> GetSchedule();
         public Task<Result<DashboardMission>> GetMission(int? staffId);
+        public Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year);
+        public Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month);
+        Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(int count = 5);
+        Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday();
+        Task<Result<List<CardStatusCountRes>>> GetCardCountByStatus();
+        Task<Result<GetCardCountIssueRes>> GetCardBountByIssue();
+
     }
 }
