@@ -26,8 +26,6 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<VisitorSession> VisitorSessionsIn { get; private set; }
         public ICollection<VisitorSession> VisitorSessionsOut { get; private set; }
 
-        public ICollection<VehicleSession> VehicleSessionsIn { get; private set; }
-        public ICollection<VehicleSession> VehicleSessionsOut { get; private set; }
 
 
         private Gate(string gateName, DateTime createDate, string description, bool status)
@@ -39,8 +37,6 @@ namespace SecurityGateApv.Domain.Models
             Cameras = new List<Camera>();
             VisitorSessionsIn = new List<VisitorSession>();
             VisitorSessionsOut = new List<VisitorSession>();
-            VehicleSessionsIn = new List<VehicleSession>();
-            VehicleSessionsOut = new List<VehicleSession>();
         }
         private Gate(int gateId, string gateName, DateTime createDate, string description, bool status)
         {
@@ -52,8 +48,6 @@ namespace SecurityGateApv.Domain.Models
             Cameras = new List<Camera>();
             VisitorSessionsIn = new List<VisitorSession>();
             VisitorSessionsOut = new List<VisitorSession>();
-            VehicleSessionsIn = new List<VehicleSession>();
-            VehicleSessionsOut = new List<VehicleSession>();
         }
 
         public static Result<Gate> Create(string gateName, DateTime createDate, string description, bool status)

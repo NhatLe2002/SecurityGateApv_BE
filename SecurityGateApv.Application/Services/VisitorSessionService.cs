@@ -159,29 +159,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
 
-            //Vehicle Session
-            if (command.VehicleSession != null)
-            {
-                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                        s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
-                    )).FirstOrDefault();
-                if (vehicleSession != null)
-                {
-                    return Result.Failure<ValidCheckinRes>(Error.ValidVehicleSession);
-                }
-                var vehicleSessionCheckin = VehicleSession.Checkin(command.VehicleSession.LicensePlate, validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
-                if (vehicleSessionCheckin.IsFailure)
-                {
-                    return Result.Failure<ValidCheckinRes>(vehicleSessionCheckin.Error);
-                }
-                var vehicleSessionEntity = vehicleSessionCheckin.Value;
 
-                foreach (var item in command.Images)
-                {
-                    vehicleSessionEntity.AddVehicleSessionImage(item.ImageType, item.ImageURL);
-                }
-                await _vehicleSessionRepo.AddAsync(vehicleSessionEntity);
-            }
 
             // Add VisitCard
             if (visitCard == null)
@@ -218,6 +196,25 @@ namespace SecurityGateApv.Application.Services
             {
                 session.AddVisitorImage(item.ImageType, item.ImageURL);
             }
+            //Vehicle Session
+            if (command.VehicleSession != null)
+            {
+
+
+                var vehicleSessionCheckin = VehicleSession.Checkin(command.VehicleSession.LicensePlate, session);
+                if (vehicleSessionCheckin.IsFailure)
+                {
+                    return Result.Failure<ValidCheckinRes>(vehicleSessionCheckin.Error);
+                }
+                var vehicleSessionEntity = vehicleSessionCheckin.Value;
+
+                foreach (var item in command.VehicleSession.VehicleImages)
+                {
+                    vehicleSessionEntity.AddVehicleSessionImage(item.ImageType, item.ImageURL);
+                }
+                await _vehicleSessionRepo.AddAsync(vehicleSessionEntity);
+            }
+
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
             result.CardRes = _mapper.Map<CardRes>(card);
             result.DetectShoeRes = detectShoeResult.Value;
@@ -322,29 +319,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.DetectionExeption);
             }
 
-            //Vehicle Session
-            if (command.VehicleSession != null)
-            {
-                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                        s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
-                    )).FirstOrDefault();
-                if (vehicleSession != null)
-                {
-                    return Result.Failure<ValidCheckinRes>(Error.ValidVehicleSession);
-                }
-                var vehicleSessionCheckin = VehicleSession.Checkin(command.VehicleSession.LicensePlate, validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
-                if (vehicleSessionCheckin.IsFailure)
-                {
-                    return Result.Failure<ValidCheckinRes>(vehicleSessionCheckin.Error);
-                }
-                var vehicleSessionEntity = vehicleSessionCheckin.Value;
 
-                foreach (var item in command.Images)
-                {
-                    vehicleSessionEntity.AddVehicleSessionImage(item.ImageType, item.ImageURL);
-                }
-                await _vehicleSessionRepo.AddAsync(vehicleSessionEntity);
-            }
 
 
             var checkinSession = VisitorSession.Checkin(validVisitDetail.VisitDetailId, command.SecurityInId, command.GateInId);
@@ -357,6 +332,23 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in command.Images)
             {
                 session.AddVisitorImage(item.ImageType, item.ImageURL);
+            }
+
+            //Vehicle Session
+            if (command.VehicleSession != null)
+            {
+                var vehicleSessionCheckin = VehicleSession.Checkin(command.VehicleSession.LicensePlate, session);
+                if (vehicleSessionCheckin.IsFailure)
+                {
+                    return Result.Failure<ValidCheckinRes>(vehicleSessionCheckin.Error);
+                }
+                var vehicleSessionEntity = vehicleSessionCheckin.Value;
+
+                foreach (var item in command.VehicleSession.VehicleImages)
+                {
+                    vehicleSessionEntity.AddVehicleSessionImage(item.ImageType, item.ImageURL);
+                }
+                await _vehicleSessionRepo.AddAsync(vehicleSessionEntity);
             }
 
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
@@ -467,7 +459,7 @@ namespace SecurityGateApv.Application.Services
             }
 
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
-            if(validVisitDetail.Visitor.VisitorImage != null)
+            if (validVisitDetail.Visitor.VisitorImage != null)
             {
                 result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
             }
@@ -636,7 +628,7 @@ namespace SecurityGateApv.Application.Services
             //};
             return result;
         }
-        
+
         private bool IsValidVisit(Visit visit, DateTime date)
         {
             if (visit.ScheduleUser == null && visit.ExpectedStartTime.Date == DateTime.Now.Date)
@@ -838,7 +830,7 @@ namespace SecurityGateApv.Application.Services
                   s => s.VisitDetailId == visitCard.VisitDetailId
                   && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
-                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit,VehicleSession.Images"
                 )).FirstOrDefault();
 
             if (visitSession == null)
@@ -850,19 +842,19 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
-            var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                    s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
-                    includeProperties: "Images"
-                )).FirstOrDefault();
+            //var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+            //        s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
+            //        includeProperties: "Images"
+            //    )).FirstOrDefault();
 
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
 
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
-            if (vehicleSession != null)
-            {
-                result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
-            }
+            //if (vehicleSession != null)
+            //{
+            //    result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
+            //}
             return result;
         }
 
@@ -882,7 +874,7 @@ namespace SecurityGateApv.Application.Services
             var visitSession = (await _visitorSessionRepo.FindAsync(
                   s => s.VisitDetail.VisitorId == visitor.VisitorId
                   && s.Status == SessionStatus.CheckIn.ToString(),
-                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit"
+                    includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit,VehicleSession.Images"
                 )).FirstOrDefault();
 
             if (visitSession == null)
@@ -893,10 +885,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
             }
-            var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                    s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
-                    includeProperties: "Images"
-                )).FirstOrDefault();
+            //var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+            //        s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
+            //        includeProperties: "Images"
+            //    )).FirstOrDefault();
 
             var visitCard = (await _visitCardRepo.FindAsync(
                     s => s.VisitDetailId == visitSession.VisitDetailId
@@ -913,10 +905,10 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<SessionCheckOutRes>(visitSession);
             result.VisitDetail.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(visitSession.VisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
             result.VisitCard = _mapper.Map<VisitCardRes>(visitCard);
-            if (vehicleSession != null)
-            {
-                result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
-            }
+            //if (vehicleSession != null)
+            //{
+            //    result.VehicleSession = _mapper.Map<VehicleSessionRes>(vehicleSession);
+            //}
             return result;
         }
         public async Task<Result<SessionCheckOutRes>> CheckOutWithCard(VisitorSessionCheckOutCommand command, string qrCardVerifi)
@@ -944,7 +936,7 @@ namespace SecurityGateApv.Application.Services
             var visitSession = (await _visitorSessionRepo.FindAsync(
                     s => s.VisitDetailId == visitCard.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString(),
                     1, 1,
-                includeProperties: "VisitDetail.Visitor, VisitDetail.Visit"
+                includeProperties: "VisitDetail.Visitor, VisitDetail.Visit,VehicleSession"
                 )).FirstOrDefault();
             if (visitSession == null)
             {
@@ -962,37 +954,39 @@ namespace SecurityGateApv.Application.Services
                 await _visitCardRepo.UpdateAsync(visitCard);
             }
 
-            //Vehicle checkout
-            if (command.VehicleSession != null)
-            {
-                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
-                   )).FirstOrDefault();
-                if (vehicleSession == null)
-                {
-                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
-                }
-                var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
-                if (vehicleSessionCheckout.IsFailure)
-                {
-                    return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
-                }
-                await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
-            }
-            else
-            {
-                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                       s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
-                   )).FirstOrDefault();
-                if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
-                {
-                    return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
-                }
-                //else if (visitSession.VisitDetail.ExpectedEndHour <= TimeSpan.  &&vehicleSession != null)
-                //{
+            
 
-                //}
-            }
+
+            //if (command.VehicleSession != null)
+            //{
+            //    var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+            //           s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+            //       )).FirstOrDefault();
+            //    if (vehicleSession == null)
+            //    {
+            //        return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+            //    }
+            //    var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+            //    if (vehicleSessionCheckout.IsFailure)
+            //    {
+            //        return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+            //    }
+            //    await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+            //}
+            //else
+            //{
+            //    var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+            //           s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
+            //       )).FirstOrDefault();
+            //    if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+            //    {
+            //        return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+            //    }
+            //    //else if (visitSession.VisitDetail.ExpectedEndHour <= TimeSpan.  &&vehicleSession != null)
+            //    //{
+
+            //    //}
+            //}
 
             // Add visitor image checkout
 
@@ -1009,6 +1003,32 @@ namespace SecurityGateApv.Application.Services
                 updateVisitorSesson.AddVisitorImage(item.ImageType, item.ImageURL);
             }
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
+
+            //VvisitSessionehicle checkout
+            if (visitSession.VehicleSession != null)
+            {
+                if (command.VehicleSession == null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionNotCheckout);
+
+                }
+                else
+                {
+                    var vehicleSessionCheckout = visitSession.VehicleSession.CheckOut(command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+                    if (vehicleSessionCheckout.IsFailure)
+                    {
+                        return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                    }
+                    await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+                }
+            }
+            else
+            {
+                if (command.VehicleSession != null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+                }
+            }
             await _unitOfWork.CommitAsync();
 
 
@@ -1060,34 +1080,58 @@ namespace SecurityGateApv.Application.Services
             }
 
 
-
-            //Vehicle checkout
-            if (command.VehicleSession != null)
+            //VvisitSessionehicle checkout
+            if (visitSession.VehicleSession != null)
             {
-                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                       s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
-                   )).FirstOrDefault();
-                if (vehicleSession == null)
+                if (command.VehicleSession == null)
                 {
-                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionNotCheckout);
+
                 }
-                var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
-                if (vehicleSessionCheckout.IsFailure)
+                else
                 {
-                    return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                    var vehicleSessionCheckout = visitSession.VehicleSession.CheckOut(command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+                    if (vehicleSessionCheckout.IsFailure)
+                    {
+                        return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                    }
+                    await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
                 }
-                await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
             }
             else
             {
-                var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-                       s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
-                   )).FirstOrDefault();
-                if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+                if (command.VehicleSession != null)
                 {
-                    return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
                 }
             }
+            //Vehicle checkout
+            //if (command.VehicleSession != null)
+            //{
+            //    var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+            //           s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
+            //       )).FirstOrDefault();
+            //    if (vehicleSession == null)
+            //    {
+            //        return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+            //    }
+            //    var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+            //    if (vehicleSessionCheckout.IsFailure)
+            //    {
+            //        return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+            //    }
+            //    await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+            //}
+            //else
+            //{
+            //    var vehicleSession = (await _vehicleSessionRepo.FindAsync(
+            //           s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
+            //       )).FirstOrDefault();
+            //    if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
+            //    {
+            //        return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
+            //    }
+            //}
 
             // Đoạn này thực hiện chức năng khác rồi, cần xóa sau này
             var visitCard = (await _visitCardRepo.FindAsync(
@@ -1112,6 +1156,32 @@ namespace SecurityGateApv.Application.Services
                 updateVisitorSesson.AddVisitorImage(item.ImageType, item.ImageURL);
             }
             await _visitorSessionRepo.UpdateAsync(updateVisitorSesson);
+
+            //VvisitSessionehicle checkout
+            if (visitSession.VehicleSession != null)
+            {
+                if (command.VehicleSession == null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionNotCheckout);
+
+                }
+                else
+                {
+                    var vehicleSessionCheckout = visitSession.VehicleSession.CheckOut(command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
+                    if (vehicleSessionCheckout.IsFailure)
+                    {
+                        return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
+                    }
+                    await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
+                }
+            }
+            else
+            {
+                if (command.VehicleSession != null)
+                {
+                    return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
+                }
+            }
             await _unitOfWork.CommitAsync();
 
             //noti

@@ -37,7 +37,6 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<Camera, CameraRes>().ReverseMap();
             CreateMap<CameraType, CameraTypeRes>().ReverseMap();
             #endregion
-            CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
             CreateMap<GetDepartmentRes, Department>().ReverseMap();
             CreateMap<ScheduleResForVisit, Schedule>().ReverseMap();
             CreateMap<CreateUserComman, User>().ReverseMap();
@@ -162,6 +161,8 @@ namespace SecurityGateApv.Application.Mapper
             CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap();
             CreateMap<VehicleSessionRes, VehicleSession>().ReverseMap();
             CreateMap<VehicleSessionImageRes, VehicleSessionImage>().ReverseMap();
+            CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
+            CreateMap<VehicleSession, VehicleSessionComand>().ReverseMap();
 
             #endregion
 

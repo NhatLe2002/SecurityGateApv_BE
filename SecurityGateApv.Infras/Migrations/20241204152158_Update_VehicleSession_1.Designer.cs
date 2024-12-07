@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SecurityGateApv.Infras.DBContext;
 
@@ -11,9 +12,11 @@ using SecurityGateApv.Infras.DBContext;
 namespace SecurityGateApv.Infras.Migrations
 {
     [DbContext(typeof(SecurityGateApvDbContext))]
-    partial class SecurityGateApvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204152158_Update_VehicleSession_1")]
+    partial class Update_VehicleSession_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -992,9 +995,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CreateById")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
@@ -1003,9 +1003,6 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.Property<string>("CredentialsCard")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -1024,8 +1021,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VisitorId");
-
-                    b.HasIndex("CreateById");
 
                     b.HasIndex("CredentialCardTypeId");
 
@@ -1347,17 +1342,11 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.User", "CreateBy")
-                        .WithMany()
-                        .HasForeignKey("CreateById");
-
                     b.HasOne("SecurityGateApv.Domain.Models.CredentialCardType", "CredentialCardType")
                         .WithMany("Visitor")
                         .HasForeignKey("CredentialCardTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreateBy");
 
                     b.Navigation("CredentialCardType");
                 });
