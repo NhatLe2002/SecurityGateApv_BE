@@ -19,6 +19,8 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
         public string VisitorCredentialFrontImageFromRequest { get; set; }
         [JsonIgnore]
         public string VisitorCredentialBackImageFromRequest { get; set; }
+        [JsonIgnore]
+        public string VisitorCredentialBlurImageFromRequest { get; set; }
     }
 }
 

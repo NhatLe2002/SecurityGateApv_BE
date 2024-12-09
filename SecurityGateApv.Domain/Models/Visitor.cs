@@ -51,7 +51,7 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<VisitDetail> VisitDetails { get; private set; }
         public ICollection<VisitorImage> VisitorImage { get; private set; } = new List<VisitorImage>();
-        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImageFront, string visitorCredentialImageBack, string status,
+        public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImageFront, string visitorCredentialImageBack, string visitorCredentialImageBlur, string status,
             int credentialCardTypeId, string? email, int createById)
         {
             var result = new Visitor(visitorName, companyName, phoneNumber, createdDate, updatedDate, credentialsCard, status, credentialCardTypeId, email, createById);
@@ -59,15 +59,17 @@ namespace SecurityGateApv.Domain.Models
             {
                 result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_FRONT", visitorCredentialImageFront, result));
                 result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BACK", visitorCredentialImageBack, result));
+                result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BLUR", visitorCredentialImageBlur, result));
             }
             else if(credentialCardTypeId == (int)CredentialCardTypeEnum.DrivingLicence)
             {
                 result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_FRONT", visitorCredentialImageFront, result));
                 result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_BACK", visitorCredentialImageBack, result));
+                result.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_BLUR", visitorCredentialImageBlur, result));
             }
             return result;
         }
-        public Result<Visitor> Update(string visitorCredentialImageFront, string visitorCredentialImageBack, int credentialCardTypeId)
+        public Result<Visitor> Update(string visitorCredentialImageFront, string visitorCredentialImageBack, string visitorCredentialImageBlur, int credentialCardTypeId)
         {
             this.UpdateDate = DateTime.Now;
             this.VisitorImage = new List<VisitorImage>();
@@ -75,11 +77,13 @@ namespace SecurityGateApv.Domain.Models
             {
                 this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_FRONT", visitorCredentialImageFront, this));
                 this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BACK", visitorCredentialImageBack, this));
+                this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.CitizenIdentificationCard.ToString() + "_BLUR", visitorCredentialImageBlur, this));
             }
             else if (credentialCardTypeId == (int)CredentialCardTypeEnum.DrivingLicence)
             {
                 this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_FRONT", visitorCredentialImageFront, this));
                 this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_BACK", visitorCredentialImageBack, this));
+                this.VisitorImage.Add(new VisitorImage(CredentialCardTypeEnum.DrivingLicence.ToString() + "_BLUR", visitorCredentialImageBlur, this));
             }
             return this;
         }

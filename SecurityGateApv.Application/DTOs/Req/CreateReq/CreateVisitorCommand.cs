@@ -20,5 +20,7 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         public IFormFile? VisitorCredentialFrontImageFromRequest { get; set; }
         [JsonIgnore]
         public IFormFile? VisitorCredentialBackImageFromRequest { get; set; }
+        [JsonIgnore]
+        public IFormFile? VisitorCredentialBlurImageFromRequest { get; set; }
     }
 }
