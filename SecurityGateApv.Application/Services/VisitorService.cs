@@ -49,7 +49,7 @@ namespace SecurityGateApv.Application.Services
             var imageFrontEncrypt = await CommonService.Encrypt(imageFrontString);
             
             
-            SixLabors.ImageSharp.Image resizeBackImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialFrontImageFromRequest.OpenReadStream());
+            SixLabors.ImageSharp.Image resizeBackImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialBackImageFromRequest.OpenReadStream());
             int heightBack = (int)((300 / (float)resizeBackImage.Width) * resizeBackImage.Height);
             if (resizeBackImage.Width > 300 || resizeBackImage.Height > 200)
             {
@@ -57,6 +57,16 @@ namespace SecurityGateApv.Application.Services
             }
             var imageBackString = await ImageToBase64(resizeBackImage);
             var imageBackEncrypt = await CommonService.Encrypt(imageBackString);
+
+            SixLabors.ImageSharp.Image resizeBlurImage = SixLabors.ImageSharp.Image.Load(command.VisitorCredentialBlurImageFromRequest.OpenReadStream());
+            int heightBlur = (int)((300 / (float)resizeBlurImage.Width) * resizeBlurImage.Height);
+            if (resizeBlurImage.Width > 300 || resizeBlurImage.Height > 200)
+            {
+                resizeBlurImage.Mutate(x => x.Resize(300, heightBlur));
+            }
+            var imageBlurString = await ImageToBase64(resizeBlurImage);
+            var imageBlurEncrypt = await CommonService.Encrypt(imageBlurString);
+
             var userId = _jwt.DecodeJwtUserId(token);
 
             var visitorCreate = Visitor.Create(
@@ -68,6 +78,7 @@ namespace SecurityGateApv.Application.Services
                 command.CredentialsCard,
                 imageFrontEncrypt,
                 imageBackEncrypt,
+                imageBlurEncrypt,
                 "Active",
                 command.CredentialCardTypeId,
                 command.Email,
@@ -195,7 +206,7 @@ namespace SecurityGateApv.Application.Services
             }
            // var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
             visitor = _mapper.Map(command, visitor);
-            visitor.Update(await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), await CommonService.Encrypt(command.VisitorCredentialBackImageFromRequest), command.CredentialCardTypeId);
+            visitor.Update(await CommonService.Encrypt(command.VisitorCredentialFrontImageFromRequest), await CommonService.Encrypt(command.VisitorCredentialBackImageFromRequest), await CommonService.Encrypt(command.VisitorCredentialBlurImageFromRequest), command.CredentialCardTypeId);
             await _visitorRepo.UpdateAsync(visitor);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
