@@ -16,17 +16,19 @@ namespace SecurityGateApv.Infras.Notifications
         {
             _connections = connections;
         }
-        public async Task JoinHub(UserConnectionDTO conn)
+        public async Task<string> JoinHub(UserConnectionDTO conn)
         {
             _connections[Context.ConnectionId] = conn;
             await Clients.All.SendAsync("ReceiveMessage", "admind", $"{Context.ConnectionId} has joined");
+            return await Task.FromResult("");
         }
 
-        public async Task SendMessage()
+        public async Task<string> SendMessage()
         {
             await Clients.All.SendAsync("ReceiveMessage", "admind", $"Test API");
+            return await Task.FromResult("");
         }
-        public async Task SendMessageAssignForStaff(string title, string description, int staffId, int scheduleId)
+        public async Task<string> SendMessageAssignForStaff(string title, string description, int staffId, int scheduleId)
         {
             try
             {
@@ -42,6 +44,7 @@ namespace SecurityGateApv.Infras.Notifications
             catch (Exception ex)
             {
             }
+            return await Task.FromResult("");
         }
         public override Task OnDisconnectedAsync(Exception? exception)
         {
