@@ -702,7 +702,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
                      )).ToList();
             }
             if (userAuthor.Role == "Department")
@@ -712,7 +712,7 @@ namespace SecurityGateApv.Application.Services
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
                      )).ToList();
             }
             if (userAuthor.Role == "Staff")
@@ -722,7 +722,7 @@ namespace SecurityGateApv.Application.Services
                          /*&& s.CheckinTime.Date == DateTime.Now.Date*/,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
                      )).ToList();
             }
 
@@ -744,7 +744,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == "Department")
@@ -753,7 +753,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == "Staff")
@@ -762,7 +762,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
                      )).ToList();
             }
 
@@ -780,7 +780,7 @@ namespace SecurityGateApv.Application.Services
                     s => s.VisitDetail.VisitorId == visitorId,
                     pageSize, pageNumber,
                     orderBy: s => s.OrderBy(s => s.CheckinTime),
-                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
                 );
             if (visitSession.Count() == 0)
             {
@@ -796,7 +796,7 @@ namespace SecurityGateApv.Application.Services
                  s => s.VisitDetail.VisitId == visitId,
                    pageSize, pageNumber,
                    orderBy: s => s.OrderBy(s => s.CheckinTime),
-                   includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,Images"
+                   includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
                );
             if (visitSession.Count() == 0)
             {
