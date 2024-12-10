@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -106,6 +107,8 @@ namespace SecurityGateApv.Infras.Extentions
         }
         public static WebApplication UseInfras(this WebApplication app)
         {
+            var hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableDetailedErrors = true;
             app.MapHub<NotificationHub>("/notificationHub");
             return app;
         }
