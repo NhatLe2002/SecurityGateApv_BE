@@ -461,7 +461,7 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
             if (validVisitDetail.Visitor.VisitorImage != null)
             {
-                result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
+                result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("BLUR")).ImageURL);
             }
             result.CardRes = _mapper.Map<CardRes>(qrCard);
             result.DetectShoeRes = detectShoeResult.Value;
@@ -533,7 +533,7 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<ValidCheckinRes>(validVisitDetail);
             if (validVisitDetail.Visitor.VisitorImage != null)
             {
-                result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("FRONT")).ImageURL);
+                result.Visitor.VisitorCredentialFrontImage = await CommonService.Decrypt(validVisitDetail.Visitor.VisitorImage.FirstOrDefault(s => s.ImageType.Contains("BLUR")).ImageURL);
             }
             result.CardRes = _mapper.Map<CardRes>(card);
             result.DetectShoeRes = detectShoeResult.Value;
