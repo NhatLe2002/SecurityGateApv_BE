@@ -14,5 +14,9 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int Month { get; set; }
         public int Cancel { get; set; }
         public int Violation { get; set; }
+        public int Active { get; set; }
+        public int Inactive { get; set; }
+        public int Pending { get; set; }
+        public int ActiveTemporary { get; set; }
     }
 }

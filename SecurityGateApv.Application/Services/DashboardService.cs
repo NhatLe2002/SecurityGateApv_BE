@@ -46,7 +46,11 @@ namespace SecurityGateApv.Application.Services
             var res = new DashboardMission()
             {
                 Total = 0,
-                WaitForFinishTask = 0
+                Approved = 0,
+                Pending = 0,
+                Assigned = 0,
+                Expired = 0,
+                Rejected = 0    
             };
             var schedules = (await _scheduleUserRepo.GetAllAsync());
             if (staffId != null)
@@ -57,12 +61,20 @@ namespace SecurityGateApv.Application.Services
                     return Result.Failure<DashboardMission>(Error.NotFound);
                 }
                 res.Total = schedules.Count(s => s.AssignToId == staffId);
-                res.WaitForFinishTask = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString() && s.AssignToId == staffId);
+                res.Assigned = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString() && s.AssignToId == staffId);
+                res.Pending = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Pending.ToString() && s.AssignToId == staffId);
+                res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString() && s.AssignToId == staffId);
+                res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString() && s.AssignToId == staffId);
+                res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString() && s.AssignToId == staffId);
             }
             else
             {
                 res.Total = schedules.Count();
-                res.WaitForFinishTask = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString());
+                res.Assigned = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString());
+                res.Pending = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Pending.ToString());
+                res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString());
+                res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString());
+                res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString());
             }
 
 
@@ -112,6 +124,10 @@ namespace SecurityGateApv.Application.Services
                 Week = 0,
                 Cancel = 0,
                 Violation = 0,
+                Active = 0,
+                ActiveTemporary = 0,
+                Pending = 0,
+                Inactive = 0,
             };
             var visit = (await _visitRepo.GetAllAsync());
             res.Total = visit.Count();
@@ -120,6 +136,9 @@ namespace SecurityGateApv.Application.Services
             res.Month = (await _visitRepo.FindAsync(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessMonth, int.MaxValue)).Count();
             res.Cancel = visit.Count(s => s.VisitStatus == VisitStatusEnum.Cancelled.ToString());
             res.Violation = visit.Count(s => s.VisitStatus == VisitStatusEnum.Violation.ToString());
+            res.Active = visit.Count(s => s.VisitStatus == VisitStatusEnum.Active.ToString());
+            res.Pending = visit.Count(s => s.VisitStatus == VisitStatusEnum.Pending.ToString());
+            res.ActiveTemporary = visit.Count(s => s.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString());
 
             return res;
         }
