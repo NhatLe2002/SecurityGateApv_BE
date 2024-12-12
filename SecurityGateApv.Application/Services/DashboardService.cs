@@ -131,12 +131,13 @@ namespace SecurityGateApv.Application.Services
             };
             var visit = (await _visitRepo.GetAllAsync());
             res.Total = visit.Count();
-            res.Daily = (await _visitRepo.FindAsync(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.VisitDaily, int.MaxValue)).Count();
+            res.Daily = (await _visitRepo.FindAsync(s => s.ScheduleUser == null, int.MaxValue)).Count();
             res.Week = (await _visitRepo.FindAsync(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessWeek, int.MaxValue)).Count();
             res.Month = (await _visitRepo.FindAsync(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessMonth, int.MaxValue)).Count();
             res.Cancel = visit.Count(s => s.VisitStatus == VisitStatusEnum.Cancelled.ToString());
             res.Violation = visit.Count(s => s.VisitStatus == VisitStatusEnum.Violation.ToString());
             res.Active = visit.Count(s => s.VisitStatus == VisitStatusEnum.Active.ToString());
+            res.Inactive = visit.Count(s => s.VisitStatus == VisitStatusEnum.Inactive.ToString());
             res.Pending = visit.Count(s => s.VisitStatus == VisitStatusEnum.Pending.ToString());
             res.ActiveTemporary = visit.Count(s => s.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString());
 
@@ -203,7 +204,7 @@ namespace SecurityGateApv.Application.Services
                 && s.CheckinTime.Date == DateTime.Now.Date*/,
                  count, 1,
                  orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                 includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+                 includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
              )).ToList();
             var result = _mapper.Map<List<GetVisitorSessionRes>>(visitSession);
             return Result.Success(result);
@@ -227,7 +228,30 @@ namespace SecurityGateApv.Application.Services
                 })
                 .OrderBy(sc => sc.Status)
                 .ToList();
-
+            if(!statusCounts.Any(s => s.Status == SessionStatus.CheckOut.ToString()))
+            {
+                statusCounts.Add(new VisitorSessionStatusCountRes
+                {
+                    Status = SessionStatus.CheckOut.ToString(),
+                    Count = 0
+                });
+            }
+            if (!statusCounts.Any(s => s.Status == SessionStatus.CheckIn.ToString()))
+            {
+                statusCounts.Add(new VisitorSessionStatusCountRes
+                {
+                    Status = SessionStatus.CheckIn.ToString(),
+                    Count = 0
+                });
+            }
+            if (!statusCounts.Any(s => s.Status == SessionStatus.UnCheckOut.ToString()))
+            {
+                statusCounts.Add(new VisitorSessionStatusCountRes
+                {
+                    Status = SessionStatus.UnCheckOut.ToString(),
+                    Count = 0
+                });
+            }
             return Result.Success(statusCounts);
         }
         public async Task<Result<List<CardStatusCountRes>>> GetCardCountByStatus()
