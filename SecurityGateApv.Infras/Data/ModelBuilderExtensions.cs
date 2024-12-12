@@ -47,7 +47,8 @@ namespace SecurityGateApv.Infras.Data
         {
             modelBuilder.Entity<NotificationType>().HasData(
                 new NotificationType { Id = 1, Name = "Visit", Description = "Action For Visit" },
-                new NotificationType { Id = 2, Name = "ScheduleUser", Description = "Action For Schedule User" }
+                new NotificationType { Id = 2, Name = "ScheduleUser", Description = "Action For Schedule User" },
+                new NotificationType { Id = 3, Name = "VisitSession", Description = "Action For Visit Session User" }
             );
         }
 
