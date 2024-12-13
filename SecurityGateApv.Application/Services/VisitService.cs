@@ -1020,5 +1020,44 @@ namespace SecurityGateApv.Application.Services
             }
             return result;
         }
+
+        public async Task<Result<GetVisitNoDetailRes>> ViolationResolvedVisit(int visitId)
+        {
+            var visit = (await _visitRepo.FindAsync(s => s.VisitId == visitId)).FirstOrDefault();
+            if (visit == null)
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
+            }
+            if (visit.VisitStatus != VisitStatusEnum.Violation.ToString())
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
+            }
+            visit.ViolationResolvedVisit();
+            await _visitRepo.UpdateAsync(visit);
+            var commit = await(_unitOfWork.CommitAsync());
+            if (!commit)
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+            }
+            //try
+            //{
+            //    var noti = Notification.Create($"Chuyến thăm {visit.VisitName} đã được chấp thuận", "", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            //    var departmentMananger = (await _userRepo.FindAsync(s => s.DepartmentId == visit.ResponsiblePerson.DepartmentId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
+            //    noti.Value.AddUserNoti(departmentMananger.UserId, (int)visit.ResponsiblePersonId);
+            //    await _notificationRepo.AddAsync(noti.Value);
+            //    var commit2 = await _unitOfWork.CommitAsync();
+            //    if (!commit2)
+            //    {
+            //        return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+            //    }
+            //    await _notifications.SendMessageAssignForStaff($"Chuyến thăm {visit.VisitName} đã được chấp thuận", "", (int)visit.ResponsiblePersonId, 1);
+            //}
+            //catch
+            //{
+
+            //}
+
+            return _mapper.Map<GetVisitNoDetailRes>(visit);
+        }
     }
 }

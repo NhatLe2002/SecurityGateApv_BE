@@ -39,11 +39,12 @@ namespace SecurityGateApv.Domain.Errors
         #region UserError
         //User validation
         public static readonly Error NotFoundUser = new("Error.NotfoundUser", "Not found this user");
+        public static readonly Error NotFoundUserLogin = new("Error.NotfoundUser", "Tài khoản hoặc mật khẩu không chính xác xin vui lòng thử lại");
         //Not found department manager
         public static readonly Error NotFoundDepartmentManager = new("Error.NotfoundDepartmentManager", "Not found this department manager");
         public static readonly Error CanNotUpdateUserName = new("Error.CanNotUpdateUserName", "Username can not change");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
-        public static readonly Error IncorrectPassword = new("Error.LoginError", "LoginError");
+        public static readonly Error IncorrectPassword = new("Error.LoginError", "Tài khoản hoặc mật khẩu không chính xác xin vui lòng thử lại");
         public static readonly Error NotPermission = new("Error.User.NotPermission", "Permission not allow");
         //user canot update departement
         public static readonly Error CanNotUpdateDepartment = new("Error.CanNotUpdateDepartment", "Department can not change for account admin, manager, security");

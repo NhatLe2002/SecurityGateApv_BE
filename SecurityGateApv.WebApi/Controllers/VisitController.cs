@@ -305,7 +305,16 @@ namespace SecurityGateApv.WebApi.Controllers
                 }
                 return Ok(result.Value);
             }
-            return BadRequest(new Domain.Errors.Error("Visit.ReportVisit", "Action must be \"Violation | Cancelled | Active\""));
+            if (action == "ViolationResolved")
+            {
+                var result = await _visitService.ActiveVisit(visitId);
+                if (result.IsFailure)
+                {
+                    return BadRequest(result.Error);
+                }
+                return Ok(result.Value);
+            }
+            return BadRequest(new Domain.Errors.Error("Visit.ReportVisit", "Action must be \"Violation | Cancelled | Active | ViolationResolved\""));
         }
         [HttpPost]
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)

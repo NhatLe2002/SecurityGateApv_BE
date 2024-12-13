@@ -294,5 +294,10 @@ namespace SecurityGateApv.Domain.Models
             this.VisitStatus = VisitStatusEnum.Active.ToString();
             return this;
         }
+        public Result<Visit> ViolationResolvedVisit()
+        {
+            this.VisitStatus = VisitStatusEnum.ViolationResolved.ToString();
+            return this;
+        }
     }
 }

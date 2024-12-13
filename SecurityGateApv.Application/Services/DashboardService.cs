@@ -244,14 +244,7 @@ namespace SecurityGateApv.Application.Services
                     Count = 0
                 });
             }
-            if (!statusCounts.Any(s => s.Status == SessionStatus.UnCheckOut.ToString()))
-            {
-                statusCounts.Add(new VisitorSessionStatusCountRes
-                {
-                    Status = SessionStatus.UnCheckOut.ToString(),
-                    Count = 0
-                });
-            }
+
             return Result.Success(statusCounts);
         }
         public async Task<Result<List<CardStatusCountRes>>> GetCardCountByStatus()
@@ -262,7 +255,7 @@ namespace SecurityGateApv.Application.Services
                 .GroupBy(c => c.CardStatus)
                 .Select(g => new CardStatusCountRes
                 {
-                    Status = g.Key.ToString(), // Convert enum to string
+                    Status = g.Key.ToString(), 
                     Count = g.Count()
                 })
                 .OrderBy(sc => sc.Status)
