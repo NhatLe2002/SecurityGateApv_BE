@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
+using SecurityGateApv.Domain.Common;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
+using SecurityGateApv.Domain.Interfaces.Jwt;
 using SecurityGateApv.Domain.Interfaces.Repositories;
 using SecurityGateApv.Domain.Models;
 using SecurityGateApv.Domain.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,8 +28,10 @@ namespace SecurityGateApv.Application.Services
         private readonly IVisitorSessionRepo _visitorSessionRepo;
         private readonly ICardRepo _cardRepo;
         private readonly IMapper _mapper;
+        private readonly IJwt _jwt;
 
-        public DashboardService(IVisitRepo visitRepo, IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, IVisitorSessionRepo visitorSessionRepo, IMapper mapper, ICardRepo cardRepo)
+        public DashboardService(IVisitRepo visitRepo, IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, 
+            IVisitorSessionRepo visitorSessionRepo, IMapper mapper, ICardRepo cardRepo, IJwt jwt)
         {
             _visitRepo = visitRepo;
             _userRepo = userRepo;
@@ -35,13 +41,14 @@ namespace SecurityGateApv.Application.Services
             _visitorSessionRepo = visitorSessionRepo;
             _mapper = mapper;
             _cardRepo = cardRepo;
+            _jwt = jwt;
         }
 
         public DashboardService()
         {
         }
 
-        public async Task<Result<DashboardMission>> GetMission(int? staffId)
+        public async Task<Result<DashboardMission>> GetMission(string token)
         {
             var res = new DashboardMission()
             {
@@ -52,30 +59,29 @@ namespace SecurityGateApv.Application.Services
                 Expired = 0,
                 Rejected = 0    
             };
+            var role = _jwt.DecodeJwt(token);
             var schedules = (await _scheduleUserRepo.GetAllAsync());
-            if (staffId != null)
+            if (role == UserRoleEnum.Admin.ToString() || role == UserRoleEnum.Manager.ToString())
             {
-                var staff = (await _userRepo.IsAny(s => s.UserId == staffId && s.RoleId == (int)UserRoleEnum.Staff));
-                if (!staff)
-                {
-                    return Result.Failure<DashboardMission>(Error.NotFound);
-                }
-                res.Total = schedules.Count(s => s.AssignToId == staffId);
-                res.Assigned = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString() && s.AssignToId == staffId);
-                res.Pending = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Pending.ToString() && s.AssignToId == staffId);
-                res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString() && s.AssignToId == staffId);
-                res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString() && s.AssignToId == staffId);
-                res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString() && s.AssignToId == staffId);
+                schedules = (await _scheduleUserRepo.GetAllAsync());
             }
-            else
+            else if (role == UserRoleEnum.DepartmentManager.ToString())
             {
-                res.Total = schedules.Count();
-                res.Assigned = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString());
-                res.Pending = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Pending.ToString());
-                res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString());
-                res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString());
-                res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString());
+                var userID = _jwt.DecodeJwtUserId(token);
+                var dm = (await _userRepo.FindAsync(s => s.UserId == userID)).FirstOrDefault();
+                schedules = await _scheduleUserRepo.FindAsync(s => s.Schedule.CreateById == dm.UserId, int.MaxValue);
             }
+            else if (role == UserRoleEnum.Staff.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                schedules = await _scheduleUserRepo.FindAsync(s => s.AssignToId == userID, int.MaxValue);
+            }
+            res.Total = schedules.Count();
+            res.Assigned = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Assigned.ToString());
+            res.Pending = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Pending.ToString());
+            res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString());
+            res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString());
+            res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString());
 
 
             return res;
@@ -114,7 +120,7 @@ namespace SecurityGateApv.Application.Services
             return res;
         }
 
-        public async Task<Result<DashBoardVisitRes>> GetVisit()
+        public async Task<Result<DashBoardVisitRes>> GetVisit(string token)
         {
             var res = new DashBoardVisitRes()
             {
@@ -129,11 +135,28 @@ namespace SecurityGateApv.Application.Services
                 Pending = 0,
                 Inactive = 0,
             };
-            var visit = (await _visitRepo.GetAllAsync());
+            var role = _jwt.DecodeJwt(token);
+            var visit = new List<Visit>();
+            if (role == UserRoleEnum.Admin.ToString() || role == UserRoleEnum.Manager.ToString())
+            {
+                visit = (await _visitRepo.FindAsync(s => true, int.MaxValue, includeProperties: "ScheduleUser.Schedule")).ToList();
+            }
+            else if (role == UserRoleEnum.DepartmentManager.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                var dm = (await _userRepo.FindAsync(s => s.UserId == userID)).FirstOrDefault();
+                visit = (await _visitRepo.FindAsync(s => s.ResponsiblePerson.DepartmentId == dm.DepartmentId, int.MaxValue, includeProperties: "ScheduleUser.Schedule")).ToList();
+            }
+            else if (role == UserRoleEnum.Staff.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                visit = (await _visitRepo.FindAsync(s => s.ResponsiblePersonId == userID, int.MaxValue, includeProperties: "ScheduleUser.Schedule")).ToList();
+            }
+
             res.Total = visit.Count();
-            res.Daily = (await _visitRepo.FindAsync(s => s.ScheduleUser == null, int.MaxValue)).Count();
-            res.Week = (await _visitRepo.FindAsync(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessWeek, int.MaxValue)).Count();
-            res.Month = (await _visitRepo.FindAsync(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessMonth, int.MaxValue)).Count();
+            res.Daily = visit.Count(s => s.ScheduleUser == null); 
+            res.Week = visit.Count(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessWeek);
+            res.Month = visit.Count(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessMonth); 
             res.Cancel = visit.Count(s => s.VisitStatus == VisitStatusEnum.Cancelled.ToString());
             res.Violation = visit.Count(s => s.VisitStatus == VisitStatusEnum.Violation.ToString());
             res.Active = visit.Count(s => s.VisitStatus == VisitStatusEnum.Active.ToString());

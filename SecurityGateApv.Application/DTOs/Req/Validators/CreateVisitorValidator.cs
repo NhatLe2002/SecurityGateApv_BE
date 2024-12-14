@@ -25,7 +25,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 return true;
             }).WithMessage("Số thẻ này đã được đăng kí trước đó");
             RuleFor(s => s.PhoneNumber).NotNull().NotEmpty()
-                           .Matches(@"^\d{10}$").WithMessage("Số điện thoại phải đúng 10 số"); 
+                           .Matches(@"^(0\d{9})$").WithMessage("Số điện thoại phải đúng 10 số và bắt đầu bằng số 0"); 
             RuleFor(s => s.CredentialCardTypeId).NotNull().NotEmpty().Must(s => {
                 return credentialCardTypeRepo.IsAny(t => t.CredentialCardTypeId == s).GetAwaiter().GetResult();
             }).WithMessage("Loại thẻ không đúng");

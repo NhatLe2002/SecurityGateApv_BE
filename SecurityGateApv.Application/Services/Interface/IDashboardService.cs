@@ -11,11 +11,11 @@ namespace SecurityGateApv.Application.Services.Interface
 {
     public interface IDashboardService
     {
-        public Task<Result<DashBoardVisitRes>> GetVisit();
+        public Task<Result<DashBoardVisitRes>> GetVisit(string token);
         public Task<Result<DashboardUserRes>> GetUser();
         public Task<Result<DashboardVisitorRes>> GetVisitor();
         public Task<Result<DashboardSchedule>> GetSchedule();
-        public Task<Result<DashboardMission>> GetMission(int? staffId);
+        public Task<Result<DashboardMission>> GetMission(string token);
         public Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year);
         public Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month);
         Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(int count = 5);
