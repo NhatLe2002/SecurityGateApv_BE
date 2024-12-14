@@ -15,7 +15,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
         {
             RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("UserName cannot be empty")
-            .MinimumLength(3).WithMessage("Tên đăng nhập phải lớn hơn 3 chữ số")
+            .MinimumLength(3).WithMessage("Tên đăng nhập phải lớn hơn 3 kí tự")
             .Must( s =>
             {
                 return !userRepo.IsAny(x => x.UserName == s).GetAwaiter().GetResult();
@@ -37,7 +37,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 
             RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("PhoneNumber cannot be empty")
-            .Matches(@"^\d{10}$").WithMessage("Số điện thoại bao gồm 10 chữ số");
+                           .Matches(@"^(0\d{9})$").WithMessage("Số điện thoại phải đúng 10 số và bắt đầu bằng số 0");
 
 
             RuleFor(x => x.DepartmentId)

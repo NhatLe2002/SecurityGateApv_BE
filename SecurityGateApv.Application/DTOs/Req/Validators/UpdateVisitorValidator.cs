@@ -19,7 +19,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(s => s.CompanyName).NotNull().NotEmpty();
             RuleFor(s => s.VisitorCredentialFrontImageFromRequest).NotNull().NotEmpty();
             RuleFor(s => s.PhoneNumber).NotNull().NotEmpty()
-                           .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
+                    .Matches(@"^(0\d{9})$").WithMessage("Số điện thoại phải đúng 10 số và bắt đầu bằng số 0");
             RuleFor(s => s.CredentialCardTypeId).NotNull().NotEmpty().Must(s => {
                 return credentialCardTypeRepo.IsAny(t => t.CredentialCardTypeId == s).GetAwaiter().GetResult();
             }).WithMessage("Credential card type not found");
