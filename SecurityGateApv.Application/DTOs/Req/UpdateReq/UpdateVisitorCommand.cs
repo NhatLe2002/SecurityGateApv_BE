@@ -13,6 +13,7 @@ namespace SecurityGateApv.Application.DTOs.Req.UpdateReq
         public string VisitorName { get; set; }
         public string CompanyName { get; set; }
         public string PhoneNumber { get; set; }
+        public string? Email { get; private set; }
         public string CredentialsCard { get; set; }
         public int CredentialCardTypeId { get; set; }
         [JsonIgnore]

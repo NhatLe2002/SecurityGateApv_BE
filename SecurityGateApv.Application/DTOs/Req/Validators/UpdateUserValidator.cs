@@ -18,7 +18,8 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
            .MinimumLength(3).WithMessage("UserName must be at least 3 characters long");
 
             RuleFor(x => x.FullName)
-            .NotEmpty().WithMessage("FullName cannot be empty");
+            .NotEmpty().WithMessage("FullName cannot be empty")
+            .Matches(@"^[A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+(?:[-'\s.][A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+)+$").WithMessage("Tên người dùng chỉ bao gồm chữ và 2 từ trở lên"); ;
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
@@ -28,12 +29,11 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             .NotEmpty().WithMessage("PhoneNumber cannot be empty")
             .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
 
-
-            //RuleFor(x => x.DepartmentId)
-            //    .NotNull().NotEmpty().Must(s =>
-            //    {
-            //        return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
-            //    }).WithMessage("Department Id is not exist");
+            RuleFor(x => x.DepartmentId)
+                .NotNull().NotEmpty().Must(s =>
+                {
+                    return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
+                }).WithMessage("Department Id is not exist");
         }
     }
     

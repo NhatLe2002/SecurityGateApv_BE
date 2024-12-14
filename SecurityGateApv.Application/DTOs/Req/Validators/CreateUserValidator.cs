@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SecurityGateApv.Application.DTOs.Req.Validators
@@ -14,7 +15,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
         {
             RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("UserName cannot be empty")
-            .MinimumLength(3).WithMessage("UserName must be at least 3 characters long")
+            .MinimumLength(3).WithMessage("Tên đăng nhập phải lớn hơn 3 chữ số")
             .Must( s =>
             {
                 return !userRepo.IsAny(x => x.UserName == s).GetAwaiter().GetResult();
@@ -24,18 +25,19 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 
             RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password cannot be empty")
-            .MinimumLength(6).WithMessage("Password must be at least 6 characters long");
+            .MinimumLength(6).WithMessage("Mật khẩu lớn hơn 6 chữ số");
 
             RuleFor(x => x.FullName)
-            .NotEmpty().WithMessage("FullName cannot be empty");
+            .NotEmpty().WithMessage("FullName cannot be empty")
+            .Matches(@"^[A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+(?:[-'\s.][A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+)+$").WithMessage("Tên người dùng chỉ bao gồm chữ và 2 từ trở lên");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
-                .EmailAddress().WithMessage("Email is not valid");
+                .EmailAddress().WithMessage("Email không hợp lệ");
 
             RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("PhoneNumber cannot be empty")
-            .Matches(@"^\d{10}$").WithMessage("PhoneNumber must be a 10-digit number");
+            .Matches(@"^\d{10}$").WithMessage("Số điện thoại bao gồm 10 chữ số");
 
 
             RuleFor(x => x.DepartmentId)

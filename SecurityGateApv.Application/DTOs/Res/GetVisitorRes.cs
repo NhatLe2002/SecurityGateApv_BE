@@ -18,6 +18,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime CreateDate { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public string Status { get; private set; }
+        public string? Email { get; private set; }
         public UserGetVisitorRes? CreateBy { get; private set; }
         public CredentialCardTypeRes CredentialCardType { get; private set; }
         public List<VisitorImageRes1> VisitorImage { get; private set; }

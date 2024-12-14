@@ -72,6 +72,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<VisitCreateCommand>(Error.NoScheduleAssignForThisStaff);
             }
+            if (scheduleAssign.DeadlineTime < DateTime.Now)
+            {
+                return Result.Failure<VisitCreateCommand>(Error.ScheduleExpireAssignForThisStaff);
+            }
             var schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleUser.Any(t => t.Id == command.ScheduleUserId), includeProperties: "ScheduleType")).FirstOrDefault();
 
             var createVisit = Visit.Create(

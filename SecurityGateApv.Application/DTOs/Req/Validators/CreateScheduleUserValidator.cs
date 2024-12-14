@@ -41,6 +41,30 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 }
                 return false;                   
             }).WithMessage("DeadlineTime not valid");
+            RuleFor(s => s.StartDate).NotNull().NotEmpty().Must(s =>
+            {
+                if (s > DateTime.Now)
+                {
+                    return true;
+                }
+                return false;
+            }).WithMessage("StartDate not valid");
+            RuleFor(s => s.EndDate).NotNull().NotEmpty().Must(s =>
+            {
+                if (s > DateTime.Now)
+                {
+                    return true;
+                }
+                return false;
+            }).WithMessage("StartDate not valid");
+            RuleFor(s => new { s.StartDate, s.EndDate}).NotNull().NotEmpty().Must(s =>
+            {
+                if (s.StartDate < s.EndDate)
+                {
+                    return true;
+                }
+                return false;
+            }).WithMessage("Ngày bắt đầu phải trước ngày kết thúc");
         }
     }
 }
