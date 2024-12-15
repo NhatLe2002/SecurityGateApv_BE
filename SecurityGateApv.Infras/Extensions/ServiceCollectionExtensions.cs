@@ -104,8 +104,8 @@ namespace SecurityGateApv.Infras.Extentions
             //signalR
             services.AddSignalR( s =>
             {
-                s.KeepAliveInterval = TimeSpan.FromSeconds(200);
-                s.ClientTimeoutInterval = TimeSpan.FromSeconds(400);
+                s.KeepAliveInterval = TimeSpan.FromSeconds(15);
+                s.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
             });
             return services;
         }
