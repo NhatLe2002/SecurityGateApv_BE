@@ -15,7 +15,7 @@ namespace SecurityGateApv.Application.Services.Interface
 {
     public interface IVisitService
     {
-        public Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date);
+        public Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date, string token);
         public Task<Result<List<GetVisitByDateRes>>> GetVisitByDateByVisitID(int pageSize, int pageNumber, int visitId);
         public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber);      
         public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisitGraphQl(int pageSize, int pageNumber, string token);      

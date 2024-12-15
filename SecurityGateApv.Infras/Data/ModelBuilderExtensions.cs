@@ -219,10 +219,10 @@ namespace SecurityGateApv.Infras.Data
         private static void SeedScheduleTypes(ModelBuilder modelBuilder)
         {
             var scheduleTypeList = new List<ScheduleType>();
-            scheduleTypeList.Add(ScheduleType.Create(1, ScheduleTypeEnum.VisitDaily.ToString(), "Lịch trình đăng ký ra vào hàng ngày cho staff và bảo vệ", true).Value);
+            scheduleTypeList.Add(ScheduleType.Create(1, ScheduleTypeEnum.VisitDaily.ToString(), "Lịch trình đăng ký ra vào hàng ngày cho staff và bảo vệ", false).Value);
             scheduleTypeList.Add(ScheduleType.Create(2, ScheduleTypeEnum.ProcessWeek.ToString(), "Lịch trình đăng ký ra vào theo tiến trình hàng tuần cho Department Manager", true).Value);
             scheduleTypeList.Add(ScheduleType.Create(3, ScheduleTypeEnum.ProcessMonth.ToString(), "Lịch trình đăng ký ra vào theo tiến trình hàng tháng cho Department Manager", true).Value);
-            scheduleTypeList.Add(ScheduleType.Create(4, ScheduleTypeEnum.Project.ToString(), "Lịch trình đăng ký ra vào theo dự án cho Department Manager", true).Value);
+            scheduleTypeList.Add(ScheduleType.Create(4, ScheduleTypeEnum.Project.ToString(), "Lịch trình đăng ký ra vào theo dự án cho Department Manager", false).Value);
 
             modelBuilder.Entity<ScheduleType>().HasData(scheduleTypeList);
 

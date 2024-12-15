@@ -334,14 +334,30 @@ namespace SecurityGateApv.Application.Services
             return res;
         }
 
-        public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date)
+        public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date, string token)
         {
-            var visits = await _visitRepo.FindAsync(
+            var userAuthen = _jwt.DecodeAuthorJwt(token);
+            var visits = new List<Visit>();
+            if (userAuthen.Role == UserRoleEnum.Security.ToString())
+            {
+                visits = (await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
                     && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
                     pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
-                );
+                )).ToList();
+
+            }
+            else if (userAuthen.Role == UserRoleEnum.Staff.ToString())
+            {
+                visits = (await _visitRepo.FindAsync(
+                    s => s.ResponsiblePersonId == userAuthen.UserId
+                    && s.ExpectedStartTime.Date <= date.Date
+                    && s.ExpectedEndTime.Date >= date.Date
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
+                    pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
+                )).ToList();
+            }
 
             if (visits.Count() == 0)
             {
@@ -655,12 +671,22 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
         {
             var visit = (await _visitRepo.FindAsync(s => s.ResponsiblePerson.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), 
-                includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType")).ToList();
+                includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType,VisitDetail.VisitorSession")).ToList();
             if (visit.Count == 0)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
             }
             var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            foreach (var item in visitRes)
+            {
+                var visitEntity = visit.FirstOrDefault(v => v.VisitId == item.VisitId);
+                if (visitEntity != null && visitEntity.VisitDetail != null)
+                {
+                    item.VisitorSessionCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession != null)
+                        .Sum(detail => detail.VisitorSession.Count);
+                }
+            }
             return visitRes.ToList();
         }
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByUserId(int userId, int pageNumber, int pageSize)

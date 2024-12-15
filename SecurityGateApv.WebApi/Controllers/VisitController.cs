@@ -206,11 +206,16 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpGet("Day")]
-        public async Task<ActionResult> GetAllVisitsByDate([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] DateTime date)
+        public async Task<ActionResult> GetVisitByDate([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] DateTime date)
         {
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
             if (pageNumber == -1 || pageSize == -1)
             {
-                var resultAll = await _visitService.GetVisitByDate(int.MaxValue, 1, date);
+                var resultAll = await _visitService.GetVisitByDate(int.MaxValue, 1, date, token);
                 if (resultAll.IsFailure)
                 {
                     return BadRequest(resultAll.Error);
@@ -221,7 +226,7 @@ namespace SecurityGateApv.WebApi.Controllers
             {
                 return BadRequest("Page number and page size must be greater than zero.");
             }
-            var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date);
+            var result = await _visitService.GetVisitByDate(pageSize, pageNumber, date,token);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

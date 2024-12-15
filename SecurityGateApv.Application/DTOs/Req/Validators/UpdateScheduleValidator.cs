@@ -22,18 +22,18 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 
             RuleFor(s => s.ScheduleName)
              .NotEmpty()
-             .WithMessage("Schedule name is required.");
+             .WithMessage("Yêu cầu nhập tên lịch trình.");
 
             RuleFor(s => s.DaysOfSchedule)
                 .NotEmpty()
-                .WithMessage("Days of schedule is required.");
+                .WithMessage("Yêu cần chọn ngày cho lịch trình.");
 
             RuleFor(s => s.Description)
                 .NotEmpty()
-                .WithMessage("Description is required.");
+                .WithMessage("Yêu cầu nhập mô tả.");
             RuleFor(s => s.Status)
                 .NotNull()
-                .WithMessage("Status is required.");
+                .WithMessage("Cập nhập trạng thái cho lịch trình.");
 
            /* RuleFor(s => s.ScheduleTypeId)
                 .NotEmpty()

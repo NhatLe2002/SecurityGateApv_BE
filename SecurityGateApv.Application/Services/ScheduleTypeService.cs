@@ -28,7 +28,10 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetScheduleTypeRes>>> GetAllScheduleType()
         {
-           var scheduleType = await _scheduleTypeRepo.GetAllAsync();
+           var scheduleType = await _scheduleTypeRepo.FindAsync(
+                    s => s.Status == true,
+                    int.MaxValue,1
+                );
             if (scheduleType == null)
             {
                 return Result.Failure<List<GetScheduleTypeRes>>(Error.NotFoundSchedule);
