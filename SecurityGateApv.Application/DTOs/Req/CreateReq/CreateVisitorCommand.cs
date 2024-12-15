@@ -29,6 +29,7 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         [Required(ErrorMessage = "Yêu cầu ảnh đầu vào")]
         public IFormFile? VisitorCredentialBackImageFromRequest { get; set; }
         [JsonIgnore]
+        [Required(ErrorMessage = "Yêu cầu ảnh đầu vào")]
         public IFormFile? VisitorCredentialBlurImageFromRequest { get; set; }
     }
 }

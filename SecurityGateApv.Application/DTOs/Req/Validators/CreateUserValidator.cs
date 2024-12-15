@@ -14,29 +14,29 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
         public CreateUserValidator(IUserRepo userRepo, IDepartmentRepo departmentRepo)
         {
             RuleFor(x => x.UserName)
-            .NotEmpty().WithMessage("UserName cannot be empty")
+            .NotEmpty().WithMessage("Bắt buộc nhập tên đăng nhập")
             .MinimumLength(3).WithMessage("Tên đăng nhập phải lớn hơn 3 kí tự")
             .Must( s =>
             {
                 return !userRepo.IsAny(x => x.UserName == s).GetAwaiter().GetResult();
 
-            }).WithMessage("Duplicate Username")
+            }).WithMessage("Tên đăng nhập này đã tồn tại")
             ;
 
             RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password cannot be empty")
+            .NotEmpty().WithMessage("Bắt buộc nhập mật khẩu")
             .MinimumLength(6).WithMessage("Mật khẩu lớn hơn 6 chữ số");
 
             RuleFor(x => x.FullName)
-            .NotEmpty().WithMessage("FullName cannot be empty")
+            .NotEmpty().WithMessage("Bắt buộc nhập tên")
             .Matches(@"^[A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+(?:[-'\s.][A-Za-zàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+)+$").WithMessage("Tên người dùng chỉ bao gồm chữ và 2 từ trở lên");
 
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email cannot be empty")
+                .NotEmpty().WithMessage("Bắt buộc nhập email")
                 .EmailAddress().WithMessage("Email không hợp lệ");
 
             RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage("PhoneNumber cannot be empty")
+            .NotEmpty().WithMessage("Bắt buộc nhập số điện thoại")
                            .Matches(@"^(0\d{9})$").WithMessage("Số điện thoại phải đúng 10 số và bắt đầu bằng số 0");
 
 
