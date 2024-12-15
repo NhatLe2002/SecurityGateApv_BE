@@ -14,6 +14,7 @@ namespace SecurityGateApv.Domain.Enums
         Inactive,
         ActiveTemporary,
         Violation,
-        Cancelled
+        Cancelled,
+        ViolationResolved
     }
 }

@@ -334,14 +334,30 @@ namespace SecurityGateApv.Application.Services
             return res;
         }
 
-        public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date)
+        public async Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date, string token)
         {
-            var visits = await _visitRepo.FindAsync(
+            var userAuthen = _jwt.DecodeAuthorJwt(token);
+            var visits = new List<Visit>();
+            if (userAuthen.Role == UserRoleEnum.Security.ToString())
+            {
+                visits = (await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
                     && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
                     pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
-                );
+                )).ToList();
+
+            }
+            else if (userAuthen.Role == UserRoleEnum.Staff.ToString())
+            {
+                visits = (await _visitRepo.FindAsync(
+                    s => s.ResponsiblePersonId == userAuthen.UserId
+                    && s.ExpectedStartTime.Date <= date.Date
+                    && s.ExpectedEndTime.Date >= date.Date
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
+                    pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
+                )).ToList();
+            }
 
             if (visits.Count() == 0)
             {
@@ -655,12 +671,22 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByDepartmentId(int departmentId, int pageNumber, int pageSize)
         {
             var visit = (await _visitRepo.FindAsync(s => s.ResponsiblePerson.DepartmentId == departmentId, pageSize, pageNumber, s => s.OrderByDescending(x => x.CreateTime), 
-                includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType")).ToList();
+                includeProperties: "CreateBy,UpdateBy,ScheduleUser.Schedule.ScheduleType,VisitDetail.VisitorSession")).ToList();
             if (visit.Count == 0)
             {
                 return Result.Failure<IEnumerable<GetVisitRes>>(Error.NotFoundVisit);
             }
             var visitRes = _mapper.Map<IEnumerable<GetVisitRes>>(visit);
+            foreach (var item in visitRes)
+            {
+                var visitEntity = visit.FirstOrDefault(v => v.VisitId == item.VisitId);
+                if (visitEntity != null && visitEntity.VisitDetail != null)
+                {
+                    item.VisitorSessionCount = visitEntity.VisitDetail
+                        .Where(detail => detail.VisitorSession != null)
+                        .Sum(detail => detail.VisitorSession.Count);
+                }
+            }
             return visitRes.ToList();
         }
         public async Task<Result<IEnumerable<GetVisitRes>>> GetVisitByUserId(int userId, int pageNumber, int pageSize)
@@ -1019,6 +1045,45 @@ namespace SecurityGateApv.Application.Services
                 }
             }
             return result;
+        }
+
+        public async Task<Result<GetVisitNoDetailRes>> ViolationResolvedVisit(int visitId)
+        {
+            var visit = (await _visitRepo.FindAsync(s => s.VisitId == visitId)).FirstOrDefault();
+            if (visit == null)
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
+            }
+            if (visit.VisitStatus != VisitStatusEnum.Violation.ToString())
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
+            }
+            visit.ViolationResolvedVisit();
+            await _visitRepo.UpdateAsync(visit);
+            var commit = await(_unitOfWork.CommitAsync());
+            if (!commit)
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+            }
+            //try
+            //{
+            //    var noti = Notification.Create($"Chuyến thăm {visit.VisitName} đã được chấp thuận", "", visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            //    var departmentMananger = (await _userRepo.FindAsync(s => s.DepartmentId == visit.ResponsiblePerson.DepartmentId && s.Role.RoleName == UserRoleEnum.DepartmentManager.ToString())).FirstOrDefault();
+            //    noti.Value.AddUserNoti(departmentMananger.UserId, (int)visit.ResponsiblePersonId);
+            //    await _notificationRepo.AddAsync(noti.Value);
+            //    var commit2 = await _unitOfWork.CommitAsync();
+            //    if (!commit2)
+            //    {
+            //        return Result.Failure<GetVisitNoDetailRes>(Error.CommitError);
+            //    }
+            //    await _notifications.SendMessageAssignForStaff($"Chuyến thăm {visit.VisitName} đã được chấp thuận", "", (int)visit.ResponsiblePersonId, 1);
+            //}
+            //catch
+            //{
+
+            //}
+
+            return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
     }
 }

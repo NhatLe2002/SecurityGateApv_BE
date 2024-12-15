@@ -9,6 +9,8 @@ USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
+ARG DATABASE_ENV=Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv;TrustServerCertificate=True
+ENV ConnectionStrings=$DATABASE_ENV
 ENV TZ="Asia/Ho_Chi_Minh"
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release

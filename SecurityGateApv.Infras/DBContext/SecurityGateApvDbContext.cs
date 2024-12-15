@@ -57,6 +57,11 @@ namespace SecurityGateApv.Infras.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<User>()
+            //    .Property(u => u.UserName)
+            //   //.HasColumnType("nvarchar(255)")
+            //   .UseCollation("Latin1_General_CS_AS");
+
             modelBuilder.Entity<NotificationUsers>()
                 .HasOne(n => n.Sender)
                 .WithMany(u => u.SentNotifications)

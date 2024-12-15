@@ -237,7 +237,7 @@ namespace SecurityGateApv.Application.Services
 
             //send Notification to Staff
             var user = validVisitDetail.Visitor;
-            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.VisitSession);
             noti.Value.AddUserNoti(command.SecurityInId, (int)validVisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
@@ -370,7 +370,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.CheckInFail);
             };
             var user = validVisitDetail.Visitor;
-            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Check-in từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã check-in", validVisitDetail.Visit.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.VisitSession);
             noti.Value.AddUserNoti(command.SecurityInId, (int)validVisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
@@ -954,42 +954,7 @@ namespace SecurityGateApv.Application.Services
                 await _visitCardRepo.UpdateAsync(visitCard);
             }
 
-            
-
-
-            //if (command.VehicleSession != null)
-            //{
-            //    var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-            //           s => s.LicensePlate == command.VehicleSession.LicensePlate && s.Status == SessionStatus.CheckIn.ToString()
-            //       )).FirstOrDefault();
-            //    if (vehicleSession == null)
-            //    {
-            //        return Result.Failure<SessionCheckOutRes>(Error.ValidVehicleSessionCheckOut);
-            //    }
-            //    var vehicleSessionCheckout = vehicleSession.CheckOut(command.SecurityOutId, command.GateOutId, command.VehicleSession.VehicleImages.Select(i => (i.ImageType, i.ImageURL)).ToList());
-            //    if (vehicleSessionCheckout.IsFailure)
-            //    {
-            //        return Result.Failure<SessionCheckOutRes>(vehicleSessionCheckout.Error);
-            //    }
-            //    await _vehicleSessionRepo.UpdateAsync(vehicleSessionCheckout.Value);
-            //}
-            //else
-            //{
-            //    var vehicleSession = (await _vehicleSessionRepo.FindAsync(
-            //           s => s.VisitDetailId == visitSession.VisitDetailId && s.Status == SessionStatus.CheckIn.ToString()
-            //       )).FirstOrDefault();
-            //    if (visitSession.VisitDetail.Visit.ScheduleUserId == null && vehicleSession != null)
-            //    {
-            //        return Result.Failure<SessionCheckOutRes>(Error.VehicleCheckoutDailyError);
-            //    }
-            //    //else if (visitSession.VisitDetail.ExpectedEndHour <= TimeSpan.  &&vehicleSession != null)
-            //    //{
-
-            //    //}
-            //}
-
-            // Add visitor image checkout
-
+       
 
 
             command.Status = "CheckOut";
@@ -1035,7 +1000,7 @@ namespace SecurityGateApv.Application.Services
 
             //Noti
             var user = visitSession.VisitDetail.Visitor;
-            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.VisitSession);
             noti.Value.AddUserNoti(command.SecurityOutId, (int)visitSession.VisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();
@@ -1186,7 +1151,7 @@ namespace SecurityGateApv.Application.Services
 
             //noti
             var user = visitor;
-            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.Visit);
+            var noti = Notification.Create($"Check-out từ chuyến thăm, Khách: {user.VisitorName}  ", $"Khách {user.VisitorName} đã Check-out", visitSession.VisitDetail.VisitId.ToString(), DateTime.Now, null, (int)NotificationTypeEnum.VisitSession);
             noti.Value.AddUserNoti(command.SecurityOutId, (int)visitSession.VisitDetail.Visit.ResponsiblePersonId);
             await _notificationRepo.AddAsync(noti.Value);
             var commit2 = await _unitOfWork.CommitAsync();

@@ -123,5 +123,16 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        //[HttpPost("LostCard/{visitDetailId}")]
+        //public async Task<ActionResult> UpdateCardStatusLost(int visitDetailId)
+        //{
+        //    var result = await _cardService.UpdateCardStatusLost(visitDetailId);
+
+        //    if (result.IsFailure)
+        //    {
+        //        return BadRequest(result.Error);
+        //    }
+        //    return Ok(result.Value);
+        //}
     }
 }

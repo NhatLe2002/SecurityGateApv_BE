@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Req.UpdateReq;
 using SecurityGateApv.Application.DTOs.Res;
@@ -146,22 +147,32 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<LoginRes>> Login(LoginModel loginModel)
         {
-            var login = (await _userRepo.FindAsync(s => s.UserName == loginModel.Username && s.Status == UserStatusEnum.Active.ToString(), includeProperties: "Role,Department")).FirstOrDefault();
+            var users = await _userRepo.FindAsync(
+                             s => EF.Functions.Collate(s.UserName, "Latin1_General_CS_AS") == loginModel.Username &&
+                                  s.Status == UserStatusEnum.Active.ToString(),
+                             includeProperties: "Role,Department"
+                         );
+
+            var login = users.FirstOrDefault();
+
             if (login == null)
             {
-                return Result.Failure<LoginRes>(Error.NotFoundUser);
+                return Result.Failure<LoginRes>(Error.NotFoundUserLogin);
             }
-            if (login.Password != loginModel.Password)
+
+            if (!string.Equals(login.Password, loginModel.Password, StringComparison.Ordinal))
             {
                 return Result.Failure<LoginRes>(Error.IncorrectPassword);
             }
+
             var result = new LoginRes
             {
                 UserId = login.UserId,
                 UserName = login.UserName,
                 JwtToken = _jwt.GenerateJwtToken(login)
             };
-            return result;
+
+            return Result.Success(result);
         }
 
         public async Task<Result<bool>> SendEmailTest(string email)

@@ -24,34 +24,34 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 
             RuleFor(s => s.ScheduleName)
             .NotEmpty()
-            .WithMessage("Schedule name is required.");
+            .WithMessage("Yêu cầu nhập tên lịch trình.");
 
             RuleFor(s => s.DaysOfSchedule)
                 .NotEmpty()
-                .WithMessage("Days of process is required.");
+                .WithMessage("Yêu cần chọn ngày cho lịch trình.");
 
 
             RuleFor(s => s.Description)
                 .NotEmpty()
-                .WithMessage("Description is required.");
+                .WithMessage("Yêu cầu nhập mô tả.");
 
             RuleFor(s => s.ScheduleTypeId)
                 .NotEmpty()
-                .WithMessage("Schedule type ID is required.")
+                .WithMessage("Yêu cầu chọn loại lịch trình.")
                 .Must( (id, cancellation) => _scheduleTypeRepo.IsAny(x => x.ScheduleTypeId == id.ScheduleTypeId).GetAwaiter().GetResult()
-                ).WithMessage("Schedule type ID does not exist.");
+                ).WithMessage("Loại lịch trình không tồn tại.");
 
             RuleFor(s => s.CreateById)
                 .NotEmpty()
-                .WithMessage("Creator ID is required.")
+                .WithMessage("Yêu cậu nhập người tạo.")
                 .Must( (id, cancellation) =>
                 {
                     return  _userRepo.IsAny(x => x.UserId == id.CreateById).GetAwaiter().GetResult();
-                }).WithMessage("Creator ID does not exist.");
+                }).WithMessage("Người tạo ko tồn tại.");
 
              RuleFor(s => s)
                 .Must((command) => ValidateDaysOfProcess(command).GetAwaiter().GetResult())
-                .WithMessage("DaysOfProcess is not valid for the selected Visit Type.");
+                .WithMessage("Ngày của lịch trình được chọn không phù hợp với loại lịch trình.");
         }
         private async Task<bool> ValidateDaysOfProcess(CreateScheduleCommand command)
         {

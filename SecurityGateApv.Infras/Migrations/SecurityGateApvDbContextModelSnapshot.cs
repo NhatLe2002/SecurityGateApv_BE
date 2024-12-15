@@ -53,7 +53,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("GateId");
 
-                    b.ToTable("Cameras");
+                    b.ToTable("Cameras", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.CameraType", b =>
@@ -74,7 +74,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("CameraTypeId");
 
-                    b.ToTable("CameraTypes");
+                    b.ToTable("CameraTypes", (string)null);
 
                     b.HasData(
                         new
@@ -130,7 +130,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("CardTypeId");
 
-                    b.ToTable("Cards");
+                    b.ToTable("Cards", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.CardType", b =>
@@ -151,7 +151,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("CardTypeId");
 
-                    b.ToTable("CardTypes");
+                    b.ToTable("CardTypes", (string)null);
 
                     b.HasData(
                         new
@@ -189,7 +189,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("CredentialCardTypeId");
 
-                    b.ToTable("CredentialCardTypes");
+                    b.ToTable("CredentialCardTypes", (string)null);
 
                     b.HasData(
                         new
@@ -239,7 +239,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
 
                     b.HasData(
                         new
@@ -318,7 +318,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("GateId");
 
-                    b.ToTable("Gates");
+                    b.ToTable("Gates", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Notification", b =>
@@ -356,7 +356,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("NotificationTypeId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.NotificationType", b =>
@@ -377,7 +377,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NotificationTypes");
+                    b.ToTable("NotificationTypes", (string)null);
 
                     b.HasData(
                         new
@@ -422,7 +422,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("SenderID");
 
-                    b.ToTable("NotificationUsers");
+                    b.ToTable("NotificationUsers", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.PrivateKeyService", b =>
@@ -446,7 +446,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("PrivateKeyServiceId");
 
-                    b.ToTable("PrivateKeyServices");
+                    b.ToTable("PrivateKeyServices", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Role", b =>
@@ -467,7 +467,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -543,7 +543,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("ScheduleTypeId");
 
-                    b.ToTable("Schedules");
+                    b.ToTable("Schedules", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.ScheduleType", b =>
@@ -567,7 +567,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("ScheduleTypeId");
 
-                    b.ToTable("ScheduleTypes");
+                    b.ToTable("ScheduleTypes", (string)null);
 
                     b.HasData(
                         new
@@ -650,7 +650,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("ScheduleUsers");
+                    b.ToTable("ScheduleUsers", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.User", b =>
@@ -712,7 +712,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
@@ -827,7 +827,7 @@ namespace SecurityGateApv.Infras.Migrations
                     b.HasIndex("VisitorSessionId")
                         .IsUnique();
 
-                    b.ToTable("VehicleSessions");
+                    b.ToTable("VehicleSessions", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VehicleSessionImage", b =>
@@ -853,7 +853,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("VehicleSessionId");
 
-                    b.ToTable("VehicleSessionImages");
+                    b.ToTable("VehicleSessionImages", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visit", b =>
@@ -912,7 +912,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("UpdateById");
 
-                    b.ToTable("Visits");
+                    b.ToTable("Visits", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitCard", b =>
@@ -945,7 +945,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("VisitDetailId");
 
-                    b.ToTable("VisitCards");
+                    b.ToTable("VisitCards", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitDetail", b =>
@@ -977,7 +977,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("VisitorId");
 
-                    b.ToTable("VisitDetails");
+                    b.ToTable("VisitDetails", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
@@ -992,9 +992,6 @@ namespace SecurityGateApv.Infras.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CreateById")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
@@ -1003,9 +1000,6 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.Property<string>("CredentialsCard")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -1025,11 +1019,9 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasKey("VisitorId");
 
-                    b.HasIndex("CreateById");
-
                     b.HasIndex("CredentialCardTypeId");
 
-                    b.ToTable("Visitors");
+                    b.ToTable("Visitors", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorImage", b =>
@@ -1055,7 +1047,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("VisitorId");
 
-                    b.ToTable("VisitorImage");
+                    b.ToTable("VisitorImage", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSession", b =>
@@ -1103,7 +1095,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("VisitDetailId");
 
-                    b.ToTable("VisitorSessions");
+                    b.ToTable("VisitorSessions", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.VisitorSessionsImage", b =>
@@ -1129,7 +1121,7 @@ namespace SecurityGateApv.Infras.Migrations
 
                     b.HasIndex("VisitorSessionId");
 
-                    b.ToTable("VisitorSessionsImages");
+                    b.ToTable("VisitorSessionsImages", (string)null);
                 });
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Camera", b =>
@@ -1347,17 +1339,11 @@ namespace SecurityGateApv.Infras.Migrations
 
             modelBuilder.Entity("SecurityGateApv.Domain.Models.Visitor", b =>
                 {
-                    b.HasOne("SecurityGateApv.Domain.Models.User", "CreateBy")
-                        .WithMany()
-                        .HasForeignKey("CreateById");
-
                     b.HasOne("SecurityGateApv.Domain.Models.CredentialCardType", "CredentialCardType")
                         .WithMany("Visitor")
                         .HasForeignKey("CredentialCardTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CreateBy");
 
                     b.Navigation("CredentialCardType");
                 });

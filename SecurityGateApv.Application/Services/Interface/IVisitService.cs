@@ -15,13 +15,14 @@ namespace SecurityGateApv.Application.Services.Interface
 {
     public interface IVisitService
     {
-        public Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date);
+        public Task<Result<List<GetVisitByDateRes>>> GetVisitByDate(int pageSize, int pageNumber, DateTime date, string token);
         public Task<Result<List<GetVisitByDateRes>>> GetVisitByDateByVisitID(int pageSize, int pageNumber, int visitId);
         public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisit(int pageSize, int pageNumber);      
         public Task<Result<List<GetVisitNoDetailRes>>> GetAllVisitGraphQl(int pageSize, int pageNumber, string token);      
         public Task<Result<GetVisitNoDetailRes>> ReportVisit(int visitId);      
         public Task<Result<GetVisitNoDetailRes>> CancelVisit(int visitId);      
         public Task<Result<GetVisitNoDetailRes>> ActiveVisit(int visitId);      
+        public Task<Result<GetVisitNoDetailRes>> ViolationResolvedVisit(int visitId);      
         public Task<Result<List<GetVisitDetailRes>>> GetVisitDetailByVisitId(int visitId, int pageNumber, int pageSize);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByCreateById(int visitId, int pageNumber, int pageSize);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByResponePersonId(int responPersonId, int pageNumber, int pageSize);

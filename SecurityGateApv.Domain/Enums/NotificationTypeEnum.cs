@@ -10,6 +10,7 @@ namespace SecurityGateApv.Domain.Enums
     {
         None,
         Visit,
-        ScheduleUser
+        ScheduleUser,
+        VisitSession
     }
 }
