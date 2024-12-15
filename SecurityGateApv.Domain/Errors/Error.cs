@@ -66,6 +66,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error VisitorIsBusy = new("Error.VisitorIsBusy", "Visitor busy at ...");
         public static readonly Error NoValidDateForVisit = new("Error.NoValidDateForVisit", "No Date Valid for this schedule");
         public static readonly Error NoScheduleAssignForThisStaff = new("Error.NoScheduleAssignForThisStaff", "No Assigned Schedule for staff");
+        public static readonly Error ScheduleExpireAssignForThisStaff = new("Error.ScheduleExpireAssignForThisStaff", "Nhiệm vụ này đã hết hạn");
         public static readonly Error AppendTimeInvalid = new("Error.AppendTimeInvalid", "Expect End Time must grater than Start Time");
         public static readonly Error VisitCancel = new("Error.VisitCancel", "Chuyến thăm đã bị hủy");
         //Not found visit by credential card

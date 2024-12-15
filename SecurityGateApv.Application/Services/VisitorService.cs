@@ -124,26 +124,26 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<List<GetVisitorRes>>> GetAllByPaging(int pageNumber, int pageSize)
         {
-            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, VisitorImage, CreateBy");
+            var list = await _visitorRepo.FindAsync(s=> true, pageSize, pageNumber,s => s.OrderByDescending(z => z.CreateDate), includeProperties: "CredentialCardType, CreateBy");
             if(list.Count() == 0)
             {
                 return Result.Failure<List<GetVisitorRes>>(Error.NotFound);
             }
-            foreach (var item in list) {
-                try
-                {
-                    var images = new List<VisitorImage>();
-                    foreach (var image in item.VisitorImage)
-                    {
-                        images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
-                    }
-                    item.DecrypCredentialCard(images);
-                }
-                catch (Exception ex)
-                {
+            //foreach (var item in list) {
+            //    try
+            //    {
+            //        var images = new List<VisitorImage>();
+            //        foreach (var image in item.VisitorImage)
+            //        {
+            //            images.Add(image.DecryptResponseImage(await CommonService.Decrypt(image.ImageURL)).Value);
+            //        }
+            //        item.DecrypCredentialCard(images);
+            //    }
+            //    catch (Exception ex)
+            //    {
                     
-                }
-            }
+            //    }
+            //}
             return _mapper.Map<List<GetVisitorRes>>(list);
         }
 

@@ -102,7 +102,11 @@ namespace SecurityGateApv.Infras.Extentions
                     };
                 });
             //signalR
-            services.AddSignalR();
+            services.AddSignalR( s =>
+            {
+                s.KeepAliveInterval = TimeSpan.FromSeconds(15);
+                s.ClientTimeoutInterval = TimeSpan.FromSeconds(200);
+            });
             return services;
         }
         public static WebApplication UseInfras(this WebApplication app)

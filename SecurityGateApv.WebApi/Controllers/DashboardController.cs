@@ -16,7 +16,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("Visit")]
         public async Task<IActionResult> GetVisit()
         {
-            return Ok((await _dashboardService.GetVisit()).Value);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            return Ok((await _dashboardService.GetVisit(token)).Value);
         }
         [HttpGet("User")]
         public async Task<IActionResult> GetUser()
@@ -36,7 +41,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("ScheduleUser")]
         public async Task<IActionResult> GetScheduleUser(int? staffId)
         {
-            var result = await _dashboardService.GetMission(staffId);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("CreateUser", "Invalid Token"));
+            }
+            var result = await _dashboardService.GetMission(token);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
