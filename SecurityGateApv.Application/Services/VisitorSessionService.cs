@@ -78,7 +78,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<ValidCheckinRes>(Error.NotFoundVisit);
             }
             //validCard
-            var cardResult = await ValidateCard(command.QRCardVerification, visitDetails.Visit);
+            var cardResult = await ValidateCard(command.QRCardVerification, visitDetails);
             if (cardResult.IsFailure)
             {
                 return Result.Failure<ValidCheckinRes>(cardResult.Error);
@@ -118,7 +118,7 @@ namespace SecurityGateApv.Application.Services
                 s => (s.CardId == card.CardId)
                 && s.VisitCardStatus.Equals(VisitCardStatusEnum.Issue.ToString())
             )).FirstOrDefault();
-            
+
             //if (visitCard != null && visitCard.VisitDetailId != validVisitDetail.VisitDetailId)
             //{
             //    return Result.Failure<ValidCheckinRes>(Error.DuplicateVisitDetail);
@@ -400,7 +400,7 @@ namespace SecurityGateApv.Application.Services
             }
 
             //validCard
-            var cardResult = await ValidateCard(command.QRCardVerification, visitDetails.Visit);
+            var cardResult = await ValidateCard(command.QRCardVerification, visitDetails);
             if (cardResult.IsFailure)
             {
                 return Result.Failure<ValidCheckinRes>(cardResult.Error);
@@ -446,7 +446,7 @@ namespace SecurityGateApv.Application.Services
             result.DetectShoeRes = detectShoeResult.Value;
             return result;
         }
-        private async Task<Result<Card>> ValidateCard(string qrCardVerification, Visit visit)
+        private async Task<Result<Card>> ValidateCard(string qrCardVerification, VisitDetail visitDetail)
         {
             var card = (await _cardRepo.FindAsync(
                     s => s.CardVerification == qrCardVerification,
@@ -464,7 +464,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<Card>(card.CardStatus == CardStatusEnum.Inactive.ToString() ? Error.CardInActive : Error.CardLost);
             }
             var scheduleUser = (await _scheduleUserRepo.FindAsync(
-                    s => s.Visit.Any(s => s.VisitId == visit.VisitId),
+                    s => s.Visit.Any(s => s.VisitId == visitDetail.Visit.VisitId),
                     int.MaxValue, 1,
                     includeProperties: "Schedule.ScheduleType"
                 )).FirstOrDefault();
@@ -480,26 +480,16 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<Card>(Error.VisitDailyRegisCardError);
             }
-            var visitCard = new VisitCard();
-            visitCard = (await _visitCardRepo.FindAsync(
-                          s => s.CardId == card.CardId,
+            var visitCard =  (await _visitCardRepo.FindAsync(
+                          s => s.VisitorId == visitDetail.Visitor.VisitorId
+                          && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                           includeProperties: "Card"
                         )).FirstOrDefault();
 
-            if (visit.ScheduleUserId != null)
+            if (visitCard != null)
             {
-                if (visitCard == null)
-                {
-                    return Result.Failure<Card>(Error.NotFoundVisitCard);
-                }
-                if (visitCard.VisitCardStatus == VisitCardStatusEnum.Issue.ToString())
-                {
-                    return Result.Failure<Card>(Error.DuplicateCard);
-                }
+                return Result.Failure<Card>(Error.DuplicateVisitDetail);
             }
-
-
-
 
             return Result.Success(card);
         }

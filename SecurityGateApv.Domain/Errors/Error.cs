@@ -135,7 +135,7 @@ namespace SecurityGateApv.Domain.Errors
         #region Visitor
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Không tìm thấy khách này.");
-        public static readonly Error NotFoundVisitorByCard = new("Error.NotfoundVisitor", "Không tìm thấy khách của thẻ này.");
+        public static readonly Error NotFoundVisitorByCard = new("Error.NotfoundVisitor", "Khách này chưa được đăng ký trong hệ thống.");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
         public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Update error");
         #endregion
