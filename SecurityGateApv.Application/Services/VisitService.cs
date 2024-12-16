@@ -40,12 +40,15 @@ namespace SecurityGateApv.Application.Services
         private readonly IScheduleUserRepo _scheduleUserRepo;
         private readonly INotifications _notifications;
         private readonly INotificationRepo _notificationRepo;
+        private readonly ICardRepo _cardRepo;
+        private readonly IVisitCardRepo _visitCardRepo;
         private readonly IJwt _jwt;
         private readonly IEmailSender _emailSender;
 
         public VisitService(IVisitRepo visitRepo, IMapper mapper, IUnitOfWork unitOfWork, IScheduleTypeRepo visitTypeRepo,
             IVisitDetailRepo visitDetailRepo, IVisitorRepo visitorRepo, IUserRepo userRepo, IScheduleRepo scheduleRepo,
-            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications, INotificationRepo notificationRepo, IEmailSender emailSender)
+            IScheduleUserRepo scheduleUserRepo, IJwt jwt, INotifications notifications, INotificationRepo notificationRepo,
+            IEmailSender emailSender, ICardRepo cardRepo, IVisitCardRepo visitCardRepo, IVisitorSessionRepo visitorSessionRepo)
         {
             _visitRepo = visitRepo;
             _mapper = mapper;
@@ -62,6 +65,9 @@ namespace SecurityGateApv.Application.Services
             _notifications = notifications;
             _notificationRepo = notificationRepo;
             _emailSender = emailSender;
+            _cardRepo = cardRepo;
+            _visitCardRepo = visitCardRepo;
+            _visitorSessionRepo = visitorSessionRepo;
         }
 
         public async Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token)
@@ -503,14 +509,111 @@ namespace SecurityGateApv.Application.Services
             return visitRes;
         }
 
-        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date)
+        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string type, string verifiedId, DateTime date)
         {
+            var visitor = new Visitor();
+            if (type == "QRCardVerified")
+            {
+                var visitCard = (await _visitCardRepo.FindAsync(
+                        s => s.Card.CardVerification == verifiedId
+                        && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                        int.MaxValue, 1
+                    )).FirstOrDefault();
+                if (visitCard == null)
+                {
+                    return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.CardNotIssue);
+                }
+
+                visitor = (await _visitorRepo.FindAsync(
+                    s => s.VisitorId == visitCard.VisitorId
+                )).FirstOrDefault();
+            }
+            else if (type == "CredentialCard")
+            {
+                visitor = (await _visitorRepo.FindAsync(
+                    s => s.CredentialsCard == verifiedId
+                )).FirstOrDefault();
+            }
+            else
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.TypeVerifiError);
+            }
+
+            if (visitor == null)
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisitorByCard);
+            }
+
             var visitDetails = await _visitDetailRepo.FindAsync(
-                s => s.Visitor.CredentialsCard.Equals(credentialCard)
+                s => s.VisitorId == visitor.VisitorId
                 && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
-                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+                && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date
+                && s.Status == true
+                && (s.Visit.VisitStatus == VisitStatusEnum.Active.ToString() || s.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString()),
                 int.MaxValue, 1, s => s.OrderByDescending(s => s.ExpectedStartHour), "Visit,Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
-                );
+            );
+
+            if (visitDetails == null || !visitDetails.Any())
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
+            }
+
+            var visitResult = new List<VisitDetail>();
+            foreach (var item in visitDetails)
+            {
+                if (IsValidVisit(item.Visit, date))
+                {
+                    var session =(await _visitorSessionRepo.FindAsync(
+                                    s => s.VisitDetailId == item.VisitDetailId
+                                    && s.Status == SessionStatus.CheckIn.ToString()
+                                )).FirstOrDefault();
+                    if (session != null)
+                    {
+                        return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.ValidCheckinSession);
+                    }
+                    visitResult.Add(item);
+                }
+            }
+
+            if (visitResult.Count == 0)
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundVisit);
+            }
+            var result = _mapper.Map<List<GetVisitByCredentialCardRes>>(visitResult);
+
+            return result;
+        }
+        public async Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByDayAndCardVerified(string cardVerified, DateTime date)
+        {
+            var card = (await _cardRepo.FindAsync(
+                    s => s.CardVerification == cardVerified
+                )).FirstOrDefault();
+            if (card == null)
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.NotFoundCard);
+            };
+            if (card.CardStatus == CardStatusEnum.Inactive.ToString())
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.CardInActive);
+            };
+            if (card.CardStatus == CardStatusEnum.Lost.ToString())
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.CardLost);
+            };
+            var visitCard = (await _visitCardRepo.FindAsync(
+                    s => s.CardId == card.CardId && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString()
+
+                    )).FirstOrDefault();
+            if (visitCard == null)
+            {
+                return Result.Failure<List<GetVisitByCredentialCardRes>>(Error.CardNotIssue);
+            }
+            var visitDetails = await _visitDetailRepo.FindAsync(
+               s => s.VisitorId == visitCard.VisitorId
+               && s.Visit.ExpectedStartTime.Date <= DateTime.Now.Date
+               && s.Visit.ExpectedEndTime.Date >= DateTime.Now.Date,
+               int.MaxValue, 1, s => s.OrderByDescending(s => s.ExpectedStartHour), "Visit,Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType,Visitor"
+               );
 
             if (visitDetails == null || !visitDetails.Any())
             {

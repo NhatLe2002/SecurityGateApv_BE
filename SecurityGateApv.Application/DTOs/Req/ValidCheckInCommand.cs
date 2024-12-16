@@ -9,8 +9,8 @@ namespace SecurityGateApv.Application.DTOs.Req
 {
     public class ValidCheckInCommand
     {
-        public string? CredentialCard { get; set; }
-        public string QRCardVerification { get; set; }
+        public int VisitDetailId { get; set; }
+        public string? QRCardVerification { get; set; }
         public IFormFile ImageShoe { get; set; }
 
     }

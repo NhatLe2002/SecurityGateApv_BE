@@ -10,23 +10,26 @@ namespace SecurityGateApv.Domain.Models
 {
     public class VisitCard
     {
-        private VisitCard(DateTime issueDate, DateTime expiryDate, string visitCardStatus, int visitDetailId, int cardId)
+        private VisitCard(DateTime issueDate, DateTime expiryDate, string visitCardStatus, int visitorId, int cardId)
         {
             IssueDate = issueDate;
             ExpiryDate = expiryDate;
             VisitCardStatus = visitCardStatus;
-            VisitDetailId = visitDetailId;
+            VisitorId = visitorId;
             CardId = cardId;
         }
-
+        public VisitCard()
+        {
+            
+        }
         public int VisitCardId { get; private set; }
         public DateTime IssueDate { get; private set; }
         public DateTime ExpiryDate { get; private set; }
         public string VisitCardStatus { get; private set; }
 
-        [ForeignKey("VisitDetail")]
-        public int VisitDetailId { get; private set; }
-        public VisitDetail VisitDetail { get; private set; }
+        [ForeignKey("Visitor")]
+        public int VisitorId { get; private set; }
+        public Visitor Visitor { get; private set; }
 
         [ForeignKey("Card")]
         public int CardId { get; private set; }
@@ -34,9 +37,9 @@ namespace SecurityGateApv.Domain.Models
 
 
         //create function create visit card
-        public static VisitCard Create(DateTime issueDate, DateTime expiryDate, string visitCardStatus, int visitDetailId, int cardId)
+        public static VisitCard Create(DateTime issueDate, DateTime expiryDate, string visitCardStatus, int visitorId, int cardId)
         {
-            VisitCard visitCard = new VisitCard(issueDate, expiryDate, visitCardStatus, visitDetailId, cardId);
+            VisitCard visitCard = new VisitCard(issueDate, expiryDate, visitCardStatus, visitorId, cardId);
 
             return visitCard;
         }

@@ -44,12 +44,12 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<VisitCardRes>(Error.NotFoundCard);
             }
 
-            var visitCard = VisitCard.Create(DateTime.Now, visitDetail.Visit.ExpectedEndTime, "Issue", visitDetailId, card.CardId);
+            //var visitCard = VisitCard.Create(DateTime.Now, visitDetail.Visit.ExpectedEndTime, "Issue", visitDetailId, card.CardId);
 
-            await _visitCardRepo.AddAsync(visitCard);
-            await _unitOfWork.CommitAsync();
-            var result = _mapper.Map<VisitCardRes>(visitCard);
-            return result;
+            //await _visitCardRepo.AddAsync(visitCard);
+            //await _unitOfWork.CommitAsync();
+            //var result = _mapper.Map<VisitCardRes>(visitCard);
+            return null;
         }
     }
 }

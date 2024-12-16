@@ -86,6 +86,8 @@ namespace SecurityGateApv.Domain.Models
         public ICollection<Schedule> Schedules { get; private set; } 
         public ICollection<ScheduleUser> ScheduleUserTo { get; private set; }
         //public Visitor Visitor { get; private set; }
+        public ICollection<Visitor> Visitor { get; private set; }
+
 
 
         public static Result<User> Create(int userId, string userName, string password, string fullName, string email, string phoneNumber, string? image, DateTime createdDate, DateTime updatedDate, string status, int roleId, int? departmentId)

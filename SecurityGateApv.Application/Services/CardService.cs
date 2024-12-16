@@ -165,8 +165,8 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<bool>> UpdateCardStatusLost(int visitDetailId)
         {
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => s.VisitDetailId == visitDetailId
-                               && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                               s => /*s.VisitDetailId == visitDetailId
+                               &&*/ s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                                includeProperties: "Card"
                                               )).FirstOrDefault();
             if (visitCard == null)

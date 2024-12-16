@@ -48,12 +48,12 @@ namespace SecurityGateApv.Infras.DBContext
         public DbSet<ScheduleUser> ScheduleUsers { get; set; }
 
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    var builder = new ConfigurationBuilder();
-        //    IConfigurationRoot configurationRoot = builder.Build();
-        //    optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv_BackUp_1;TrustServerCertificate=True");
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var builder = new ConfigurationBuilder();
+            IConfigurationRoot configurationRoot = builder.Build();
+            optionsBuilder.UseSqlServer("Server=nmh1223.myvnc.com;Uid=sa;Pwd=Password789;Database=SecurityGateApv_BackUp_2;TrustServerCertificate=True");
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

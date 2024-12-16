@@ -51,6 +51,7 @@ namespace SecurityGateApv.Domain.Models
 
         public ICollection<VisitDetail> VisitDetails { get; private set; }
         public ICollection<VisitorImage> VisitorImage { get; private set; } = new List<VisitorImage>();
+        public ICollection<VisitCard> VisitCard { get; private set; }
         public static Result<Visitor> Create(string visitorName, string companyName, string phoneNumber, DateTime createdDate, DateTime updatedDate, string credentialsCard, string visitorCredentialImageFront, string visitorCredentialImageBack, string visitorCredentialImageBlur, string status,
             int credentialCardTypeId, string? email, int createById)
         {
