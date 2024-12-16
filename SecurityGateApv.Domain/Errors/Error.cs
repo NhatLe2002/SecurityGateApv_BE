@@ -22,7 +22,8 @@ namespace SecurityGateApv.Domain.Errors
         public string Message { get; }
         public static implicit operator string(Error error) { return error.Code; }
         //Domain Errors
-        public static readonly Error NotFound = new("Error.Notfound", "Not found item");
+        public static readonly Error NotFound = new("Error.Notfound", "Không tìm thấy");
+        public static readonly Error NotFoundVistor = new("Error.Notfound", "Không tìm thấy khách này");
         public static readonly Error SaveToDBError = new("Error.CommitDataBase", "Save to DB error");
         #region Valid input
         public static readonly Error NullInput = new("Error.Input", "Input param can't null");
@@ -130,7 +131,7 @@ namespace SecurityGateApv.Domain.Errors
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Không tìm thấy khách này.");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
-        public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Update error");
+        public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Số thẻ này đã được sử dụng");
         #endregion
 
 

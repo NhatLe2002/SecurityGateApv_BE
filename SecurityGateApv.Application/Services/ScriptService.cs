@@ -1,5 +1,7 @@
-﻿using SecurityGateApv.Application.DTOs.Req;
+﻿using FluentValidation;
+using SecurityGateApv.Application.DTOs.Req;
 using SecurityGateApv.Application.DTOs.Req.CreateReq;
+using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Enums;
 using SecurityGateApv.Domain.Errors;
@@ -13,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SecurityGateApv.Application.Services
 {
@@ -31,11 +34,14 @@ namespace SecurityGateApv.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IScheduleService _scheduleService;
         private readonly IScheduleUserService _scheduleUserService;
+        private readonly IGateRepo _gateRepo;
+        private readonly IVisitorSessionRepo _visitorSessionRepo;
 
         public ScriptService(IJwt jwt, IScheduleRepo scheduleRepo, IUserRepo userRepo, IVisitRepo visitRepo,
             IVisitDetailRepo visitDetailRepo,IScheduleUserRepo scheduleUserRepo,
             IVisitorRepo visitorRepo,INotificationRepo notificationRepo, IUnitOfWork unitOfWork, INotifications notifications,
-            IVisitService visitService, IScheduleService scheduleService, IScheduleUserService scheduleUserService)
+            IVisitService visitService, IScheduleService scheduleService, IScheduleUserService scheduleUserService, 
+            IGateRepo gateRepo, IVisitorSessionRepo visitorSessionRepo)
         {
             _jwt = jwt;
             _scheduleRepo = scheduleRepo;
@@ -50,6 +56,8 @@ namespace SecurityGateApv.Application.Services
             _unitOfWork = unitOfWork;
             _scheduleService = scheduleService;
             _scheduleUserService = scheduleUserService;
+            _gateRepo = gateRepo;
+            _visitorSessionRepo = visitorSessionRepo;
         }
         public async Task<Result<bool>> Coflow1_1_CreateVisit(int requestOfStaff, int requestOfSecurity)
         {
@@ -281,19 +289,67 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
-        public Task<Result<bool>> Coflow3_1_Check_in(int numberOfCheckIn)
+        public async Task<Result<bool>> Coflow3_1_Check_in(int numberOfCheckIn)
         {
-            throw new NotImplementedException();
+            var visitorSessionList = new List<VisitorSession>();
+            var gate = (await _gateRepo.FindAsync(s =>  s.Status == true)).FirstOrDefault();
+            var security = (await _userRepo.FindAsync(s => s.RoleId == (int)UserRoleEnum.Security && s.Status == UserStatusEnum.Active.ToString())).FirstOrDefault();
+            var visitDetails = (await _visitDetailRepo.FindAsync(s => s.Visit.Description == "VisitMock" && s.Visit.VisitStatus == VisitStatusEnum.Active.ToString())).ToArray();
+            for (var i = 0; i < numberOfCheckIn; i++)
+            {
+                if (i > visitDetails.Count())
+                {
+                    break;
+                }
+                var visitorSession = VisitorSession.Checkin(visitDetails[i].VisitDetailId,
+                              security.UserId,
+                              gate.GateId
+                    );
+                visitorSession.Value.AddVisitorImage("CheckIn_Body", "MockImage");
+                visitorSession.Value.AddVisitorImage("CheckIn_Shoe", "MockImage");
+                visitorSessionList.Add(visitorSession.Value);
+            }
+            await _visitorSessionRepo.AddRangeAsync(visitorSessionList);
+            await _unitOfWork.CommitAsync();
+            return true;
+
         }
 
-        public Task<Result<bool>> Coflow4_1_Check_out(int checkInId)
+        public async Task<Result<bool>> Coflow4_1_Check_out(int checkInId)
         {
-            throw new NotImplementedException();
+            var gate = (await _gateRepo.FindAsync(s => s.Status == true)).FirstOrDefault();
+            var security = (await _userRepo.FindAsync(s => s.RoleId == (int)UserRoleEnum.Security && s.Status == UserStatusEnum.Active.ToString())).FirstOrDefault();
+            var visitorSessions = (await _visitorSessionRepo.FindAsync(s => s.VisitorSessionsImages.Any(t=> t.ImageType == "CheckIn_Body" && t.ImageURL == "MockImage"))).ToArray();
+            for (var i = 0; i < checkInId; i++)
+            {
+                if (i > visitorSessions.Count())
+                {
+                    break;
+                }
+                visitorSessions[i].CheckOutMock(security.UserId, gate.GateId);
+                await _visitorSessionRepo.UpdateAsync(visitorSessions[i]);
+            }
+            await _unitOfWork.CommitAsync();
+            return true;
         }
 
-        public Task<Result<bool>> Coflow4_2_Check_out_lost_card(int checkInId)
+        public async Task<Result<bool>> Coflow4_2_Check_out_lost_card(int checkInId)
         {
-            throw new NotImplementedException();
+            var gate = (await _gateRepo.FindAsync(s => s.Status == true)).FirstOrDefault();
+            var security = (await _userRepo.FindAsync(s => s.RoleId == (int)UserRoleEnum.Security && s.Status == UserStatusEnum.Active.ToString())).FirstOrDefault();
+            var visitorSessions = (await _visitorSessionRepo.FindAsync(s => s.VisitorSessionsImages.Any(t => t.ImageType == "CheckIn_Body" && t.ImageURL == "MockImage"))).ToArray();
+            for (var i = 0; i < checkInId; i++)
+            {
+                if (i > visitorSessions.Count())
+                {
+                    break;
+                }
+                visitorSessions[i].CheckOutMock(security.UserId, gate.GateId);
+                await _visitorSessionRepo.UpdateAsync(visitorSessions[i]);
+            }
+
+            await _unitOfWork.CommitAsync();
+            return true;
         }
 
         public Task<Result<bool>> Coflow4_GetListCheckIn()

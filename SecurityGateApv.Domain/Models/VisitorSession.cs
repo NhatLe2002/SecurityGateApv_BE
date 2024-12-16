@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SecurityGateApv.Domain.Shared;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Enums;
+using System.Runtime.CompilerServices;
 
 namespace SecurityGateApv.Domain.Models
 {
@@ -67,6 +68,15 @@ namespace SecurityGateApv.Domain.Models
             var visitorSession = new VisitorSession(DateTime.Now, null, visitdetailId, securityInId, null, gateInId, null, SessionStatus.CheckIn.ToString());
 
             return Result.Success(visitorSession);
+        }
+        public Result<VisitorSession> CheckOutMock( int securityOutId, int gateOutId)
+        {
+            this.SecurityOutId = securityOutId;
+            this.GateOutId = gateOutId;
+            this.Status = SessionStatus.CheckOut.ToString();
+            this.CheckoutTime = DateTime.Now;
+
+            return this;
         }
         //public static Result<VisitorSession> AddVehicleCheckin(string licensePlate, VisitorSession visitorSession)
         //{
