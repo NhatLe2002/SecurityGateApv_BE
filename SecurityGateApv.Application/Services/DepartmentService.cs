@@ -63,10 +63,6 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<GetDepartmentRes>> GetById(int departmentId)
         {
             var department = (await _departmentRepo1.FindAsync(s => s.DepartmentId == departmentId)).FirstOrDefault();
-            if(department == null)
-            {
-                return Result.Failure<GetDepartmentRes>(Error.NotFoundDepartment);
-            }
             return _mapper.Map<GetDepartmentRes>(department); 
         }
 

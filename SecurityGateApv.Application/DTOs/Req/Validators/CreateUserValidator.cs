@@ -11,7 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class CreateUserValidator: AbstractValidator<CreateUserComman>
     {
-        public CreateUserValidator(IUserRepo userRepo, IDepartmentRepo departmentRepo)
+        public CreateUserValidator(IUserRepo userRepo, IDepartmentRepo departmentRepo, IRoleRepo roleRepo)
         {
             RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("Bắt buộc nhập tên đăng nhập")
@@ -26,6 +26,10 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Bắt buộc nhập mật khẩu")
             .MinimumLength(6).WithMessage("Mật khẩu lớn hơn 6 chữ số");
+
+            RuleFor(x => x.Image).NotNull()
+            .NotEmpty().WithMessage("Bắt buộc đưa vào ảnh người dùng");
+
 
             RuleFor(x => x.FullName)
             .NotEmpty().WithMessage("Bắt buộc nhập tên")
@@ -44,7 +48,13 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 .NotNull().NotEmpty().Must(s =>
                 {
                     return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
-                }).WithMessage("Department Id is not exist");
+                }).WithMessage("Phòng ban này không tồn tại");
+
+            RuleFor(x => x.RoleID)
+            .NotNull().NotEmpty().Must(s =>
+            {
+                return roleRepo.IsAny(x => x.RoleId == s).GetAwaiter().GetResult();
+            }).WithMessage("Vai trò này không tồn tại");
         }
     }
 }
