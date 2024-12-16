@@ -486,7 +486,7 @@ namespace SecurityGateApv.Application.Services
                           includeProperties: "Card"
                         )).FirstOrDefault();
 
-            if (visitCard != null)
+            if (visitCard != null && visitCard.CardId != card.CardId)
             {
                 return Result.Failure<Card>(Error.DuplicateVisitDetail);
             }
