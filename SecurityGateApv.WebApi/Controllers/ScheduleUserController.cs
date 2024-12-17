@@ -47,7 +47,18 @@ namespace SecurityGateApv.WebApi.Controllers
             }
 
             return Ok(result.Value);
-        } 
+        }
+        [HttpGet("Staff/{staffId}")]
+        public async Task<IActionResult> GetScheduleUserByStaffId(int staffId)
+        {
+            var result = await _scheduleUserService.GetScheduleUserByStaffId(staffId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
         [HttpGet("{scheduleUserId}")]
         public async Task<IActionResult> GetScheduleUserById(int scheduleUserId)
         {
@@ -84,6 +95,16 @@ namespace SecurityGateApv.WebApi.Controllers
         public async Task<IActionResult> RejectScheduleUser(int scheduleUserId)
         {
             var result = await _scheduleUserService.RejectScheduleUser(scheduleUserId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
+        [HttpPut("Cancel/{scheduleUserId}")]
+        public async Task<IActionResult> CancelScheduleUser(int scheduleUserId)
+        {
+            var result = await _scheduleUserService.CancelScheduleUser(scheduleUserId);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);

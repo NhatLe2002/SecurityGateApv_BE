@@ -241,6 +241,34 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
+        public async Task<Result<int>> GetScheduleUserByStaffId(int staffId)
+        {
+            var scheduleUser = (await _scheduleUserRepo.FindAsync(s => s.AssignToId == staffId && s.Status == ScheduleUserStatusEnum.Assigned.ToString()));
+            return scheduleUser.Count();
+        }
 
+        public async Task<Result<bool>> CancelScheduleUser(int scheduleId)
+        {
+            var scheduleUser = await _scheduleUserRepo.GetByIdAsync(scheduleId);
+            if (scheduleUser == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundScheduleUser);
+            }
+            var visit = (await _visitRepo.FindAsync(
+                s => s.ScheduleUserId == scheduleUser.Id)).FirstOrDefault();
+            if (visit != null)
+            {
+                return Result.Failure<bool>(Error.ScheduleUserHaveVisit);
+            }
+
+            scheduleUser.UpdateStatus(ScheduleUserStatusEnum.Cancel.ToString());
+            await _scheduleUserRepo.UpdateAsync(scheduleUser);
+            var commit = await _unitOfWork.CommitAsync();
+            if (!commit)
+            {
+                return Result.Failure<bool>(Error.CommitError);
+            }
+            return true;
+        }
     }
 }

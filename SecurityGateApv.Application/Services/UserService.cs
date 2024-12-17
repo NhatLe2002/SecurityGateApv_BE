@@ -387,7 +387,7 @@ namespace SecurityGateApv.Application.Services
             }
             user.SetOTP(OTP);
             await _userRepo.UpdateAsync(user);
-            await _emailSender.SendEmailAsync(email, "OTP Reset Password", OTP);
+            await _emailSender.SendEmailAsync(email, "OTP cấp lại mật khẩu", OTP);
             var commit = await _unitOfWork.CommitAsync();
             if (!commit)
             {

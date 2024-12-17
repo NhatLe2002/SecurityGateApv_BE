@@ -152,7 +152,7 @@ namespace SecurityGateApv.Application.Services
             var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage,CreateBy")).FirstOrDefault();
             if (visitor == null)
             {
-                return Result.Failure<GetVisitorRes>(Error.NotFound);
+                return Result.Failure<GetVisitorRes>(Error.NotFoundVistor);
             }
             try
             {

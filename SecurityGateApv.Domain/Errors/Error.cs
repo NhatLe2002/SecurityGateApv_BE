@@ -63,9 +63,9 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error UpdateTimeVisitError = new("Error.UpdateTimeVisitError", "Time Error");
         public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
-        public static readonly Error DuplicateVisitorDetail = new("Error.DuplicateVisitorDetail", "Duplicate visitor");
+        public static readonly Error DuplicateVisitorDetail = new("Error.DuplicateVisitorDetail", "Khách này đã có trước đó");
         public static readonly Error VisitorIsBusy = new("Error.VisitorIsBusy", "Visitor busy at ...");
-        public static readonly Error NoValidDateForVisit = new("Error.NoValidDateForVisit", "No Date Valid for this schedule");
+        public static readonly Error NoValidDateForVisit = new("Error.NoValidDateForVisit", "Số ngày tạo của chuyến thăm không đủ(Ít nhất có 1 ngày)");
         public static readonly Error NoScheduleAssignForThisStaff = new("Error.NoScheduleAssignForThisStaff", "No Assigned Schedule for staff");
         public static readonly Error ScheduleExpireAssignForThisStaff = new("Error.ScheduleExpireAssignForThisStaff", "Nhiệm vụ này đã hết hạn");
         public static readonly Error AppendTimeInvalid = new("Error.AppendTimeInvalid", "Expect End Time must grater than Start Time");
@@ -142,6 +142,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ScheduleUpdateError = new("Error.Schedule", "Can not update schedule");
         public static readonly Error ScheduleSaveError = new("Error.Schedule", "Can not save schedule");
         public static readonly Error NotFoundSchedule = new("Error.Schedule", "Không tìm thấy lịch trình");
+        public static readonly Error CanNotUpdateSchedule = new("Error.CanNotUpdateSchedule", "Không thể cập nhật vì lịch trình này đã được tạo chuyến thăm");
         public static readonly Error ScheduleValid = new("Error.Schedule", "DaysOfProcess is not valid for the selected Visit Type.");
         public static readonly Error ScheduleCannotUpdate = new("Error.Schedule", "Can not update Schedule daily");
         public static readonly Error ScheduleCannotAssign = new("Error.ScheduleCannotAssign", "Can not Assign Schedule daily");
@@ -149,13 +150,14 @@ namespace SecurityGateApv.Domain.Errors
 
         #region ScheduleUser Error
         //ScheduleUser not found
-        public static readonly Error NotFoundScheduleUser = new("Error.ScheduleUser", "Not found this ScheduleUser");
+        public static readonly Error NotFoundScheduleUser = new("Error.ScheduleUser", "Không tìm thấy nhiệm vụ này");
         //ScheduleUser reject error
-        public static readonly Error ScheduleUserRejectError = new("Error.ScheduleUserReject", "Can not reject this ScheduleUser");
+        public static readonly Error ScheduleUserRejectError = new("Error.ScheduleUserReject", "Không thể từ chối nhiệm vụ này");
         //ScheduleUser aprove error
-        public static readonly Error ScheduleUserAproveError = new("Error.ScheduleUserAprove", "Can not aprove this ScheduleUser");
+        public static readonly Error ScheduleUserAproveError = new("Error.ScheduleUserAprove", "Không thể xác nhận nhiệm vụ này");
         //ScheduleUser does not have visit 
-        public static readonly Error ScheduleUserNotHaveVisit = new("Error.ScheduleUserNotHaveVisit", "This ScheduleUser does not have visit");
+        public static readonly Error ScheduleUserNotHaveVisit = new("Error.ScheduleUserNotHaveVisit", "Nhiệm vụ này chưa được tạo chuyến thăm");
+        public static readonly Error ScheduleUserHaveVisit = new("Error.ScheduleUserNotHaveVisit", "Nhiệm vụ này đã được tạo chuyến thăm không thể hủy");
         #endregion
 
         #region ScheduleType

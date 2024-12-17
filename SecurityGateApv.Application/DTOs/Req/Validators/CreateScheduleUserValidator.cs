@@ -40,7 +40,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;                   
-            }).WithMessage("DeadlineTime not valid");
+            }).WithMessage("Thời cho nhiệm vụ hạn phải lớn hơn 1 ngày");
             RuleFor(s => s.StartDate).NotNull().NotEmpty().Must(s =>
             {
                 if (s > DateTime.Now)
@@ -48,7 +48,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;
-            }).WithMessage("StartDate not valid");
+            }).WithMessage("Ngày bắt đầu không hợp lệ");
             RuleFor(s => s.EndDate).NotNull().NotEmpty().Must(s =>
             {
                 if (s > DateTime.Now)
@@ -56,7 +56,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;
-            }).WithMessage("StartDate not valid");
+            }).WithMessage("Ngày kết thúc không hợp lệ");
             RuleFor(s => new { s.StartDate, s.EndDate}).NotNull().NotEmpty().Must(s =>
             {
                 if (s.StartDate < s.EndDate)

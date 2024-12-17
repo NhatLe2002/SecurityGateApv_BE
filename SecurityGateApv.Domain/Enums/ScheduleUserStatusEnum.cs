@@ -14,5 +14,6 @@ namespace SecurityGateApv.Domain.Enums
         Approved,
         Rejected,
         Expired,
+        Cancel,
     }
 }
