@@ -17,7 +17,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(s => s.ExpectedEndTime).NotNull().NotEmpty();
             RuleFor(s => s.ExpectedStartTime).NotNull().NotEmpty();
             RuleFor(s => s.Description).NotNull().NotEmpty();
-            RuleFor(s => s.VisitQuantity).NotNull().NotEmpty().Must(s =>s>0).WithMessage("Must greater than zero");
+            RuleFor(s => s.VisitQuantity).NotNull().NotEmpty().Must(s =>s>0).WithMessage("Số lượng phải lớn hơn 0");
             RuleFor(s => new {s.VisitQuantity, s.VisitDetail}).NotNull().NotEmpty().Must(s =>
             {
                 if(s.VisitQuantity == s.VisitDetail.Count)
@@ -25,19 +25,19 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;
-            }).WithMessage("Quantity not match visit detail");
+            }).WithMessage("Số lượng khác với chi tiết");
             RuleFor(s => s.CreateById).NotNull().NotEmpty().Must(s =>
             {
                 return userRepo.IsAny(t=> t.UserId == s).GetAwaiter().GetResult();
-            }).WithMessage("User Id is not exist");
+            }).WithMessage("Người tạo này không tồn tại");
             RuleFor(s => s.ResponsiblePersonId).NotNull().NotEmpty().Must(s =>
             {
                 return userRepo.IsAny(t=> t.UserId == s).GetAwaiter().GetResult();
-            }).WithMessage("ResponsiblePerson Id is not exist");
+            }).WithMessage("Người chịu trách nhiệm không tồn tại");
             RuleFor(s => s.ScheduleUserId).NotNull().NotEmpty().Must(s =>
             {
                 return scheduleRepo.IsAny(t => t.Id == s).GetAwaiter().GetResult();
-            }).WithMessage("ScheduleUser Id is not exist");
+            }).WithMessage("Không tìm thấy nhiệm vụ này");
             RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
                 if (x.ExpectedEndHour < x.ExpectedStartHour)
@@ -50,7 +50,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 }
                 return true;
             }
-            ).WithMessage("Time, visitor id not valid");
+            ).WithMessage("Thời gian không hợp lệ hoặc không tìm thấy khách này trong hệ thống");
         }
 
             
@@ -63,7 +63,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(s => s.ExpectedEndTime).NotNull().NotEmpty();
             RuleFor(s => s.ExpectedStartTime).NotNull().NotEmpty();
             RuleFor(s => s.Description).NotNull().NotEmpty();
-            RuleFor(s => s.VisitQuantity).NotNull().NotEmpty().Must(s => s > 0).WithMessage("Must greater than zero");
+            RuleFor(s => s.VisitQuantity).NotNull().NotEmpty().Must(s => s > 0).WithMessage("Số lượng phải lớn hơn 0");
             RuleFor(s => new { s.VisitQuantity, s.VisitDetail }).NotNull().NotEmpty().Must(s =>
             {
                 if (s.VisitQuantity == s.VisitDetail.Count)
@@ -71,11 +71,15 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                     return true;
                 }
                 return false;
-            }).WithMessage("Quantity not match visit detail");
+            }).WithMessage("Số lượng khác với chi tiết");
             RuleFor(s => s.CreateById).NotNull().NotEmpty().Must(s =>
             {
                 return userRepo.IsAny(t => t.UserId == s).GetAwaiter().GetResult();
-            }).WithMessage("User Id is not exist");
+            }).WithMessage("Người tạo này không tồn tại");
+            RuleFor(s => s.ResponsiblePersonId).NotNull().NotEmpty().Must(s =>
+            {
+                return userRepo.IsAny(t => t.UserId == s).GetAwaiter().GetResult();
+            }).WithMessage("Người chịu trách nhiệm không tồn tại");
             RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
                 if (x.ExpectedEndHour < x.ExpectedStartHour)
@@ -88,7 +92,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 }
                 return true;
             }
-            ).WithMessage("Time, visitor id not valid");
+            ).WithMessage("Thời gian không hợp lệ hoặc không tìm thấy khách này trong hệ thống");
         }
 
 

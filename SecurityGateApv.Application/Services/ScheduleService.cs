@@ -121,6 +121,11 @@ namespace SecurityGateApv.Application.Services
 
         public async Task<Result<GetScheduleRes>> UpdateSchedule(UpdateScheduleCommand request, int scheduleId)
         {
+            var userschedule = (await _scheduleUserRepo.IsAny(s => s.ScheduleId == scheduleId && s.Status == ScheduleUserStatusEnum.Approved.ToString()));
+            if (userschedule)
+            {
+                return Result.Failure<GetScheduleRes>(Error.CanNotUpdateSchedule);
+            }
             var schedule = await _scheduleRepo.GetByIdAsync(scheduleId);
             if (schedule == null)
             {

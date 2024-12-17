@@ -5,6 +5,7 @@ using SecurityGateApv.Application.DTOs.Res;
 using SecurityGateApv.Application.Services.Interface;
 using SecurityGateApv.Domain.Errors;
 using SecurityGateApv.Domain.Shared;
+using System.ComponentModel.DataAnnotations;
 using Error = SecurityGateApv.Domain.Errors.Error;
 
 namespace SecurityGateApv.WebApi.Controllers
@@ -30,7 +31,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPost("User/OTP")]
-        public async Task<IActionResult> SendOTP(string email)
+        public async Task<IActionResult> SendOTP([Required(ErrorMessage = "Yêu cầu nhập email")]string email)
         {
             var result = await _userService.SendOTPResetPassword(email);
 
@@ -41,7 +42,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPost("User/ConfirmOTP")]
-        public async Task<IActionResult> ConfirmOTP(string email, string OTP)
+        public async Task<IActionResult> ConfirmOTP([Required(ErrorMessage = "Yêu cầu nhập email")] string email, [Required(ErrorMessage = "Yêu cầu nhập OTP")] string OTP)
         {
             var result = await _userService.ConfirmOTPResetPassword(email, OTP);
 
@@ -52,7 +53,7 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpPost("User/SetNewPassword")]
-        public async Task<IActionResult> SetNewPassword(string email, string OTP, string password)
+        public async Task<IActionResult> SetNewPassword([Required(ErrorMessage = "Yêu cầu nhập email")] string email, [Required(ErrorMessage = "Yêu cầu nhập OTP")] string OTP, [Required(ErrorMessage = "Yêu cầu nhập mật khẩu mới")] string password)
         {
             if(password.Length < 6)
             {

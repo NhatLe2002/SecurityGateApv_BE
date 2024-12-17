@@ -11,7 +11,7 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
 {
     public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
     {
-        public UpdateUserValidator(IUserRepo userRepo, IDepartmentRepo departmentRepo)
+        public UpdateUserValidator(IUserRepo userRepo, IDepartmentRepo departmentRepo, IRoleRepo roleRepo)
         {
             RuleFor(x => x.UserName)
            .NotEmpty().WithMessage("Bắt buộc nhập tên đăng nhập")
@@ -24,6 +24,8 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Bắt buộc nhập email")
                 .EmailAddress().WithMessage("Email không hợp lệ");
+            RuleFor(x => x.Image).NotNull()
+            .NotEmpty().WithMessage("Bắt buộc đưa vào ảnh người dùng");
 
             RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("Bắt buộc nhập số điện thoại")
@@ -33,7 +35,12 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 .NotNull().NotEmpty().Must(s =>
                 {
                     return departmentRepo.IsAny(x => x.DepartmentId == s).GetAwaiter().GetResult();
-                }).WithMessage("Department Id is not exist");
+                }).WithMessage("Phòng ban này không tồn tại");
+            RuleFor(x => x.RoleID)
+            .NotNull().NotEmpty().Must(s =>
+            {
+                  return roleRepo.IsAny(x => x.RoleId == s).GetAwaiter().GetResult();
+            }).WithMessage("Vai trò này không tồn tại");
         }
     }
     

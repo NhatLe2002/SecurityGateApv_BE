@@ -152,7 +152,7 @@ namespace SecurityGateApv.Application.Services
             var visitor = (await _visitorRepo.FindAsync(s => s.CredentialsCard == cardNumber , includeProperties: "CredentialCardType, VisitorImage,CreateBy")).FirstOrDefault();
             if (visitor == null)
             {
-                return Result.Failure<GetVisitorRes>(Error.NotFound);
+                return Result.Failure<GetVisitorRes>(Error.NotFoundVistor);
             }
             try
             {
@@ -202,7 +202,7 @@ namespace SecurityGateApv.Application.Services
             var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == visitorId, includeProperties: "VisitorImage")).FirstOrDefault();
             if (visitor == null)
             {
-                return Result.Failure<GetVisitorCreateRes>(Error.NotFound);
+                return Result.Failure<GetVisitorCreateRes>(Error.NotFoundVistor);
             }
            // var imageEncrypt = await CommonService.Encrypt(command.VisitorCredentialImageFromRequest);
             visitor = _mapper.Map(command, visitor);

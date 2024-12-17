@@ -119,24 +119,24 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
         [HttpGet("Coflow4_1_Check_out")]
-        public async Task<IActionResult> Coflow4_1_Check_out(int checkInId)
+        public async Task<IActionResult> Coflow4_1_Check_out(int checkOutNumber, int checkOutLostNumber)
         {
-            var result = await _scriptService.Coflow4_1_Check_out(checkInId);
+            var result = await _scriptService.Coflow4_1_Check_out(checkOutNumber);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
         }        
-        [HttpGet("Coflow4_2_Check_out_lost_card")]
-        public async Task<IActionResult> Coflow4_2_Check_out_lost_card(int checkInId)
-        {
-            var result = await _scriptService.Coflow4_2_Check_out_lost_card(checkInId);
-            if (result.IsFailure)
-            {
-                return BadRequest(result.Error);
-            }
-            return Ok(result.Value);
-        }
+        //[HttpGet("Coflow4_2_Check_out_lost_card")]
+        //public async Task<IActionResult> Coflow4_2_Check_out_lost_card(int checkInId)
+        //{
+        //    var result = await _scriptService.Coflow4_2_Check_out_lost_card(checkInId);
+        //    if (result.IsFailure)
+        //    {
+        //        return BadRequest(result.Error);
+        //    }
+        //    return Ok(result.Value);
+        //}
     }
 }

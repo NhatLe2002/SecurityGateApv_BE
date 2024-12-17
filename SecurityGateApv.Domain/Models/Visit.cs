@@ -76,7 +76,7 @@ namespace SecurityGateApv.Domain.Models
         }
 
         public async Task<Result<Visit>> AddVisitDetailOfOldVisitor(IEnumerable<VisitDetail> visitSchedule,ScheduleUser? scheduleUser, Schedule schedule, TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
-            , int visitorId)
+            , int visitorId, string visitorName)
         {
             if (VisitDetail.Any(s => s.VisitorId == visitorId))
             {
@@ -145,7 +145,7 @@ namespace SecurityGateApv.Domain.Models
             }
             if (error.Distinct().Count() > 0)
             {
-                return Result.Failure<Visit>(new Error("CreateVisit", "Khách " + visitorId + " bận ở cuộc Hẹn/Ngày: " + string.Join(", ", error)));
+                return Result.Failure<Visit>(new Error("CreateVisit", "Khách " + visitorName + " bận ở cuộc Hẹn/Ngày: " + string.Join(", ", error.Values)));
             }
             VisitDetail.Add(visitDetailAdd);
             return this;
