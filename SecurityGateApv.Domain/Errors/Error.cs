@@ -73,7 +73,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error VisitDailyRegisCardError = new("Error.VisitDailyRegisCardError", "Chuyến thăm trong ngày không dùng loại thẻ cho lịch trình.");
         public static readonly Error VisitScheduleRegisCardError = new("Error.VisitScheduleRegisCardError", "Chuyến thăm lịch trình không dùng loại thẻ trong ngày.");
         //Not found visit by credential card
-        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
+        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy chuyến thăm của thẻ CCCD đã quét.");
         //public static readonly Error VisitCancel = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
         #endregion
 

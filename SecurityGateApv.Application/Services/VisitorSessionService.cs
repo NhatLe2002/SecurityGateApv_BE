@@ -476,9 +476,13 @@ namespace SecurityGateApv.Application.Services
             bool isVisitDaily = scheduleUser == null ? true : false;
             bool isProcessMonthOrWeek = scheduleUser != null ? true : false;
 
-            if ((isShortTermCard && !isVisitDaily) || (isLongTermCard && !isProcessMonthOrWeek))
+            if (isShortTermCard && !isVisitDaily)
             {
                 return Result.Failure<Card>(Error.VisitDailyRegisCardError);
+            } 
+            if (isLongTermCard && !isProcessMonthOrWeek)
+            {
+                return Result.Failure<Card>(Error.VisitScheduleRegisCardError);
             }
             var visitCard =  (await _visitCardRepo.FindAsync(
                           s => s.VisitorId == visitDetail.Visitor.VisitorId
