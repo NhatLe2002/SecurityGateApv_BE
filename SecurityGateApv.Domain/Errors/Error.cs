@@ -45,11 +45,11 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error CanNotUpdateUserName = new("Error.CanNotUpdateUserName", "Username can not change");
         public static readonly Error NotFoundDepartmentManagerById = new("Error.NotfoundDepartmentManager", "Not found departmentManager by id");
         public static readonly Error IncorrectPassword = new("Error.LoginError", "Tài khoản hoặc mật khẩu không chính xác xin vui lòng thử lại");
-        public static readonly Error NotPermission = new("Error.User.NotPermission", "Permission not allow");
+        public static readonly Error NotPermission = new("Error.User.NotPermission", "Bạn không có quyền thực hiện hành động này");
         //user canot update departement
         public static readonly Error CanNotUpdateDepartment = new("Error.CanNotUpdateDepartment", "Department can not change for account admin, manager, security");
         //user role does not match department
-        public static readonly Error UserRoleNotMatchDepartment = new("Error.UserRoleNotMatchDepartment", "User role does not match department");
+        public static readonly Error UserRoleNotMatchDepartment = new("Error.UserRoleNotMatchDepartment", "Bạn không có quyền thực hiện hành động này");
         public static readonly Error EmailResetPasswordNotValid = new("Error.EmailResetPasswordNotValid", "Email chưa được đăng kí trong hệ thống");
         public static readonly Error OTPNotEqual = new("Error.OTPNotEqual", "OTP Không chính xác hoặc hết hạn");
         public static readonly Error OTPExpired = new("Error.OTPExpired", "OTP Không chính xác hoặc hết hạn");
