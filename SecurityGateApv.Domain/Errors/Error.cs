@@ -108,7 +108,7 @@ namespace SecurityGateApv.Domain.Errors
         // Card expried 
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         // This type of card cannot be used for this visit
-        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kích hoạt");
+        public static readonly Error CardNotIssue = new("Error.CardNotIssue", "Thẻ này chưa được kích hoạt");
         public static readonly Error TypeVerifiError = new("Error.TypeVerifiError", "Cần input đúng loại thẻ (QRCardVerified) hoặc (CredentialCard)");
 
         #endregion
