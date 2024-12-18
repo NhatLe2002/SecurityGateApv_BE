@@ -74,7 +74,7 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<GetCardRes>(Error.NotFoundCardType);
             }
             //var qrCard = QRCard.Create(1, 2, cardGuid, );
-            var cardGenerate = await _qrRCardRepo.GenerateQRCard(command.CardVerified, command.ImageLoGo, cardType.CardTypeName);
+            var cardGenerate = await _qrRCardRepo.GenerateQRCard(command.CardVerified,  cardType.CardTypeName);
             var qrCoder = _mapper.Map<GetCardRes>(cardGenerate);
             return qrCoder;
         }
@@ -154,7 +154,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<bool>(Error.NotFoundCardType);
             }
-            var qrCoder = _qrRCardRepo.GenerateQRCard(command.CardVerified, command.ImageLoGo, cardType.CardTypeName).Result;
+            var qrCoder = _qrRCardRepo.GenerateQRCard(command.CardVerified, cardType.CardTypeName).Result;
 
             var qrCard = Card.Create(command.CardTypeId, command.CardVerified, qrCoder.CardImage);
             await _qrRCardRepo.AddAsync(qrCard);
