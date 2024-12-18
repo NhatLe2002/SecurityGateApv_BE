@@ -910,8 +910,8 @@ namespace SecurityGateApv.Application.Services
             //    )).FirstOrDefault();
 
             var visitCard = (await _visitCardRepo.FindAsync(
-                    s => /*s.VisitDetailId == visitSession.VisitDetailId
-                    &&*/ s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                    s => s.VisitorId == visitSession.VisitDetail.VisitDetailId
+                    && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                     includeProperties: "Card"
                 )).FirstOrDefault();
 
@@ -953,7 +953,7 @@ namespace SecurityGateApv.Application.Services
 
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
-                    s => /*s.VisitDetailId == visitCard.VisitDetailId &&*/ s.Status == SessionStatus.CheckIn.ToString(),
+                    s => s.VisitDetail.VisitorId == visitCard.VisitorId && s.Status == SessionStatus.CheckIn.ToString(),
                     1, 1,
                 includeProperties: "VisitDetail.Visitor, VisitDetail.Visit,VehicleSession"
                 )).FirstOrDefault();
@@ -1119,8 +1119,8 @@ namespace SecurityGateApv.Application.Services
 
             // Đoạn này thực hiện chức năng khác rồi, cần xóa sau này
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => /*s.VisitDetailId == visitSession.VisitDetailId
-                               &&*/ s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                               s => s.VisitorId == visitSession.VisitDetail.VisitorId
+                               && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                                includeProperties: "Card"
                                               )).FirstOrDefault();
             if (visitCard == null)
