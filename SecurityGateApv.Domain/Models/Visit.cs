@@ -110,7 +110,22 @@ namespace SecurityGateApv.Domain.Models
                 {
                     foreach (var day in check)
                     {
-                        if (day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut)
+                        if ((day.TimeIn <= dateOfBusy.TimeIn && day.TimeOut >= dateOfBusy.TimeOut))
+                        {
+                            error.TryGetValue((int)day.VisitId, out string date);
+                            if (date != null)
+                            {
+                                date += $", {day.VisitDate.ToShortDateString()}";
+                                error.Remove((int)day.VisitId);
+                                error.Add((int)day.VisitId, date);
+                            }
+                            else
+                            {
+                                error.Add((int)day.VisitId, day.VisitDate.ToShortDateString());
+                            }
+                            continue;
+                        }
+                        if ((day.TimeIn >= dateOfBusy.TimeIn && day.TimeIn < dateOfBusy.TimeOut))
                         {
                             error.TryGetValue((int)day.VisitId, out string date);
                             if (date != null)
