@@ -1076,6 +1076,10 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
             }
+            if (visit.VisitStatus != VisitStatusEnum.Violation.ToString())
+            {
+                return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
+            }
             visit.ActiveVisit();
             await _visitRepo.UpdateAsync(visit);
             var commit = await (_unitOfWork.CommitAsync());
