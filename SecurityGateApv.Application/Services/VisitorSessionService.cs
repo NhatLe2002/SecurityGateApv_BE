@@ -846,8 +846,8 @@ namespace SecurityGateApv.Application.Services
 
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
-                  s => /*s.VisitDetailId == visitCard.VisitDetailId
-                  &&*/ s.Status == SessionStatus.CheckIn.ToString(),
+                  s => s.VisitDetail.VisitorId == visitCard.VisitorId
+                  && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
                     includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit,VehicleSession.Images"
                 )).FirstOrDefault();
