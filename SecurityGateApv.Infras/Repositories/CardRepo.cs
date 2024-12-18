@@ -33,10 +33,19 @@ namespace SecurityGateApv.Infras.Repositories
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             // Navigate up the directory tree to the source code directory
-            string sourceDirectory = Directory.GetParent(baseDirectory).Parent.Parent.Parent.Parent.FullName;
+            DirectoryInfo directoryInfo = new DirectoryInfo(baseDirectory);
+            for (int i = 0; i < 5; i++)
+            {
+                if (directoryInfo.Parent == null)
+                {
+                    throw new InvalidOperationException("Unable to navigate to the source directory.");
+                }
+                directoryInfo = directoryInfo.Parent;
+            }
+            string sourceDirectory = directoryInfo.FullName;
 
             // Construct the path to the logo file
-            string logoFilePath = System.IO.Path.Combine(sourceDirectory, "SecurityGateApv.Infras", "Data", "Image", "Secure-Web-Gateway-01-1024x844.png");
+            string logoFilePath = System.IO.Path.Combine(sourceDirectory, "SecurityGateApv_BE", "SecurityGateApv.Infras", "Data", "Image", "Secure-Web-Gateway-01-1024x844.png");
 
             // Generate QR code
             var qrCodeGenerator = new QRCodeGenerator();
@@ -99,7 +108,7 @@ namespace SecurityGateApv.Infras.Repositories
                     // Convert the card image to a base64 string
                     using (var ms = new MemoryStream())
                     {
-                        cardImage.Save(ms, new PngEncoder());
+                        await cardImage.SaveAsync(ms, new PngEncoder());
                         var cardImageBase64 = Convert.ToBase64String(ms.ToArray());
 
                         // Create the Card object
