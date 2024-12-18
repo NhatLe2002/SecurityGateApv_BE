@@ -78,7 +78,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<VisitCreateCommand>(Error.NoScheduleAssignForThisStaff);
             }
-            if (scheduleAssign.DeadlineTime < DateTime.Now)
+            if (scheduleAssign.DeadlineTime.Date < DateTime.Now.Date)
             {
                 return Result.Failure<VisitCreateCommand>(Error.ScheduleExpireAssignForThisStaff);
             }
@@ -1039,7 +1039,7 @@ namespace SecurityGateApv.Application.Services
             }
             foreach (var secu in security)
             {
-                await _notifications.SendMessageAssignForStaff("Thông báo cho tất cả bảo vê về chuyến thăm vi phạm", $"Chuyến thăm bị vi phạm, tên chuyến thăm: {visit.VisitName} - ngày: {visit.ExpectedStartTime}", secu.UserId, 1);
+                await _notifications.SendMessageAssignForStaff("Thông báo cho tất cả bảo về về chuyến thăm vi phạm", $"Chuyến thăm bị vi phạm, tên chuyến thăm: {visit.VisitName} - ngày: {visit.ExpectedStartTime}", secu.UserId, 1);
             }
             return _mapper.Map<GetVisitNoDetailRes>(visit);
         }
