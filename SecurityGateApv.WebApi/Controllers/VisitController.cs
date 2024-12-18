@@ -268,10 +268,22 @@ namespace SecurityGateApv.WebApi.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("CurrentDate/CredentialCard/{credentialCard}")]
-        public async Task<ActionResult> GetVisitByCurrentDateAndCredentialCard(string credentialCard, [FromQuery] DateTime date)
+        [HttpGet("Day/VerifiedId/{verifiedId}")]
+        public async Task<ActionResult> GetVisitByCurrentDateAndCredentialCard(string verifiedType, string verifiedId, [FromQuery] DateTime date)
         {
-            var result = await _visitService.GetVisitByCurrentDateAndCredentialCard(credentialCard, date);
+            var result = await _visitService.GetVisitByCurrentDateAndCredentialCard(verifiedType, verifiedId, date);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+        [HttpGet("Day/CardVerified/{cardVerified}")]
+        public async Task<ActionResult> GetVisitByDayAndCardVerified(string cardVerified, [FromQuery] DateTime date)
+        {
+            var result = await _visitService.GetVisitByDayAndCardVerified(cardVerified, date);
 
             if (result.IsFailure)
             {

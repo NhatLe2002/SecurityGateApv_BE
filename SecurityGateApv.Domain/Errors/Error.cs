@@ -70,8 +70,11 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ScheduleExpireAssignForThisStaff = new("Error.ScheduleExpireAssignForThisStaff", "Nhiệm vụ này đã hết hạn");
         public static readonly Error AppendTimeInvalid = new("Error.AppendTimeInvalid", "Expect End Time must grater than Start Time");
         public static readonly Error VisitCancel = new("Error.VisitCancel", "Chuyến thăm đã bị hủy");
+        public static readonly Error VisitNotRegisCard = new("Error.VisitNotRegisCard", "Chuyến thăm chưa được đăng ký thẻ.");
+        public static readonly Error VisitDailyRegisCardError = new("Error.VisitDailyRegisCardError", "Chuyến thăm trong ngày không dùng loại thẻ cho lịch trình.");
+        public static readonly Error VisitScheduleRegisCardError = new("Error.VisitScheduleRegisCardError", "Chuyến thăm lịch trình không dùng loại thẻ trong ngày.");
         //Not found visit by credential card
-        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
+        public static readonly Error NotFoundVisitByCredentialCard = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy chuyến thăm của thẻ CCCD đã quét.");
         //public static readonly Error VisitCancel = new("Error.NotFoundVisitByCredentialCard", "Không tìm thấy lịch thăm của thẻ CCCD đã quét.");
         #endregion
 
@@ -91,6 +94,7 @@ namespace SecurityGateApv.Domain.Errors
         //DuplicateQRCard
         public static readonly Error DuplicateCard = new("Error.DuplicateCard", "Card đang được sử dụng cho 1 lịch hẹn, không sử dụng card cho 2 lịch hẹn.");
         public static readonly Error DuplicateVisitDetail = new("Error.DuplicateCard", "Lịch hẹn này đã được tạo card, không thể tạo 2 thẻ cho 1 lịch hẹn.");
+        public static readonly Error CardSortTermError = new("Error.CardSortTermError", "");
         #endregion
 
         #region CardType
@@ -105,6 +109,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         // This type of card cannot be used for this visit
         public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kích hoạt");
+        public static readonly Error TypeVerifiError = new("Error.TypeVerifiError", "Cần input đúng loại thẻ (QRCardVerified) hoặc (CredentialCard)");
 
         #endregion
 
@@ -116,6 +121,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error FailCreateSession = new("Error.CanNotCreate", "Create session checkin fail");
         public static readonly Error ValidSession = new("Error.ValidSession", "Bạn đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
+        public static readonly Error ValidCheckinSession = new("Error.ValidCheckinSession", "Khách này đã check-in, không thể check-in 2 lần liên tiếp.");
         public static readonly Error CheckoutNotvalidWithVisitActiveTemporary = new("Error.CheckoutNotvalidWithVisitActiveTemporary", "Khách thăm này chưa được nhân viên duyệt, cần duyệt chuyến thăm của khách này trước khi thực hiện CheckOut.");
         #endregion
 
@@ -130,6 +136,7 @@ namespace SecurityGateApv.Domain.Errors
         #region Visitor
         //Visitor eror
         public static readonly Error NotFoundVisitor = new("Error.NotfoundVisitor", "Không tìm thấy khách này.");
+        public static readonly Error NotFoundVisitorByCard = new("Error.NotfoundVisitor", "Khách này chưa được đăng ký trong hệ thống.");
         public static readonly Error CreateVisitor = new("Error.CreateVisitor", "Create error");
         public static readonly Error DuplicateCardNumber = new("Error.DuplicateCardNumber", "Số thẻ này đã được sử dụng");
         #endregion

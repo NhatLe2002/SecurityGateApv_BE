@@ -42,32 +42,32 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost("CheckIn")]
         public async Task<ActionResult> CheckIn([FromForm] VisitSessionCheckInCommand command)
         {
-            if (!string.IsNullOrEmpty(command.CredentialCard))
-            {
-                var result = await _visitorSessionService.CheckInWithCredentialCard(command);
+            var result = await _visitorSessionService.CheckInWithCredentialCard(command);
 
-                if (result.IsFailure)
-                {
-                    return BadRequest(result.Error);
-                }
-                return Ok(result.Value);
-            }
-            else
+            if (result.IsFailure)
             {
-                var result = await _visitorSessionService.CheckInWithoutCredentialCard(command);
-                if (result.IsSuccess)
-                {
-                    return Ok(result.Value);
-                }
                 return BadRequest(result.Error);
             }
+            return Ok(result.Value);
+            //if (!string.IsNullOrEmpty(command.CredentialCard))
+            //{
+            //}
+            //else
+            //{
+            //    var result = await _visitorSessionService.CheckInWithoutCredentialCard(command);
+            //    if (result.IsSuccess)
+            //    {
+            //        return Ok(result.Value);
+            //    }
+            //    return BadRequest(result.Error);
+            //}
         }
         [HttpPost("ValidCheckIn")]
         public async Task<ActionResult> ValidCheckIn([FromForm] ValidCheckInCommand command)
         {
-            if (!string.IsNullOrEmpty(command.CredentialCard))
+            if (!string.IsNullOrEmpty(command.QRCardVerification))
             {
-                var result = await _visitorSessionService.ValidCheckWithCredentialCardIn(command);
+                var result = await _visitorSessionService.ValidCheckWithQRCardVerification(command);
 
                 if (result.IsFailure)
                 {
@@ -77,7 +77,7 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             else
             {
-                var result = await _visitorSessionService.ValidCheckWithoutCredentialCardIn(command);
+                var result = await _visitorSessionService.ValidCheckWithoutQRCardVerification(command);
                 if (result.IsSuccess)
                 {
                     return Ok(result.Value);

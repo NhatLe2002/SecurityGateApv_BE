@@ -41,7 +41,7 @@ namespace SecurityGateApv.Domain.Models
         public Visitor Visitor { get; private set; }
 
         public ICollection<VisitorSession> VisitorSession { get; private set; }
-        public ICollection<VisitCard> VisitCard { get; private set; }
+        //public ICollection<VisitCard> VisitCard { get; private set; }
         //create function create visit detail
         public static VisitDetail Create(TimeSpan expectedStartHour, TimeSpan expectedEndHour, bool status
             , Visit visit, int visitorId)

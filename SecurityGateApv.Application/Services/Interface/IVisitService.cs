@@ -33,7 +33,8 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<GetVisitRes>> GetVisitByScheduleUserId(int scheduleUserId);
         public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatus(string token, string status, int pageNumber, int pageSize);
         //public Task<Result<IEnumerable<GetVisitRes>>> GetVisitDetailByStatusOfStaff(string status, int pageNumber, int pageSize);
-        public Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string credentialCard, DateTime date);
+        public Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByCurrentDateAndCredentialCard(string verifiedType, string credentialCard, DateTime date);
+        public Task<Result<List<GetVisitByCredentialCardRes>>> GetVisitByDayAndCardVerified(string cardVerified, DateTime date);
         public Task<Result<VisitCreateCommand>> CreateVisit(VisitCreateCommand command, string token);
         public Task<Result<VisitCreateCommandDaily>> CreateVisitDaily(VisitCreateCommandDaily command, string token);
         //public Task<Result<VisitCreateCommand>> UpdateVisit(int visitId, VisitCreateCommand command);
