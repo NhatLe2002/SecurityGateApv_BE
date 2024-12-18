@@ -1072,11 +1072,7 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotFoundVisit);
             }
-            if (visit.VisitStatus != VisitStatusEnum.ActiveTemporary.ToString())
-            {
-                return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
-            }
-            if (visit.VisitStatus != VisitStatusEnum.Violation.ToString())
+            if (visit.VisitStatus != VisitStatusEnum.ActiveTemporary.ToString() && visit.VisitStatus != VisitStatusEnum.Violation.ToString())
             {
                 return Result.Failure<GetVisitNoDetailRes>(Error.NotPermission);
             }
