@@ -309,10 +309,10 @@ namespace SecurityGateApv.Application.Services
                 s => s.ScheduleUserId == scheduleUserId, 1, 1, includeProperties: "VisitDetail.Visitor,CreateBy"
                 )).FirstOrDefault();
 
-            if (visit == null)
-            {
-                return Result.Failure<GetVisitRes>(Error.NotFoundVisit);
-            }
+            //if (visit == null)
+            //{
+            //    return Result.Failure<GetVisitRes>(Error.NotFoundVisit);
+            //}
             var visitRes = _mapper.Map<GetVisitRes>(visit);
             return Result.Success(visitRes);
         }
@@ -332,6 +332,11 @@ namespace SecurityGateApv.Application.Services
                 visitRes.VisitorSessionCount = visits.VisitDetail
                     .Where(detail => detail.VisitorSession != null)
                     .Sum(detail => detail.VisitorSession.Count);
+            }
+            foreach(var visit in visitRes.VisitDetail)
+            {
+                visit.VisitorSessionCurrentDay = visits.VisitDetail.Where(s => s.VisitDetailId == visit.VisitDetailId && s.VisitorSession != null).FirstOrDefault()
+                    .VisitorSession.Count(t => t.CheckinTime.Date == DateTime.Now.Date);
             }
             return visitRes;
         }
@@ -356,7 +361,7 @@ namespace SecurityGateApv.Application.Services
                 visits = (await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
-                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())) || s.VisitStatus.Equals(VisitStatusEnum.Violation.ToString()),
                     pageSize, pageNumber,
                     s => s.OrderByDescending(x => x.CreateTime),
                     includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
@@ -369,7 +374,7 @@ namespace SecurityGateApv.Application.Services
                     s => s.ResponsiblePersonId == userAuthen.UserId
                     && s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
-                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.Violation.ToString())),
                     pageSize, pageNumber,
                     s => s.OrderByDescending(x => x.CreateTime),
                     includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
