@@ -26,11 +26,11 @@ namespace SecurityGateApv.Infras.BackgroundWorker
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var now = DateTime.Now;
-            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 21, 00, 0); 
+            var scheduledTime = new DateTime(now.Year, now.Month, now.Day, 21, 00, 0);
 
             if (now > scheduledTime)
             {
-                scheduledTime = scheduledTime.AddDays(1); 
+                scheduledTime = scheduledTime.AddDays(1);
             }
 
             var initialDelay = scheduledTime - now;
@@ -38,6 +38,21 @@ namespace SecurityGateApv.Infras.BackgroundWorker
 
             return Task.CompletedTask;
         }
+        //protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        //{
+        //    var now = DateTime.Now;
+        //    var scheduledTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0).AddMinutes(10 - (now.Minute % 10));
+
+        //    if (now > scheduledTime)
+        //    {
+        //        scheduledTime = scheduledTime.AddMinutes(10);
+        //    }
+
+        //    var initialDelay = scheduledTime - now;
+        //    _timer = new Timer(async _ => await UpdateVisitStatusesAsync(), null, initialDelay, TimeSpan.FromMinutes(10));
+
+        //    return Task.CompletedTask;
+        //}
 
         private async Task UpdateVisitStatusesAsync()
         {

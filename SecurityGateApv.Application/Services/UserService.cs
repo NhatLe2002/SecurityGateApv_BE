@@ -148,7 +148,7 @@ namespace SecurityGateApv.Application.Services
         public async Task<Result<LoginRes>> Login(LoginModel loginModel)
         {
             var users = await _userRepo.FindAsync(
-                             s => EF.Functions.Collate(s.UserName, "Latin1_General_CS_AS") == loginModel.Username &&
+                             s => s.UserName == loginModel.Username &&
                                   s.Status == UserStatusEnum.Active.ToString(),
                              includeProperties: "Role,Department"
                          );

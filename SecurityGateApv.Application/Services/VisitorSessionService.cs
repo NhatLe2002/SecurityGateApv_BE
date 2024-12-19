@@ -681,7 +681,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor,VehicleSession.Images"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
@@ -690,7 +690,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor,VehicleSession.Images"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Staff.ToString())
@@ -699,8 +699,9 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor,VehicleSession.Images"
                      )).ToList();
+                //visitSession.FirstOrDefault().VehicleSession.Images
             }
 
             if (visitSession.Count() == 0)
@@ -846,8 +847,8 @@ namespace SecurityGateApv.Application.Services
 
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
-                  s => /*s.VisitDetailId == visitCard.VisitDetailId
-                  &&*/ s.Status == SessionStatus.CheckIn.ToString(),
+                  s => s.VisitDetail.VisitorId == visitCard.VisitorId
+                  && s.Status == SessionStatus.CheckIn.ToString(),
                   int.MaxValue, 1,
                     includeProperties: "SecurityIn,GateIn,VisitDetail.Visitor.VisitorImage,VisitorSessionsImages,VisitDetail.Visit,VehicleSession.Images"
                 )).FirstOrDefault();
@@ -910,8 +911,8 @@ namespace SecurityGateApv.Application.Services
             //    )).FirstOrDefault();
 
             var visitCard = (await _visitCardRepo.FindAsync(
-                    s => /*s.VisitDetailId == visitSession.VisitDetailId
-                    &&*/ s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                    s => s.VisitorId == visitSession.VisitDetail.VisitorId
+                    && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                     includeProperties: "Card"
                 )).FirstOrDefault();
 
@@ -953,7 +954,7 @@ namespace SecurityGateApv.Application.Services
 
 
             var visitSession = (await _visitorSessionRepo.FindAsync(
-                    s => /*s.VisitDetailId == visitCard.VisitDetailId &&*/ s.Status == SessionStatus.CheckIn.ToString(),
+                    s => s.VisitDetail.VisitorId == visitCard.VisitorId && s.Status == SessionStatus.CheckIn.ToString(),
                     1, 1,
                 includeProperties: "VisitDetail.Visitor, VisitDetail.Visit,VehicleSession"
                 )).FirstOrDefault();
@@ -1119,8 +1120,8 @@ namespace SecurityGateApv.Application.Services
 
             // Đoạn này thực hiện chức năng khác rồi, cần xóa sau này
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => /*s.VisitDetailId == visitSession.VisitDetailId
-                               &&*/ s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                               s => s.VisitorId == visitSession.VisitDetail.VisitorId
+                               && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                                includeProperties: "Card"
                                               )).FirstOrDefault();
             if (visitCard == null)

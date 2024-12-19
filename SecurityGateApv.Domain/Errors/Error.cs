@@ -59,9 +59,9 @@ namespace SecurityGateApv.Domain.Errors
 
         #region Visit
         //Visit error
-        public static readonly Error NotFoundVisit = new("Error.Visit", "Không tìm thấy lịch hẹn");
+        public static readonly Error NotFoundVisit = new("fError.NotFoundVisit", "Không tìm thấy lịch hẹn");
         public static readonly Error UpdateTimeVisitError = new("Error.UpdateTimeVisitError", "Time Error");
-        public static readonly Error NotFoundVisitCurrentDate = new("Error.Visit", "There is no one visit in current day");
+        public static readonly Error NotFoundVisitCurrentDate = new("Error.NotFoundVisitCurrentDate", "There is no one visit in current day");
         public static readonly Error NotRoleNotPermission = new("Error.NotfoundVisit", "Not found this visit");
         public static readonly Error DuplicateVisitorDetail = new("Error.DuplicateVisitorDetail", "Khách này đã có trước đó");
         public static readonly Error VisitorIsBusy = new("Error.VisitorIsBusy", "Visitor busy at ...");
@@ -108,7 +108,7 @@ namespace SecurityGateApv.Domain.Errors
         // Card expried 
         public static readonly Error CardExpried = new("Error.CardExpried", "Card is expried");
         // This type of card cannot be used for this visit
-        public static readonly Error CardNotIssue = new("Error.NotFoundVisitSesson", "Thẻ này chưa được kích hoạt");
+        public static readonly Error CardNotIssue = new("Error.CardNotIssue", "Thẻ này chưa được kích hoạt");
         public static readonly Error TypeVerifiError = new("Error.TypeVerifiError", "Cần input đúng loại thẻ (QRCardVerified) hoặc (CredentialCard)");
 
         #endregion

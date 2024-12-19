@@ -82,9 +82,9 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitorNoSessionCount { get; set; }
         public int VisitorCheckkInCount { get; set; }
         public int VisitorCheckkOutCount { get; set; }
-        public int VisitorSessionCheckedOutCount { get; set; }
-        public int VisitorSessionCheckedInCount { get; set; }
-        public int VisitorCheckOutedCount { get; set; }
+        //public int VisitorSessionCheckedOutCount { get; set; }
+        //public int VisitorSessionCheckedInCount { get; set; }
+        //public int VisitorCheckOutedCount { get; set; }
         public TimeSpan? VisitDetailStartTime { get; set; }
         public TimeSpan? VisitDetailEndTime { get; set; }
         public string VisitStatus { get; set; }
