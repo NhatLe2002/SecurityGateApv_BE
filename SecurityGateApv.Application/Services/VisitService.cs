@@ -401,15 +401,15 @@ namespace SecurityGateApv.Application.Services
                 var visitEntity = visitResult.FirstOrDefault(v => v.VisitId == visit.VisitId);
                 if (visitEntity != null && visitEntity.VisitDetail != null)
                 {
-                    visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckOut.ToString()));
-                    visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
-                    visit.VisitorCheckOutedCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Count();
+                    //visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                    //    .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckOut.ToString()));
+                    //visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                    //    .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
+                    //visit.VisitorCheckOutedCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                    //    .Count();
 
                     visit.VisitDetailStartTime = visitEntity.VisitDetail
                         .Min(detail => (TimeSpan?)detail.ExpectedStartHour);
@@ -417,17 +417,24 @@ namespace SecurityGateApv.Application.Services
                     visit.VisitDetailEndTime = visitEntity.VisitDetail
                         .Max(detail => (TimeSpan?)detail.ExpectedEndHour);
 
-                    visit.VisitorNoSessionCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count == 0)
-                        .Count();
+                    //visit.VisitorNoSessionCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession == null)
+                    //    .Count();
                     visit.VisitorCheckkInCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
                     visit.VisitorCheckkOutCount += visitEntity.VisitDetail
-                        .SelectMany(detail => detail.VisitorSession)
-                        .Where(session => session.Status == SessionStatus.CheckOut.ToString())
-                        .OrderByDescending(session => session.CheckoutTime)
-                        .FirstOrDefault() != null ? 1 : 0;
+                        .Where(detail => detail.VisitorSession.Count != 0 
+                        && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date && session.Status == SessionStatus.CheckOut.ToString())
+                        && !detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date && session.Status == SessionStatus.CheckIn.ToString()))
+                        .FirstOrDefault() == null ? 0 : 1 ;
+
+                    visit.VisitorNoSessionCount = visit.VisitQuantity - visit.VisitorCheckkOutCount - visit.VisitorCheckkInCount;
+                    //+= visitEntity.VisitDetail
+                    //.SelectMany(detail => detail.VisitorSession)
+                    //.Where(session => session.Status == SessionStatus.CheckOut.ToString())
+                    //.OrderByDescending(session => session.CheckoutTime)
+                    //.FirstOrDefault() != null ? 1 : 0;
                 }
             }
             return result;
@@ -1132,32 +1139,31 @@ namespace SecurityGateApv.Application.Services
                 var visitEntity = visitResult.FirstOrDefault(v => v.VisitId == visit.VisitId);
                 if (visitEntity != null && visitEntity.VisitDetail != null)
                 {
-                    visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckOut.ToString()));
-                    visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
-                    visit.VisitorCheckOutedCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
-                        .Count();
+                    //visit.VisitorSessionCheckedOutCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                    //    .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckOut.ToString()));
+                    //visit.VisitorSessionCheckedInCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                    //    .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
+                    //visit.VisitorCheckOutedCount = visitEntity.VisitDetail
+                    //    .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                    //    .Count();
                     visit.VisitDetailStartTime = visitEntity.VisitDetail
                         .Min(detail => (TimeSpan?)detail.ExpectedStartHour);
 
                     visit.VisitDetailEndTime = visitEntity.VisitDetail
                         .Max(detail => (TimeSpan?)detail.ExpectedEndHour);
 
-                    visit.VisitorNoSessionCount = visitEntity.VisitDetail
-                        .Where(detail => detail.VisitorSession.Count == 0)
-                        .Count();
                     visit.VisitorCheckkInCount = visitEntity.VisitDetail
                         .Where(detail => detail.VisitorSession.Count != 0 && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
                         .Sum(detail => detail.VisitorSession.Count(session => session.Status == SessionStatus.CheckIn.ToString()));
                     visit.VisitorCheckkOutCount += visitEntity.VisitDetail
-                        .SelectMany(detail => detail.VisitorSession)
-                        .Where(session => session.Status == SessionStatus.CheckOut.ToString())
-                        .OrderByDescending(session => session.CheckoutTime)
-                        .FirstOrDefault() != null ? 1 : 0;
+                        .Where(detail => detail.VisitorSession.Count != 0
+                        && detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date && session.Status == SessionStatus.CheckOut.ToString())
+                        && !detail.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date && session.Status == SessionStatus.CheckIn.ToString()))
+                        .FirstOrDefault() == null ? 0 : 1;
+
+                    visit.VisitorNoSessionCount = visit.VisitQuantity - visit.VisitorCheckkOutCount - visit.VisitorCheckkInCount;
                 }
             }
             return result;

@@ -15,6 +15,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitDetailId { get; set; }
         public GraphQlGetVisitRes Visit { get; set; }
         public GraphQlVisitorRes Visitor { get; set; }
+        public VehicleSessionRes? VehicleSession { get; set; }
         public SecurityRes SecurityIn { get; set; }
         public SecurityRes? SecurityOut { get; set; }
         public GateRes GateIn { get; set; }
