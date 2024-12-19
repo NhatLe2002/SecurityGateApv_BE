@@ -911,7 +911,7 @@ namespace SecurityGateApv.Application.Services
             //    )).FirstOrDefault();
 
             var visitCard = (await _visitCardRepo.FindAsync(
-                    s => s.VisitorId == visitSession.VisitDetail.VisitDetailId
+                    s => s.VisitorId == visitSession.VisitDetail.VisitorId
                     && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                     includeProperties: "Card"
                 )).FirstOrDefault();
