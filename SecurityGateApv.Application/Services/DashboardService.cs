@@ -135,6 +135,7 @@ namespace SecurityGateApv.Application.Services
                 ActiveTemporary = 0,
                 Pending = 0,
                 Inactive = 0,
+                ViolationResolved = 0,
             };
             var role = _jwt.DecodeJwt(token);
             var visit = new List<Visit>();
@@ -164,6 +165,7 @@ namespace SecurityGateApv.Application.Services
             res.Inactive = visit.Count(s => s.VisitStatus == VisitStatusEnum.Inactive.ToString());
             res.Pending = visit.Count(s => s.VisitStatus == VisitStatusEnum.Pending.ToString());
             res.ActiveTemporary = visit.Count(s => s.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString());
+            res.ViolationResolved = visit.Count(s => s.VisitStatus == VisitStatusEnum.ViolationResolved.ToString());
 
             return res;
         }
