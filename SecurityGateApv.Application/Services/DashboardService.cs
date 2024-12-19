@@ -57,7 +57,8 @@ namespace SecurityGateApv.Application.Services
                 Pending = 0,
                 Assigned = 0,
                 Expired = 0,
-                Rejected = 0    
+                Rejected = 0,
+                Cancel = 0
             };
             var role = _jwt.DecodeJwt(token);
             var schedules = (await _scheduleUserRepo.GetAllAsync());
@@ -82,7 +83,7 @@ namespace SecurityGateApv.Application.Services
             res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString());
             res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString());
             res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString());
-
+            res.Cancel = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Cancel.ToString());
 
             return res;
         }
