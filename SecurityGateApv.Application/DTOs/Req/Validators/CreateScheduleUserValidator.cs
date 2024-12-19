@@ -35,28 +35,28 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             }).WithMessage("Schedule Id not exist");
             RuleFor(s => s.DeadlineTime).NotNull().NotEmpty().Must(s =>
             {
-                if(s > DateTime.Now)
+                if(s.Date >= DateTime.Now.Date)
                 {
                     return true;
                 }
                 return false;                   
-            }).WithMessage("Thời cho nhiệm vụ hạn phải lớn hơn 1 ngày");
+            }).WithMessage("Thời gian cho nhiệm vụ hạn phải lớn hơn hoặc bằng ngày hôm nay");
             RuleFor(s => s.StartDate).NotNull().NotEmpty().Must(s =>
             {
-                if (s > DateTime.Now)
+                if (s.Date >= DateTime.Now.Date)
                 {
                     return true;
                 }
                 return false;
-            }).WithMessage("Ngày bắt đầu không hợp lệ");
+            }).WithMessage("Ngày bắt đầu phải lớn hơn hoặc bằng ngày hôm nay");
             RuleFor(s => s.EndDate).NotNull().NotEmpty().Must(s =>
             {
-                if (s > DateTime.Now)
+                if (s.Date >= DateTime.Now.Date)
                 {
                     return true;
                 }
                 return false;
-            }).WithMessage("Ngày kết thúc không hợp lệ");
+            }).WithMessage("Ngày kết thúc phải lớn hơn hoặc bằng ngày hôm nay");
             RuleFor(s => new { s.StartDate, s.EndDate}).NotNull().NotEmpty().Must(s =>
             {
                 if (s.StartDate < s.EndDate)

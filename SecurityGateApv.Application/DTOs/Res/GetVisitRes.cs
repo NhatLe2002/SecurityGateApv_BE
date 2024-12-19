@@ -60,6 +60,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public TimeSpan ExpectedEndHour { get; private set; }
         public bool Status { get; private set; }
         public VisitorDetailRes Visitor { get; set; }
+        public int VisitorSessionCurrentDay { get; set; } = 0;
     }
     public class VisitorDetailRes
     {

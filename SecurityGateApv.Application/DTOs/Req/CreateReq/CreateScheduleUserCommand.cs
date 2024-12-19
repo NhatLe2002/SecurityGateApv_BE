@@ -19,7 +19,7 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
         public int ScheduleId { get; set; }
         public int AssignToId { get; set; }
         public int? MaxPersonQuantity { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

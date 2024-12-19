@@ -19,7 +19,7 @@ namespace SecurityGateApv.WebApi.Controllers
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
             {
-                return BadRequest(new Error("CreateUser", "Invalid Token"));
+                return BadRequest(new Error("CreateUser", "Không có quyền truy cập"));
             }
             return Ok((await _dashboardService.GetVisit(token)).Value);
         }
@@ -44,7 +44,7 @@ namespace SecurityGateApv.WebApi.Controllers
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
             {
-                return BadRequest(new Error("CreateUser", "Invalid Token"));
+                return BadRequest(new Error("CreateUser", "Không có quyền truy cập"));
             }
             var result = await _dashboardService.GetMission(token);
             if (result.IsFailure)
