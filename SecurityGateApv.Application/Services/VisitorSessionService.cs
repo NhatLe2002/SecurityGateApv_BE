@@ -906,6 +906,11 @@ namespace SecurityGateApv.Application.Services
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
             }
+            if (visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.Violation.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckInViolation);
+
+            }
             if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotvalidWithVisitActiveTemporary);
