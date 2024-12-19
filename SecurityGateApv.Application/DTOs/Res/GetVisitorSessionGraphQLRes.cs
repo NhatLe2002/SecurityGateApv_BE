@@ -55,5 +55,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int VisitorId { get; set; }
         public string VisitorName { get; set; }
         public string CompanyName { get; set; }
+        public List<VisitCardRes> VisitCard { get; set; }
     }
 }

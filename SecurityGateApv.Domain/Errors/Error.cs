@@ -122,6 +122,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error ValidSession = new("Error.ValidSession", "Bạn đã checkin rồi, không thể checkin 2 lần liên liếp.");
         public static readonly Error CheckoutNotValid = new("Error.CheckoutNotValid", "Không thể checkout khi chưa checkin");
         public static readonly Error ValidCheckinSession = new("Error.ValidCheckinSession", "Khách này đã check-in, không thể check-in 2 lần liên tiếp.");
+        public static readonly Error CheckInViolation = new("Error.CheckInViolation", "Khách này bị nhân biên đánh vi phạm.");
         public static readonly Error CheckoutNotvalidWithVisitActiveTemporary = new("Error.CheckoutNotvalidWithVisitActiveTemporary", "Khách thăm này chưa được nhân viên duyệt, cần duyệt chuyến thăm của khách này trước khi thực hiện CheckOut.");
         #endregion
 

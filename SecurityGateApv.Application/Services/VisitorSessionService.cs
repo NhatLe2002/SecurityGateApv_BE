@@ -681,7 +681,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor,VehicleSession.Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor.VisitCard,VehicleSession.Images"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
@@ -690,7 +690,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor,VehicleSession.Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor.VisitCard,VehicleSession.Images"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Staff.ToString())
@@ -699,9 +699,9 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor,VehicleSession.Images"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visit.ScheduleUser.Schedule,VisitDetail.Visitor.VisitCard,VehicleSession.Images"
                      )).ToList();
-                //visitSession.FirstOrDefault().VehicleSession.Images
+                //visitSession.FirstOrDefault().VisitDetail.Visitor.VisitCard
             }
 
             if (visitSession.Count() == 0)
@@ -856,6 +856,11 @@ namespace SecurityGateApv.Application.Services
             if (visitSession == null)
             {
                 return Result.Failure<SessionCheckOutRes>(Error.CheckoutNotValid);
+
+            }
+            if (visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.Violation.ToString())
+            {
+                return Result.Failure<SessionCheckOutRes>(Error.CheckInViolation);
 
             }
             if (visitSession != null && visitSession.VisitDetail.Visit.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString())

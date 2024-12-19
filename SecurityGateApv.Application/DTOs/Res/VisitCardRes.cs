@@ -15,6 +15,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public DateTime ExpiryDate { get; private set; }
         public string VisitCardStatus { get; private set; }
         public int VisitDetailId { get; private set; }
-        public CardRes Card { get; private set; }
+        public int CardId { get; private set; }
     }
 }
