@@ -11,6 +11,6 @@ namespace SecurityGateApv.Application.DTOs.Req.CreateReq
     {
         public string CardVerified { get; set; }
         public int CardTypeId { get; set; }
-        //public IFormFile ImageLoGo { get; set; }
+        public IFormFile ImageLoGo { get; set; }
     }
 }

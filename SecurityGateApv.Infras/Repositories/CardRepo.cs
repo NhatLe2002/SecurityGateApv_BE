@@ -27,25 +27,12 @@ namespace SecurityGateApv.Infras.Repositories
             _dbSet = _context.Set<Visit>();
         }
 
-        public async Task<Card> GenerateQRCard(string cardIdGuid, string cardTypeName)
+        public async Task<Card> GenerateQRCard(string cardIdGuid, IFormFile file, string cardTypeName)
         {
-            // Get the base directory of the currently executing assembly
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-            // Navigate up the directory tree to the source code directory
-            DirectoryInfo directoryInfo = new DirectoryInfo(baseDirectory);
-            for (int i = 0; i < 5; i++)
+            if (file == null)
             {
-                if (directoryInfo.Parent == null)
-                {
-                    throw new InvalidOperationException("Unable to navigate to the source directory.");
-                }
-                directoryInfo = directoryInfo.Parent;
+                throw new ArgumentNullException(nameof(file), "File parameter is null.");
             }
-            string sourceDirectory = directoryInfo.FullName;
-
-            // Construct the path to the logo file
-            string logoFilePath = System.IO.Path.Combine(sourceDirectory, "SecurityGateApv_BE", "SecurityGateApv.Infras", "Data", "Image", "Secure-Web-Gateway-01-1024x844.png");
 
             // Generate QR code
             var qrCodeGenerator = new QRCodeGenerator();
@@ -75,13 +62,18 @@ namespace SecurityGateApv.Infras.Repositories
                         ctx.Draw(Color.White, 10, rect);
 
                         // Add logo
-                        using (var logo = Image.Load<Rgba32>(logoFilePath))
+                        using (var memoryStream = new MemoryStream())
                         {
-                            int logoWidth = 100;
-                            int logoX = (cardWidth - logoWidth) / 2;
-                            int logoY = 20;
-                            logo.Mutate(x => x.Resize(logoWidth, logoWidth)); // Resize logo to 100x100
-                            ctx.DrawImage(logo, new Point(logoX, logoY), 1);
+                            file.CopyTo(memoryStream);
+                            memoryStream.Seek(0, SeekOrigin.Begin); // Reset stream position
+                            using (var logo = Image.Load<Rgba32>(memoryStream.ToArray()))
+                            {
+                                int logoWidth = 100;
+                                int logoX = (cardWidth - logoWidth) / 2;
+                                int logoY = 20;
+                                logo.Mutate(x => x.Resize(logoWidth, logoWidth)); // Resize logo to 100x100
+                                ctx.DrawImage(logo, new Point(logoX, logoY), 1);
+                            }
                         }
 
                         // Add title text
@@ -108,7 +100,7 @@ namespace SecurityGateApv.Infras.Repositories
                     // Convert the card image to a base64 string
                     using (var ms = new MemoryStream())
                     {
-                        await cardImage.SaveAsync(ms, new PngEncoder());
+                        cardImage.Save(ms, new PngEncoder());
                         var cardImageBase64 = Convert.ToBase64String(ms.ToArray());
 
                         // Create the Card object
