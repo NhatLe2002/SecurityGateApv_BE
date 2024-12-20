@@ -478,11 +478,11 @@ namespace SecurityGateApv.Application.Services
 
             if (isShortTermCard && !isVisitDaily)
             {
-                return Result.Failure<Card>(Error.VisitDailyRegisCardError);
+                return Result.Failure<Card>(Error.VisitScheduleRegisCardError);
             } 
             if (isLongTermCard && !isProcessMonthOrWeek)
             {
-                return Result.Failure<Card>(Error.VisitScheduleRegisCardError);
+                return Result.Failure<Card>(Error.VisitDailyRegisCardError);
             }
             var visitCard =  (await _visitCardRepo.FindAsync(
                           s => s.VisitorId == visitDetail.Visitor.VisitorId
