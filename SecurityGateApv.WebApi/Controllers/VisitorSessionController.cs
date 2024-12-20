@@ -178,6 +178,27 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("VehicleSession/Visit/{visitId}")]
+        public async Task<IActionResult> GetVehicleSessionByvisitId(int visitId)
+        {
+
+            var result = await _visitorSessionService.GetVehicleSessionByVisitId(visitId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }[HttpGet("VehicleSession/Visit/{visitId}/Visitor/{visitorId}")]
+        public async Task<IActionResult> GetVehicleSessionByvisitorId(int visitId, int visitorId)
+        {
+
+            var result = await _visitorSessionService.GetVehicleSessionByVisitorId(visitId, visitorId);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpGet("Visit/{visitId}")]
         public async Task<IActionResult> GetAllVisitorSessionByVisitId(int pageNumber, int pageSize, int visitId)
         {

@@ -764,7 +764,7 @@ namespace SecurityGateApv.Application.Services
                          s => true,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor,VehicleSession"
                      )).ToList();
             }
             if (userAuthor.Role == "Department")
@@ -773,7 +773,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor,VehicleSession"
                      )).ToList();
             }
             if (userAuthor.Role == "Staff")
@@ -782,10 +782,9 @@ namespace SecurityGateApv.Application.Services
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor,VehicleSession"
                      )).ToList();
             }
-
             if (visitSession.Count() == 0)
             {
                 return Result.Failure<ICollection<GetVisitorSessionRes>>(Error.NotFoundVisitSesson);
@@ -1213,14 +1212,44 @@ namespace SecurityGateApv.Application.Services
                     s => s.VisitorSessionId == visitorSessionId,
                     int.MaxValue, 1 , includeProperties : "Images"
                 );
-            if(vehicleSession.Count() == 0)
-            {
-                return Result.Failure<List<VehicleSessionRes>>(Error.NotFound);
+            //if(vehicleSession.Count() == 0)
+            //{
+            //    return Result.Failure<List<VehicleSessionRes>>(Error.NotFound);
 
-            }
+            //}
             var result = _mapper.Map<List<VehicleSessionRes>>(vehicleSession);
             return result;
 
+        }
+
+        public async Task<Result<List<VehicleSessionRes>>> GetVehicleSessionByVisitId(int visitId)
+        {
+            var vehicleSession = await _vehicleSessionRepo.FindAsync(
+                   s => s.VisitorSession.VisitDetail.VisitId == visitId,
+                   int.MaxValue, 1, includeProperties: "Images"
+               );
+            //if (vehicleSession.Count() == 0)
+            //{
+            //    return Result.Failure<List<VehicleSessionRes>>(Error.NotFound);
+
+            //}
+            var result = _mapper.Map<List<VehicleSessionRes>>(vehicleSession);
+            return result;
+        }
+
+        public async Task<Result<List<VehicleSessionRes>>> GetVehicleSessionByVisitorId(int visitId, int visitorId)
+        {
+            var vehicleSession = await _vehicleSessionRepo.FindAsync(
+                   s => s.VisitorSession.VisitDetail.VisitorId == visitorId && s.VisitorSession.VisitDetail.VisitId == visitId,
+                   int.MaxValue, 1, includeProperties: "Images"
+               );
+            //if (vehicleSession.Count() == 0)
+            //{
+            //    return Result.Failure<List<VehicleSessionRes>>(Error.NotFound);
+
+            //}
+            var result = _mapper.Map<List<VehicleSessionRes>>(vehicleSession);
+            return result;
         }
     }
 }

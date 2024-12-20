@@ -145,7 +145,8 @@ namespace SecurityGateApv.Application.Mapper
             #endregion
 
             #region VisitSession
-            CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap();
+            CreateMap<GetVisitorSessionRes, VisitorSession>().ReverseMap()
+                .ForMember(dest => dest.IsVehicleSession, opt => opt.MapFrom(src => src.VehicleSession != null)); // Map IsVehicleSession
             CreateMap<SessionCheckOutRes, VisitorSession>().ReverseMap();
             CreateMap<VisitorSession, GetVisitorSessionGraphQLRes>()
                 .ForMember(dest => dest.Visitor, opt => opt.MapFrom(src => src.VisitDetail.Visitor))

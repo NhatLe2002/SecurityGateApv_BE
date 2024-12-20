@@ -21,6 +21,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public GateRes? GateOut { get;  set; }
         public string Status { get;  set; }
         public ICollection<SessionsImageRes> Images { get; private set; }
+        public bool IsVehicleSession { get;  set; }
 
     }
     public class SecurityRes
