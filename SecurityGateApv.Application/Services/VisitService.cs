@@ -653,7 +653,7 @@ namespace SecurityGateApv.Application.Services
         }
         private bool IsValidVisit(Visit visit, DateTime date)
         {
-            int dateOfWeekInput = (int)date.DayOfWeek + 1;
+            int dateOfWeekInput = (int)date.DayOfWeek;
             if (visit.ScheduleUser == null)
             {
                 return true;
