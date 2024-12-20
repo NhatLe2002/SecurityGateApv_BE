@@ -324,7 +324,7 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             if (action == "ViolationResolved")
             {
-                var result = await _visitService.ActiveVisit(visitId);
+                var result = await _visitService.ViolationResolvedVisit(visitId);
                 if (result.IsFailure)
                 {
                     return BadRequest(result.Error);
