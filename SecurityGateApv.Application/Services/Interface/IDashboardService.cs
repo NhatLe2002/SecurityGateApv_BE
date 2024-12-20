@@ -19,7 +19,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year, string token);
         public Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month, string token);
         Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(string token, int count = 5);
-        Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday();
+        Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday(string token);
         Task<Result<List<CardStatusCountRes>>> GetCardCountByStatus();
         Task<Result<GetCardCountIssueRes>> GetCardBountByIssue();
 

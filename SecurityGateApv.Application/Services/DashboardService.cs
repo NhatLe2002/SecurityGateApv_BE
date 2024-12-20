@@ -300,8 +300,10 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<List<GetVisitorSessionRes>>(visitSession);
             return Result.Success(result);
         }
-        public async Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday()
+        public async Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday(string token)
         {
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
+
             var today = DateTime.Today;
             var visitorSessions = await _visitorSessionRepo.FindAsync(
                 vs => vs.CheckinTime.Date == today,
@@ -309,7 +311,36 @@ namespace SecurityGateApv.Application.Services
                 orderBy: vs => vs.OrderBy(v => v.Status),
                 includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
             );
-
+            if (userAuthor.Role == UserRoleEnum.Admin.ToString() || userAuthor.Role == UserRoleEnum.Manager.ToString())
+            {
+                visitorSessions = (await _visitorSessionRepo.FindAsync(
+                                     s => true /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                                    && s.CheckinTime.Date == DateTime.Now.Date*/,
+                                     int.MaxValue, 1,
+                                     orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                                 )).ToList();
+            }
+            else if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
+            {
+                visitorSessions = (await _visitorSessionRepo.FindAsync(
+                                      s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                                    && s.CheckinTime.Date == DateTime.Now.Date*/,
+                                      int.MaxValue, 1,
+                                      orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                                      includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                                  )).ToList();
+            }
+            else if (userAuthor.Role == UserRoleEnum.Staff.ToString())
+            {
+                visitorSessions = (await _visitorSessionRepo.FindAsync(
+                                    s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                                    && s.CheckinTime.Date == DateTime.Now.Date*/,
+                                    int.MaxValue, 1,
+                                    orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                                )).ToList();
+            }
             var statusCounts = visitorSessions
                 .GroupBy(vs => vs.Status)
                 .Select(g => new VisitorSessionStatusCountRes

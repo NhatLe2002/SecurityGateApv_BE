@@ -135,7 +135,19 @@ namespace SecurityGateApv.Application.Services
             var result = _mapper.Map<GetCardRes>(card);
             return result;
         }
+        public async Task<Result<GetCardRes>> GetQrCardByCardCredentialCard(string credentialCard)
+        {
+            var card = (await _qrRCardRepo.FindAsync(
+                 s => s.VisitCards.Any(s => s.Visitor.CredentialsCard == credentialCard) && s.VisitCards.Any(s => s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString()), includeProperties: "CardType"
+                 )).FirstOrDefault();
+            if (card == null)
+            {
+                return Result.Failure<GetCardRes>(Error.NotFoundCardByCardVerification);
+            }
 
+            var result = _mapper.Map<GetCardRes>(card);
+            return result;
+        }
         public async Task<Result<bool>> CreateCard(CreateCardCommand command)
         {
             var card = (await _qrRCardRepo.FindAsync(
@@ -162,18 +174,27 @@ namespace SecurityGateApv.Application.Services
             return true;
         }
 
-        public async Task<Result<bool>> UpdateCardStatusLost(int visitDetailId)
+        public async Task<Result<bool>> UpdateCardStatusLost(string credentialCard, string newCard)
         {
             var visitCard = (await _visitCardRepo.FindAsync(
-                               s => /*s.VisitDetailId == visitDetailId
-                               &&*/ s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
+                               s => s.Visitor.CredentialsCard == credentialCard
+                               && s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString(),
                                includeProperties: "Card"
                                               )).FirstOrDefault();
             if (visitCard == null)
             {
                 return Result.Failure<bool>(Error.CardNotIssue);
             }
+            var newCardEntiry = (await _qrRCardRepo.FindAsync(
+                    s => s.CardVerification == newCard
+                )).FirstOrDefault();
+            if (visitCard == null)
+            {
+                return Result.Failure<bool>(Error.NotFoundCard);
+            }
             visitCard.CancelCardLost();
+            visitCard = VisitCard.Create(DateTime.Now, visitCard.ExpiryDate, "Issue", visitCard.VisitorId, newCardEntiry.CardId);
+
             await _visitCardRepo.UpdateAsync(visitCard);
             if (!await _unitOfWork.CommitAsync())
             {

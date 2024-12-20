@@ -87,6 +87,7 @@ namespace SecurityGateApv.Domain.Errors
         #region CardError
         //Card error
         public static readonly Error NotFoundCard = new("Error.NotfoundCard", "Không tìm được thẻ trong hệ thống.");
+        public static readonly Error NotFoundCardByCredentialCard = new("Error.NotFoundCardByCredentialCard", "Không tìm được thẻ bằng CCCD/GPLX này.");
         public static readonly Error NotFoundCardByCardVerification = new("Error.NotfoundCard", "Không tìm được thẻ theo QR đã nhận.");
         public static readonly Error CardAcctive = new("Error.CardStatus", "Card is acctive cannot accept");
         public static readonly Error CardInActive = new("Error.CardStatus", "Card không còn hoạt đọng không thể sử dụng.");

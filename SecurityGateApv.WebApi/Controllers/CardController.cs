@@ -67,6 +67,21 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
+        [HttpGet("CredentialCard/{credentialCard}")]
+        public async Task<ActionResult> GetQrCardByCredentialCard(string credentialCard)
+        {
+            if (credentialCard == null)
+            {
+                return BadRequest("CredentialCard can not null");
+            }
+
+            var result = await _cardService.GetQrCardByCardCredentialCard(credentialCard);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error);
+            }
+            return Ok(result.Value);
+        }
         [HttpPost("ShoeDetect")]
         public async Task<IActionResult> ShoeDetect(DetectImageCommand request)
         {
@@ -112,10 +127,10 @@ namespace SecurityGateApv.WebApi.Controllers
             }
             return Ok(result.Value);
         }
-        [HttpPost("LostCard/{visitDetailId}")]
-        public async Task<ActionResult> UpdateCardStatusLost(int visitDetailId)
+        [HttpPost("UpdateCardLost")]
+        public async Task<ActionResult> UpdateCardStatusLost(string credentialCard, string newQrCardVerifed)
         {
-            var result = await _cardService.UpdateCardStatusLost(visitDetailId);
+            var result = await _cardService.UpdateCardStatusLost(credentialCard, newQrCardVerifed);
 
             if (result.IsFailure)
             {

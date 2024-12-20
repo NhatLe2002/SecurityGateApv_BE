@@ -101,8 +101,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("VisitorSessionStatusToday")]
         public async Task<IActionResult> GetVisitorSessionCountByStatusForToday()
         {
-
-            var result = await _dashboardService.GetVisitorSessionCountByStatusForToday();
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("Authorization", "Yêu cầu quyền truy cập."));
+            }
+            var result = await _dashboardService.GetVisitorSessionCountByStatusForToday(token);
             if (result.IsSuccess)
             {
                 return Ok(result.Value);
