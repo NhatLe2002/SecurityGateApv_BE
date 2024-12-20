@@ -1120,7 +1120,7 @@ namespace SecurityGateApv.Application.Services
         {
             var visits = await _visitRepo.FindAsync(
                     s => s.VisitId == visitId
-                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())),
+                    /*&& (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString()))*/,
                     pageSize, pageNumber, includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
                 );
             if (visits.Count() == 0)
