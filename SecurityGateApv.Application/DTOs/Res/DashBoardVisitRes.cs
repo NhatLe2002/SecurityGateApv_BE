@@ -19,6 +19,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int Inactive { get; set; }
         public int Pending { get; set; }
         public int ActiveTemporary { get; set; }
-        public int ViolationResolved { get; set; }
+        //public int ViolationResolved { get; set; }
     }
 }
