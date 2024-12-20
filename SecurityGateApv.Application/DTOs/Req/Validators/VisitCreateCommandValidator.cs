@@ -44,7 +44,15 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
                 {
                     return false;
                 }
-                if(!visitorRepo.IsAny(s=>s.VisitorId == x.VisitorId).GetAwaiter().GetResult())
+                if(x.ExpectedEndHour > TimeSpan.Parse("20:00:00"))
+                {
+                    return false;
+                }
+                if (x.ExpectedStartHour < TimeSpan.Parse("07:00:00"))
+                {
+                    return false;
+                }
+                if (!visitorRepo.IsAny(s=>s.VisitorId == x.VisitorId).GetAwaiter().GetResult())
                 {
                     return false;
                 }
@@ -83,6 +91,14 @@ namespace SecurityGateApv.Application.DTOs.Req.Validators
             RuleForEach(s => s.VisitDetail).NotNull().NotEmpty().Must(x =>
             {
                 if (x.ExpectedEndHour < x.ExpectedStartHour)
+                {
+                    return false;
+                }
+                if (x.ExpectedEndHour > TimeSpan.Parse("20:00:00"))
+                {
+                    return false;
+                }
+                if (x.ExpectedStartHour < TimeSpan.Parse("07:00:00"))
                 {
                     return false;
                 }
