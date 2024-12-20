@@ -84,7 +84,10 @@ namespace SecurityGateApv.Application.Services
             res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString());
             res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString());
             res.Cancel = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Cancel.ToString());
+<<<<<<< HEAD
 
+=======
+>>>>>>> 731cf5899facd8d5a839ffda1f5ebb32498baa46
 
             return res;
         }

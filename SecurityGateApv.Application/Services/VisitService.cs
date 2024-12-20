@@ -361,7 +361,7 @@ namespace SecurityGateApv.Application.Services
                 visits = (await _visitRepo.FindAsync(
                     s => s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
-                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString())) || s.VisitStatus.Equals(VisitStatusEnum.Violation.ToString()),
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.Violation.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ViolationResolved.ToString())),
                     pageSize, pageNumber,
                     s => s.OrderByDescending(x => x.CreateTime),
                     includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
@@ -374,7 +374,7 @@ namespace SecurityGateApv.Application.Services
                     s => s.ResponsiblePersonId == userAuthen.UserId
                     && s.ExpectedStartTime.Date <= date.Date
                     && s.ExpectedEndTime.Date >= date.Date
-                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.Violation.ToString())),
+                    && (s.VisitStatus.Equals(VisitStatusEnum.Active.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ActiveTemporary.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.Violation.ToString()) || s.VisitStatus.Equals(VisitStatusEnum.ViolationResolved.ToString())),
                     pageSize, pageNumber,
                     s => s.OrderByDescending(x => x.CreateTime),
                     includeProperties: "ScheduleUser.Schedule.ScheduleType,CreateBy,VisitDetail.VisitorSession"
