@@ -739,7 +739,17 @@ namespace SecurityGateApv.Application.Services
             {
                 visitSession = (await _visitorSessionRepo.FindAsync(
                          s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId
-                         /*&& s.CheckinTime.Date == DateTime.Now.Date*/,
+                         && s.CheckinTime.Date == DateTime.Now.Date,
+                         pageSize, pageNumber,
+                         orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+                     )).ToList();
+            }
+            if (userAuthor.Role == UserRoleEnum.Security.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                         s => s.SecurityInId == userAuthor.UserId || s.SecurityOutId == userAuthor.UserId
+                         && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
                          includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
