@@ -778,7 +778,7 @@ namespace SecurityGateApv.Application.Services
                          includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor,VehicleSession"
                      )).ToList();
             }
-            if (userAuthor.Role == "Department")
+            if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
             {
                 visitSession = (await _visitorSessionRepo.FindAsync(
                          s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId,
