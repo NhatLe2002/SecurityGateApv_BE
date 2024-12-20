@@ -722,7 +722,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
                      )).ToList();
             }
             if (userAuthor.Role == "Department")
@@ -732,7 +732,7 @@ namespace SecurityGateApv.Application.Services
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
                      )).ToList();
             }
             if (userAuthor.Role == "Staff")
@@ -742,18 +742,19 @@ namespace SecurityGateApv.Application.Services
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Security.ToString())
             {
                 visitSession = (await _visitorSessionRepo.FindAsync(
-                         s => s.SecurityInId == userAuthor.UserId || s.SecurityOutId == userAuthor.UserId
+                         s => (s.SecurityInId == userAuthor.UserId || s.SecurityOutId == userAuthor.UserId)
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
                      )).ToList();
+                //visitSession.FirstOrDefault().VehicleSession;
             }
 
             if (visitSession.Count() == 0)
