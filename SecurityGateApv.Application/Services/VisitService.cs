@@ -506,7 +506,7 @@ namespace SecurityGateApv.Application.Services
                         correspondingVisitRes.SessionStatus = "NoSession";
                     }
                 }
-                else if (item.VisitorSession.Count() != 0 && item.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date))
+                else if (item.VisitorSession.Count() != 0 && item.VisitorSession.Any(session => session.CheckinTime.Date == DateTime.Now.Date && session.Status == SessionStatus.CheckIn.ToString()))
                 {
                     if (correspondingVisitRes != null)
                     {
