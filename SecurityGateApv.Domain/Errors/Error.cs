@@ -203,7 +203,7 @@ namespace SecurityGateApv.Domain.Errors
         public static readonly Error UpdateDepartment = new("Error.UpdateDepartment", "Update department error");
 
         //Detection Error
-        public static readonly Error DetectionError = new("Error.DetectionError", "No valid object found");
+        public static readonly Error DetectionError = new("Error.DetectionError", "Không tìm thấy giày hợp lệ");
         public static readonly Error NotShoe = new("Error.DetectionError", "Cần đưa đúng loại ảnh giày (type:Shoe).");
         public static readonly Error DetectionExeption = new("Error.DetectionExeption", "Lỗi trong quá trình detect giày.");
         //Not found shoe 

@@ -119,6 +119,10 @@ namespace SecurityGateApv.Application.Services
                     result = item;
                 }
             }
+            if(result.Label == "Sandal")
+            {
+                return Result.Failure<AWSDomainDTO>(Error.DetectionError);
+            }
             return result;
         }
 
