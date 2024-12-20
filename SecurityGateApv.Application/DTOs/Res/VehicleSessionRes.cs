@@ -14,6 +14,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string LicensePlate { get; set; }
         public string Status { get; private set; }
         public List<VehicleSessionImageRes> Images { get;  set; } 
+        public int VisitorSessionId { get; set; }
 
     }
     public class VehicleSessionImageRes
