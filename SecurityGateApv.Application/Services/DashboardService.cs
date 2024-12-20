@@ -30,7 +30,7 @@ namespace SecurityGateApv.Application.Services
         private readonly IMapper _mapper;
         private readonly IJwt _jwt;
 
-        public DashboardService(IVisitRepo visitRepo, IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo, 
+        public DashboardService(IVisitRepo visitRepo, IUserRepo userRepo, IVisitorRepo visitorRepo, IScheduleRepo scheduleRepo, IScheduleUserRepo scheduleUserRepo,
             IVisitorSessionRepo visitorSessionRepo, IMapper mapper, ICardRepo cardRepo, IJwt jwt)
         {
             _visitRepo = visitRepo;
@@ -57,7 +57,8 @@ namespace SecurityGateApv.Application.Services
                 Pending = 0,
                 Assigned = 0,
                 Expired = 0,
-                Rejected = 0    
+                Rejected = 0,
+                Cancel = 0
             };
             var role = _jwt.DecodeJwt(token);
             var schedules = (await _scheduleUserRepo.GetAllAsync());
@@ -82,6 +83,7 @@ namespace SecurityGateApv.Application.Services
             res.Approved = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Approved.ToString());
             res.Expired = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Expired.ToString());
             res.Rejected = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Rejected.ToString());
+            res.Cancel = schedules.Count(s => s.Status == ScheduleUserStatusEnum.Cancel.ToString());
 
 
             return res;
@@ -134,6 +136,7 @@ namespace SecurityGateApv.Application.Services
                 ActiveTemporary = 0,
                 Pending = 0,
                 Inactive = 0,
+                ViolationResolved = 0,
             };
             var role = _jwt.DecodeJwt(token);
             var visit = new List<Visit>();
@@ -154,15 +157,16 @@ namespace SecurityGateApv.Application.Services
             }
 
             res.Total = visit.Count();
-            res.Daily = visit.Count(s => s.ScheduleUser == null); 
+            res.Daily = visit.Count(s => s.ScheduleUser == null);
             res.Week = visit.Count(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessWeek);
-            res.Month = visit.Count(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessMonth); 
+            res.Month = visit.Count(s => s.ScheduleUser != null && s.ScheduleUser.Schedule.ScheduleTypeId == (int)ScheduleTypeEnum.ProcessMonth);
             res.Cancel = visit.Count(s => s.VisitStatus == VisitStatusEnum.Cancelled.ToString());
             res.Violation = visit.Count(s => s.VisitStatus == VisitStatusEnum.Violation.ToString());
             res.Active = visit.Count(s => s.VisitStatus == VisitStatusEnum.Active.ToString());
             res.Inactive = visit.Count(s => s.VisitStatus == VisitStatusEnum.Inactive.ToString());
             res.Pending = visit.Count(s => s.VisitStatus == VisitStatusEnum.Pending.ToString());
             res.ActiveTemporary = visit.Count(s => s.VisitStatus == VisitStatusEnum.ActiveTemporary.ToString());
+            res.ViolationResolved = visit.Count(s => s.VisitStatus == VisitStatusEnum.ViolationResolved.ToString());
 
             return res;
         }
@@ -182,11 +186,26 @@ namespace SecurityGateApv.Application.Services
             return res;
         }
 
-        public async Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month)
+        public async Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month, string token)
         {
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
             var res = new VisitorSessionCountMonthRes();
             var visitorSessions = await _visitorSessionRepo.GetAllAsync();
-
+            if (userAuthor.Role == UserRoleEnum.Admin.ToString() || userAuthor.Role == UserRoleEnum.Manager.ToString())
+            {
+                visitorSessions = (await _visitorSessionRepo.GetAllAsync());
+            }
+            else if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                var dm = (await _userRepo.FindAsync(s => s.UserId == userID)).FirstOrDefault();
+                visitorSessions = await _visitorSessionRepo.FindAsync(s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId, int.MaxValue);
+            }
+            else if (userAuthor.Role == UserRoleEnum.Staff.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                visitorSessions = await _visitorSessionRepo.FindAsync(s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId, int.MaxValue);
+            }
             res.DailyCounts = visitorSessions
                 .Where(vs => vs.CheckinTime.Year == year && vs.CheckinTime.Month == month)
                 .GroupBy(vs => vs.CheckinTime.Day)
@@ -201,10 +220,27 @@ namespace SecurityGateApv.Application.Services
             return Result.Success(res);
         }
 
-        public async Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year)
+        public async Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year, string token)
         {
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
+
             var res = new VisitorSessionCountRes();
             var visitorSessions = await _visitorSessionRepo.GetAllAsync();
+            if (userAuthor.Role == UserRoleEnum.Admin.ToString() || userAuthor.Role == UserRoleEnum.Manager.ToString())
+            {
+                visitorSessions = (await _visitorSessionRepo.GetAllAsync());
+            }
+            else if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                var dm = (await _userRepo.FindAsync(s => s.UserId == userID)).FirstOrDefault();
+                visitorSessions = await _visitorSessionRepo.FindAsync(s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId, int.MaxValue);
+            }
+            else if (userAuthor.Role == UserRoleEnum.Staff.ToString())
+            {
+                var userID = _jwt.DecodeJwtUserId(token);
+                visitorSessions = await _visitorSessionRepo.FindAsync(s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId, int.MaxValue);
+            }
 
             res.MonthlyCounts = visitorSessions
                 .Where(vs => vs.CheckinTime.Year == year)
@@ -220,8 +256,10 @@ namespace SecurityGateApv.Application.Services
             return Result.Success(res);
         }
 
-        public async Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(int count = 5)
+        public async Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(string token, int count = 5)
         {
+            var userAuthor = _jwt.DecodeAuthorJwt(token);
+
             var visitSession = (await _visitorSessionRepo.FindAsync(
                  s => true /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
                 && s.CheckinTime.Date == DateTime.Now.Date*/,
@@ -229,6 +267,36 @@ namespace SecurityGateApv.Application.Services
                  orderBy: s => s.OrderByDescending(s => s.CheckinTime),
                  includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
              )).ToList();
+            if (userAuthor.Role == UserRoleEnum.Admin.ToString() || userAuthor.Role == UserRoleEnum.Manager.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                                     s => true /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                                    && s.CheckinTime.Date == DateTime.Now.Date*/,
+                                     count, 1,
+                                     orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                                     includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                                 )).ToList();
+            }
+            else if (userAuthor.Role == UserRoleEnum.DepartmentManager.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                                      s => s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                                    && s.CheckinTime.Date == DateTime.Now.Date*/,
+                                      count, 1,
+                                      orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                                      includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                                  )).ToList();
+            }
+            else if (userAuthor.Role == UserRoleEnum.Staff.ToString())
+            {
+                visitSession = (await _visitorSessionRepo.FindAsync(
+                                    s => s.VisitDetail.Visit.ResponsiblePersonId == userAuthor.UserId /*s.VisitDetail.Visit.CreateBy.DepartmentId == userAuthor.DepartmentId
+                                    && s.CheckinTime.Date == DateTime.Now.Date*/,
+                                    count, 1,
+                                    orderBy: s => s.OrderByDescending(s => s.CheckinTime),
+                                    includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VisitDetail.Visitor"
+                                )).ToList();
+            }
             var result = _mapper.Map<List<GetVisitorSessionRes>>(visitSession);
             return Result.Success(result);
         }
@@ -251,7 +319,7 @@ namespace SecurityGateApv.Application.Services
                 })
                 .OrderBy(sc => sc.Status)
                 .ToList();
-            if(!statusCounts.Any(s => s.Status == SessionStatus.CheckOut.ToString()))
+            if (!statusCounts.Any(s => s.Status == SessionStatus.CheckOut.ToString()))
             {
                 statusCounts.Add(new VisitorSessionStatusCountRes
                 {
@@ -278,7 +346,7 @@ namespace SecurityGateApv.Application.Services
                 .GroupBy(c => c.CardStatus)
                 .Select(g => new CardStatusCountRes
                 {
-                    Status = g.Key.ToString(), 
+                    Status = g.Key.ToString(),
                     Count = g.Count()
                 })
                 .OrderBy(sc => sc.Status)

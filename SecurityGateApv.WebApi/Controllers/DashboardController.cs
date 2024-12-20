@@ -56,7 +56,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("VisitorSessionYear")]
         public async Task<IActionResult> GetVisitorSessionCountByYear(int year)
         {
-            var result = await _dashboardService.GetVisitorSessionCountByYear(year);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("Authorization", "Yêu cầu quyền truy cập."));
+            }
+            var result = await _dashboardService.GetVisitorSessionCountByYear(year, token);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -66,7 +71,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("VisitorSessionMonth")]
         public async Task<IActionResult> GetVisitorSessionCountByMonth(int year, int month)
         {
-            var result = await _dashboardService.GetVisitorSessionCountByMonth(year, month);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("Authorization", "Yêu cầu quyền truy cập."));
+            }
+            var result = await _dashboardService.GetVisitorSessionCountByMonth(year, month, token);
             if (result.IsFailure)
             {
                 return BadRequest(result.Error);
@@ -76,7 +86,12 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("RecentVisitorSessions")]
         public async Task<IActionResult> GetRecentVisitorSessions([FromQuery] int count = 5)
         {
-            var result = await _dashboardService.GetRecentVisitorSessions(count);
+            var token = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new Error("Authorization", "Yêu cầu quyền truy cập."));
+            }
+            var result = await _dashboardService.GetRecentVisitorSessions(token,count);
             if (result.IsSuccess)
             {
                 return Ok(result.Value);
@@ -86,6 +101,7 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpGet("VisitorSessionStatusToday")]
         public async Task<IActionResult> GetVisitorSessionCountByStatusForToday()
         {
+
             var result = await _dashboardService.GetVisitorSessionCountByStatusForToday();
             if (result.IsSuccess)
             {

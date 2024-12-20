@@ -14,5 +14,6 @@ namespace SecurityGateApv.Application.DTOs.Res
         public int Assigned { get; set; }
         public int Rejected { get; set; }
         public int Expired { get; set; }
+        public int Cancel { get; set; }
     }
 }

@@ -16,9 +16,9 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<DashboardVisitorRes>> GetVisitor();
         public Task<Result<DashboardSchedule>> GetSchedule();
         public Task<Result<DashboardMission>> GetMission(string token);
-        public Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year);
-        public Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month);
-        Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(int count = 5);
+        public Task<Result<VisitorSessionCountRes>> GetVisitorSessionCountByYear(int year, string token);
+        public Task<Result<VisitorSessionCountMonthRes>> GetVisitorSessionCountByMonth(int year, int month, string token);
+        Task<Result<List<GetVisitorSessionRes>>> GetRecentVisitorSessions(string token, int count = 5);
         Task<Result<List<VisitorSessionStatusCountRes>>> GetVisitorSessionCountByStatusForToday();
         Task<Result<List<CardStatusCountRes>>> GetCardCountByStatus();
         Task<Result<GetCardCountIssueRes>> GetCardBountByIssue();
