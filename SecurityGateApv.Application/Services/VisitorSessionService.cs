@@ -1207,8 +1207,20 @@ namespace SecurityGateApv.Application.Services
             return result;
         }
 
+        public async Task<Result<List<VehicleSessionRes>>> GetVehicleSessionByvisitorId(int visitorSessionId)
+        {
+            var vehicleSession = await _vehicleSessionRepo.FindAsync(
+                    s => s.VisitorSessionId == visitorSessionId,
+                    int.MaxValue, 1 , includeProperties : "Images"
+                );
+            if(vehicleSession.Count() == 0)
+            {
+                return Result.Failure<List<VehicleSessionRes>>(Error.NotFound);
 
+            }
+            var result = _mapper.Map<List<VehicleSessionRes>>(vehicleSession);
+            return result;
 
-
+        }
     }
 }

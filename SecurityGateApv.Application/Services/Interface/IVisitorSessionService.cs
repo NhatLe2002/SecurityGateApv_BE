@@ -15,6 +15,7 @@ namespace SecurityGateApv.Application.Services.Interface
         public Task<Result<SessionCheckOutRes>> CheckOutWithCredentialCard(VisitorSessionCheckOutCommand command, string credentialCard);
         public Task<Result<ValidCheckinRes>> CheckInWithCredentialCard(VisitSessionCheckInCommand command);
         public Task<Result<List<VisitorSessionImageRes>>> GetAllImagesByVisitorSessionId(int  visitorSessionId);
+        public Task<Result<List<VehicleSessionRes>>> GetVehicleSessionByvisitorId(int  visitorSessionId);
         public Task<Result<ValidCheckinRes>> CheckInWithoutCredentialCard(VisitSessionCheckInCommand command);
         public Task<Result<ValidCheckinRes>> ValidCheckWithQRCardVerification(ValidCheckInCommand command);
         public Task<Result<ValidCheckinRes>> ValidCheckWithoutQRCardVerification(ValidCheckInCommand command);

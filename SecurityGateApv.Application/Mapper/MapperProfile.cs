@@ -158,7 +158,8 @@ namespace SecurityGateApv.Application.Mapper
             //    /*.ForMember(dest => dest.Visit, opt => opt.MapFrom(src => src.VisitDetail.Visit))*/;
             CreateMap<SessionsRes, VisitorSession>().ReverseMap();
             CreateMap<GraphQlGetVisitRes, Visit>().ReverseMap();
-            CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap();
+            CreateMap<GraphQlVisitorRes, Visitor>().ReverseMap()
+                .ForMember(dest => dest.VisitCard, opt => opt.MapFrom(src => src.VisitCard.Where(s => s.VisitCardStatus == VisitCardStatusEnum.Issue.ToString())));
             CreateMap<VehicleSessionRes, VehicleSession>().ReverseMap();
             CreateMap<VehicleSessionImageRes, VehicleSessionImage>().ReverseMap();
             CreateMap<VisitorSession, VisitorSessionCheckOutCommand>().ReverseMap();
