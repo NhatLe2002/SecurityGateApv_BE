@@ -29,9 +29,10 @@ namespace SecurityGateApv.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
         private readonly INotifications _notifications;
+        private readonly IScheduleUserRepo _scheduleUserRepo;
 
         public UserService(IUserRepo userRepo, IMapper mapper, IJwt jwt, IDepartmentRepo departmentRepo,
-            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender, INotifications notifications)
+            IRoleRepo roleRepo, IUnitOfWork unitOfWork, IEmailSender emailSender, INotifications notifications, IScheduleUserRepo scheduleUserRepo)
         {
             _userRepo = userRepo;
             _mapper = mapper;
@@ -41,6 +42,7 @@ namespace SecurityGateApv.Application.Services
             _unitOfWork = unitOfWork;
             _emailSender = emailSender;
             _notifications = notifications;
+            _scheduleUserRepo = scheduleUserRepo;
         }
 
         public Task<Result<CreateUserComman>> CreateDepartmentManager(CreateUserComman command)
@@ -95,6 +97,10 @@ namespace SecurityGateApv.Application.Services
                 return Result.Failure<List<GetUserRes>>(Error.NotFoundUser);
             }
             var result = _mapper.Map<List<GetUserRes>>(user);
+            foreach(var staff in result)
+            {
+                staff.UserMission = (await _scheduleUserRepo.FindAsync(s => s.AssignToId == staff.UserId && s.Status == ScheduleUserStatusEnum.Assigned.ToString(), int.MaxValue)).Count();
+            }
             return result;
         }
 

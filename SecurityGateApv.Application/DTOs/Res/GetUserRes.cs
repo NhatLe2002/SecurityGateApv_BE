@@ -20,6 +20,7 @@ namespace SecurityGateApv.Application.DTOs.Res
         public string Status { get; private set; }
         public RoleRes Role { get; private set; }
         public DeparmentRes Department { get; private set; }
+        public int UserMission { get; set; }
     }
 
     public class RoleRes

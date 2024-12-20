@@ -105,7 +105,7 @@ namespace SecurityGateApv.Application.Services
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.Visit.VisitStatus != VisitStatusEnum.Cancelled.ToString()
-                 && s.Visit.ExpectedEndTime >= command.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
+                 && s.Visit.ExpectedEndTime.Date >= command.ExpectedStartTime.Date, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit,Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
                 var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == item.VisitorId)).FirstOrDefault();
                 var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
@@ -926,21 +926,22 @@ namespace SecurityGateApv.Application.Services
             {
                 schedule = (await _scheduleRepo.FindAsync(s => s.ScheduleId == visit.ScheduleUser.ScheduleId, includeProperties: "ScheduleType")).FirstOrDefault();
             }
-
+            visit.RemoveDetail();
             visit.UpdateVisitAfterStartDate(command.VisitQuantity, command.ExpectedEndTime);
             foreach (var item in command.VisitDetail)
             {
                 var visitorSchedule = await _visitDetailRepo.FindAsync(s => s.VisitorId == item.VisitorId && s.VisitId != visitId &&
                     s.Visit.ExpectedEndTime >= visit.ExpectedStartTime, int.MaxValue, 1, e => e.OrderBy(z => z.Visit.ExpectedStartTime), "Visit.ScheduleUser,Visit.ScheduleUser.Schedule,Visit.ScheduleUser.Schedule.ScheduleType");
-
-                var addVisitDetailResult = await visit.CheckUpdateVisit(
+                var visitor = (await _visitorRepo.FindAsync(s => s.VisitorId == item.VisitorId)).FirstOrDefault();
+                var addVisitDetailResult = await visit.AddVisitDetailOfOldVisitor(
                     visitorSchedule,
                     visit.ScheduleUser,
                     schedule,
                     item.ExpectedStartHour,
                     item.ExpectedEndHour,
                     item.Status,
-                    item.VisitorId);
+                    item.VisitorId,
+                    visitor.VisitorName);
                 if (item.Status == false)
                 {
                     continue;
