@@ -722,7 +722,7 @@ namespace SecurityGateApv.Application.Services
                          s => s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == "Department")
@@ -732,7 +732,7 @@ namespace SecurityGateApv.Application.Services
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == "Staff")
@@ -742,7 +742,7 @@ namespace SecurityGateApv.Application.Services
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession,VisitDetail.Visitor"
                      )).ToList();
             }
             if (userAuthor.Role == UserRoleEnum.Security.ToString())
@@ -752,9 +752,9 @@ namespace SecurityGateApv.Application.Services
                          && s.CheckinTime.Date == DateTime.Now.Date,
                          pageSize, pageNumber,
                          orderBy: s => s.OrderByDescending(s => s.CheckinTime),
-                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession"
+                         includeProperties: "SecurityIn,SecurityOut,GateIn,GateOut,VisitorSessionsImages,VehicleSession,VisitDetail.Visitor"
                      )).ToList();
-                //visitSession.FirstOrDefault().VehicleSession;
+                //visitSession.FirstOrDefault().VisitDetail.Visitor;
             }
 
             if (visitSession.Count() == 0)
