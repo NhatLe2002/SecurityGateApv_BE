@@ -336,6 +336,17 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateVisit(VisitCreateCommand command)
         {
+            foreach (var x in command.VisitDetail)
+            {
+                if (x.ExpectedEndHour > TimeSpan.Parse("20:00:00"))
+                {
+                    return StatusCode(410, "Thời gian không hợp lệ");
+                }
+                if (x.ExpectedStartHour < TimeSpan.Parse("07:00:00"))
+                {
+                    return StatusCode(410, "Thời gian không hợp lệ");
+                }
+            }
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
             {
@@ -352,6 +363,17 @@ namespace SecurityGateApv.WebApi.Controllers
         [HttpPost("Daily")]
         public async Task<ActionResult> CreateVisitDaily(VisitCreateCommandDaily command)
         {
+            foreach (var x in command.VisitDetail)
+            {
+                if (x.ExpectedEndHour > TimeSpan.Parse("20:00:00"))
+                {
+                    return StatusCode(410, "Thời gian không hợp lệ");
+                }
+                if (x.ExpectedStartHour < TimeSpan.Parse("07:00:00"))
+                {
+                    return StatusCode(410, "Thời gian không hợp lệ");
+                }
+            }
             var token = Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(token))
             {
